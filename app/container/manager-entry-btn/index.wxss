@@ -1,1 +1,11 @@
 /* container/manager-entry-btn/index.wxss */
+
+
+.con-manager-entry-btn-container {
+  right: 50rpx;
+  z-index: 10;
+  bottom: 200rpx;
+  position: fixed;
+  border-radius: 50%;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.20);
+}

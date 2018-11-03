@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@minui/wxc-button": "^1.0.2"
+    "@minui/wxc-button": "^1.0.2",
+    "@minui/wxc-icon": "^1.0.9"
   }
 }

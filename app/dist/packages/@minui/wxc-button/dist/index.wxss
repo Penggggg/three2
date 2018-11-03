@@ -1,5 +1,5 @@
 
-.btn {
+    .btn {
         display: inline-block;
         margin: 0;
         border: 1rpx solid transparent;

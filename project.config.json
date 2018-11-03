@@ -6,7 +6,9 @@
 		"es6": true,
 		"postcss": true,
 		"minified": true,
-		"newFeature": true
+		"newFeature": true,
+		"nodeModules": true,
+		"uglifyFileName": true
 	},
 	"appid": "wx60bf7f745ce31ef0",
 	"projectname": "three",
