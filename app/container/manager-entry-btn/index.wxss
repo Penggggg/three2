@@ -3,9 +3,51 @@
 
 .con-manager-entry-btn-container {
   right: 50rpx;
-  z-index: 10;
   bottom: 200rpx;
   position: fixed;
   border-radius: 50%;
   box-shadow: 3px 3px 10px rgba(0,0,0,0.20);
+}
+
+.con-manager-entry-drawer {
+  height: 100vh;
+  width: 75vw;
+  background: #fff;
+}
+
+.con-manager-entry-drawer-list-item {
+  flex: 1;
+}
+
+.con-manager-entry-btn-list-item {
+  background: #fff;
+  margin-bottom: 30rpx;
+}
+
+.con-manager-entry-btn-list-item:last-child {
+  margin: 0;
+}
+
+.con-manager-entry-btn-list-check {
+  display: flex;
+  align-items: center
+}
+
+.con-manager-entry-btn-list-image {
+  width: 102rpx;
+  height: 102rpx;
+  margin-left: 30rpx;
+}
+
+.radius {
+  border-radius: 50%;
+}
+
+.con-manager-entry-btn-item {
+  flex: 1;
+}
+.con-manager-entry-btn-list-image {
+  width: 102rpx;
+  height: 102rpx;
+  background: #d8d8d8;
 }

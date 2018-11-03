@@ -13,7 +13,20 @@ Component({
    * 组件的初始数据
    */
   data: {
-    showBtn: false
+    // 展示按钮
+    showBtn: false,
+    // 展示弹框
+    showDrawer: false,
+    // 展示列表
+    list: [
+      {
+        title: '我的商品',
+        desc: '新增、编辑、上下架商品',
+      }, {
+        title: '商品分组',
+        desc: '批量推荐同类型商品'
+      }
+    ]
   },
 
   /**
@@ -33,6 +46,13 @@ Component({
     setBtn( showBtn ) {
       this.setData({
         showBtn
+      })
+    },
+
+    /** 弹窗开关 */
+    toggleDrawer( ) {
+      this.setData({
+        showDrawer: !this.data.showDrawer
       })
     }
     

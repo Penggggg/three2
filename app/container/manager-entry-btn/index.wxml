@@ -1,16 +1,48 @@
 <!--container/manager-entry-btn/index.wxml-->
 <view class='con-manager-entry-btn'>
 
+  <!-- 可视按钮 -->
   <view
+    wx:if='{{ showBtn }}'
     class='con-manager-entry-btn-container'
   >
       <wxc-button 
         type='beauty'
-        wx:if='{{ showBtn }}'
+        bind:click='toggleDrawer'
         btnStyle='min-width: 100rpx;padding: 0;border-radius: 100rpx;min-height:100rpx;line-height:100rpx'
       >
         <wxc-icon color="#fff" size="45" type="add" /> 
       </wxc-button>
   </view>
+
+  <!-- 弹框 -->
+  <i-drawer
+    mode="right"
+    visible="{{showDrawer}}"
+    bind:close="toggleDrawer"
+  >
+    <view
+      class="con-manager-entry-drawer"
+    >
+      <view 
+        wx:key="{{ index }}"
+        wx:for="{{ list }}"
+        class="con-manager-entry-btn-list-item"
+    >
+        <view class="con-manager-entry-btn-list-check">
+          <image
+            mode="aspectFill"
+            class="con-manager-entry-btn-list-image radius"
+            src="http://s2.mogucdn.com/new1/v1/bdefaultavatar/04.jpg" />
+          <wxc-list
+            title="{{ item.title }}"
+            detail="{{ item.desc }}"
+            class="con-manager-entry-btn-item"
+          />
+        </view>
+    </view>
+
+    </view>
+  </i-drawer>
 
 </view>
