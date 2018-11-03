@@ -1,1 +1,5 @@
-{}
+{
+  "usingComponents": {
+    "manager-entry-btn": "../../container/manager-entry-btn/index"
+  }
+}

@@ -1,10 +1,12 @@
 <view>
-  hello world
+  hello world 
   <open-data type="userAvatarUrl"></open-data>
   <open-data type="userNickName"></open-data>
 
   <button type='primary' bindtap='goManager' data-routeTo='/pages/manager-goods-detail/index'>
     商品管理
   </button>
+
+  <manager-entry-btn />
 
 </view>
