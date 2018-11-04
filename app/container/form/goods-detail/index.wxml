@@ -1,0 +1,9 @@
+<!--container/form/goods-detail/index.wxml-->
+<view class='con-form-goods-detail'>
+
+  <my-active-form
+    meta="{{ meta }}"
+  />
+
+
+</view>

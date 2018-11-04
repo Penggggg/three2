@@ -1,0 +1,69 @@
+<!--components/active-form/index.wxml-->
+<view class='c-active-form'>
+
+  <form>
+  
+    <view
+      wx:for="{{ meta }}"
+      wx:key="{{ index }}"
+    >
+
+      <!-- 标题类型 -->
+      <view
+        class="caf-title"
+        wx:if="{{ item.title }}"
+      >
+        <text class='caf-title-big'>{{ item.title }}</text>
+        <text class='caf-title-desc'>{{ item.desc }}</text>
+      </view>
+
+      <!-- 文本输入类型 -->
+      <view
+        class='caf-inputs caf-item'
+        wx:elif="{{ item.type === 'input' }}"
+      >
+        <text class='caf-item-label'>{{ item.label }}</text>
+        <input
+          class='caf-item-input'
+          maxlength='{{ item.max || 99999 }}'
+          placeholder="{{ item.placeholder || '' }}"
+        />
+      </view>
+
+      <!-- 多行文本 -->
+      <view
+        class='caf-inputs caf-item'
+        wx:elif="{{ item.type === 'textarea' }}"
+      >
+        <text class='caf-item-label'>{{ item.label }}</text>
+        <textarea
+          auto-height
+          class='caf-item-input'
+          placeholder="{{ item.placeholder || '' }}"
+        />
+      </view>
+
+      <!-- 标签 -->
+      <view
+        class='caf-inputs caf-item'
+        wx:elif="{{ item.type === 'tag' }}"
+      >
+        <text class='caf-item-label'>{{ item.label }}</text>
+        <view class='caf-item-input'>
+          <wxc-label
+            wx:for="{{ item.value }}"
+            wx:for-item="label"
+            wx:for-index="k"
+            wx:key="{{ k }}"
+            class='label'
+            text="{{ label }}"
+          />
+          <wxc-label class='label' text="+" />
+        </view>
+      </view>
+
+    </view>
+
+  </form>
+
+</view>

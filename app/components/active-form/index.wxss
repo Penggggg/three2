@@ -1,0 +1,57 @@
+/* components/active-form/index.wxss */
+.c-active-form {
+  
+}
+
+.caf-title {
+
+  background: #fafafa;
+  box-sizing: border-box;
+  padding: 10rpx 30rpx 20rpx 30rpx;
+
+}
+
+.caf-title-big {
+  color: #666;
+  font-size: 32rpx;
+  margin-right: 20rpx;
+}
+
+.caf-title-desc {
+  color: #999;
+  font-size: 28rpx;
+}
+
+.caf-item {
+  display: flex;
+  position: relative;
+  padding: 20rpx 30rpx;
+  align-items: center;
+}
+
+.caf-item::after {
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: 100%;
+  content: '';
+  transform: scaleY( 0.5 );
+  background: rgba(0, 0, 0, 0.19);
+  position: absolute;
+}
+
+.caf-item-label {
+  color: #666;
+  font-size: 32rpx;
+  margin-right: 50rpx;
+}
+
+.caf-item-input {
+  flex: 1;
+  color: #666;
+  font-size: 28rpx;
+}
+
+.label {
+  margin-right: 20rpx;
+}

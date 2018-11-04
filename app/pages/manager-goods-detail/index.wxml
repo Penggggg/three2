@@ -1,2 +1,5 @@
 <!--app/pages/manager-goods-detail/index.wxml-->
-<text>app/pages/manager-goods-detail/index.wxml</text>
+
+<view class='p-manager-goods-detail'>
+  <my-form-goods-details />
+</view>

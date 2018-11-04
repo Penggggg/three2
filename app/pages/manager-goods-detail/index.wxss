@@ -1,1 +1,4 @@
 /* app/pages/manager-goods-detail/index.wxss */
+.p-manager-goods-detail {
+  
+}

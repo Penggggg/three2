@@ -20,6 +20,7 @@
       <wxc-button
         size="large"
         type="beauty"
+        bind:click="navigate"
       >
         添加商品
       </wxc-button>

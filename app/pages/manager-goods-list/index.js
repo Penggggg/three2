@@ -8,6 +8,14 @@ Page({
 
   },
 
+  /** 跳页 */
+  navigate( e ) {
+    console.log( e );
+    wx.navigateTo({
+      url: e.currentTarget.dataset.url || '/pages/manager-goods-detail/index',
+    })
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */
