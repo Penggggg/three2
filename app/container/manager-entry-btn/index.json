@@ -1,9 +1,5 @@
 {
   "component": true,
   "usingComponents": {
-    "wxc-button": "../../dist/packages/@minui/wxc-button/dist/index",
-    "wxc-icon": "../../dist/packages/@minui/wxc-icon/dist/index",
-    "wxc-list": "../../dist/packages/@minui/wxc-list/dist/index",
-    "i-drawer": "../../dist/iview/drawer/index"
   }
 }

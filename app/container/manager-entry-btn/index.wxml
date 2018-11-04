@@ -32,8 +32,9 @@
         <view class="con-manager-entry-btn-list-check">
           <image
             mode="aspectFill"
+            src="{{ item.img }}"
             class="con-manager-entry-btn-list-image radius"
-            src="http://s2.mogucdn.com/new1/v1/bdefaultavatar/04.jpg" />
+          />
           <wxc-list
             title="{{ item.title }}"
             detail="{{ item.desc }}"

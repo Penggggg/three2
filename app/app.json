@@ -2,5 +2,11 @@
   "pages": [
     "pages/index/index",
     "pages/manager-goods-detail/index"
-  ]
+  ],
+  "usingComponents": {
+    "i-drawer": "./dist/iview/drawer/index",
+    "wxc-icon": "./dist/packages/@minui/wxc-icon/dist/index",
+    "wxc-list": "./dist/packages/@minui/wxc-list/dist/index",
+    "wxc-button": "./dist/packages/@minui/wxc-button/dist/index"
+  }
 }
