@@ -2,8 +2,12 @@
 <view class='con-form-goods-detail'>
 
   <my-active-form
+    id="form"
     meta="{{ meta }}"
   />
 
+  <view bindtap='test'>
+    tab
+  </view>
 
 </view>

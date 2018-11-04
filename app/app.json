@@ -1,5 +1,4 @@
 {
-  "debug": true,
   "pages": [
     "pages/manager-goods-detail/index",
     "pages/index/index",

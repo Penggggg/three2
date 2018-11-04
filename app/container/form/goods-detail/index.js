@@ -47,7 +47,7 @@ Component({
           placeholder: `可长可短的一段介绍(回车可换行)`,
           value: undefined,
           rules: [ ]
-        }, , {
+        }, {
           key: 'tag',
           label: '商品标签',
           type: 'tag',
@@ -85,6 +85,11 @@ Component({
           });
         }
       })
+    },
+
+    test( ) {
+      const formEle = this.selectComponent('#form');
+      
     }
 
   },

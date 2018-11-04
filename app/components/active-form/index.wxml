@@ -25,8 +25,11 @@
         <text class='caf-item-label'>{{ item.label }}</text>
         <input
           class='caf-item-input'
+          data-key="{{ item.key }}"
+          value="{{ formData[ item.key ]}}"
           maxlength='{{ item.max || 99999 }}'
           placeholder="{{ item.placeholder || '' }}"
+          bindinput='textInput'
         />
       </view>
 
@@ -39,7 +42,10 @@
         <textarea
           auto-height
           class='caf-item-input'
+          data-key="{{ item.key }}"
+          value="{{ formData[ item.key ]}}"
           placeholder="{{ item.placeholder || '' }}"
+          bindinput='textInput'
         />
       </view>
 
@@ -50,22 +56,29 @@
       >
         <text class='caf-item-label'>{{ item.label }}</text>
         <view class='caf-item-input'>
-          <wxc-label
-            wx:for="{{ item.value }}"
+          <view
+            wx:for="{{ formData[ item.key ]}}"
             wx:for-item="label"
             wx:for-index="k"
             wx:key="{{ k }}"
-            class='label'
-            text="{{ label }}"
-          />
+            data-tagkey="{{ item.key }}"
+            data-tagindex="{{ k }}"
+            class='label inline'
+            bindtap='toogleTag'
+          >
+            <wxc-label
+              text="{{ label }}"
+            />
+          </view>
           <view
-            class='inline'
+            class='label inline'
+            data-tagkey="{{ item.key }}"
             bindtap='toogleTag'
           >
             <wxc-label
               text="点我添加+"
               class='label'
-              wx:if="{{ item.value.length < item.max }}"
+              wx:if="{{ formData[ item.key ].length < item.max }}"
             />
           </view>
         </view>
@@ -98,10 +111,13 @@
     title="新的标签"
     visible="{{ tagging }}"
     bind:cancel="toogleTag"
+    bind:ok="editOrCreateTag"
   >
     <wxc-input
       mode="none"
       type="text"
+      value="{{ selecingTag }}"
+      bind:input="editingTag"
       placeholder="请输入新的标签名"
     />
   </i-modal>
