@@ -1,1 +1,25 @@
 /* app/pages/manager-goods-list/index.wxss */
+.p-manager-goods-list {
+  min-height: 100vh;
+}
+
+.pmgl-btn-container {
+  left: 0;
+  padding: 20rpx;
+  bottom: 20rpx;
+  width: 100%;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.pmgl-list-container {
+  height: 960rpx;
+  overflow: hidden;
+  padding: 20rpx 30rpx;
+}
+
+.btn {
+  width: 100% !important;
+}

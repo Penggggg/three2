@@ -1,12 +1,28 @@
 <!--app/pages/manager-goods-list/index.wxml-->
-<view>
+<view class="p-manager-goods-list">
 
+  <!-- 头部搜索栏 -->
   <view class='p-manager-goods-list-header'>
     <wxc-input
       type="text"
       icon="search"
       placeholder="搜索商品"
     />
+  </view>
+
+  <!-- 中间列表 -->
+  <view class='pmgl-list-container'>
+    <view>11</view><view>11</view><view>11</view><view>11</view><view>11</view><view>11</view><view>11</view><view>11</view><view>11</view><view>11</view><view>11</view>
+  </view>
+
+  <!-- 按钮 -->
+  <view class='pmgl-btn-container'>
+      <wxc-button
+        size="large"
+        type="beauty"
+      >
+        添加商品
+      </wxc-button>
   </view>
 
 </view>
