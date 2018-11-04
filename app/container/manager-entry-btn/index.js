@@ -22,6 +22,7 @@ Component({
       {
         title: '我的商品',
         desc: '新增、编辑、上下架商品',
+        url: '/pages/manager-goods-detail/index',
         img: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/11.png'
       }, {
         title: '商品分组',
@@ -39,7 +40,6 @@ Component({
     /** 监听全局管理员权限 */
     watchRole( ) {
       app.watch$('role', ( val ) => {
-        console.log('watch...', val );
         val === 1 && this.setBtn( true );
       });
     },
@@ -56,13 +56,19 @@ Component({
       this.setData({
         showDrawer: !this.data.showDrawer
       })
+    },
+
+    /** 地址跳转 */
+    navigate( e ) {
+      wx.navigateTo({
+        url: e.currentTarget.dataset.url
+      });
     }
     
   },
 
   attached: function( ) {
     this.watchRole( );
-    console.log('readying...', app.globalData.role)
     this.setBtn( app.globalData.role === 1 );
   }
 })

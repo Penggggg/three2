@@ -12,6 +12,7 @@
 .con-manager-entry-drawer {
   height: 100vh;
   width: 75vw;
+  overflow-y: scroll;
   background: #fff;
 }
 

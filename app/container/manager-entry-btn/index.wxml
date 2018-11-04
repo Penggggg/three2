@@ -27,7 +27,9 @@
       <view 
         wx:key="{{ index }}"
         wx:for="{{ list }}"
+        data-url="{{ item.url }}"
         class="con-manager-entry-btn-list-item"
+        bindtap='navigate'
     >
         <view class="con-manager-entry-btn-list-check">
           <image

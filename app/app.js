@@ -27,7 +27,6 @@ App({
       wx.cloud.callFunction({
         name: 'login'
       }).then( res => {
-        console.log('cloud init:', res.result );
         this.setGlobalData( res.result );
       });
     },

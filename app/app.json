@@ -1,4 +1,5 @@
 {
+  "debug": true,
   "pages": [
     "pages/index/index",
     "pages/manager-goods-detail/index"
@@ -8,5 +9,10 @@
     "wxc-icon": "./dist/packages/@minui/wxc-icon/dist/index",
     "wxc-list": "./dist/packages/@minui/wxc-list/dist/index",
     "wxc-button": "./dist/packages/@minui/wxc-button/dist/index"
+  },
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "香港正品代购",
+    "navigationBarBackgroundColor": "#eb2f96"
   }
 }
