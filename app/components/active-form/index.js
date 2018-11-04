@@ -14,7 +14,8 @@ Component({
    * 组件的初始数据
    */
   data: {
-
+    // 编辑标签
+    tagging: false
   },
 
   /**
@@ -22,5 +23,13 @@ Component({
    */
   methods: {
 
+    /** 展开tag */
+    toogleTag( ) {
+      this.setData({
+        tagging: !this.data.tagging
+      })
+    }
+
   }
+
 })

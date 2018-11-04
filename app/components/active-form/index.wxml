@@ -58,12 +58,43 @@
             class='label'
             text="{{ label }}"
           />
-          <wxc-label class='label' text="+" />
+          <view
+            class='inline'
+            bindtap='toogleTag'
+          >
+            <wxc-label
+              text="点我添加+"
+              class='label'
+              wx:if="{{ item.value.length < item.max }}"
+            />
+          </view>
         </view>
+      </view>
+
+      <!-- select -->
+      <view
+        class='caf-inputs caf-item'
+        wx:elif="{{ item.type === 'select' }}"
+      >
+        <text class='caf-item-label'>{{ item.label }}</text>
+        
       </view>
 
     </view>
 
   </form>
+
+  <!-- 增加标签 -->
+  <i-modal
+    title="新的标签"
+    visible="{{ tagging }}"
+    bind:cancel="toogleTag"
+  >
+    <wxc-input
+      mode="none"
+      type="text"
+      placeholder="请输入新的标签名"
+    />
+  </i-modal>
 
 </view>

@@ -1,0 +1,33 @@
+// 云函数入口文件
+const cloud = require('wx-server-sdk');
+
+cloud.init();
+
+const db = cloud.database();
+
+// 云函数入口函数
+exports.main = async (event, context) => {
+
+  const dbRes = await db.collection('dic')
+    .where({
+      belong: db.RegExp({
+        regexp: event.dicName.replace(/\,/g, '|'),
+        optiond: 'i'
+      })
+    })
+    .get( );
+
+  let result = { };
+  dbRes.data.map( dic => {
+    result = Object.assign({ }, result, {
+      [ dic.belong ]: dic[ dic.belong ]
+    });
+  });
+
+  return new Promise( resolve => {
+    resolve({
+      ...result
+    });
+  });
+
+}

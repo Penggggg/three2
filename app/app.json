@@ -10,6 +10,7 @@
     "my-manager-entry-btn": "./container/manager-entry-btn/index",
     "my-active-form": "./components/active-form/index",
     "i-drawer": "./dist/iview/drawer/index",
+    "i-modal": "./dist/iview/modal/index",
     "wxc-icon": "./dist/packages/@minui/wxc-icon/dist/index",
     "wxc-list": "./dist/packages/@minui/wxc-list/dist/index",
     "wxc-input": "./dist/packages/@minui/wxc-input/dist/index",

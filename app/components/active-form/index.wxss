@@ -55,3 +55,7 @@
 .label {
   margin-right: 20rpx;
 }
+
+.inline {
+  display: inline-block;
+}

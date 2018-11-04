@@ -16,7 +16,8 @@ Component({
    * 组件的初始数据
    */
   data: {
-
+    /** 数据字典 */
+    dic: { }
   },
 
   /** 计算属性 */
@@ -51,7 +52,14 @@ Component({
           type: 'tag',
           max: 2,
           placeholder: `如：补水`,
-          value: [  ],
+          value: [ ],
+        }, {
+          key: 'category',
+          label: '商品类目',
+          type: 'select',
+          placeholder: '请设置商品类目',
+          value: undefined,
+          options: [ ]
         }
       ]
     }
@@ -62,5 +70,23 @@ Component({
    */
   methods: {
 
+    /** 拉取数据字典 */
+    fetchDic( ) {
+      wx.cloud.callFunction({
+        name: 'api-dic',
+        data: {
+          dicName: 'goods_category',
+        },
+        complete: function (res) {
+          console.log(res) // 3
+        }
+      })
+    }
+
+  },
+
+  attached: function () {
+    this.fetchDic( );
   }
+
 })
