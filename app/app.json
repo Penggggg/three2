@@ -2,12 +2,16 @@
   "debug": true,
   "pages": [
     "pages/index/index",
-    "pages/manager-goods-detail/index"
+    "pages/manager-goods-detail/index",
+    "pages/manager-goods-list/index"
   ],
   "usingComponents": {
+    "my-nav": "./container/nav-bar/index",
+    "my-manager-entry-btn": "./container/manager-entry-btn/index",
     "i-drawer": "./dist/iview/drawer/index",
     "wxc-icon": "./dist/packages/@minui/wxc-icon/dist/index",
     "wxc-list": "./dist/packages/@minui/wxc-list/dist/index",
+    "wxc-input": "./dist/packages/@minui/wxc-input/dist/index",
     "wxc-button": "./dist/packages/@minui/wxc-button/dist/index"
   },
   "window": {

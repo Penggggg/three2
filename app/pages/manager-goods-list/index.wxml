@@ -1,0 +1,12 @@
+<!--app/pages/manager-goods-list/index.wxml-->
+<view>
+
+  <view class='p-manager-goods-list-header'>
+    <wxc-input
+      type="text"
+      icon="search"
+      placeholder="搜索商品"
+    />
+  </view>
+
+</view>

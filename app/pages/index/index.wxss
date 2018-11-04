@@ -1,2 +1,5 @@
 /* pages/index/index.wxss */
 
+.p-index {
+  min-height: 100vh;
+}

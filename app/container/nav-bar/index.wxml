@@ -1,0 +1,18 @@
+<!--container/nav-bar/index.wxml-->
+<view class='con-nav-bar'>
+  <view
+    wx:for="{{ navList }}"
+    wx:key="{{ index }}"
+    class='con-nav-item'
+  >
+    <image
+      mode="aspectFill"
+      class='con-nav-bar-img'
+      src="{{ item.normal }}"
+    />
+    <view class='con-nav-text'>
+      {{ item.label }}
+    </view>
+  </view>
+
+</view>

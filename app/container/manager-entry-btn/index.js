@@ -22,12 +22,12 @@ Component({
       {
         title: '我的商品',
         desc: '新增、编辑、上下架商品',
-        url: '/pages/manager-goods-detail/index',
-        img: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/11.png'
+        url: '/pages/manager-goods-list/index',
+        img: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-1.png'
       }, {
         title: '商品分组',
         desc: '批量推荐同类型商品',
-        img: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/22.png'
+        img: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-2.png'
       }
     ]
   },

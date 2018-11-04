@@ -1,0 +1,42 @@
+/* container/nav-bar/index.wxss */
+.con-nav-bar {
+  
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  position: fixed;
+  display: flex;
+  align-items: center;
+}
+
+.con-nav-bar::before {
+  top: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  content: '';
+  position: absolute;
+  background: rgba(0,0,0,0.15);
+}
+
+.con-nav-item {
+  flex: 1;
+  display: flex;
+  padding: 15rpx;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.con-nav-bar-img {
+  width: 50rpx;
+  height: 50rpx;
+}
+
+.con-nav-text {
+  color: #666;
+  margin-top: 10rpx;
+  line-height: 24rpx;
+  font-size: 24rpx;
+  font-weight: 200;
+}

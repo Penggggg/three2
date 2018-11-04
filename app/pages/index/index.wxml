@@ -1,8 +1,5 @@
-<view>
-  hello world 
-  <open-data type="userAvatarUrl"></open-data>
-  <open-data type="userNickName"></open-data>
+<view class='p-index'>
 
-  <manager-entry-btn />
-
+  <my-manager-entry-btn />
+  <my-nav />
 </view>

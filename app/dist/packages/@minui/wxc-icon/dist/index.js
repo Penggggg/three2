@@ -1,4 +1,3 @@
-const app = getApp();
 
 // container/manager-entry-btn/index.js
 Component({
