@@ -22,6 +22,7 @@ Component({
 
   /** 计算属性 */
   computed: {
+    
     // 表单数据
     meta( ) {
       return [
@@ -43,7 +44,7 @@ Component({
           key: 'detail',
           label: '商品描述',
           type: 'textarea',
-          placeholder: `可长可短的一段介绍`,
+          placeholder: `可长可短的一段介绍(回车可换行)`,
           value: undefined,
           rules: [ ]
         }, , {
@@ -59,7 +60,7 @@ Component({
           type: 'select',
           placeholder: '请设置商品类目',
           value: undefined,
-          options: [ ]
+          options: this.data.dic['goods_category'] || [ ] 
         }
       ]
     }
@@ -72,13 +73,16 @@ Component({
 
     /** 拉取数据字典 */
     fetchDic( ) {
+      const that = this;
       wx.cloud.callFunction({
         name: 'api-dic',
         data: {
           dicName: 'goods_category',
         },
         complete: function (res) {
-          console.log(res) // 3
+          that.setData({
+            dic: res.result
+          });
         }
       })
     }

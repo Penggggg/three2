@@ -76,8 +76,17 @@
         class='caf-inputs caf-item'
         wx:elif="{{ item.type === 'select' }}"
       >
-        <text class='caf-item-label'>{{ item.label }}</text>
-        
+        <picker
+          value="{{ 0 }}"
+          range-key="label"
+          class='picker'
+          range="{{ item.options }}"
+        >
+          <view class="picker">
+            <text class='caf-item-label'>{{ item.label }}</text>
+            <text class='caf-item-input'>{{ array[ index ].label }}</text>
+          </view>
+        </picker>
       </view>
 
     </view>
