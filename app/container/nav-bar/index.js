@@ -11,6 +11,10 @@ Component({
    * 组件的初始数据
    */
   data: {
+    // 动画
+    noAnimation: { },
+    // 动画
+    animationData: { },
     // 导航nav
     navList: [
       {
@@ -31,7 +35,7 @@ Component({
       }, {
         label: '我的',
         url: "/pages/index/index",
-        normal: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-1.png",
+        normal: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-2-2.png",
         active: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-2.png"
       }
     ]
@@ -41,6 +45,25 @@ Component({
    * 组件的方法列表
    */
   methods: {
+    // 初始化动画
+    initAnimation( ) {
 
+      const animation = wx.createAnimation({
+        delay: 1000,
+        duration: 10000,
+        timingFunction: "ease",
+      });
+
+      animation.translateX(80).step();
+
+      this.setData({
+        animationData: animation.export()
+      })
+    }
+  },
+
+  attached: function( ) {
+    // this.initAnimation( );
   }
+
 })
