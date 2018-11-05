@@ -104,6 +104,14 @@
         </picker>
       </view>
 
+      <!-- 图片上传 -->
+      <view 
+        class='caf-img-block'
+        wx:elif="{{ item.type === 'img' }}"
+      > 
+        ?
+      </view>
+
     </view>
 
   </form>

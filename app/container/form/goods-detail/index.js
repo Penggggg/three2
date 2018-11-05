@@ -61,6 +61,9 @@ Component({
           placeholder: '请设置商品类目',
           value: '0',
           options: this.data.dic['goods_category'] || [ ] 
+        }, {
+          label: '商品图片',
+          type: 'img'
         }
       ]
     }
@@ -89,7 +92,11 @@ Component({
 
     test( ) {
       const formEle = this.selectComponent('#form');
-      
+      wx.chooseImage({
+        success(res) {
+          console.log('???')
+        }
+      });
     }
 
   },
