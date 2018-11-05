@@ -59,7 +59,7 @@ Component({
           label: '商品类目',
           type: 'select',
           placeholder: '请设置商品类目',
-          value: undefined,
+          value: '0',
           options: this.data.dic['goods_category'] || [ ] 
         }
       ]

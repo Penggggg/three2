@@ -24,7 +24,9 @@ Component({
     // 选中标签的文字
     selecingTag: '',
     // 标签类型的选中的那个标签key
-    selectingTagKey: ''
+    selectingTagKey: '',
+    // select类型的下标
+    selectFormItemIndex: { }
   },
 
   /**
@@ -42,6 +44,21 @@ Component({
         })
       });
       console.log( this.data.formData );
+    },
+
+    /** select输入 */
+    selectChange( e ) {
+      const value = e.detail.value;
+      const formItemKey = e.currentTarget.dataset.formkey;
+      const formItem = this.data.meta.find( x => x.key === formItemKey );
+      this.setData({
+        formData: Object.assign({ }, this.data.formData, {
+          [ formItemKey ]: value 
+        }),
+        selectFormItemIndex: Object.assign({ }, this.data.selectFormItemIndex, {
+          [ formItemKey ]: formItem.options.findIndex( x => x.value === value )
+        })
+      })
     },
 
     /** 展开tag */
@@ -100,9 +117,11 @@ Component({
 
     /** 处理本地formData */
     dealFormData( ) {
+      let selectTypeIndex = { };
       let obj = Object.assign({ }, this.formData );
       this.data.meta.map( formItem => {
         if ( !!formItem.key ) {
+          // 处理formData
           obj = Object.assign({ }, obj, {
             [ formItem.key ]: this.data.formData[ formItem.key ] !== undefined ?
               this.data.formData[ formItem.key] :
@@ -112,12 +131,20 @@ Component({
                   Object.assign({ }, formItem.value ) :
                   formItem.value
           });
+          // 处理select类型
+          if ( formItem.type === 'select' ) {
+            selectTypeIndex = Object.assign({ }, selectTypeIndex, {
+              [ formItem.key ]: formItem.options.findIndex( x => x.value === formItem.value )
+            });
+          }
         }
+
       });
       this.setData({
-        formData: obj
+        formData: obj,
+        selectFormItemIndex: selectTypeIndex
       });
-    }
+    },
 
   },
 
