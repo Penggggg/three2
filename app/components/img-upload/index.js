@@ -23,8 +23,10 @@ Component({
    * 组件的初始数据
    */
   data: {
-    /** 已上传列表 */
+    /** 上传列表 */
     list: [ ],
+    /** 已上传列表 */
+    has: [ ],
     /** cos */
     cos: new COS({
       getAuthorization: function (params, callback) {
@@ -48,7 +50,7 @@ Component({
     upload: function( ) {
       const that = this;
       wx.chooseImage({
-        count: that.data.max - that.data.hasBeenUploaded.length - that.data.list.length,
+        count: that.data.max - that.data.has.length - that.data.list.length,
         sizeType: ['original'],
         success: function( res ) {
           const filePaths = res.tempFilePaths;
@@ -70,6 +72,7 @@ Component({
 
     /** 上传成功的回调 */
     upLoadSuccess( err, data, imgUrl ) {
+      const that = this;
       if (err && err.error) {
         wx.showModal({
           title: '返回错误',
@@ -87,8 +90,45 @@ Component({
           list: [ ...this.data.list, imgUrl ]
         })
         wx.showToast({ title: '上传成功', icon: 'success', duration: 1500 });
+        // 发送事件
+        setTimeout(( ) => {
+          that.triggerEvent('change', [ ...this.data.has, ...this.data.list ]);
+        }, 0 );
       }
-    }
+    },
 
+    /** 删除图片 */
+    deleteImg( event ) {
+      const that = this;
+      const { has, list } = this.data;
+      const { typee, index } = event.currentTarget.dataset;
+      if ( typee === 'hasBeenUploaded') {
+        const temp = [ ...has ];
+        temp.splice( index, 1 );
+        this.setData({ has: temp });
+      } else if ( typee === 'newUploaded') {
+        const temp = [ ...list ];
+        temp.splice( index, 1);
+        this.setData({ list: temp });
+      }
+      setTimeout(() => {
+        that.triggerEvent('change', [ ...this.data.has, ...this.data.list ]);
+      }, 0);
+    },
+
+    /** 预览图片 */
+    preview( event ) {
+      wx.previewImage({
+        current: event.currentTarget.dataset.url,
+        urls: [ ...this.data.has, ...this.data.list ],
+      })
+    },
+
+  },
+
+  attached: function () {
+    this.setData({
+      has: [ ...this.data.hasBeenUploaded ]
+    });
   }
 })

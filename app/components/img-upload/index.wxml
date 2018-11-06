@@ -1,16 +1,64 @@
 <!--components/img-upload/index.wxml-->
 <view class='c-img-upload'>
+
+  <!-- 已有照片 -->
   <view
-    bindtap='upload'
+    wx:key="{{ index }}"
+    wx:for="{{ has }}"
+    class='ciu-img-container'
   >
-    u
+      <image
+        src="{{ item }}"
+        class='ciu-img'
+        mode="aspectFill"
+        bindtap='preview'
+        data-url="{{ item }}"
+      >
+      </image>
+      <view
+        class='ciu-img-icon'
+        data-index="{{ index }}"
+        data-typee="hasBeenUploaded"
+        bindtap='deleteImg'
+      >
+        x
+      </view>
   </view>
-  <view>
-  <image
+
+  <!-- 本次上传的照片 -->
+  <view
     wx:for="{{ list }}"
     wx:key="{{ index }}"
-    src="{{ item }}"
+    class='ciu-img-container'
   >
-  </image>
+    <image
+      src="{{ item }}"
+      class='ciu-img'
+      mode="aspectFill"
+      bindtap='preview'
+      data-url="{{ item }}"
+    >
+    </image>
+    <view
+      class='ciu-img-icon'
+      data-index="{{ index }}"
+      data-typee="newUploaded"
+      bindtap='deleteImg'
+    >
+      x
+    </view>
+  </view>
+
+
+  <view
+    bindtap='upload'
+    class='ciu-upload-btn-container'
+  >
+    <image  
+      class='ciu-upload-btn'
+      mode="aspectFit"
+      src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/upload.png"
+    />
+    <text class='ciu-upload-tips'>上传图片</text>
   </view>
 </view>

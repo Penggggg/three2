@@ -146,6 +146,16 @@ Component({
       });
     },
 
+    /** 图片上传 */
+    onImgChange( e ) {
+      const key = e.currentTarget.dataset.key;
+      this.setData({
+        formData: Object.assign({ }, this.data.formData, {
+          [ key ]: e.detail
+        })
+      });
+    }
+
   },
 
   attached: function( ) {

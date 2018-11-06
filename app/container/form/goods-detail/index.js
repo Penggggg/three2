@@ -62,10 +62,11 @@ Component({
           value: '0',
           options: this.data.dic['goods_category'] || [ ] 
         }, {
+          key: 'img',
           label: '商品图片',
           type: 'img',
           max: 6,
-          value: [ ]
+          value: ['https://wx60bf7f745ce31ef0-1257764567.cos.ap-guangzhou.myqcloud.com/tmp_540f8bb8cce4853df41b50aac9c604c26945f008d288d4fe.jpg']
         }
       ]
     }

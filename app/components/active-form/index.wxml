@@ -110,7 +110,10 @@
         wx:elif="{{ item.type === 'img' }}"
       > 
         <my-img-upload
-          
+          data-key="{{ item.key }}"
+          max="{{ item.max || 9 }}"
+          hasBeenUploaded="{{ item.value }}"
+          bindchange="onImgChange"
         />
       </view>
 

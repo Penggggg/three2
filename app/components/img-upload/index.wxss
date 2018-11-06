@@ -1,1 +1,66 @@
 /* components/img-upload/index.wxss */
+
+.c-img-upload {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 40rpx 10rpx 20rpx 30rpx;
+}
+
+.ciu-img-container {
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 8px;
+  margin-right: 33rpx; 
+  margin-bottom: 30rpx; 
+  display: inline-block;
+  position: relative;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.20);
+}
+
+.ciu-img {
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.ciu-upload-btn-container {
+  display: flex;
+  width: 100rpx;
+  height: 100rpx;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px dotted #ff5777;
+}
+
+.ciu-upload-btn {
+  width: 50rpx;
+  height: 50rpx;
+  margin-bottom: 10rpx;
+}
+
+.ciu-upload-tips {
+  color: #999;
+  font-weight: 200;
+  font-size: 22rpx;
+}
+
+.ciu-img-icon {
+  
+  color: #fff;
+  top: -10rpx;
+  right: -10px;
+  width: 35rpx;
+  height: 35rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  border-radius: 50%;
+  font-size:30rpx;
+  font-weight:100;
+  background: rgba(0,0,0,0.45);
+}
