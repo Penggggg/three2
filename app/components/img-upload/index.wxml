@@ -1,0 +1,16 @@
+<!--components/img-upload/index.wxml-->
+<view class='c-img-upload'>
+  <view
+    bindtap='upload'
+  >
+    u
+  </view>
+  <view>
+  <image
+    wx:for="{{ list }}"
+    wx:key="{{ index }}"
+    src="{{ item }}"
+  >
+  </image>
+  </view>
+</view>

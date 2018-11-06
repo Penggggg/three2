@@ -109,7 +109,9 @@
         class='caf-img-block'
         wx:elif="{{ item.type === 'img' }}"
       > 
-        ?
+        <my-img-upload
+          
+        />
       </view>
 
     </view>

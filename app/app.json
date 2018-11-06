@@ -8,6 +8,7 @@
     "my-nav": "./container/nav-bar/index",
     "my-manager-entry-btn": "./container/manager-entry-btn/index",
     "my-active-form": "./components/active-form/index",
+    "my-img-upload": "./components/img-upload/index",
     "i-drawer": "./dist/iview/drawer/index",
     "i-modal": "./dist/iview/modal/index",
     "wxc-icon": "./dist/packages/@minui/wxc-icon/dist/index",

@@ -63,7 +63,9 @@ Component({
           options: this.data.dic['goods_category'] || [ ] 
         }, {
           label: '商品图片',
-          type: 'img'
+          type: 'img',
+          max: 6,
+          value: [ ]
         }
       ]
     }
