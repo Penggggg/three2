@@ -117,13 +117,28 @@
         />
       </view>
 
+      <!-- 数字类 -->
+      <view
+        class='caf-inputs caf-item'
+        wx:elif="{{ item.type === 'number' }}"
+      >
+        <text class='caf-item-label'>{{ item.label }}</text>
+        <input
+          type="digit"
+          class='caf-item-input'
+          data-key="{{ item.key }}"
+          value="{{ formData[ item.key ]}}"
+          placeholder="{{ item.placeholder || '' }}"
+        />
+      </view>
+
     </view>
 
   </form>
 
   <!-- 增加标签 -->
   <i-modal
-    title="新的标签"
+    title="{{ selectingTagIndex !== null ? '编辑标签' : '新的标签' }} "
     visible="{{ tagging }}"
     bind:cancel="toogleTag"
     bind:ok="editOrCreateTag"

@@ -1,13 +1,101 @@
 <!--container/form/goods-detail/index.wxml-->
 <view class='con-form-goods-detail'>
 
+  <!-- 基本信息 -->
   <my-active-form
     id="form"
     meta="{{ meta }}"
   />
 
-  <view bindtap='test'>
-    tab
+ <!-- 规格信息 -->
+  <view class='standards-block'>
+
+    <view
+      class='standards-line'
+      wx:if="{{ standards.length > 0 }}"
+    >
+      <view class='name standards-item'>型号名称</view>
+      <view class='standards-item'>价格</view>
+      <view class='standards-item'>团购价</view>
+      <view class='standards-item'>库存</view>
+      <view class='standards-item'>图片</view>
+    </view>
+
+    <view
+      class='standards-line'
+      wx:for="{{ standards }}"
+      wx:key="{{ index }}"
+      data-index="{{ index }}"
+      bindtap='standarClick'
+    >
+      <view class='name standards-item'>{{ item.name }}</view>
+      <view class='standards-item'>{{ item.price }}</view>
+      <view class='standards-item'>{{ item.groupPrice }}</view>
+      <view class='standards-item'>{{ item.stock }}</view>
+      <view class='standards-item'>
+        <image class='standards-img' src="{{ item.img }}" />
+      </view>
+    </view>
+
+    <view class='btn-block'>
+      <wxc-button
+        type="beauty"
+        plain="{{ true }}"
+        bind:click="toogleStandard"
+      >
+        增加型号
+      </wxc-button>
+    </view>
   </view>
 
+  <!-- 增加/编辑规格 -->
+  <i-modal
+    title="规则信息"
+    visible="{{ standarding }}"
+    bind:ok="addStandard"
+    actions="{{ actions }}"
+    bind:click="modalClick"
+  >
+    <wxc-input
+      title="型号名称"
+      data-key="name"
+      nocenter="{{ true }}"
+      placeholder="如YSL的“4号管”"
+      value='{{ standarForm.name }}'
+      bindinput='standarInput'
+    />
+    <wxc-input
+      type="number"
+      title="价格"
+      data-key="price"
+      nocenter="{{ true }}"
+      placeholder="该型号的单价"
+      value='{{ standarForm.price }}'
+      bindinput='standarInput'
+    />
+    <wxc-input
+      type="number"
+      title="团购价"
+      nocenter="{{ true }}"
+      data-key="groupPrice"
+      placeholder="该型号的团购价"
+      value='{{ standarForm.groupPrice }}'
+      bindinput='standarInput'
+    />
+    <wxc-input
+      type="number"
+      title="库存"
+      data-key="stock"
+      nocenter="{{ true }}"
+      placeholder="该型号的库存"
+      value='{{ standarForm.stock }}'
+      bindinput='standarInput'
+    />
+    <my-img-upload
+      data-key="img"
+      max="{{ 1 }}"
+      bindchange="onImgChange"
+      hasBeenUploaded="{{ standarForm.img ? [ standarForm.img ] : [ ] }}"
+    />
+  </i-modal>
 </view>

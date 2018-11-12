@@ -10,6 +10,11 @@
     font-size: 28rpx;
     color: #333
 }
+
+.nocenter {
+  text-align: left !important;
+}
+
 .input__combine::after {
     content: '';
     position: absolute;

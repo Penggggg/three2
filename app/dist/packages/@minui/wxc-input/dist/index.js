@@ -9,6 +9,10 @@ Component({
       type: String,
       value: ''
     },
+    nocenter: {
+      type: Boolean,
+      value: false
+    },
     src: {
       type: String,
       value: ''

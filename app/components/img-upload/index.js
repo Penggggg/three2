@@ -27,6 +27,8 @@ Component({
     list: [ ],
     /** 已上传列表 */
     has: [ ],
+    /** 是否展示上传图标 */
+    showIcon: true,
     /** cos */
     cos: new COS({
       getAuthorization: function (params, callback) {
@@ -88,7 +90,8 @@ Component({
       } else {
         this.setData({
           list: [ ...this.data.list, imgUrl ]
-        })
+        });
+        this.judgeIcon();
         wx.showToast({ title: '上传成功', icon: 'success', duration: 1500 });
         // 发送事件
         setTimeout(( ) => {
@@ -112,6 +115,7 @@ Component({
         this.setData({ list: temp });
       }
       setTimeout(() => {
+        this.judgeIcon( );
         that.triggerEvent('change', [ ...this.data.has, ...this.data.list ]);
       }, 0);
     },
@@ -124,11 +128,19 @@ Component({
       })
     },
 
+    /** 判断图标 */
+    judgeIcon( ) {
+      this.setData({
+        showIcon: (this.data.max - this.data.has.length - this.data.list.length) > 0
+      })
+    }
+
   },
 
   attached: function () {
     this.setData({
       has: [ ...this.data.hasBeenUploaded ]
     });
+    this.judgeIcon();
   }
 })

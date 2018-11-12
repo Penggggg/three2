@@ -48,11 +48,12 @@
       x
     </view>
   </view>
-
+  
 
   <view
     bindtap='upload'
     class='ciu-upload-btn-container'
+    wx:if="{{ showIcon }}"
   >
     <image  
       class='ciu-upload-btn'
