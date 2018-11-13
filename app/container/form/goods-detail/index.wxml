@@ -48,6 +48,12 @@
     </view>
   </view>
 
+  <!-- 其他信息 -->
+  <my-active-form
+    id="form"
+    meta="{{ meta2 }}"
+  />
+
   <!-- 增加/编辑规格 -->
   <i-modal
     title="规则信息"
@@ -92,10 +98,14 @@
       bindinput='standarInput'
     />
     <my-img-upload
+      class="img-upload"
       data-key="img"
       max="{{ 1 }}"
       bindchange="onImgChange"
       hasBeenUploaded="{{ standarForm.img ? [ standarForm.img ] : [ ] }}"
     />
   </i-modal>
+
+  <!-- 按钮 -->
+
 </view>

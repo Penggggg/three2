@@ -52,6 +52,10 @@
   font-size: 28rpx;
 }
 
+.caf-item-input.right {
+  text-align: right;
+}
+
 .label {
   margin-right: 20rpx;
 }

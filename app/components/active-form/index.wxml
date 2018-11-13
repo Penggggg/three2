@@ -132,6 +132,21 @@
         />
       </view>
 
+      <!-- switch类型 -->
+      <view
+        class='caf-inputs caf-item'
+        wx:elif="{{ item.type === 'switch' }}"
+      >
+        <text class='caf-item-label'>{{ item.label }}</text>
+        <switch
+          data-key="{{ item.key }}"
+          class='caf-item-input right'
+          color='#ff5777'
+          bindchange="textInput"
+          checked="{{ formData[ item.key ]}}"
+        />
+      </view>
+
     </view>
 
   </form>

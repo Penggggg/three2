@@ -34,7 +34,7 @@ Component({
    */
   methods: {
 
-    /** 文本输入 */
+    /** swithc/文本输入 */
     textInput( e ) {
       const formItemKey = e.currentTarget.dataset.key;
       const value = e.detail.value;
@@ -43,7 +43,6 @@ Component({
           [ formItemKey ]: value 
         })
       });
-      console.log( this.data.formData );
     },
 
     /** select输入 */

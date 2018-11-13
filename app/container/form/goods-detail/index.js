@@ -115,6 +115,33 @@ Component({
       ]
     },
 
+    // 表单数据2
+    meta2( ) {
+      return [
+        {
+          title: '其他信息',
+          desc: ''
+        }, {
+          key: 'deposit-price',
+          label: '商品订金',
+          type: 'number',
+          placeholder: '在行程出发前，客户将收到订金收款推送',
+          value: undefined
+        }, {
+          key: 'limit',
+          label: '限购数量',
+          type: 'number',
+          placeholder: '不填或为0，则表示不限购',
+          value: undefined
+        }, {
+          key: 'visiable',
+          label: '立即上架',
+          type: 'switch',
+          value: true
+        }
+      ]
+    },
+
     // modal按钮
     actions( ) {
 
@@ -170,9 +197,11 @@ Component({
           img: null
         }
       });
+      const imgEle = this.selectComponent('.img-upload');
+      imgEle && imgEle.reset( );
     },
 
-    /** 增加型号/规格 */
+    /** 增加编辑型号/规格 */
     addStandard( ) {
 
       if ( Object.keys(this.data.standarForm)

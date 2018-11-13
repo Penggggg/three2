@@ -133,6 +133,15 @@ Component({
       this.setData({
         showIcon: (this.data.max - this.data.has.length - this.data.list.length) > 0
       })
+    },
+
+    /** 公共方法 - 重置已上传的列表 */
+    reset( ) {
+      this.setData({
+        list: [],
+        has: [...this.data.hasBeenUploaded]
+      });
+      this.judgeIcon();
     }
 
   },
