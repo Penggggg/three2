@@ -1,8 +1,8 @@
 <!--components/active-form/index.wxml-->
 <view class='c-active-form'>
-
+{{ errData.visiable }}
   <form>
-  
+    
     <view
       wx:for="{{ meta }}"
       wx:key="{{ index }}"
@@ -16,46 +16,69 @@
         <text class='caf-title-big'>{{ item.title }}</text>
         <text class='caf-title-desc'>{{ item.desc }}</text>
       </view>
-
+      
       <!-- 文本输入类型 -->
       <view
-        class='caf-inputs caf-item'
+        class="caf-inputs caf-item {{ !!errData[ item.key ] ? 'error' : '' }}"
         wx:elif="{{ item.type === 'input' }}"
+
       >
         <text class='caf-item-label'>{{ item.label }}</text>
-        <input
-          class='caf-item-input'
-          data-key="{{ item.key }}"
-          value="{{ formData[ item.key ]}}"
-          maxlength='{{ item.max || 99999 }}'
-          placeholder="{{ item.placeholder || '' }}"
-          bindinput='textInput'
-        />
+        <view class='caf-item-input'>
+          <view
+            class="error-tips"
+            wx:if="{{errData[ item.key ]}}"
+          >
+            {{ errData[ item.key ] }}
+          </view>
+          <input
+            data-key="{{ item.key }}"
+            value="{{ formData[ item.key ]}}"
+            maxlength='{{ item.max || 99999 }}'
+            placeholder="{{ item.placeholder || '' }}"
+            bindinput='textInput'
+          />
+        </view>
       </view>
 
       <!-- 多行文本 -->
       <view
-        class='caf-inputs caf-item'
+        class="caf-inputs caf-item {{ !!errData[ item.key ] ? 'error' : '' }}"
         wx:elif="{{ item.type === 'textarea' }}"
       >
         <text class='caf-item-label'>{{ item.label }}</text>
-        <textarea
-          auto-height
-          class='caf-item-input'
-          data-key="{{ item.key }}"
-          value="{{ formData[ item.key ]}}"
-          placeholder="{{ item.placeholder || '' }}"
-          bindinput='textInput'
-        />
+        <view class='caf-item-input'>
+          <view
+              class="error-tips"
+              wx:if="{{errData[ item.key ]}}"
+            >
+            {{ errData[ item.key ] }}
+          </view>
+          <textarea
+            auto-height
+            data-key="{{ item.key }}"
+            value="{{ formData[ item.key ]}}"
+            placeholder="{{ item.placeholder || '' }}"
+            bindinput='textInput'
+            class="my-textarea"
+          />
+        </view>
+        
       </view>
 
       <!-- 标签 -->
       <view
-        class='caf-inputs caf-item'
+        class="caf-inputs caf-item  {{ !!errData[ item.key ] ? 'error' : '' }}"
         wx:elif="{{ item.type === 'tag' }}"
       >
         <text class='caf-item-label'>{{ item.label }}</text>
         <view class='caf-item-input'>
+          <view
+            class="error-tips"
+            wx:if="{{errData[ item.key ]}}"
+          >
+            {{ errData[ item.key ] }}
+          </view>
           <view
             wx:for="{{ formData[ item.key ]}}"
             wx:for-item="label"
@@ -86,7 +109,7 @@
 
       <!-- select -->
       <view
-        class='caf-inputs caf-item'
+        class="caf-inputs caf-item"
         wx:elif="{{ item.type === 'select' }}"
       >
         <picker
@@ -98,17 +121,31 @@
           value='{{ selectFormItemIndex[ item.key ] }}'
         >
           <view class="picker">
-            <text class='caf-item-label'>{{ item.label }}</text>
-            <text class='caf-item-input'>{{ item.options[ selectFormItemIndex[ item.key ]].label }}</text>
+            <text class="caf-item-label {{ !!errData[ item.key ] ? 'error' : '' }}">{{ item.label }}</text>
+            <view class="caf-item-input">
+                <view
+                  class="error-tips"
+                  wx:if="{{errData[ item.key ]}}"
+                >
+                  {{ errData[ item.key ] }}
+              </view>
+              <text>{{ item.options[ selectFormItemIndex[ item.key ]].label }}</text>
+            </view>
           </view>
         </picker>
       </view>
 
       <!-- 图片上传 -->
       <view 
-        class='caf-img-block'
+        class="caf-img-block  {{ !!errData[ item.key ] ? 'error' : '' }}"
         wx:elif="{{ item.type === 'img' }}"
       > 
+        <view
+            class="error-tips align"
+            wx:if="{{errData[ item.key ]}}"
+        >
+          {{ errData[ item.key ] }}
+        </view>
         <my-img-upload
           data-key="{{ item.key }}"
           max="{{ item.max || 9 }}"
@@ -119,32 +156,47 @@
 
       <!-- 数字类 -->
       <view
-        class='caf-inputs caf-item'
+        class="caf-inputs caf-item  {{ !!errData[ item.key ] ? 'error' : '' }}"
         wx:elif="{{ item.type === 'number' }}"
       >
         <text class='caf-item-label'>{{ item.label }}</text>
-        <input
-          type="digit"
-          class='caf-item-input'
-          data-key="{{ item.key }}"
-          value="{{ formData[ item.key ]}}"
-          placeholder="{{ item.placeholder || '' }}"
-        />
+        <view class='caf-item-input'>
+          <view
+            class="error-tips"
+            wx:if="{{errData[ item.key ]}}"
+          >
+            {{ errData[ item.key ] }}
+          </view>
+          <input
+            type="digit"
+            data-key="{{ item.key }}"
+            bindinput='textInput'
+            value="{{ formData[ item.key ]}}"
+            placeholder="{{ item.placeholder || '' }}"
+          />
+        </view>
       </view>
-
+      
       <!-- switch类型 -->
       <view
-        class='caf-inputs caf-item'
+        class="caf-inputs caf-item {{ !!errData[ item.key ] ? 'error' : '' }}"
         wx:elif="{{ item.type === 'switch' }}"
       >
         <text class='caf-item-label'>{{ item.label }}</text>
-        <switch
-          data-key="{{ item.key }}"
-          class='caf-item-input right'
-          color='#ff5777'
-          bindchange="textInput"
-          checked="{{ formData[ item.key ]}}"
-        />
+        <view class="caf-item-input right">
+          <view
+            class="error-tips"
+            wx:if="{{errData[ item.key ]}}"
+          >
+            {{ errData[ item.key ] }}
+          </view>
+          <switch
+            data-key="{{ item.key }}"
+            color='#ff5777'
+            bindchange="textInput"
+            checked="{{ formData[ item.key ]}}"
+          />
+        </view>
       </view>
 
     </view>

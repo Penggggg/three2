@@ -68,19 +68,27 @@ Component({
           max: 2,
           placeholder: `如：补水`,
           value: [ ],
+          rules: [{
+            validate: val => val.length >= 1,
+            message: '至少有一个商品标签'
+          }]
         }, {
           key: 'category',
           label: '商品类目',
           type: 'select',
           placeholder: '请设置商品类目',
           value: '0',
-          options: this.data.dic['goods_category'] || [ ] 
+          options: this.data.dic['goods_category'] || [ ]
         }, {
           key: 'img',
           label: '商品图片',
           type: 'img',
           max: 6,
-          value: ['https://wx60bf7f745ce31ef0-1257764567.cos.ap-guangzhou.myqcloud.com/tmp_540f8bb8cce4853df41b50aac9c604c26945f008d288d4fe.jpg']
+          value: [ ],
+          rules: [{
+            validate: val => val.length >= 1,
+            message: '至少上传一张商品图片'
+          }]
         }, {
           title: '价格信息',
           desc: ''
@@ -89,13 +97,21 @@ Component({
           label: '价格',
           type: 'number',
           placeholder: '商品单价',
-          value: undefined
+          value: undefined,
+          rules: [{
+            validate: val => !!val && !!val.trim( ),
+            message: '请设置商品单价'
+          }]
         }, {
           key: 'fade-price',
           label: '划线价',
           type: 'number',
           placeholder: '建议输入比原价格稍高的价位',
-          value: undefined
+          value: undefined,
+          rules: [{
+            validate: val => !!val && !!val.trim(),
+            message: '请设置商品划线价'
+          }]
         }, {
           key: 'group-price',
           label: '团购价',
@@ -289,9 +305,18 @@ Component({
         })
       }
       this.toogleStandard( );
-    }
+    },
 
     /** 拉取商品详情s */
+
+    /** 提交当前表单的值 */
+    submit( ) {
+      const form1 = this.selectComponent('#form1');
+      const r1 = form1.getData( );
+      const form2 = this.selectComponent('#form2');
+      const r2 = form2.getData( );
+      console.log( r1, r2 );
+    }
 
   },
 

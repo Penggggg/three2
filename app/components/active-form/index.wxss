@@ -56,6 +56,10 @@
   text-align: right;
 }
 
+.my-textarea {
+  width: 100%;
+}
+
 .label {
   margin-right: 20rpx;
 }
@@ -66,4 +70,23 @@
 
 .picker {
   width: 100%;
+  display: flex;
+}
+
+.caf-item.error > .caf-item-label {
+  color: red;
+}
+
+.error-tips {
+  color: red;
+  font-size: 24rpx;
+}
+
+.error-tips.align {
+  margin-top: 5rpx;
+  text-align: center;
+}
+
+.caf-item-label.error {
+  color: red;
 }

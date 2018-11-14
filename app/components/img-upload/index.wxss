@@ -3,7 +3,7 @@
 .c-img-upload {
   display: flex;
   flex-wrap: wrap;
-  padding: 40rpx 10rpx 20rpx 30rpx;
+  padding: 30rpx 10rpx 20rpx 30rpx;
 }
 
 .ciu-img-container {

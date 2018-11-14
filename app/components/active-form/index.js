@@ -19,6 +19,8 @@ Component({
     tagging: false,
     // 表单数据
     formData: { },
+    // 错误信息
+    errData: { },
     // 正在选中的标签
     selectingTagIndex: null,
     // 选中标签的文字
@@ -43,6 +45,7 @@ Component({
           [ formItemKey ]: value 
         })
       });
+      this.validateItem( formItemKey );
     },
 
     /** select输入 */
@@ -58,6 +61,7 @@ Component({
           [ formItemKey ]: formItem.options.findIndex( x => x.value === value )
         })
       })
+      this.validateItem( formItemKey );
     },
 
     /** 展开tag */
@@ -104,7 +108,8 @@ Component({
       this.setData({
         tagging: false,
         selecingTag: '',
-      })
+      });
+      this.validateItem( selectingTagKey );
     },
 
     /** 编辑ing标签 */
@@ -153,6 +158,48 @@ Component({
           [ key ]: e.detail
         })
       });
+      this.validateItem( key );
+    },
+
+    /** 全部表单校验 */
+    validate( ) {
+      const validateItemResult = Object.keys( this.data.formData ).map( k => this.validateItem( k ));
+      return {
+        data: this.data.formData,
+        err: this.data.errData,
+        result: !validateItemResult.some(x => !x)
+      }
+    },
+
+    /** 单个表单校验 */
+    validateItem( key ) {
+      const formItem = this.data.meta.find( x => x.key === key );
+      if ( !formItem || !formItem.rules || !formItem.key || !formItem.rules.length === 0 ) { return; }
+      const isExistedErr = formItem.rules.some( rule => {
+        const result = rule.validate( this.data.formData[ key ], this.data.formData );
+        if ( !result ) {
+          this.data.errData = Object.assign({}, this.data.errData, {
+            [key]: rule.message
+          });
+          this.setData({
+            errData: Object.assign({ }, this.data.errData, {
+              [ key ]: rule.message
+            })
+          })
+        } else {
+          delete this.data.errData[ key ];
+          this.setData({
+            errData: this.data.errData
+          });
+        }
+        return !result;
+      });
+      return !isExistedErr;
+    },
+
+    /** public - 校验并拿到校验结果 */
+    getData( ) {
+      return this.validate( );
     }
 
   },
