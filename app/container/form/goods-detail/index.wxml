@@ -30,7 +30,7 @@
     >
       <view class='name standards-item'>{{ item.name }}</view>
       <view class='standards-item'>{{ item.price }}</view>
-      <view class='standards-item'>{{ item.groupPrice }}</view>
+      <view class='standards-item'>{{ item.groupPrice || '未设置' }}</view>
       <view class='standards-item'>{{ item.stock || '不限' }}</view>
       <view class='standards-item'>
         <image class='standards-img' src="{{ item.img }}" />

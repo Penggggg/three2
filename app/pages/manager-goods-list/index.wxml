@@ -2,7 +2,7 @@
 <view class="p-manager-goods-list">
 
   <!-- 头部搜索栏 -->
-  <view class='p-manager-goods-list-header'>
+  <view class='pmgl-header'>
     <wxc-input
       type="text"
       icon="search"
@@ -12,7 +12,34 @@
 
   <!-- 中间列表 -->
   <view class='pmgl-list-container'>
-    <view>11</view><view>11</view><view>11</view><view>11</view><view>11</view><view>11</view><view>11</view><view>11</view><view>11</view><view>11</view><view>11</view>
+
+    <view class='pmgl-list-header pmgl-list-item'>
+      <view class="text pmgl-list-item-meta">商品名称</view>
+      <view class="text pmgl-list-item-meta">单价</view>
+      <view class="text pmgl-list-item-meta">销量</view>
+      <view class="text pmgl-list-item-meta">库存</view>
+      <view class="text pmgl-list-item-meta">上下架</view>
+    </view>
+
+    <view
+      wx:for="{{ list }}"
+      wx:key="{{ index }}"
+      class='pmgl-list-item'
+    >
+      <view class="text pmgl-list-item-meta">{{ item.title }}</view>
+      <view class="text pmgl-list-item-meta">
+        <wxc-price
+          decimal="none"
+          class="price-demo"
+        > 
+          {{ item.price }}
+        </wxc-price>
+      </view>
+      <view class="text pmgl-list-item-meta">{{ item.saled }}</view>
+      <view class="text pmgl-list-item-meta">{{ item.stock ? item.stock : '无限' }}</view>
+      <view class="text pmgl-list-item-meta">{{ item.visiable ? '上架中' : '已下架' }}</view>
+    </view>
+
   </view>
 
   <!-- 按钮 -->

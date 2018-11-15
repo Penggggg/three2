@@ -1,6 +1,16 @@
 /* app/pages/manager-goods-list/index.wxss */
+.text {
+  color: #666;
+  font-size: 26rpx;
+  line-height: 30rpx;
+}
+
 .p-manager-goods-list {
   min-height: 100vh;
+}
+
+.pmgl-header {
+  box-shadow: 5px 5px 10px rgba( 0, 0, 0, 0.10 );
 }
 
 .pmgl-btn-container {
@@ -15,9 +25,29 @@
 }
 
 .pmgl-list-container {
-  height: 960rpx;
+  height: 930rpx;
   overflow: hidden;
-  padding: 20rpx 30rpx;
+  padding: 25rpx 30rpx;
+}
+
+.pmgl-list-item {
+
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 25rpx 30rpx;
+  justify-content: space-around;
+  border-bottom: 1px dotted rgba( 0, 0, 0, 0.19 );
+
+}
+
+.pmgl-list-item-meta {
+  flex: 1;
+  text-align: center;
+}
+
+.price-demo {
+  color: #ff4422;
 }
 
 .btn {
