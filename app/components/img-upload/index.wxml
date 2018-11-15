@@ -1,6 +1,5 @@
 <!--components/img-upload/index.wxml-->
 <view class='c-img-upload'>
-
   <!-- 已有照片 -->
   <view
     wx:key="{{ index }}"

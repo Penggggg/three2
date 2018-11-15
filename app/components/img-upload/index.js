@@ -15,7 +15,13 @@ Component({
     /** 已上传列表 */
     hasBeenUploaded: {
       type: Array,
-      value: [ ]
+      value: [ ],
+      observer: function( val ) {
+        this.setData({
+          has: [ ...val ]
+        });
+        this.judgeIcon();
+      }
     }
   },
 
@@ -138,8 +144,7 @@ Component({
     /** 公共方法 - 重置已上传的列表 */
     reset( ) {
       this.setData({
-        list: [],
-        has: [...this.data.hasBeenUploaded]
+        list: [ ],
       });
       this.judgeIcon();
     }

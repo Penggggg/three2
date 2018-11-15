@@ -101,7 +101,7 @@
       data-key="img"
       max="{{ 1 }}"
       bindchange="onImgChange"
-      hasBeenUploaded="{{ standarForm.img ? [ standarForm.img ] : [ ] }}"
+      hasBeenUploaded="{{ selectingStandarIndex !== null ? standarForm.img ? [ standarForm.img ] : [ ] : [ ] }}"
     />
   </i-modal>
 
