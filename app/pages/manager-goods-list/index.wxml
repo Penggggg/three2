@@ -30,14 +30,20 @@
       <view class="text pmgl-list-item-meta">
         <wxc-price
           decimal="none"
-          class="price-demo"
+          class="red"
         > 
           {{ item.price }}
         </wxc-price>
       </view>
       <view class="text pmgl-list-item-meta">{{ item.saled }}</view>
-      <view class="text pmgl-list-item-meta">{{ item.stock ? item.stock : '无限' }}</view>
-      <view class="text pmgl-list-item-meta">{{ item.visiable ? '上架中' : '已下架' }}</view>
+      <view class="text pmgl-list-item-meta {{ stockNeed[ index ] ? 'red' : '' }}">
+        {{ item.stock ? item.stock : '无限' }}
+      </view>
+      <view
+        class="text pmgl-list-item-meta {{ !item.visiable ? 'red' : '' }}"
+      >
+        {{ item.visiable ? '上架中' : '已下架' }}
+      </view>
     </view>
 
   </view>

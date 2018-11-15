@@ -333,7 +333,9 @@ Component({
         ...r1.data,
         ...r2.data,
         saled: 0,
-        standards: this.data.standards
+        standards: this.data.standards,
+        createTime: new Date().getTime( ),
+        updateTime: new Date().getTime()
       };
       
       wx.cloud.callFunction({

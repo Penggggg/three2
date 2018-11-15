@@ -12,7 +12,9 @@ Page({
     // 搜索
     search: '',
     // 商品列表
-    list: [ ]
+    list: [ ],
+    // 库存紧急列表
+    stockNeed: [ ]
   },
 
   /** 跳页 */
@@ -54,11 +56,17 @@ Page({
                 price = `${sortedPrice[0].price}~${sortedPrice[sortedPrice.length - 1 ].price}`;
                 const sortedStock = x.standards.filter(i => i.stock !== undefined && i.stock !== null).sort((x, y) => x.stock - y.stock);
                 if ( sortedStock.length === 1 ) {
-                  stock = sortedStock[0].stock;
+                  stock = `${sortedStock[0].stock}`;
                 } else if ( sortedStock.length > 1 ) {
                   stock = `${sortedStock[0].stock}~${sortedStock[sortedStock.length - 1].stock}`;
                 }
               }
+              
+              const origin = [...that.data.stockNeed ];
+              origin.push(((stock !== undefined) && (Number(stock.split('~')[0]) < 10)));
+              that.setData({
+                stockNeed: origin
+              });
               return Object.assign({ }, x, {
                 stock,
                 price
@@ -89,14 +97,14 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    this.fetchData( );
+
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    this.fetchData( );
   },
 
   /**

@@ -49,6 +49,7 @@ exports.main = async (event, context) => {
               })
           })
           .skip(( event.page - 1 ) * limit )
+          .orderBy('updateTime', 'desc')
           .get( );
 
       return new Promise( resolve => {
@@ -73,6 +74,7 @@ exports.main = async (event, context) => {
       // 获取数据
       const data$ = await db.collection('goods')
           .skip(( event.page - 1 ) * limit )
+          .orderBy('updateTime', 'desc')
           .get( );
 
       return new Promise( resolve => {

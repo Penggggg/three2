@@ -5,6 +5,10 @@
   line-height: 30rpx;
 }
 
+.red {
+  color: #ff4422;
+}
+
 .p-manager-goods-list {
   min-height: 100vh;
 }
@@ -44,10 +48,6 @@
 .pmgl-list-item-meta {
   flex: 1;
   text-align: center;
-}
-
-.price-demo {
-  color: #ff4422;
 }
 
 .btn {
