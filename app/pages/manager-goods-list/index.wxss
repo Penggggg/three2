@@ -5,6 +5,10 @@
   line-height: 30rpx;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .red {
   color: #ff4422;
 }
@@ -14,6 +18,12 @@
 }
 
 .pmgl-header {
+  top: 0;
+  left: 0;
+  width: 100%;
+  position: fixed;
+  z-index: 100;
+  background: #fff;
   box-shadow: 5px 5px 10px rgba( 0, 0, 0, 0.10 );
 }
 
@@ -29,9 +39,22 @@
 }
 
 .pmgl-list-container {
-  height: 930rpx;
+  height: 1080rpx;
   overflow: hidden;
+  padding: 180rpx 30rpx 0;
+  box-sizing: border-box;
+  overflow-y: scroll;
+}
+
+.pmgl-list-container.fixed {
+  top: 80rpx;
+  left: 0;
+  width: 100%;
+  position: fixed;
+  height: auto;
   padding: 25rpx 30rpx;
+  z-index: 50;
+  background: #fff;
 }
 
 .pmgl-list-item {
@@ -39,6 +62,8 @@
   display: flex;
   align-items: center;
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
   padding: 25rpx 30rpx;
   justify-content: space-around;
   border-bottom: 1px dotted rgba( 0, 0, 0, 0.19 );

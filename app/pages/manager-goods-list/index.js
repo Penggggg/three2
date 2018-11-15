@@ -33,7 +33,8 @@ Page({
     wx.cloud.callFunction({
       name: 'api-goods-list',
       data: {
-        page: 1,
+        title: this.data.search,
+        page: this.data.page,
         title: this.data.search
       },
       success: function (res) {

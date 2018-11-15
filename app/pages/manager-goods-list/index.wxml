@@ -10,16 +10,18 @@
     />
   </view>
 
+    <view class='pmgl-list-container fixed'>
+      <view class='pmgl-list-header pmgl-list-item'>
+        <view class="text pmgl-list-item-meta bold">商品名称</view>
+        <view class="text pmgl-list-item-meta bold">单价</view>
+        <view class="text pmgl-list-item-meta bold">销量</view>
+        <view class="text pmgl-list-item-meta bold">库存</view>
+        <view class="text pmgl-list-item-meta bold">上下架</view>
+      </view>
+    </view>
+
   <!-- 中间列表 -->
   <view class='pmgl-list-container'>
-
-    <view class='pmgl-list-header pmgl-list-item'>
-      <view class="text pmgl-list-item-meta">商品名称</view>
-      <view class="text pmgl-list-item-meta">单价</view>
-      <view class="text pmgl-list-item-meta">销量</view>
-      <view class="text pmgl-list-item-meta">库存</view>
-      <view class="text pmgl-list-item-meta">上下架</view>
-    </view>
 
     <view
       wx:for="{{ list }}"

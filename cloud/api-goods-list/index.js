@@ -37,7 +37,6 @@ exports.main = async (event, context) => {
                   optiond: 'i'
               })
           })
-          .skip(( event.page - 1 ) * limit )
           .count( );
 
       // 获取数据
@@ -48,6 +47,7 @@ exports.main = async (event, context) => {
                   optiond: 'i'
               })
           })
+          .limit( limit )
           .skip(( event.page - 1 ) * limit )
           .orderBy('updateTime', 'desc')
           .get( );
@@ -68,11 +68,11 @@ exports.main = async (event, context) => {
 
         // 获取总数
       const total$ = await db.collection('goods')
-        .skip(( event.page - 1 ) * limit )
         .count( );
 
       // 获取数据
       const data$ = await db.collection('goods')
+          .limit(limit)
           .skip(( event.page - 1 ) * limit )
           .orderBy('updateTime', 'desc')
           .get( );

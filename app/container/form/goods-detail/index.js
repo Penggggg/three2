@@ -153,7 +153,7 @@ Component({
           key: 'visiable',
           label: '立即上架',
           type: 'switch',
-          value: true
+          value: false
         }
       ]
     },
