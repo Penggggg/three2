@@ -103,7 +103,7 @@ Component({
             message: '请设置商品单价'
           }]
         }, {
-          key: 'fade-price',
+          key: 'fadePrice',
           label: '划线价',
           type: 'number',
           placeholder: '建议输入比原价格稍高的价位',
@@ -113,7 +113,7 @@ Component({
             message: '请设置商品划线价'
           }]
         }, {
-          key: 'group-price',
+          key: 'groupPrice',
           label: '团购价',
           type: 'number',
           placeholder: '鼓励多个客户在一趟团购行程中同时下单',
@@ -138,7 +138,7 @@ Component({
           title: '其他信息',
           desc: ''
         }, {
-          key: 'deposit-price',
+          key: 'depositPrice',
           label: '商品订金',
           type: 'number',
           placeholder: '在行程出发前，客户将收到订金收款推送',
@@ -192,10 +192,16 @@ Component({
         data: {
           dicName: 'goods_category',
         },
-        complete: function (res) {
+        success: function (res) {
           that.setData({
             dic: res.result
           });
+        },
+        fail: function( ) {
+          wx.showToast({
+            icon: 'none',
+            title: '获取数据错误',
+          })
         }
       })
     },
@@ -220,8 +226,8 @@ Component({
     /** 增加编辑型号/规格 */
     addStandard( ) {
 
-      if ( Object.keys(this.data.standarForm)
-            .some(key => !this.data.standarForm[ key ] ||!this.data.standarForm[ key ].trim( ))) {
+      if ( Object.keys( this.data.standarForm )
+            .some(key => (!this.data.standarForm[ key ] ||!this.data.standarForm[ key ].trim( )) && key !== 'stock' )) {
         return wx.showToast({
           icon: 'none',
           title: '请完善型号信息',
@@ -312,10 +318,44 @@ Component({
     /** 提交当前表单的值 */
     submit( ) {
       const form1 = this.selectComponent('#form1');
-      const r1 = form1.getData( );
       const form2 = this.selectComponent('#form2');
+      const r1 = form1.getData();
       const r2 = form2.getData( );
-      console.log( r1, r2 );
+
+      if ( !r1.result || !r2.result ) {
+        return wx.showToast({
+          icon: 'none',
+          title: '请完善商品信息',
+        })
+      }
+
+      const goodsDetail = {
+        ...r1.data,
+        ...r2.data,
+        saled: 0,
+        standards: this.data.standards
+      };
+      
+      wx.cloud.callFunction({
+        name: 'api-goods-create',
+        data: {
+          data: goodsDetail,
+        },
+        success: function (res) {
+          if ( res.result.status === 200 ) {
+            wx.showToast({
+              title: '创建成功！'
+            })
+          }
+        },
+        fail: function () {
+          wx.showToast({
+            icon: 'none',
+            title: '获取数据错误',
+          })
+        }
+      })
+
     }
 
   },

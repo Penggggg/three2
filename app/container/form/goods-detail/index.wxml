@@ -31,7 +31,7 @@
       <view class='name standards-item'>{{ item.name }}</view>
       <view class='standards-item'>{{ item.price }}</view>
       <view class='standards-item'>{{ item.groupPrice }}</view>
-      <view class='standards-item'>{{ item.stock }}</view>
+      <view class='standards-item'>{{ item.stock || '不限' }}</view>
       <view class='standards-item'>
         <image class='standards-img' src="{{ item.img }}" />
       </view>
@@ -58,7 +58,6 @@
   <i-modal
     title="规则信息"
     visible="{{ standarding }}"
-    bind:ok="addStandard"
     actions="{{ actions }}"
     bind:click="modalClick"
   >

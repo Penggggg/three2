@@ -207,8 +207,8 @@
   <i-modal
     title="{{ selectingTagIndex !== null ? '编辑标签' : '新的标签' }} "
     visible="{{ tagging }}"
-    bind:cancel="toogleTag"
-    bind:ok="editOrCreateTag"
+    actions="{{ actions }}"
+    bind:click="modalClick"
   >
     <wxc-input
       mode="none"

@@ -1,5 +1,8 @@
 // components/active-form/index.js
 Component({
+
+  behaviors: [require('../../behaviores/computed/index.js')],
+
   /**
    * 组件的属性列表
    */
@@ -29,6 +32,32 @@ Component({
     selectingTagKey: '',
     // select类型的下标
     selectFormItemIndex: { }
+  },
+
+  /**
+   * 计算属性
+   */
+
+  computed: {
+    // modal按钮
+    actions() {
+
+      return this.data.selectingTagIndex !== null ? [{
+        name: '取消',
+        }, {
+          name: '删除',
+          color: 'red'
+        }, {
+          name: '确认',
+          color: '#2d8cf0',
+        }
+        ] : [{
+          name: '取消',
+        }, {
+          name: '确认',
+          color: '#2d8cf0',
+        }]
+      }
   },
 
   /**
@@ -163,7 +192,10 @@ Component({
 
     /** 全部表单校验 */
     validate( ) {
-      const validateItemResult = Object.keys( this.data.formData ).map( k => this.validateItem( k ));
+      const validateItemResult = Object.keys( this.data.formData ).map( k => {
+        return this.validateItem( k );
+      }).filter( x => x !== undefined );
+
       return {
         data: this.data.formData,
         err: this.data.errData,
@@ -200,7 +232,46 @@ Component({
     /** public - 校验并拿到校验结果 */
     getData( ) {
       return this.validate( );
-    }
+    },
+
+    /** 点击modal */
+    modalClick({ detail }) {
+      
+      const index = detail.index;
+      const { selectingTagIndex } = this.data;
+      if (index === 0) {
+        this.setData({
+          tagging: false,
+          selectingTagKey: '',
+          selectingTagIndex: null,
+          selecingTag: ''
+        });
+      } else if (index === 1 && selectingTagIndex !== null) {
+        this.deleteTag();
+      } else if (index === 2 && selectingTagIndex !== null) {
+        this.editOrCreateTag();
+      } else if (index === 1 && selectingTagIndex === null) {
+        this.editOrCreateTag();
+      }
+    },
+
+    /** 删除标签 */
+    deleteTag() {
+      const { selectingTagIndex, selectingTagKey, formData, selecingTag } = this.data;
+      if (selectingTagIndex !== null) {
+        const origin = formData[selectingTagKey];
+        origin.splice(selectingTagIndex, 1 );
+        this.setData({
+          tagging: false,
+          selectingTagKey: '',
+          selectingTagIndex: null,
+          selecingTag: '',
+          formData: Object.assign({}, formData, {
+            [selectingTagKey]: origin
+          })
+        })
+      }
+    },
 
   },
 
