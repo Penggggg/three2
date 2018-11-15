@@ -1,8 +1,8 @@
 {
   "pages": [
+    "pages/manager-goods-list/index",
     "pages/manager-goods-detail/index",
-    "pages/index/index",
-    "pages/manager-goods-list/index"
+    "pages/index/index"
   ],
   "usingComponents": {
     "my-nav": "./container/nav-bar/index",
@@ -19,8 +19,8 @@
     "wxc-button": "./dist/packages/@minui/wxc-button/dist/index"
   },
   "window": {
-    "navigationBarTextStyle": "white",
+    "navigationBarTextStyle": "black",
     "navigationBarTitleText": "香港正品代购",
-    "navigationBarBackgroundColor": "#eb2f96"
+    "navigationBarBackgroundColor": "#fff"
   }
 }

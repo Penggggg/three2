@@ -227,7 +227,7 @@ Component({
     addStandard( ) {
 
       if ( Object.keys( this.data.standarForm )
-            .some(key => (!this.data.standarForm[ key ] ||!this.data.standarForm[ key ].trim( )) && key !== 'stock' )) {
+            .some(key => (!this.data.standarForm[ key ] ||!this.data.standarForm[ key ].trim( )) && ( key !== 'stock' || key !== 'groupPrice' ))) {
         return wx.showToast({
           icon: 'none',
           title: '请完善型号信息',
