@@ -12,6 +12,7 @@
     "i-drawer": "./dist/iview/drawer/index",
     "i-modal": "./dist/iview/modal/index",
     "wxc-icon": "./dist/packages/@minui/wxc-icon/dist/index",
+    "wxc-search": "./dist/packages/@minui/wxc-search/dist/index",
     "wxc-price": "./dist/packages/@minui/wxc-price/dist/index",
     "wxc-popup": "./dist/packages/@minui/wxc-popup/dist/index",
     "wxc-list": "./dist/packages/@minui/wxc-list/dist/index",
@@ -20,8 +21,8 @@
     "wxc-button": "./dist/packages/@minui/wxc-button/dist/index"
   },
   "window": {
-    "navigationBarTextStyle": "black",
+    "navigationBarTextStyle": "white",
     "navigationBarTitleText": "香港正品代购",
-    "navigationBarBackgroundColor": "#fff"
+    "navigationBarBackgroundColor": "#ff5777"
   }
 }

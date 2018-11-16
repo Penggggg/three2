@@ -27,25 +27,18 @@ exports.main = async (event, context) => {
 
     // 查询条数
     const limit = 20;
-
     if ( !!event.title && !!event.title.trim( )) {
       // 获取总数
       const total$ = await db.collection('goods')
           .where({
-              title: db.RegExp({
-                  regexp: event.title.replace(/\s+/g,""),
-                  optiond: 'i'
-              })
+            title: new RegExp(event.title.replace(/\s+/g, ""), 'g')
           })
           .count( );
 
       // 获取数据
       const data$ = await db.collection('goods')
           .where({
-              title: db.RegExp({
-                  regexp: event.title.replace(/\s+/g,""),
-                  optiond: 'i'
-              })
+            title: new RegExp(event.title.replace(/\s+/g, ""), 'g')
           })
           .limit( limit )
           .skip(( event.page - 1 ) * limit )
@@ -72,7 +65,7 @@ exports.main = async (event, context) => {
 
       // 获取数据
       const data$ = await db.collection('goods')
-          .limit(limit)
+          .limit( limit )
           .skip(( event.page - 1 ) * limit )
           .orderBy('updateTime', 'desc')
           .get( );

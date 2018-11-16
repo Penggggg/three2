@@ -3,11 +3,38 @@
 
   <!-- 头部搜索栏 -->
   <view class='pmgl-header'>
-    <wxc-input
+    <view
+      class='my-icon'
+      bindtap='fetchData'
+    >
+      <wxc-icon
+        size="34"
+        type="search"
+        color='#999'
+      />
+    </view>
+    <input
+      class='my-input text'
+      value="{{ search }}"
+      placeholder="搜索商品"
+      bindinput='onInput'
+      bindconfirm="fetchData"
+    />
+    <!-- <wxc-search
+      class="search"
+      showClear="{{false}}"
+      bg-color="#fff"
+      color="#666"
+      icon-color="#999"
+      ph-color="#999"
+      placeholder="搜索商品"
+    /> -->
+    <!-- <wxc-input
       type="text"
       icon="search"
-      placeholder="搜索商品"
-    />
+      placeholder="搜索从这里开始"
+      bind:confirm="fetchData"
+    /> -->
   </view>
 
     <view class='pmgl-list-container fixed'>

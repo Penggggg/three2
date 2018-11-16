@@ -33,7 +33,6 @@ Page({
     wx.cloud.callFunction({
       name: 'api-goods-list',
       data: {
-        title: this.data.search,
         page: this.data.page,
         title: this.data.search
       },
@@ -85,6 +84,13 @@ Page({
         wx.hideLoading();
       }
     })
+  },
+
+  /** 搜索输入 */
+  onInput({ detail }) {
+    this.setData({
+      search: detail.value
+    });
   },
 
   /**
