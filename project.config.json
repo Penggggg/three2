@@ -10,9 +10,14 @@
 		"nodeModules": true,
 		"uglifyFileName": true
 	},
+	"scripts": {
+		"beforeCompile": "npm run compile",
+		"beforePreview": "npm run compile",
+		"beforeUpload": "npm run compile"
+	},
 	"appid": "wx60bf7f745ce31ef0",
 	"projectname": "three",
-	"libVersion": "2.3.2",
+	"libVersion": "2.4.0",
 	"compileType": "miniprogram",
 	"condition": {}
 }

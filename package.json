@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "tsc": "./node_modules/typescript/bin/tsc",
+    "dev": "tsc -w"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +18,7 @@
     "@minui/wxc-mask": "^1.0.8",
     "@minui/wxc-popup": "^1.0.10",
     "@minui/wxc-price": "^1.0.8",
-    "@minui/wxc-search": "^1.0.1"
+    "@minui/wxc-search": "^1.0.1",
+    "typescript": "^3.1.6"
   }
 }

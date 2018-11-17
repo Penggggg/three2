@@ -1,16 +1,9 @@
-const app = getApp( );
-
+"use strict";
+var app = getApp();
 Page({
-
-    /** 去相应的管理页面 */
-    goManager: function( event ) {
-      // wx.navigateTo({
-      //   url: event.currentTarget.dataset.routeto,
-      // })
+    goManager: function (event) {
     },
-
-    onLoad: function( ) {
-
-    },
-
+    onLoad: function () {
+    }
 });
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJpbmRleC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUEsSUFBTSxHQUFHLEdBQUcsTUFBTSxFQUFHLENBQUM7QUFFdEIsSUFBSSxDQUFDO0lBR0QsU0FBUyxFQUFFLFVBQVUsS0FBSztJQUkxQixDQUFDO0lBRUQsTUFBTSxFQUFFO0lBRVIsQ0FBQztDQUVKLENBQUMsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbImNvbnN0IGFwcCA9IGdldEFwcCggKTtcblxuUGFnZSh7XG5cbiAgICAvKiog5Y6755u45bqU55qE566h55CG6aG16Z2iICovXG4gICAgZ29NYW5hZ2VyOiBmdW5jdGlvbiggZXZlbnQgKSB7XG4gICAgICAvLyB3eC5uYXZpZ2F0ZVRvKHtcbiAgICAgIC8vICAgdXJsOiBldmVudC5jdXJyZW50VGFyZ2V0LmRhdGFzZXQucm91dGV0byxcbiAgICAgIC8vIH0pXG4gICAgfSxcblxuICAgIG9uTG9hZDogZnVuY3Rpb24oICkge1xuXG4gICAgfVxuXG59KTsiXX0=
