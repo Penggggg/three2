@@ -146,7 +146,7 @@ Component({
       this.setData({
         list: [ ],
       });
-      this.judgeIcon();
+      this.judgeIcon( );
     }
 
   },

@@ -305,7 +305,9 @@ Component({
         standarding: true,
         selectingStandarIndex: index,
         standarForm: this.data.standards[ index ]
-      })
+      });
+      const imgEle = this.selectComponent('.img-upload');
+      imgEle && imgEle.reset( );
     },
 
     /** 删除规格 */
