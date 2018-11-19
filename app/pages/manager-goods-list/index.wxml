@@ -43,7 +43,9 @@
     <view
       wx:for="{{ list }}"
       wx:key="{{ index }}"
+      data-pid="{{ item._id }}"
       class='pmgl-list-item'
+      bindtap="onTab"
     >
       <view class="text pmgl-list-item-meta">{{ item.title }}</view>
       <view class="text pmgl-list-item-meta">

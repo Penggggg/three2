@@ -6,9 +6,11 @@ Component({
    * 组件的属性列表
    */
   properties: {
-    gid: {
+    // 商品id
+    pid: {
       type: String,
-      value: ''
+      value: '',
+      observer: 'fetchDetail'
     }
   },
 
@@ -323,7 +325,35 @@ Component({
       this.toogleStandard( );
     },
 
-    /** 拉取商品详情s */
+    /** 拉取商品详情 */
+    fetchDetail( id ) {
+      if ( !id ) { return; }
+      wx.showLoading({
+        title: '加载中...',
+    });
+
+    wx.cloud.callFunction({
+        name: 'api-goods-detail',
+        data: {
+            _id: this.data.pid
+        },
+        success: function ( res ) {
+
+            const { status, data } = res.result;
+            if ( status !== 200 ) { return; }
+            console.log( data );
+            wx.hideLoading({ });
+            
+        },
+        fail: function( ) {
+            wx.showToast({
+                icon: 'none',
+                title: '获取数据错误',
+            });
+            wx.hideLoading({ });
+        }
+    });
+    },
 
     /** 提交当前表单的值 */
     submit( ) {

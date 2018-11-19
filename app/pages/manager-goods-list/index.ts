@@ -98,7 +98,7 @@ Page({
                     loadingList: false
                 });
             }
-        })
+        });
     },
   
     /** 搜索输入 */
@@ -160,6 +160,14 @@ Page({
                 price
             });
         })
+    },
+
+    /** 点击详情 */
+    onTab({ currentTarget }) {
+        const { pid } = currentTarget.dataset;
+        wx.navigateTo({
+            url: `/pages/manager-goods-detail/index?id=${pid}`
+        });
     },
   
     /**
