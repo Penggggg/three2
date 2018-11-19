@@ -20,35 +20,25 @@
       bindinput='onInput'
       bindconfirm="fetchData"
     />
-    <!-- <wxc-search
-      class="search"
-      showClear="{{false}}"
-      bg-color="#fff"
-      color="#666"
-      icon-color="#999"
-      ph-color="#999"
-      placeholder="搜索商品"
-    /> -->
-    <!-- <wxc-input
-      type="text"
-      icon="search"
-      placeholder="搜索从这里开始"
-      bind:confirm="fetchData"
-    /> -->
   </view>
 
-    <view class='pmgl-list-container fixed'>
-      <view class='pmgl-list-header pmgl-list-item'>
-        <view class="text pmgl-list-item-meta bold">商品名称</view>
-        <view class="text pmgl-list-item-meta bold">单价</view>
-        <view class="text pmgl-list-item-meta bold">销量</view>
-        <view class="text pmgl-list-item-meta bold">库存</view>
-        <view class="text pmgl-list-item-meta bold">上下架</view>
-      </view>
+  <view class='pmgl-list-container fixed'>
+    <view class='pmgl-list-header pmgl-list-item'>
+      <view class="text pmgl-list-item-meta bold">商品名称</view>
+      <view class="text pmgl-list-item-meta bold">单价</view>
+      <view class="text pmgl-list-item-meta bold">销量</view>
+      <view class="text pmgl-list-item-meta bold">库存</view>
+      <view class="text pmgl-list-item-meta bold">上下架</view>
     </view>
+  </view>
 
   <!-- 中间列表 -->
-  <view class='pmgl-list-container'>
+  <scroll-view
+    scroll-y
+    lower-threshold="100"
+    bindscrolltolower="fetchData"
+    class='pmgl-list-container'
+  >
 
     <view
       wx:for="{{ list }}"
@@ -75,7 +65,7 @@
       </view>
     </view>
 
-  </view>
+  </scroll-view>
 
   <!-- 按钮 -->
   <view class='pmgl-btn-container'>

@@ -28,17 +28,19 @@ export const main = async (event, context) => {
     // 查询条数
     const limit = 20;
     if ( !!event.title && !!event.title.trim( )) {
+
+      const search = new RegExp(event.title.replace(/\s+/g, ""), 'g');
       // 获取总数
       const total$ = await db.collection('goods')
           .where({
-            title: new RegExp(event.title.replace(/\s+/g, ""), 'g')
+            title: search
           })
           .count( );
 
       // 获取数据
       const data$ = await db.collection('goods')
           .where({
-            title: new RegExp(event.title.replace(/\s+/g, ""), 'g')
+            title: search
           })
           .limit( limit )
           .skip(( event.page - 1 ) * limit )
@@ -49,6 +51,7 @@ export const main = async (event, context) => {
         resolve({
           status: 200,
           data: {
+              search: event.title.replace(/\s+/g),
               pageSize: limit,
               page: event.page,
               data: data$.data,
@@ -74,6 +77,7 @@ export const main = async (event, context) => {
         resolve({
           status: 200,
           data: {
+              search: null,
               pageSize: limit,
               page: event.page,
               data: data$.data,
