@@ -39,7 +39,7 @@ Component({
     
     // 表单数据
     meta( ) {
-      return [
+      const meta = [
         {
           title: '基本信息',
           desc: ''
@@ -93,16 +93,6 @@ Component({
           title: '价格信息',
           desc: ''
         }, {
-          key: 'price',
-          label: '价格',
-          type: 'number',
-          placeholder: '商品单价',
-          value: undefined,
-          rules: [{
-            validate: val => !!val && !!val.trim( ),
-            message: '请设置商品单价'
-          }]
-        }, {
           key: 'fadePrice',
           label: '划线价',
           type: 'number',
@@ -113,22 +103,40 @@ Component({
             message: '请设置商品划线价'
           }]
         }, {
+          title: '规格型号',
+          desc: ''
+        }
+      ];
+
+      if ( this.data.standards.length === 0 ) {
+        meta.splice( 7, 0, {
+          key: 'price',
+          label: '价格',
+          type: 'number',
+          placeholder: '商品单价',
+          value: undefined,
+          rules: [{
+            validate: val => !!val && !!val.trim( ),
+            message: '请设置商品单价'
+          }]
+        });
+        meta.splice( 9, 0, {
           key: 'groupPrice',
           label: '团购价',
           type: 'number',
           placeholder: '鼓励多个客户在一趟团购行程中同时下单',
           value: undefined
-        }, {
+        });
+        meta.splice( 10, 0, {
           key: 'stock',
           label: '库存',
           type: 'number',
           placeholder: '不填写，则无限库存',
           value: undefined
-        }, {
-          title: '规格型号',
-          desc: ''
-        }
-      ]
+        })
+      }
+
+      return meta;
     },
 
     // 表单数据2
