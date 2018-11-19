@@ -3,7 +3,7 @@ import * as cloud from 'wx-server-sdk';
 
 cloud.init();
 
-const db = cloud.database();
+const db: DB.Database = cloud.database();
 
 /**
  * @description 商品列表

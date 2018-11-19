@@ -4,7 +4,7 @@ import * as cloud from 'wx-server-sdk';
 
 cloud.init( );
 
-const db = cloud.database();
+const db: DB.Database = cloud.database();
 
 /** 
  * 云函数入口函数
