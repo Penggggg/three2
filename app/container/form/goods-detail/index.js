@@ -363,6 +363,7 @@ Component({
 
               form1 && form1.set({
                 tag,
+                img,
                 title,
                 stock,
                 price,
@@ -402,32 +403,49 @@ Component({
         })
       }
 
-      const goodsDetail = {
+      let goodsDetail = {
         ...r1.data,
         ...r2.data,
         saled: 0,
         standards: this.data.standards,
-        createTime: new Date().getTime( ),
-        updateTime: new Date().getTime()
+        updateTime: new Date( ).getTime( ),
       };
+
+      const _id = this.data.pid;
+
+      if ( !_id ) {
+          goodsDetail = Object.assign({ }, goodsDetail, {
+            createTime: new Date( ).getTime( )
+          });
+      } else {
+          goodsDetail = Object.assign({ }, goodsDetail, {
+            _id
+          });
+      }
+
+      wx.showLoading({
+        title: _id ? '更新中...' : '创建中..',
+      })
       
       wx.cloud.callFunction({
-        name: 'api-goods-create',
+        name: 'api-goods-edit',
         data: {
           data: goodsDetail,
         },
         success: function (res) {
+          wx.hideLoading({ });
           if ( res.result.status === 200 ) {
             wx.showToast({
-              title: '创建成功！'
+              title: _id ? '更新成功' : '创建成功！'
             })
           }
         },
         fail: function () {
           wx.showToast({
             icon: 'none',
-            title: '获取数据错误',
-          })
+            title: _id ? '更新失败' : '创建失败',
+          });
+          wx.hideLoading({ });
         }
       })
 
