@@ -20,7 +20,7 @@ Component({
         this.setData({
           has: [ ...val ]
         });
-        this.judgeIcon();
+        this.judgeIcon( );
       }
     }
   },

@@ -34,6 +34,10 @@ Component({
     selectingStandarIndex: null,
     // 规格信息: 字段名称、价格、团购价、划线价、库存、图片
     standards: [ ],
+    // 详情 - 已上传的图片列表
+    hasBeenUploaded: [ ],
+    // 详情 - 商品类目
+    category: '0'
   },
 
   /** 计算属性 */
@@ -79,14 +83,14 @@ Component({
           label: '商品类目',
           type: 'select',
           placeholder: '请设置商品类目',
-          value: '0',
+          value: this.data.category,
           options: this.data.dic['goods_category'] || [ ]
         }, {
           key: 'img',
           label: '商品图片',
           type: 'img',
           max: 6,
-          value: [ ],
+          value: this.data.hasBeenUploaded,
           rules: [{
             validate: val => val.length >= 1,
             message: '至少上传一张商品图片'
@@ -344,7 +348,7 @@ Component({
               const { status, data, } = res.result;
               if ( status !== 200 ) { return; }
               wx.hideLoading({ });
-              console.log( data );
+              
               const { title, detail, tag, category, img, fadePrice, price,
                 groupPrice, stock, standards, depositPrice, limit, visiable } = data;
 
@@ -352,12 +356,13 @@ Component({
               const form2 = that.selectComponent('#form2');
 
               that.setData({
-                standards
+                standards,
+                category,
+                hasBeenUploaded: img
               });
 
               form1 && form1.set({
                 tag,
-                img,
                 title,
                 stock,
                 price,

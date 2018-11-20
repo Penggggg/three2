@@ -146,7 +146,6 @@
         >
           {{ errData[ item.key ] }}
         </view>
-        {{ item.value.length }}
         <my-img-upload
           data-key="{{ item.key }}"
           max="{{ item.max || 9 }}"
