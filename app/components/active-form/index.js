@@ -273,6 +273,14 @@ Component({
       }
     },
 
+    // 设置表单
+    set( obj ) {
+      this.setData({
+        formData: Object.assign({ }, this.data.formData, { ...obj })
+      });
+      Object.keys( obj ).map( k => this.validateItem( k ));
+    }
+
   },
 
   attached: function( ) {

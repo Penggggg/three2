@@ -202,7 +202,7 @@ Component({
         data: {
           dicName: 'goods_category',
         },
-        success: function (res) {
+        success: function( res ) {
           that.setData({
             dic: res.result
           });
@@ -327,32 +327,60 @@ Component({
 
     /** 拉取商品详情 */
     fetchDetail( id ) {
+
+      const that = this;
       if ( !id ) { return; }
       wx.showLoading({
-        title: '加载中...',
-    });
+          title: '加载中...',
+      });
 
-    wx.cloud.callFunction({
-        name: 'api-goods-detail',
-        data: {
-            _id: this.data.pid
-        },
-        success: function ( res ) {
+      wx.cloud.callFunction({
+          name: 'api-goods-detail',
+          data: {
+              _id: this.data.pid
+          },
+          success: function ( res ) {
 
-            const { status, data } = res.result;
-            if ( status !== 200 ) { return; }
-            console.log( data );
-            wx.hideLoading({ });
-            
-        },
-        fail: function( ) {
-            wx.showToast({
-                icon: 'none',
-                title: '获取数据错误',
-            });
-            wx.hideLoading({ });
-        }
-    });
+              const { status, data, } = res.result;
+              if ( status !== 200 ) { return; }
+              wx.hideLoading({ });
+              console.log( data );
+              const { title, detail, tag, category, img, fadePrice, price,
+                groupPrice, stock, standards, depositPrice, limit, visiable } = data;
+
+              const form1 = that.selectComponent('#form1');
+              const form2 = that.selectComponent('#form2');
+
+              that.setData({
+                standards
+              });
+
+              form1 && form1.set({
+                tag,
+                img,
+                title,
+                stock,
+                price,
+                detail,
+                category,
+                fadePrice,
+                groupPrice
+              });
+
+              form2 && form2.set({
+                limit,
+                visiable,
+                depositPrice
+              })
+          },
+          fail: function( ) {
+              wx.showToast({
+                  icon: 'none',
+                  title: '获取数据错误',
+              });
+              wx.hideLoading({ });
+          }
+      });
     },
 
     /** 提交当前表单的值 */
