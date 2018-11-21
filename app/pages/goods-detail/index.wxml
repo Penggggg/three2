@@ -78,6 +78,14 @@
                 wx:key="{{ index }}"
                 wx:for="{{ detail.tag }}"
             />
+
+            <view class="pgd-like">
+                <i-icon
+                    size="20"
+                    type="like"
+                    color="#ff5777"
+                />喜欢
+            </view>
         </view>
 
     </view> 

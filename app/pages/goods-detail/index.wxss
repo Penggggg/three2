@@ -64,3 +64,18 @@
 .pgd-label {
     margin-right: 10rpx;
 }
+
+.pgd-tag-block {
+    position: relative;
+}
+
+.pgd-like {
+    bottom: 5rpx;
+    right: 25rpx;
+    color: #ff5777;
+    font-size: 28rpx;
+    position: absolute;
+    padding: 0rpx 18rpx;
+    border-radius: 5px;
+    border: 1px solid #ffe8ee;
+}

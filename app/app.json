@@ -12,6 +12,7 @@
     "my-img-upload": "./components/img-upload/index",
     "i-drawer": "./dist/iview/drawer/index",
     "i-modal": "./dist/iview/modal/index",
+    "i-icon": "./dist/iview/icon/index",
     "wxc-icon": "./dist/packages/@minui/wxc-icon/dist/index",
     "wxc-search": "./dist/packages/@minui/wxc-search/dist/index",
     "wxc-price": "./dist/packages/@minui/wxc-price/dist/index",
