@@ -80,15 +80,25 @@ Page({
   
     runComputed( ) {
         computed( this, {
+            // 计算价格
             price: function( ) {
-                if ( this.data.detail && this.data.detail.standards.length > 0 ) {
-                    return this.data.detail.standards[ 0 ].price;
-                } else if ( this.data.detail && this.data.detail.standards.length === 0 ) {
-                    return this.data.detail.standards[ 0 ].price;
-                } else if ( !this.detail ) {
+                const { detail } = this.data;
+                if ( !detail ) {
                     return '';
+                } else {
+                    if ( detail.standards.length === 0 ) {
+                        return detail.price;
+                    } else if ( detail.standards.length === 1 ) {
+                        return detail.standards[ 0 ].price;
+                    } else {
+                        const sortedPrice = detail.standards.sort(( x, y ) => x.price - y.price );
+                        if (  sortedPrice[0].price === sortedPrice[ sortedPrice.length - 1 ].price ) {
+                            return sortedPrice[ 0 ].price;
+                        } else {
+                            return `${sortedPrice[0].price}~${sortedPrice[sortedPrice.length - 1 ].price}`;
+                        }
+                    }
                 }
-                return '???';
             }
         })
     },
