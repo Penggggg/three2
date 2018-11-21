@@ -77,5 +77,8 @@
     position: absolute;
     padding: 0rpx 18rpx;
     border-radius: 5px;
+    display: flex;
+    align-items: center;
+    line-height: 20rpx;
     border: 1px solid #ffe8ee;
 }

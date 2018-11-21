@@ -15,7 +15,11 @@ Page({
         // 数据字典
         dic: { },
         // 加载状态
-        loading: true
+        loading: true,
+        // 是否初始化过“喜欢”
+        hasInitLike: false,
+        // 是否“喜欢”
+        liked: false
     },
     
     /** 拉取商品详情 */
@@ -70,6 +74,7 @@ Page({
         })
     },
 
+    /** 预览图片 */
     previewImg({ currentTarget }) {
         const { img } = currentTarget.dataset;
         this.data.detail && wx.previewImage({
@@ -78,6 +83,7 @@ Page({
         });
     },
   
+    /** 设置computed */
     runComputed( ) {
         computed( this, {
             // 计算价格
@@ -103,6 +109,58 @@ Page({
         })
     },
 
+    /** 设置“喜欢” */
+    onLike( ) {
+        const that = this;
+        if ( !this.data.hasInitLike ) { return; }
+        wx.cloud.callFunction({
+            name: 'api-like-collection',
+            data: {
+                pid: this.data.id
+            },
+            success: function ( res: any ) {
+                if ( res.result.status === 200 ) {
+                    that.setData!({
+                        liked: !that.data.liked
+                    })
+                }
+            },
+            fail: function( ) {
+                wx.showToast({
+                    icon: 'none',
+                    title: '设置“喜欢”错误',
+                });
+            }
+        });
+    },
+
+    /** 设置“喜欢” */
+    checkLike( ) {
+        const that = this;
+        wx.cloud.callFunction({
+            name: 'api-like-collection-detail',
+            data: {
+                pid: this.data.id
+            },
+            success: function ( res: any ) {
+                that.setData!({
+                    hasInitLike: true
+                });
+                if ( res.result.status === 200 ) {
+                    that.setData!({
+                        liked: res.result.data
+                    })
+                }
+            },
+            fail: function( ) {
+                wx.showToast({
+                    icon: 'none',
+                    title: '查询“喜欢”错误',
+                });
+            }
+        });
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
@@ -126,6 +184,7 @@ Page({
      */
     onShow: function ( ) {
         this.fetchDic( ); 
+        this.checkLike( );
         this.fetDetail( this.data.id );
     },
   

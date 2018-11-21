@@ -71,6 +71,7 @@
         <view
             wx:if="{{ detail }}"
             class="pgd-tag-block padding"
+            bindtap="onLike"
         >
             <wxc-label
                 class="pgd-label"
@@ -82,7 +83,7 @@
             <view class="pgd-like">
                 <i-icon
                     size="20"
-                    type="like"
+                    type="{{ liked ? 'like_fill' : 'like' }}"
                     color="#ff5777"
                 />喜欢
             </view>

@@ -386,6 +386,8 @@ declare namespace DB {
 
   export class Query {
 
+    remove( ): any
+
     where(condition: IQueryCondition): Query
 
     orderBy(fieldPath: string, order: string): Query
