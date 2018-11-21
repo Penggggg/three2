@@ -1,2 +1,85 @@
 <!--app/pages/goods-detail/index.wxml-->
-<text>app/pages/goods-detail/index.wxml</text>
+<view class="page-goods-detail"> 
+
+    <!-- 加载栏 -->
+    <view
+        class="pgd-tips-skt"
+        wx:if="{{ loading }}"
+    >
+        <view class="text">正在加载...</view> 
+    </view>
+
+    <!-- 内容 -->
+    <view
+        wx:else
+    >
+        
+        <!-- 轮播图 -->
+        <swiper
+            autoplay="{{ true }}"
+            interval="{{ 5000 }}"
+            circular="{{ true }}"
+            class="pgd-swiper"
+        >
+            <block
+                wx:if="{{ detail }}"
+                wx:key="{{ index }}"
+                wx:for="{{ detail.img }}"
+            >
+                <swiper-item>
+                    <image
+                        mode="widthFix"
+                        src="{{ item }}"
+                        data-img="{{ item }}"
+                        class="pgd-swiper-img"
+                        bindtap='previewImg'
+                    />
+                </swiper-item>
+            </block>
+        </swiper>
+
+        <!-- 标题 -->
+        <view
+            class="pgd-title"
+            wx:if="{{ detail }}"
+        >
+            {{ detail.title }}
+        </view>
+
+        <!-- 价格 -->
+        <view class="padding">
+            <wxc-price
+                icon="sub"
+                class="red price price-item"
+                decimal="small"
+                wx:if="{{ detail }}"
+            > 
+                {{ price }}
+            </wxc-price>
+            <wxc-price
+                status="del"
+                decimal="small"
+                del-color="#666"
+                wx:if="{{ detail }}"
+                class="fade-price price-item"
+            > 
+                原价{{ detail.fadePrice }}
+            </wxc-price>
+        </view>
+
+        <!-- 标签 -->
+        <view
+            wx:if="{{ detail }}"
+            class="pgd-tag-block padding"
+        >
+            <wxc-label
+                class="pgd-label"
+                text="{{ item }}"
+                wx:key="{{ index }}"
+                wx:for="{{ detail.tag }}"
+            />
+        </view>
+
+    </view> 
+
+</view>

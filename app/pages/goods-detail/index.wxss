@@ -1,1 +1,66 @@
 /* app/pages/goods-detail/index.wxss */
+.page-goods-detail {
+    min-height: 100vh;
+}
+
+.red {
+    color: #ff5777;
+}
+
+.price {
+    font-size: 46rpx;
+    font-weight: bold;
+}
+
+.fade-price {
+    font-size: 26rpx;
+}
+
+.price-item {
+    display: flex;
+    margin-right: 10rpx;
+    align-items: flex-end;
+}
+
+.text {
+    color: #999;
+    font-size: 28rpx;
+}
+
+.padding {
+    display: flex;
+    align-items: flex-end;
+    padding-left: 25rpx;
+    padding-right: 25rpx;
+}
+
+.padding.small {
+    padding-left: 15rpx;
+    padding-right: 15rpx;
+}
+
+.pgd-swiper {
+    height: 65vh;
+}
+
+.pgd-tips-skt {
+    padding-top: 50%;    
+    text-align: center;
+}
+
+.pgd-swiper-img {
+    width: 100vw;
+    height: 30vh;
+}
+
+.pgd-title {
+    color: #333;
+    font-weight: bold;
+    font-size: 32rpx;
+    line-height: 40rpx;
+    padding: 15rpx 25rpx;
+}
+
+.pgd-label {
+    margin-right: 10rpx;
+}

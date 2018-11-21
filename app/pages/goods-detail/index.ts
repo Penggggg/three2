@@ -1,4 +1,7 @@
 // app/pages/manager-goods-list/index.js
+
+import { computed } from '../../lib/vuefy/index.js';
+
 Page({
 
     /**
@@ -10,9 +13,11 @@ Page({
         // 商品详情
         detail: null,
         // 数据字典
-        dic: { }
+        dic: { },
+        // 加载状态
+        loading: true
     },
-
+    
     /** 拉取商品详情 */
     fetDetail( id ) {
         const that = this;
@@ -25,9 +30,11 @@ Page({
   
                 const { status, data } = res.result;
                 if ( status !== 200 ) { return; }
+                console.log( data );
                 wx.hideLoading({ });
                 that.setData!({
-                    detail: data
+                    detail: data,
+                    loading: false
                 });
 
             },
@@ -61,12 +68,36 @@ Page({
                 })
             }
         })
-      },
+    },
+
+    previewImg({ currentTarget }) {
+        const { img } = currentTarget.dataset;
+        this.data.detail && wx.previewImage({
+            current: img,
+            urls: [ ...(this.data as any).detail.img ],
+        });
+    },
   
+    runComputed( ) {
+        computed( this, {
+            price: function( ) {
+                if ( this.data.detail && this.data.detail.standards.length > 0 ) {
+                    return this.data.detail.standards[ 0 ].price;
+                } else if ( this.data.detail && this.data.detail.standards.length === 0 ) {
+                    return this.data.detail.standards[ 0 ].price;
+                } else if ( !this.detail ) {
+                    return '';
+                }
+                return '???';
+            }
+        })
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+        this.runComputed( );
         if ( !options!.id ) { return; }
         this.setData!({
           id: options!.id
