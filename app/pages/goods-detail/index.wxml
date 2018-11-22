@@ -38,7 +38,7 @@
             </block>
         </swiper>
 
-        <!-- 标题 -->
+        <!-- v1 - 标题 -->
         <view
             class="pgd-title"
             wx:if="{{ detail }}"
@@ -46,7 +46,7 @@
             {{ detail.title }}
         </view>
 
-        <!-- 价格 -->
+        <!-- v1 - 价格 -->
         <view class="padding">
             <wxc-price
                 icon="sub"
@@ -67,7 +67,7 @@
             </wxc-price>
         </view>
 
-        <!-- 标签 -->
+        <!-- v1 - 标签 -->
         <view
             wx:if="{{ detail }}"
             class="pgd-tag-block padding"
@@ -86,6 +86,64 @@
                     type="{{ liked ? 'like_fill' : 'like' }}"
                     color="#ff5777"
                 />喜欢
+            </view>
+        </view>
+
+        <!-- 分割线 -->
+        <view class="drive-line mt"></view>
+
+        <!-- 团购信息、基本保证 -->
+        <view
+            class="info-block"
+        >
+
+            <view class="info-block-item" wx:if="{{ priceGap }}">
+
+                <view class="info-block-item-label">
+                    团购：
+                </view>
+
+                <view class="info-block-item-content">
+                    一趟行程中，只要有人下单，<text class="red">自动减{{ priceGap }}元</text>
+                </view>
+
+            </view>
+
+            <view class="info-block-item">
+
+                <view class="info-block-item-label">
+                    保证：
+                </view>
+
+                <view class="info-block-item-content">
+                    <view
+                        wx:for="{{ promiseTips }}"
+                        wx:key="{{ index }}"
+                        class="info-block-item-tips"
+                    >
+                        <image
+                            class="info-block-item-tips-image"
+                            src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/right-icon.png"
+                        />
+                        {{ item }}
+                    </view>
+                </view>
+                
+            </view>
+
+        </view>
+
+        <!-- 分割线 -->
+        <view class="drive-line"></view>
+
+        <!-- 文字介绍 -->
+        <view class="text-info-block" wx:if="{{ detail }}">
+            <view
+                wx:key="{{ index }}"
+                class="text-info-item"
+                wx:for="{{ detailIntro }}"
+            >
+                {{ item }}
             </view>
         </view>
 

@@ -1,6 +1,11 @@
 /* app/pages/goods-detail/index.wxss */
 .page-goods-detail {
     min-height: 100vh;
+    padding-bottom: 120rpx;
+}
+
+.flex {
+    display: flex
 }
 
 .red {
@@ -67,6 +72,7 @@
 
 .pgd-tag-block {
     position: relative;
+    padding-bottom: 10rpx
 }
 
 .pgd-like {
@@ -81,4 +87,68 @@
     align-items: center;
     line-height: 20rpx;
     border: 1px solid #ffe8ee;
+}
+
+.drive-line {
+    background: #fafafa;
+    height: 25rpx;
+}
+
+.drive-line.mt {
+    margin-top: 20rpx;
+}
+
+.text-info-block {
+
+    padding: 20rpx 35rpx;
+
+}
+
+.text-info-item {
+    color: #666;
+    line-height: 50rpx;
+    text-align: center;
+    font-size: 32rpx;
+    margin-bottom: 10rpx;
+}
+
+.info-block-item {
+    display: flex;
+    color: #666;
+    font-size: 28rpx;
+    align-items: center;
+    padding: 25rpx 25rpx;
+    position: relative;
+}
+
+.info-block-item:not(:last-child):after {
+    left: 0;
+    bottom: 0;
+    height: 1rpx;
+    width: 100%;
+    content: '';
+    position: absolute;
+    transform: translateY( 0.5 );
+    background: rgba( 0, 0, 0, 0.06 );
+}
+
+.info-block-item-label {
+    margin-right: 20rpx;
+}
+
+.info-block-item-content {
+    flex: 1;
+    display: flex;
+}
+
+.info-block-item-tips {
+    display: flex;
+    align-items: center;
+    margin-right: 20rpx;
+}
+
+.info-block-item-tips-image {
+    height: 30rpx;
+    width: 30rpx;
+    margin-right: 5rpx
 }

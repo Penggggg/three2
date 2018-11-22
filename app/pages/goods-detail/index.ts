@@ -19,7 +19,11 @@ Page({
         // 是否初始化过“喜欢”
         hasInitLike: false,
         // 是否“喜欢”
-        liked: false
+        liked: false,
+        // 文字保证提示
+        promiseTips: [
+            '正品保证', '价格优势', '真人跑腿'
+        ]
     },
     
     /** 拉取商品详情 */
@@ -102,6 +106,48 @@ Page({
                             return sortedPrice[ 0 ].price;
                         } else {
                             return `${sortedPrice[0].price}~${sortedPrice[sortedPrice.length - 1 ].price}`;
+                        }
+                    }
+                }
+            },
+            // 商品详情
+            detailIntro: function( ) {
+                const { detail } = this.data;
+                if ( !detail || ( !!detail && !detail.detail )) {
+                    return [ ];
+                } else {
+                    return detail.detail.split('\n').filter( x => !!x );
+                }
+            },
+            // 价格 ～ 团购价的差价
+            priceGap: function( ) {
+                const { detail } = this.data;
+                if ( !detail ) {
+                    return 0;
+                } else {
+                    const { standards, groupPrice, price } = detail;
+                    // 无型号
+                    if ( standards.length === 0 ) {
+                        // 有团购的
+                        if ( groupPrice !== null && groupPrice !== undefined ) {
+                            return groupPrice - price;
+                        } else {
+                            return 0;
+                        }
+                    // 有型号
+                    } else {
+                        const groupPrice = standards.filter( x => x.groupPrice !== null && x.groupPrice !== undefined );
+                        // 型号里面有团购的
+                        if ( groupPrice.length > 0 ) {
+                            const sortedGroupPrice = groupPrice.sort(( x, y ) => (( x.groupPrice - x.price ) - ( y.groupPrice - y.price )));
+                            if (( sortedGroupPrice[0].groupPrice - sortedGroupPrice[0].price ) ===
+                                ( sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice - sortedGroupPrice[ sortedGroupPrice.length - 1 ].price )) {
+                                return ( sortedGroupPrice[0].groupPrice - sortedGroupPrice[0].price );
+                            } else {
+                                return `${sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice - sortedGroupPrice[ sortedGroupPrice.length - 1 ].price}~${sortedGroupPrice[0].groupPrice - sortedGroupPrice[0].price}`;
+                            }
+                        } else {
+                            return 0;
                         }
                     }
                 }
