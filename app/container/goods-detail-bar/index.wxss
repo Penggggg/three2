@@ -2,6 +2,7 @@
 .con-gbs {
     left: 0;
     bottom: 0;
+    height: 100rpx;
     width: 100%;
     position: fixed;
 }
@@ -24,11 +25,41 @@
 .gbs-btn-special {
     flex: 1;
     display: flex;
+    height: 100rpx;
+}
+
+.gbs-btn-special-item { 
+    flex: 1;
+    height: 100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;    
+}
+
+.gbs-btn-special-item.grey {
+    color: #fff;
+    font-size: 36rpx;
+    text-align: center;
+    background: rgba(0,0,0,0.09);
+}
+
+.gbs-btn-special-item.pink {
+    color: #ff5777;
+    font-size: 32rpx;
+    text-align: center;
+    background: #ffe8ee;
+}
+
+.gbs-btn-special-item.morepink {
+    color: #fff;
+    font-size: 32rpx;
+    text-align: center;
+    background: #ff5777;
 }
 
 .gbs-btn-item-img {
-    width: 40rpx;
-    height: 40rpx;
+    width: 45rpx;
+    height: 45rpx;
     margin-bottom: 10rpx;
 }
 

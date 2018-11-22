@@ -19,12 +19,41 @@
         <view
             class="gbs-btn-special"
         >
-            1
+            <!-- 已下架 -->
+            <view
+                wx:if="{{ detail && !detail.visiable }}"
+                class="gbs-btn-special-item grey"
+            >   
+                已下架
+            </view>
+            <!-- 已售罄 -->
+            <view
+                wx:elif="{{ detail && detail.visiable && !hasStock }}"
+                class="gbs-btn-special-item grey"
+            >   
+                已售罄
+            </view>
+            <!-- 加入购物车 -->
+            <!-- 立即购买 -->
+            <view
+                wx:else
+                class="gbs-btn-special-item"
+            >
+                <view
+                    class="gbs-btn-special-item pink"
+                >   
+                    加入购物车
+                </view>
+                <view
+                    class="gbs-btn-special-item morepink"
+                >   
+                    立即购买
+                </view>
+            </view>
+            
+
         </view>
-        <!-- 已下架 -->
-        <!-- 已售罄 -->
-        <!-- 加入购物车 -->
-        <!-- 立即购买 -->
+        
     </view>
 
 </view>

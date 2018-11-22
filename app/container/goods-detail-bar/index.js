@@ -30,7 +30,29 @@ Component({
                 label: '购物车',
                 src: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/good-bar-cart4.png'          
             }
-        ]
+        ],
+        // 商品详情
+        detail: null
+    },
+
+    computed: {
+        // 是否还有库存
+        hasStock( ) {
+            const d = this.data.detail;
+            if ( !d ) { 
+                return false;
+            } else {
+                if ( d.standards.length === 0 ) {
+                    return d.stock === undefined 
+                    || Number.isInteger( d.stock ) && d.stock > 0
+                } else {
+                    return d.standards.some( x =>
+                        x.stock === undefined 
+                        || Number.isInteger( x.stock ) && x.stock > 0
+                    )
+                }
+            }
+        }
     },
 
     /**
@@ -52,14 +74,13 @@ Component({
                     _id: this.data.pid
                 },
                 success: function ( res ) {
-    
+                    console.log( res.result.data );
                     const { status, data, } = res.result;
                     if ( status !== 200 ) { return; }
                     wx.hideLoading({ });
-                    
-                    const { title, detail, tag, category, img, fadePrice, price,
-                    groupPrice, stock, standards, depositPrice, limit, visiable } = data;
-    
+                    that.setData({
+                        detail: data
+                    });
                 },
                 fail: function( ) {
                     wx.showToast({
