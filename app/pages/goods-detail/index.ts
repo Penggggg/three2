@@ -34,7 +34,7 @@ Page({
   
                 const { status, data } = res.result;
                 if ( status !== 200 ) { return; }
-                console.log( data );
+             
                 wx.hideLoading({ });
                 that.setData!({
                     detail: data,

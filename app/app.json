@@ -10,6 +10,7 @@
     "my-manager-entry-btn": "./container/manager-entry-btn/index",
     "my-active-form": "./components/active-form/index",
     "my-img-upload": "./components/img-upload/index",
+    "my-goods-detail-bar": "./container/goods-detail-bar/index",
     "i-drawer": "./dist/iview/drawer/index",
     "i-modal": "./dist/iview/modal/index",
     "i-icon": "./dist/iview/icon/index",

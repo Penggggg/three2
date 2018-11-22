@@ -1,0 +1,30 @@
+<!--container/goods-detail-bar/index.wxml-->
+<view class="con-gbs">
+
+    <view
+        class="gbs-btn-bar"
+    >
+        <view
+            class="gbs-btn-item"
+            wx:for="{{ btnList }}"
+            wx:key="{{ index }}"
+        >
+            <image
+                mode="aspectFill"
+                class="gbs-btn-item-img"
+                src="{{ item.src }}"
+            />
+            <view class="gbs-btn-item-text">{{ item.label }}</view>
+        </view>
+        <view
+            class="gbs-btn-special"
+        >
+            1
+        </view>
+        <!-- 已下架 -->
+        <!-- 已售罄 -->
+        <!-- 加入购物车 -->
+        <!-- 立即购买 -->
+    </view>
+
+</view>
