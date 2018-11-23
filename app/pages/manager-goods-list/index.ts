@@ -80,6 +80,10 @@ Page({
                         that.setData!({
                             list: meta
                         });
+                    } else {
+                        that.setData!({
+                            list: [ ]
+                        });
                     }
 
                 }

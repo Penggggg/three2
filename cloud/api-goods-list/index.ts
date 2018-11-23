@@ -29,7 +29,7 @@ export const main = async (event, context) => {
     const limit = 20;
     if ( !!event.title && !!event.title.trim( )) {
 
-      const search = new RegExp(event.title.replace(/\s+/g, ""), 'g');
+      const search = new RegExp(event.title.replace(/\s+/g, ""), 'i');
       // 获取总数
       const total$ = await db.collection('goods')
           .where({
