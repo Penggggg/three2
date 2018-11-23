@@ -107,6 +107,14 @@
                     一趟行程中有Ta人购买，<text class="red">自动减{{ priceGap }}元</text>
                 </view>
 
+                <view class="invite-icon">
+                    <image
+                        class="invite-icon-img"
+                        src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/wechat.png"
+                        animation="{{ animationMiddleHeaderItem }}"
+                    />
+                </view>
+
             </view>
 
             <view class="info-block-item">

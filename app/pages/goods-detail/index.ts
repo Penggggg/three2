@@ -4,6 +4,9 @@ import { computed } from '../../lib/vuefy/index.js';
 
 Page({
 
+    // 动画
+    animationMiddleHeaderItem: null,
+
     /**
      * 页面的初始数据
      */
@@ -23,7 +26,9 @@ Page({
         // 文字保证提示
         promiseTips: [
             '正品保证', '价格优势', '真人跑腿'
-        ]
+        ],
+        // 动画
+        animationMiddleHeaderItem: null
     },
     
     /** 拉取商品详情 */
@@ -221,8 +226,29 @@ Page({
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
-    onReady: function () {
-  
+    onReady: function ( ) {
+        let circleCount = 0; 
+        const that: any = this;
+        // 心跳的外框动画 
+        that.animationMiddleHeaderItem = wx.createAnimation({ 
+            duration: 800, 
+            timingFunction: 'ease', 
+            transformOrigin: '50% 50%',
+        }); 
+        setInterval( function( ) { 
+            if (circleCount % 2 == 0) { 
+                that.animationMiddleHeaderItem.scale( 1.0 ).rotate( 30 ).step( ); 
+            } else { 
+                that.animationMiddleHeaderItem.scale( 1.0 ).rotate( -30 ).step( ); 
+            } 
+            that.setData({ 
+                animationMiddleHeaderItem: that.animationMiddleHeaderItem.export( ) 
+            }); 
+            
+            if ( ++circleCount === 1000 ) { 
+                circleCount = 0; 
+            } 
+        }.bind( this ), 1000 ); 
     },
   
     /**
