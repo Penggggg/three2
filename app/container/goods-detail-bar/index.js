@@ -40,18 +40,23 @@ Component({
         hasStock( ) {
             const d = this.data.detail;
             if ( !d ) { 
+                console.log('111');
                 return false;
             } else {
                 if ( d.standards.length === 0 ) {
+                    console.log('222', d.stock, d.stock === undefined, d.stock === undefined 
+                    || ( Number.isInteger( d.stock ) && d.stock > 0 ) );
                     return d.stock === undefined 
-                    || Number.isInteger( d.stock ) && d.stock > 0
+                    || ( Number.isInteger( d.stock ) && d.stock > 0 )
                 } else {
+                    console.log('333');
                     return d.standards.some( x =>
                         x.stock === undefined 
-                        || Number.isInteger( x.stock ) && x.stock > 0
+                        || ( Number.isInteger( x.stock ) && x.stock > 0 )
                     )
                 }
             }
+            console.log('44444')
         }
     },
 

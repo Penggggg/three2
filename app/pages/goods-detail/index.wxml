@@ -104,7 +104,7 @@
                 </view>
 
                 <view class="info-block-item-content">
-                    一趟行程中，只要有人下单，<text class="red">自动减{{ priceGap }}元</text>
+                    一趟行程中有Ta人购买，<text class="red">自动减{{ priceGap }}元</text>
                 </view>
 
             </view>

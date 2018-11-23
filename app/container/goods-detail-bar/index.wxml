@@ -1,6 +1,5 @@
 <!--container/goods-detail-bar/index.wxml-->
 <view class="con-gbs">
-
     <view
         class="gbs-btn-bar"
     >
@@ -19,6 +18,7 @@
         <view
             class="gbs-btn-special"
         >
+            {{ hasStock }}
             <!-- 已下架 -->
             <view
                 wx:if="{{ detail && !detail.visiable }}"
