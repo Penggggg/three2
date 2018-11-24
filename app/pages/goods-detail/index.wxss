@@ -187,7 +187,7 @@
 }
 
 .pgd-price-time-block-item  {
-    padding: 20rpx 25rpx;
+    padding: 12rpx 25rpx;
 }
 
 .pgd-price-time-block-item.msg {
@@ -237,6 +237,13 @@
     font-size: 20rpx;
 }
 
+.detail-info-banner {
+    display: flex;
+    padding-top: 20rpx;
+    justify-content: center;
+}
+
 .detail-info-banner-img {
-    width: 100vw;
+    height: 200rpx;
+    border-radius: 6px;
 }
