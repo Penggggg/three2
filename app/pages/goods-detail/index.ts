@@ -237,7 +237,7 @@ Page({
         }); 
         setInterval( function( ) { 
             if (circleCount % 2 == 0) { 
-                that.animationMiddleHeaderItem.scale( 1.0 ).rotate( 30 ).step( ); 
+                that.animationMiddleHeaderItem.scale( 1.0 ).rotate( 10 ).step( ); 
             } else { 
                 that.animationMiddleHeaderItem.scale( 1.0 ).rotate( -30 ).step( ); 
             } 

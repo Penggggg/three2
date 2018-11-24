@@ -129,6 +129,7 @@
 
             <wxc-label
                 class="pgd-label"
+                wx:if="{{ detail.groupPrice }}"
                 text="团购价{{ detail.groupPrice }}"
             />
 
@@ -195,6 +196,15 @@
 
         <!-- 分割线 -->
         <view class="drive-line"></view>
+
+        <!-- banner -->
+        <view class="detail-info-banner">
+            <image
+                mode="widthFix"
+                class="detail-info-banner-img"
+                src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/good-info-banner.png"
+            />
+        </view>
 
         <!-- 文字介绍 -->
         <view class="text-info-block" wx:if="{{ detail }}">
