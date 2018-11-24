@@ -32,31 +32,35 @@ Component({
             }
         ],
         // 商品详情
-        detail: null
+        detail: {
+            stock: undefined,
+            standards: [ ]
+        }
     },
 
     computed: {
         // 是否还有库存
         hasStock( ) {
             const d = this.data.detail;
-            if ( !d ) { 
+            if ( !d._id ) { 
                 console.log('111');
                 return false;
             } else {
                 if ( d.standards.length === 0 ) {
-                    console.log('222', d.stock, d.stock === undefined, d.stock === undefined 
-                    || ( Number.isInteger( d.stock ) && d.stock > 0 ) );
+                    console.log('222', d.stock, d.stock === undefined, Number( d.stock ) > 0 , d.stock === undefined 
+                    || Number( d.stock ) > 0 );
                     return d.stock === undefined 
-                    || ( Number.isInteger( d.stock ) && d.stock > 0 )
+                            || Number( d.stock ) > 0 
                 } else {
-                    console.log('333');
-                    return d.standards.some( x =>
+                    console.log('333', d.standards.some( x =>
                         x.stock === undefined 
-                        || ( Number.isInteger( x.stock ) && x.stock > 0 )
+                        || Number( d.stock ) > 0));
+                    return d.standards.some( x =>
+                                x.stock === undefined 
+                                || Number( d.stock ) > 0  
                     )
                 }
             }
-            console.log('44444')
         }
     },
 

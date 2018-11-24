@@ -403,11 +403,20 @@ Component({
         })
       }
 
+      // 这里有点奇怪 number 如果是带 小数点的 会返回 string，因此做个特殊处理
+      const standards$ = this.data.standards.map( x => {
+        return Object.assign({ }, x, {
+          groupPrice: ( x.groupPrice === null || x.groupPrice === undefined ) ? x.groupPrice : Number( x.groupPrice ),
+          price: ( x.price === null || x.price === undefined ) ? x.price : Number( x.price ),
+          stock: ( x.stock === null || x.stock === undefined ) ? x.stock : Number( x.stock )
+        });
+      });
+
       let goodsDetail = {
         ...r1.data,
         ...r2.data,
         saled: 0,
-        standards: this.data.standards,
+        standards: standards$,
         updateTime: new Date( ).getTime( ),
       };
 

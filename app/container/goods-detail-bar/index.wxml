@@ -21,14 +21,14 @@
             {{ hasStock }}
             <!-- 已下架 -->
             <view
-                wx:if="{{ detail && !detail.visiable }}"
+                wx:if="{{ detail._id && !detail.visiable }}"
                 class="gbs-btn-special-item grey"
             >   
                 已下架
             </view>
             <!-- 已售罄 -->
             <view
-                wx:elif="{{ detail && detail.visiable && !hasStock }}"
+                wx:elif="{{ detail._id && detail.visiable && !hasStock }}"
                 class="gbs-btn-special-item grey"
             >   
                 已售罄

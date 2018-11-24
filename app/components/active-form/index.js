@@ -196,8 +196,22 @@ Component({
         return this.validateItem( k );
       }).filter( x => x !== undefined );
 
+      // 这里有点奇怪 number 如果是带 小数点的 会返回 string，因此做个特殊处理
+      let temp = { };
+      const { formData, meta } = this.data;
+      Object.keys( formData ).map( formKey => {
+        const currentTarget = meta.find( x => x.key === formKey );
+        temp = Object.assign({ }, temp, {
+          [ formKey ]: ( formData[ formKey ] === null || formData[ formKey ] === undefined ) ?
+            formData[ formKey ]:
+            currentTarget.type === 'number' ? 
+              Number( formData[ formKey ]) : 
+              formData[ formKey ]
+        })
+      });      
+
       return {
-        data: this.data.formData,
+        data: temp,
         err: this.data.errData,
         result: !validateItemResult.some(x => !x)
       }
