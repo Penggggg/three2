@@ -38,6 +38,53 @@
             </block>
         </swiper>
 
+        <!-- v2 价格信息 + 倒计时 -->
+        <view
+            class="pgd-price-time-block"
+        >
+            <!-- 固定文案 -->
+            <view class="pgd-price-time-block-item msg">
+                <view class="pgd-price-time-block-text">
+                    超值优惠
+                </view>
+                <view class="pgd-price-time-block-text indent">
+                    限时购
+                </view>
+            </view>
+
+            <!-- 价格信息 -->
+            <view class="pgd-price-time-block-item purple">
+                <wxc-price
+                    icon="sub"
+                    class="white price mr"
+                    decimal="small"
+                    wx:if="{{ detail }}"
+                > 
+                    {{ price }}
+                </wxc-price>
+                <wxc-price
+                    status="del"
+                    decimal="small"
+                    wx:if="{{ detail }}"
+                    del-color="#fff"
+                    class="white fade-price"
+                > 
+                    原价{{ detail.fadePrice }}
+                </wxc-price>
+            </view>
+
+            <!-- 倒计时 -->
+            <view class="pgd-price-time-block-item countdown">
+                <view class="pgd-price-time-block-tips">行程开始还剩</view>
+                <wxc-countdown
+                    countdown="{{ 1000 }}"
+                    format="hh:mm:ss"
+                    num-style="font-size: 32rpx; color: #fff; padding: 5rpx 8rpx;background: #000; text-align: center; border-radius: 8rpx;"
+                />
+            </view>
+
+        </view>
+
         <!-- v1 - 标题 -->
         <view
             class="pgd-title"
@@ -47,7 +94,7 @@
         </view>
 
         <!-- v1 - 价格 -->
-        <view class="padding">
+        <!-- <view class="padding">
             <wxc-price
                 icon="sub"
                 class="red price price-item"
@@ -65,7 +112,7 @@
             > 
                 原价{{ detail.fadePrice }}
             </wxc-price>
-        </view>
+        </view> -->
 
         <!-- v1 - 标签 -->
         <view
@@ -78,6 +125,11 @@
                 text="{{ item }}"
                 wx:key="{{ index }}"
                 wx:for="{{ detail.tag }}"
+            />
+
+            <wxc-label
+                class="pgd-label"
+                text="团购价{{ detail.groupPrice }}"
             />
 
             <view class="pgd-like">

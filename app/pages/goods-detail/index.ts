@@ -135,7 +135,7 @@ Page({
                     if ( standards.length === 0 ) {
                         // 有团购的
                         if ( groupPrice !== null && groupPrice !== undefined ) {
-                            return groupPrice - price;
+                            return  price - groupPrice;
                         } else {
                             return 0;
                         }
@@ -147,9 +147,9 @@ Page({
                             const sortedGroupPrice = groupPrice.sort(( x, y ) => (( x.groupPrice - x.price ) - ( y.groupPrice - y.price )));
                             if (( sortedGroupPrice[0].groupPrice - sortedGroupPrice[0].price ) ===
                                 ( sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice - sortedGroupPrice[ sortedGroupPrice.length - 1 ].price )) {
-                                return ( sortedGroupPrice[0].groupPrice - sortedGroupPrice[0].price );
+                                return ( sortedGroupPrice[0].price - sortedGroupPrice[0].groupPrice );
                             } else {
-                                return `${sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice - sortedGroupPrice[ sortedGroupPrice.length - 1 ].price}~${sortedGroupPrice[0].groupPrice - sortedGroupPrice[0].price}`;
+                                return `${sortedGroupPrice[ sortedGroupPrice.length - 1 ].price - sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice}~${sortedGroupPrice[0].price - sortedGroupPrice[0].groupPrice}`;
                             }
                         } else {
                             return 0;
