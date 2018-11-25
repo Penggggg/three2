@@ -129,7 +129,8 @@ export const main = async ( event, context) => {
 
             // 2. 更新部分型号信息
             await Promise.all( wouldUpdate.map( x => {
-                const { name, price, groupPrice, stock, img } = x;
+                const newTarget = standards.find( y => y._id === x._id );
+                const { name, price, groupPrice, stock, img } = newTarget;
                 return db.collection('standards')
                         .doc( x._id )
                         .update({
