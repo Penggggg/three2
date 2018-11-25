@@ -170,8 +170,8 @@ Page({
     onTab({ currentTarget }) {
         const { pid } = currentTarget.dataset;
         wx.navigateTo({
-            // url: `/pages/goods-detail/index?id=${pid}`
-            url: `/pages/manager-goods-detail/index?id=${pid}`
+            url: `/pages/goods-detail/index?id=${pid}`
+            // url: `/pages/manager-goods-detail/index?id=${pid}`
         });
     },
   
