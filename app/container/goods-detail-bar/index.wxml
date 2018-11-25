@@ -41,13 +41,13 @@
                 <view
                     class="gbs-btn-special-item pink"
                 >   
-                    加入购物车
+                    立即购买
                 </view>
-                <view
+                <!-- <view
                     class="gbs-btn-special-item morepink"
                 >   
                     立即购买
-                </view>
+                </view> -->
             </view>
             
 
