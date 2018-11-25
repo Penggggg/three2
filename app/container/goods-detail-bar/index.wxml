@@ -18,7 +18,6 @@
         <view
             class="gbs-btn-special"
         >
-            {{ hasStock }}
             <!-- 已下架 -->
             <view
                 wx:if="{{ detail._id && !detail.visiable }}"
