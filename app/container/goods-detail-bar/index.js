@@ -1,4 +1,5 @@
 // container/goods-detail-bar/index.js
+
 Component({
 
     behaviors: [require('../../behaviores/computed/index.js')],
@@ -32,36 +33,13 @@ Component({
             }
         ],
         // 商品详情
-        detail: {
-            stock: undefined,
-            standards: [ ]
-        }
+        detail: null,
+        // 库存
+        hasStock: false
     },
 
     computed: {
-        // 是否还有库存
-        hasStock( ) {
-            const d = this.data.detail;
-            if ( !d._id ) { 
-                console.log('111');
-                return false;
-            } else {
-                if ( d.standards.length === 0 ) {
-                    console.log('222', d.stock, d.stock === undefined, Number( d.stock ) > 0 , d.stock === undefined 
-                    || Number( d.stock ) > 0 );
-                    return d.stock === undefined 
-                            || Number( d.stock ) > 0 
-                } else {
-                    console.log('333', d.standards.some( x =>
-                        x.stock === undefined 
-                        || Number( d.stock ) > 0));
-                    return d.standards.some( x =>
-                                x.stock === undefined 
-                                || Number( d.stock ) > 0  
-                    )
-                }
-            }
-        }
+
     },
 
     /**
@@ -70,9 +48,9 @@ Component({
     methods: {
         /** 拉取商品详情 */
         fetchDetail( id ) {
-
             const that = this;
             if ( !id ) { return; }
+
             wx.showLoading({
                 title: '加载中...',
             });
@@ -83,12 +61,22 @@ Component({
                     _id: this.data.pid
                 },
                 success: function ( res ) {
-                    console.log( res.result.data );
+      
+                    let result = false;
                     const { status, data, } = res.result;
                     if ( status !== 200 ) { return; }
+
+                    const { _id, stock, standards } = data;
+                    if ( standards.length === 0 ) {
+                        result = stock === undefined || stock > 0;
+                    } else {
+                        result = standards.some( x => x.stock === undefined || x.stock > 0 )
+                    }
+
                     wx.hideLoading({ });
                     that.setData({
-                        detail: data
+                        detail: data,
+                        hasStock: result
                     });
                 },
                 fail: function( ) {
