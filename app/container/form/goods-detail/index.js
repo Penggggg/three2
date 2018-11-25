@@ -24,6 +24,7 @@ Component({
     standarding: false,
     // 规格弹框表单
     standarForm: {
+      pid: null,
       name: null,
       price: null,
       groupPrice: null,
@@ -105,7 +106,7 @@ Component({
           placeholder: '建议输入比原价格稍高的价位',
           value: undefined,
           rules: [{
-            validate: val => !!val && !!val.trim(),
+            validate: val => !!val,
             message: '请设置商品划线价'
           }]
         }, {
@@ -122,7 +123,7 @@ Component({
           placeholder: '商品单价',
           value: undefined,
           rules: [{
-            validate: val => !!val && !!val.trim( ),
+            validate: val => !!val,
             message: '请设置商品单价'
           }]
         });
@@ -226,6 +227,7 @@ Component({
         selectingStandarIndex: null,
         standarding: !this.data.standarding,
         standarForm: {
+          pid: null,
           name: null,
           price: null,
           groupPrice: null,
@@ -240,12 +242,23 @@ Component({
     /** 增加编辑型号/规格 */
     addStandard( ) {
 
-      if (Object.keys(this.data.standarForm).filter(k => (k !== 'stock' && k !== 'groupPrice'))
-            .some(key => (!this.data.standarForm[ key ] ||!this.data.standarForm[ key ].trim( )))) {
+      const errMsg = title => {
         return wx.showToast({
+          title,
           icon: 'none',
-          title: '请完善型号信息',
         });
+      }
+      const { name, img, price } = this.data.standarForm;
+      if ( !name || !name.trim( )) {
+        return errMsg('请填写型号名称');
+      }
+
+      if ( price <= 0 ) {
+        return errMsg('请填写价格');
+      } 
+
+      if ( !img ) {
+        return errMsg('请上传型号图片');
       }
 
       let origin = [...this.data.standards];
@@ -259,6 +272,7 @@ Component({
         standards: origin,
         standarding: false,
         standarForm: {
+          pid: null,
           name: null,
           price: null,
           groupPrice: null,
@@ -344,7 +358,6 @@ Component({
               _id: this.data.pid
           },
           success: function ( res ) {
-              
               const { status, data, } = res.result;
               if ( status !== 200 ) { return; }
               wx.hideLoading({ });

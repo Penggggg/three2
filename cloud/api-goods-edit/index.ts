@@ -62,6 +62,7 @@ export const main = async ( event, context) => {
                 }))
             }
         } else {
+
             // 更新
             const meta = Object.assign({ }, event.data );
             delete meta[ _id ];
@@ -80,12 +81,29 @@ export const main = async ( event, context) => {
                     groupPrice,
                     category,
                     fadePrice,
-                    standards,
                     visiable,
                     updateTime,
                     depositPrice
                 }
             });
+
+            // 型号：先删除所有所属型号，然后重新新增本次型号
+            await db.collection('standards')
+                    .where({
+                        pid: _id
+                    })
+                    .remove( );
+
+            await Promise.all( standards.map( x => {
+                delete x['_id'];
+                return db.collection('standards')
+                        .add({
+                            data: Object.assign({ }, x, {
+                                pid: _id
+                            })
+                        });
+            }));
+
         }
 
         return new Promise( resolve => {
