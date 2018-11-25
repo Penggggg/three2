@@ -39,12 +39,30 @@ const db: DB.Database = cloud.database();
 export const main = async ( event, context) => {
 
     try {
-        const _id = event.data._id;
+        let _id = event.data._id;
         if ( !_id ) {
-            await db.collection('goods').add({
+            // 创建
+            const { standards } = event.data;
+
+            delete event.data['standards'];
+
+            const create$ = await db.collection('goods').add({
                 data: event.data,
             });
+            _id = create$._id;
+
+            // 插入型号
+            if ( !!standards && Array.isArray( standards )) {
+                await Promise.all( standards.map( x => {
+                    return db.collection('standards').add({
+                        data: Object.assign({ }, x, {
+                            pid: _id
+                        })
+                    });
+                }))
+            }
         } else {
+            // 更新
             const meta = Object.assign({ }, event.data );
             delete meta[ _id ];
             const { title, category, depositPrice, detail, fadePrice, img, limit, saled, 
@@ -72,6 +90,7 @@ export const main = async ( event, context) => {
 
         return new Promise( resolve => {
             resolve({
+                data: _id,
                 status: 200
             })
         })
