@@ -344,7 +344,7 @@ Component({
               _id: this.data.pid
           },
           success: function ( res ) {
-
+              
               const { status, data, } = res.result;
               if ( status !== 200 ) { return; }
               wx.hideLoading({ });
@@ -443,6 +443,7 @@ Component({
         },
         success: function (res) {
           wx.hideLoading({ });
+          
           if ( res.result.status === 200 ) {
            
             wx.showToast({

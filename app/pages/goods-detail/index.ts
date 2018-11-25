@@ -40,7 +40,7 @@ Page({
                 _id: this.data.id
             },
             success: function ( res: any ) {
-  
+                
                 const { status, data } = res.result;
                 if ( status !== 200 ) { return; }
              
