@@ -28,13 +28,17 @@ const db: DB.Database = cloud.database();
  *          price: Number,
  *          groupPrice!: Number,
  *          stock!: Number:
- *          img: String 
+ *          img: String ,
+ *          _id: string,
+ *          pid: string,
+ *          isDelete: boolean
  *      }>
  * }
  * -------- 请求 ----------
  * {
  *      status: 200 / 500
  * }
+ * ! 更新的时候，先判断型号有没有被引用
  */
 export const main = async ( event, context) => {
 
@@ -56,7 +60,8 @@ export const main = async ( event, context) => {
                 await Promise.all( standards.map( x => {
                     return db.collection('standards').add({
                         data: Object.assign({ }, x, {
-                            pid: _id
+                            pid: _id,
+                            isDelete: false
                         })
                     });
                 }))
@@ -87,21 +92,61 @@ export const main = async ( event, context) => {
                 }
             });
 
-            // 型号：先删除所有所属型号，然后重新新增本次型号
-            await db.collection('standards')
-                    .where({
-                        pid: _id
-                    })
-                    .remove( );
+            // 0. 查询该产品底下所有的型号
+            const allStandards$ = await db.collection('standards')
+                                            .where({
+                                                pid: _id
+                                            })
+                                            .get( );
 
-            await Promise.all( standards.map( x => {
-                delete x['_id'];
+            // 需要“删除”的型号
+            const wouldSetDelete: any[ ] = [ ];
+
+            // 需要“更新”的型号
+            const wouldUpdate: any[ ] = [ ];
+
+            // 需要“增加”、“更新”的型号
+            const wouldCreate = standards.filter( x => !x._id );
+
+            allStandards$.data.filter( x => {
+                if ( !standards.find( y => y._id === x._id )) {
+                    wouldSetDelete.push( x )
+                } else {
+                    wouldUpdate.push( x )
+                }
+            });
+
+            // 1.  “删除”部分型号
+            await Promise.all( wouldSetDelete.map( x => {
                 return db.collection('standards')
-                        .add({
-                            data: Object.assign({ }, x, {
-                                pid: _id
-                            })
-                        });
+                        .doc( x._id )
+                        .update({
+                            data: {
+                                isDelete: true
+                            }
+                        })
+            }));
+
+            // 2. 更新部分型号信息
+            await Promise.all( wouldUpdate.map( x => {
+                const { name, price, groupPrice, stock, img } = x;
+                return db.collection('standards')
+                        .doc( x._id )
+                        .update({
+                            data: {
+                                name, price, groupPrice, stock, img
+                            }
+                        })
+            }));
+
+            // 3. 新增部分型号
+            await Promise.all( wouldCreate.map( x => {
+                return db.collection('standards').add({
+                    data: Object.assign({ }, x, {
+                        pid: _id,
+                        isDelete: false
+                    })
+                })
             }));
 
         }
