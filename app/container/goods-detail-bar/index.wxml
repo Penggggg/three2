@@ -63,8 +63,8 @@
 
     <!-- sku背景 -->
     <view
-        class="sku-bg {{ !openSku ? 'hide' : ''  }}"
         bindtap="toggleAnimate"
+        class="sku-bg {{ !openSku ? 'hide' : ''  }}"
         animation="{{ animationSkuBg }}"
     >
     </view>
@@ -73,13 +73,17 @@
     <view
         class="sku-contaienr-bg"
         animation="{{ animationSku }}"
+        catchtouchmove="preventTouchMove"
     >
         <view
             class="sku-container-block"
         >
 
             <!-- 关闭按钮 -->
-            <view class="sku-close-btn">
+            <view
+                bindtap="toggleAnimate"
+                class="sku-close-btn"
+            >
                 <wxc-icon
                     size="40"
                     type="no"
@@ -87,7 +91,68 @@
                 />
             </view>
 
+            <!-- 头部栏 图片、价格、库存 -->
+            <view class="sku-header">
 
+                <!-- 图片 -->
+                <view class="sku-img-block" wx:if="{{ selectedSku }}">
+                    <image
+                        class="sku-img"
+                        mode="aspectFill"
+                        bindtap='previewImg'
+                        src="{{ selectedSku.img }}"
+                        data-img="{{ selectedSku.img }}"
+                    />
+                </view>
+
+                <!-- 价格 -->
+                <view class="sku-price-block" wx:if="{{ selectedSku }}">
+                    <wxc-price
+                        icon="sub"
+                        decimal="small"
+                        class="sku-price"
+                    > 
+                        {{ selectedSku.price }}
+                    </wxc-price>
+                    <view
+                        class="sku-stock"
+                        wx:if="{{ selectedSku.stock }}"
+                    >
+                        库存{{  selectedSku.stock }}件
+                    </view>
+                    <view
+                        class="sku-title"
+                    >
+                        已选择：{{ selectedSku.title }}
+                    </view>
+                </view>
+
+            </view>
+
+            <!-- 型号、购买数量 -->
+            <scroll-view
+                scroll-y
+                class="sku-standards-and-buy-block"
+            >
+
+                <view class="sku-standards-block">
+                    <view class="sku-info-title">
+                        型号
+                    </view>
+                    <!-- 型号 -->
+                    <view class="sku-standards" wx:if="{{ selectedSku }}">
+                        <view
+                            wx:for="{{ skuItems }}"
+                            wx:key="{{ index }}"
+                            class="sku-standards-item {{ item.canSelect ? '' : 'out_select' }} {{ item._id === selectedSku._id ? 'selecting' : '' }} "
+                        >
+                            {{ item.title }}
+                        </view>
+                    </view>
+                </view>
+                
+
+            </scroll-view>
 
         </view>
 

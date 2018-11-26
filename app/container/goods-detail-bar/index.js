@@ -42,8 +42,10 @@ Component({
         animationSkuBg: null,
         // 展开sku
         openSku: false,
-        // sku展示队列
-        skuItems: [ ]
+        // sku展示队列 _id, canSelect是否能选、 title名称、price价格、stock库存、pid产品id、sid型号id、img图片
+        skuItems: [ ],
+        // 选中的 sku
+        selectedSku: null
     },
 
     computed: {
@@ -57,7 +59,7 @@ Component({
         /** 拉取商品详情 */
         fetchDetail( id ) {
             const that = this;
-            if ( !id || !this.data.openSku ) { return; }
+            if ( !id ) { return; }
 
             wx.showLoading({
                 title: '加载中...',
@@ -71,23 +73,49 @@ Component({
                 success: function ( res ) {
       
                     let result = false;
+                    let skuItems = [ ];
                     const { status, data, } = res.result;
                     console.log( data );
                     if ( status !== 200 ) { return; }
 
-                    // 判断是否有库存
-                    const { _id, stock, standards, price } = data;
+                    // 判断是否有库存、设置sku的展示队列
+                    const { _id, stock, standards, price, title, img } = data;
+                    
                     if ( standards.length === 0 ) {
+                        // 只有单品本身
                         result = stock === undefined || stock > 0;
+                        skuItems = [{
+                            _id,
+                            title: '默认型号',
+                            price,
+                            stock,
+                            pid: _id,
+                            img: img[ 0 ],
+                            sid: null,
+                            canSelect: stock !== undefined && stock > 0
+                        }];
                     } else {
+                        // 有型号
                         result = standards.some( x => x.stock === undefined || x.stock > 0 )
-                    }
-
+                        skuItems = standards.map( x => ({
+                            _id: x._id,
+                            sid: x._id,
+                            pid: x.pid,
+                            title: x.name,
+                            img: x.img,
+                            stock: x.stock,
+                            price: x.price,
+                            canSelect: x.stock !== undefined && x.stock > 0
+                        }))
+                    }                    
                     wx.hideLoading({ });
                     that.setData({
+                        skuItems,
                         detail: data,
-                        hasStock: result
+                        hasStock: result,
+                        selectedSku: skuItems[ 0 ]
                     });
+                    console.log( skuItems, skuItems[ 0 ] )
                 },
                 fail: function( ) {
                     wx.showToast({
@@ -101,10 +129,10 @@ Component({
         /** 创建动画 */
         toggleAnimate( ) {
             const { openSku, pid } = this.data;
-
-            if ( !openSku ) {
-                this.fetchDetail( pid );
-            }
+            
+            // if ( !openSku ) {
+            //     this.fetchDetail( pid );
+            // }
 
             const animationSkuMeta = wx.createAnimation({ 
                 duration: 50,
@@ -132,11 +160,23 @@ Component({
                 animationSku: animationSkuMeta.export( ),
                 animationSkuBg: animationSkuBgMeta.export( )
             })
+        },
+        /** 预览图片 */
+        previewImg({ currentTarget }) {
+            const img = currentTarget.dataset.img;
+            wx.previewImage({
+                current: img,
+                urls: [ img ]
+            });
+        },
+        /** 禁止滑动 */
+        preventTouchMove( ) {
+
         }
     },
 
     attached: function( ) {
-        this.toggleAnimate( );
+        // this.toggleAnimate( );
     }
 
 })
