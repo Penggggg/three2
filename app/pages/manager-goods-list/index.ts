@@ -61,7 +61,6 @@ Page({
                 title: this.data.search
             },
             success: function ( res: any ) {
-                
                 const { status, data } = res.result;
                 if ( status === 200 ) {
                     const { page, totalPage, search } = data;

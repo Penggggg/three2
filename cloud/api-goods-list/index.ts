@@ -91,7 +91,8 @@ export const main = async (event, context) => {
         const standards = await Promise.all( metaList.map( x => {
           return db.collection('standards')
               .where({
-                pid: x._id
+                pid: x._id,
+                isDelete: false
               })
               .get( );
         }));

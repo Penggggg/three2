@@ -35,7 +35,13 @@ Component({
         // 商品详情
         detail: null,
         // 库存
-        hasStock: false
+        hasStock: false,
+        // 动画
+        animationSku: null,
+        // 动画
+        animationSkuBg: null,
+        // 展开sku
+        openSku: false
     },
 
     computed: {
@@ -88,5 +94,39 @@ Component({
                 }
             });
         },
+        /** 创建动画 */
+        toggleAnimate( ) {
+            const { openSku } = this.data;
+            const animationSkuMeta = wx.createAnimation({ 
+                duration: 250, 
+                timingFunction: 'ease-out', 
+                transformOrigin: '50% 50%',
+            });
+
+            const animationSkuBgMeta = wx.createAnimation({ 
+                duration: 250, 
+                timingFunction: 'ease-out', 
+                transformOrigin: '50% 50%',
+            });
+            
+            if ( !openSku ) {
+                animationSkuMeta.opacity( 0.3 ).translateY( '-75vh' ).opacity( 1 ).step( );
+                animationSkuBgMeta.opacity( 1 ).step( );
+            } else {
+                animationSkuMeta.opacity( 0.5 ).translateY( '75vh' ).opacity( 0 ).step( );
+                animationSkuBgMeta.opacity( 0 ).step( );
+            }
+
+            this.setData({
+                openSku: !openSku,
+                animationSku: animationSkuMeta.export( ),
+                animationSkuBg: animationSkuBgMeta.export( )
+            })
+        }
+    },
+
+    attached: function( ) {
+        // this.toggleAnimate( );
     }
+
 })
