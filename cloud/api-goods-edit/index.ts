@@ -10,6 +10,7 @@ const db: DB.Database = cloud.database();
  * -------- 请求 ----------
  * {
  *      _id: id
+ *      isDelete: 是否删除
  *      title: 商品名称 String
  *      detail!: 商品描述 String
  *      tag: 商品标签 Array<String>

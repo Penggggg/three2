@@ -437,12 +437,14 @@ Component({
       const _id = this.data.pid;
 
       if ( !_id ) {
+          isDelete: false,
           goodsDetail = Object.assign({ }, goodsDetail, {
             createTime: new Date( ).getTime( )
           });
       } else {
           goodsDetail = Object.assign({ }, goodsDetail, {
-            _id
+            _id,
+            isDelete: false,
           });
       }
 
