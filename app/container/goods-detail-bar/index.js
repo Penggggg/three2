@@ -45,7 +45,8 @@ Component({
         // sku展示队列 _id, canSelect是否能选、 title名称、price价格、stock库存、pid产品id、sid型号id、img图片
         skuItems: [ ],
         // 选中的 sku
-        selectedSku: null
+        selectedSku: null,
+        selectdSkuCount: 1
     },
 
     computed: {
@@ -75,9 +76,9 @@ Component({
                     let result = false;
                     let skuItems = [ ];
                     const { status, data, } = res.result;
-                    console.log( data );
+                    
                     if ( status !== 200 ) { return; }
-
+                    
                     // 判断是否有库存、设置sku的展示队列
                     const { _id, stock, standards, price, title, img } = data;
                     
@@ -115,7 +116,6 @@ Component({
                         hasStock: result,
                         selectedSku: skuItems[ 0 ]
                     });
-                    console.log( skuItems, skuItems[ 0 ] )
                 },
                 fail: function( ) {
                     wx.showToast({
@@ -172,6 +172,27 @@ Component({
         /** 禁止滑动 */
         preventTouchMove( ) {
 
+        },
+        /** 选择 sku */
+        onSelectSku({ currentTarget }) {
+            const tappingSku = currentTarget.dataset.standard;
+            if ( !tappingSku.canSelect ) { return; }
+            this.setData({
+                selectdSkuCount: 1,
+                selectedSku: tappingSku
+            });
+        },
+        /** sku 数量 */
+        onSkuCount({ detail }) {
+            this.setData({
+                selectdSkuCount: detail.number
+            });
+        },
+        /** 确定购买 */
+        confirmSelect( ) {
+            const { selectedSku, selectdSkuCount } = this.data;
+            console.log( selectedSku, selectdSkuCount );
+            this.toggleAnimate( );
         }
     },
 

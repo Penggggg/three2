@@ -81,13 +81,13 @@
 
             <!-- 关闭按钮 -->
             <view
-                bindtap="toggleAnimate"
                 class="sku-close-btn"
             >
                 <wxc-icon
                     size="40"
                     type="no"
                     color="#e8e8e8"
+                    bindtap="toggleAnimate"
                 />
             </view>
 
@@ -135,24 +135,49 @@
                 class="sku-standards-and-buy-block"
             >
 
+                <!-- 型号 -->
                 <view class="sku-standards-block">
                     <view class="sku-info-title">
                         型号
                     </view>
-                    <!-- 型号 -->
                     <view class="sku-standards" wx:if="{{ selectedSku }}">
                         <view
                             wx:for="{{ skuItems }}"
                             wx:key="{{ index }}"
+                            data-standard="{{ item }}"
+                            bindtap="onSelectSku"
                             class="sku-standards-item {{ item.canSelect ? '' : 'out_select' }} {{ item._id === selectedSku._id ? 'selecting' : '' }} "
                         >
                             {{ item.title }}
                         </view>
                     </view>
                 </view>
+
+                <!-- 购买数量 -->
+                <view class="sku-count-block sku-standards-block">
+                    <view class="sku-info-title sku-count-title">
+                        购买数量
+                    </view>
+                    <wxc-counter
+                        min="{{ 1 }}"
+                        number="{{ selectdSkuCount }}"
+                        max="{{ selectedSku.stock || 99999999 }}"
+                        bind:changenumber="onSkuCount"
+                    />
+                </view>
                 
 
             </scroll-view>
+
+            <!-- 确认按钮 -->
+            <view class="sku-btn-block">
+                <view
+                    class="sku-btn"
+                    bindtap="confirmSelect"
+                >   
+                    确定
+                </view>  
+            </view>
 
         </view>
 

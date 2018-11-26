@@ -12,6 +12,7 @@
   "dependencies": {
     "@minui/wxc-button": "^1.0.2",
     "@minui/wxc-countdown": "^1.0.6",
+    "@minui/wxc-counter": "^1.0.6",
     "@minui/wxc-icon": "^1.0.9",
     "@minui/wxc-input": "^1.0.2",
     "@minui/wxc-label": "^1.0.5",
