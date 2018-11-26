@@ -80,6 +80,10 @@
     background: rgba( 0, 0, 0, 0.5 );
 }
 
+.hide {
+    bottom: -100vh;
+}
+
 .sku-contaienr-bg {
     /* top: 0; */
     left: 0;
@@ -94,7 +98,15 @@
 
 .sku-container-block {
     height: 100%;
+    position: relative;
     background: #fff;
     box-sizing: border-box;
     border-radius: 10px 10px 0 0;
+}
+
+.sku-close-btn {
+    top: 20rpx;
+    right: 20rpx;
+    padding: 5rpx;
+    position: absolute;
 }

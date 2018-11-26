@@ -41,7 +41,9 @@ Component({
         // 动画
         animationSkuBg: null,
         // 展开sku
-        openSku: false
+        openSku: false,
+        // sku展示队列
+        skuItems: [ ]
     },
 
     computed: {
@@ -70,9 +72,11 @@ Component({
       
                     let result = false;
                     const { status, data, } = res.result;
+                    console.log( data );
                     if ( status !== 200 ) { return; }
 
-                    const { _id, stock, standards } = data;
+                    // 判断是否有库存
+                    const { _id, stock, standards, price } = data;
                     if ( standards.length === 0 ) {
                         result = stock === undefined || stock > 0;
                     } else {
@@ -103,6 +107,7 @@ Component({
             }
 
             const animationSkuMeta = wx.createAnimation({ 
+                duration: 50,
                 duration: 250, 
                 timingFunction: 'ease-out', 
                 transformOrigin: '50% 50%',
@@ -131,7 +136,7 @@ Component({
     },
 
     attached: function( ) {
-        // this.toggleAnimate( );
+        this.toggleAnimate( );
     }
 
 })
