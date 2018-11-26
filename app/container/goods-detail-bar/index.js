@@ -55,7 +55,7 @@ Component({
         /** 拉取商品详情 */
         fetchDetail( id ) {
             const that = this;
-            if ( !id ) { return; }
+            if ( !id || !this.data.openSku ) { return; }
 
             wx.showLoading({
                 title: '加载中...',
@@ -96,7 +96,12 @@ Component({
         },
         /** 创建动画 */
         toggleAnimate( ) {
-            const { openSku } = this.data;
+            const { openSku, pid } = this.data;
+
+            if ( !openSku ) {
+                this.fetchDetail( pid );
+            }
+
             const animationSkuMeta = wx.createAnimation({ 
                 duration: 250, 
                 timingFunction: 'ease-out', 
