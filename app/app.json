@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/manager-goods-list/index",
     "pages/cart-list/index",
+    "pages/manager-goods-list/index",
     "pages/goods-detail/index",
     "pages/index/index",
     "pages/manager-goods-detail/index"
@@ -29,7 +29,7 @@
   },
   "window": {
     "navigationBarTextStyle": "white",
-    "navigationBarTitleText": "c",
+    "navigationBarTitleText": "香港真品代购",
     "navigationBarBackgroundColor": "#ff5777"
   }
 }

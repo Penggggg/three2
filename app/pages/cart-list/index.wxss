@@ -5,6 +5,10 @@
     font-size: 28rpx;
 }
 
+.pcl-flex {
+    display: flex;
+}
+
 .pcl-text-red {
     color: #ff5777;
 }
@@ -111,6 +115,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-top: 20rpx;
     justify-content: space-between;
 }
 
@@ -149,6 +154,11 @@
 .pcl-price {
     color: #ff5777;
     font-size: 34rpx;
+}
+
+.pcl-price.del {
+    margin-left: 10rpx;
+    font-size: 26rpx;
 }
 
 .pcl-counter {

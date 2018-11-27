@@ -16,8 +16,8 @@
         <view class="pcl-cart-list-block">
             <view
                 wx:key="{{ index }}"
-                class="pcl-cart-list-item"
                 wx:for="{{ cartList }}"
+                class="pcl-cart-list-item"
             >
                 <!-- 选择框、图片、标题、限购、信息、价格、计数器 -->
                 <view class="pcl-cart-item-top">
@@ -25,75 +25,105 @@
                     <switch
                         color='#ff5777'
                         type="checkbox"
-                        bindchange="c"
+                        catch:change="c"
                         checked="{{ item.selected }}"
                         class="pcl-cart-item-radio"
                     />
 
-                    <image
-                        mode="aspectFill"
-                        class="pcl-cart-item-img"
-                        src="{{ item.current.img }}"
-                    />
+                    <view
+                        class="pcl-flex"
+                        bindtap="goDetail"
+                        data-cart="{{ item }}"
+                    >
+                        <!-- 图片 -->
+                        <image
+                            mode="aspectFill"
+                            class="pcl-cart-item-img"
+                            src="{{ item.current.img }}"
+                        />
 
-                    <view class="pcl-cart-item-msg-block">
+                        <view class="pcl-cart-item-msg-block">
 
-                        <!-- 标题 -->
-                        <view class="pcl-cart-item-title"> 
-                            {{ item.current.title }}
-                        </view> 
+                            <!-- 标题 -->
+                            <view class="pcl-cart-item-title"> 
+                                {{ item.current.title }}
+                            </view> 
 
-                        <!-- 团购信息 -->
-                        <view
-                            class="pcl-cart-item-info grey"
-                        >
-                            立即购买<text class="pcl-text-red">自动拼团</text>
-                        </view>
+                            <!-- 团购信息 -->
+                            <!-- <view
+                                class="pcl-cart-item-info grey"
+                            >
+                                立即购买<text class="pcl-text-red">自动拼团</text>
+                            </view> -->
 
-                        <!-- 优惠信息 -->
-                        <view
-                            class="pcl-cart-item-info grey"
-                            wx:if="{{ item.current.price < item.current.lastPrice }}"
-                        >
-                            比加入时<text class="pcl-text-red">便宜{{ item.current.lastPrice - item.current.price }}元！</text>
-                        </view>
-
-                        <!-- 限购信息 -->
-                        <!-- <view
-                            wx:if="{{ item.current.limit }}"
-                            class="pcl-cart-item-info grey"
-                        >
-                            限购{{ item.current.limit }}件
-                        </view> -->
-
-                        <!-- 价格、数量 -->
-                        <view class="pcl-cart-item-price-block">
-                            <wxc-price
-                                decimal="small"
-                                class="pcl-price"
-                            > 
-                                {{ item.current.price }}
-                            </wxc-price>
-                            <view class="pcl-counter">
-                                <text class="pcl-counter-opt del">-</text>
-                                {{ item.current.count }}
-                                <text class="pcl-counter-opt add">+</text>
+                            <!-- 优惠信息 -->
+                            <view
+                                class="pcl-cart-item-info grey"
+                                wx:if="{{ item.current.price < item.current.lastPrice }}"
+                            >
+                                该商品<text class="pcl-text-red">降价了{{ item.current.lastPrice - item.current.price }}元！</text>
                             </view>
-                        </view>
 
+                            <!-- 限购信息 -->
+                            <!-- <view
+                                wx:if="{{ item.current.limit }}"
+                                class="pcl-cart-item-info grey"
+                            >
+                                限购{{ item.current.limit }}件
+                            </view> -->
+
+                            <!-- 价格、数量 -->
+                            <view class="pcl-cart-item-price-block">
+                                <view>
+                                    <wxc-price
+                                        icon="sub"
+                                        decimal="small"
+                                        class="pcl-price"
+                                    > 
+                                        {{ item.current.price }}
+                                    </wxc-price>
+                                    <wxc-price
+                                        icon="sub"
+                                        status="del"
+                                        decimal="small"
+                                        class="pcl-price del"
+                                        del-color="#999"
+                                    > 
+                                        {{ item.current.lastPrice }}
+                                    </wxc-price>
+                                </view>
+                                <view
+                                    class="pcl-counter"
+                                    catch:tap="toggleSku"
+                                >
+                                    <text class="pcl-counter-opt del">-</text>
+                                    {{ item.current.count }}
+                                    <text class="pcl-counter-opt add">+</text>
+                                </view>
+                            </view>
+
+                        </view>
                     </view>
 
                 </view>
 
                 <!-- 省钱icon -->
                 <view class="pcl-cart-item-icon">
-                    省钱
+                    可拼团
                 </view>
                 
             </view>
         </view>
 
     </scroll-view>
+
+    <!-- sku -->
+    <!-- <my-sku-popup
+        open="{{ openSku }}"
+        skuItems="{{ skuItems }}"
+        bind:close="onCloseSku"
+        bind:confirm="onConfirmSku"
+    /> -->
     
     <!-- 底部结算栏 -->
     <view class="pcl-settlet-block">

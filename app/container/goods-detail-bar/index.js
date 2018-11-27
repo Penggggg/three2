@@ -138,7 +138,7 @@ Component({
                     canSelect: x.stock !== undefined && x.stock > 0
                 }))
             } 
-
+            
             that.setData({
                 skuItems,
                 hasStock: result,

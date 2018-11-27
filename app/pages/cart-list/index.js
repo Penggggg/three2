@@ -6,7 +6,9 @@ Page({
      */
     data: {
         /** 购物车列表 含商品详情、型号详情 */
-        cartList: [ ]
+        cartList: [ ],
+        /** 弹出sku时，所选的cart */
+        selectedCart: null
     },
 
     fetchList: function( ) {
@@ -83,6 +85,17 @@ Page({
 
     c: function( e ) {
         console.log(e)
+    },
+
+    goDetail({ currentTarget }) {
+        const pid = currentTarget.dataset.cart.detail._id;
+        wx.navigateTo({
+            url: `/pages/goods-detail/index?id=${pid}`
+        });
+    },
+
+    toggleSku( e ) {
+        console.log( e )
     },
 
     /**
