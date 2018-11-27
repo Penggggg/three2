@@ -61,6 +61,44 @@ Component({
      * 组件的方法列表
      */
     methods: {
+        /** 展开/关闭 sku */
+        toggleSku( e ) {
+            const { openSku } = this.data;
+            this.setData({
+                openSku: !this.data.openSku
+            });
+            if ( !openSku && e ) {
+                this.setData({
+                    skuSelectType: e.currentTarget.dataset.type
+                })
+            }
+        },
+        /** 关闭sku */
+        onCloseSku( e ) {
+            this.setData({
+                openSku: e.detail
+            })
+        },
+        /** 选择sku */
+        onConfirmSku( e ) {
+
+            const selectedSku = e.detail;
+            const { skuSelectType } = this.data;
+
+            // 寻找当前sku的cart记录，插入_id
+            const skuItem = {
+                pid: this.data.detail._id,
+                count: selectedSku.count,
+                standarad_id: selectedSku.sid,
+                current_price: selectedSku.price
+            };
+
+            if ( skuSelectType === 'cart' ) {
+                this.putCart( skuItem );
+            } else if ( skuSelectType === 'buy' ) {
+                this.buy( skuItem );
+            }
+        },
         /** 处理商品详情 */
         dealDetail( data ) {
 
@@ -107,90 +145,6 @@ Component({
                 selectedSku: skuItems[ 0 ]
             });
         },
-        /** 创建动画 */
-        toggleAnimate( e ) {
-            
-            const { openSku } = this.data;
-
-            if ( !openSku && e ) {
-                this.setData({
-                    skuSelectType: e.currentTarget.dataset.type
-                })
-            }
-
-            const animationSkuMeta = wx.createAnimation({ 
-                duration: 50,
-                duration: 250, 
-                timingFunction: 'ease-out', 
-                transformOrigin: '50% 50%',
-            });
-
-            const animationSkuBgMeta = wx.createAnimation({ 
-                duration: 250, 
-                timingFunction: 'ease-out', 
-                transformOrigin: '50% 50%',
-            });
-            
-            if ( !openSku ) {
-                animationSkuMeta.opacity( 0.3 ).translateY( '-75vh' ).opacity( 1 ).step( );
-                animationSkuBgMeta.opacity( 1 ).step( );
-            } else {
-                animationSkuMeta.opacity( 0.5 ).translateY( '75vh' ).opacity( 0 ).step( );
-                animationSkuBgMeta.opacity( 0 ).step( );
-            }
-
-            this.setData({
-                openSku: !openSku,
-                animationSku: animationSkuMeta.export( ),
-                animationSkuBg: animationSkuBgMeta.export( )
-            })
-        },
-        /** 预览图片 */
-        previewImg({ currentTarget }) {
-            const img = currentTarget.dataset.img;
-            wx.previewImage({
-                current: img,
-                urls: [ img ]
-            });
-        },
-        /** 禁止滑动 */
-        preventTouchMove( ) {
-
-        },
-        /** 选择 sku */
-        onSelectSku({ currentTarget }) {
-            const tappingSku = currentTarget.dataset.standard;
-            if ( !tappingSku.canSelect ) { return; }
-            this.setData({
-                selectdSkuCount: 1,
-                selectedSku: tappingSku
-            });
-        },
-        /** sku 数量 */
-        onSkuCount({ detail }) {
-            this.setData({
-                selectdSkuCount: detail.number
-            });
-        },
-        /** 选择购物车 */
-        confirmSelect( ) {
-            const { selectedSku, selectdSkuCount, skuSelectType } = this.data;
-
-            // 寻找当前sku的cart记录，插入_id
-            const skuItem = {
-                pid: this.data.detail._id,
-                count: selectdSkuCount,
-                standarad_id: selectedSku.sid,
-                current_price: selectedSku.price
-            };
-            this.toggleAnimate( );
-
-            if ( skuSelectType === 'cart' ) {
-                this.putCart( skuItem );
-            } else if ( skuSelectType === 'buy' ) {
-                this.buy( skuItem );
-            }
-        },
         /** 加入购物车 */
         putCart( item ) {
 
@@ -198,8 +152,6 @@ Component({
             wx.showLoading({
                 title: '添加中...',
             });
-
-            console.log( item );
 
             wx.cloud.callFunction({
                 name: 'api-cart-edit',
@@ -238,7 +190,7 @@ Component({
     },
 
     attached: function( ) {
-        // this.toggleAnimate( );
+        
     }
 
 })

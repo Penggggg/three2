@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/cart-list/index",
     "pages/manager-goods-list/index",
+    "pages/cart-list/index",
     "pages/goods-detail/index",
     "pages/index/index",
     "pages/manager-goods-detail/index"
@@ -11,6 +11,7 @@
     "my-manager-entry-btn": "./container/manager-entry-btn/index",
     "my-active-form": "./components/active-form/index",
     "my-img-upload": "./components/img-upload/index",
+    "my-sku-popup": "./container/sku-popup/index",
     "my-goods-detail-bar": "./container/goods-detail-bar/index",
     "i-drawer": "./dist/iview/drawer/index",
     "i-modal": "./dist/iview/modal/index",
