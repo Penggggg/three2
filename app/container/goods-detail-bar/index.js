@@ -47,7 +47,11 @@ Component({
         // 选中的 sku
         selectedSku: null,
         // 所选sku的购买数量
-        selectdSkuCount: 1
+        selectdSkuCount: 1,
+        // 选择sku的类型：cart、buy，（购物车、立即购买）
+        skuSelectType: null,
+        // skuId或pid与cartId的映射关系
+        skuMapCart: { }
     },
 
     computed: {
@@ -77,7 +81,7 @@ Component({
                     let result = false;
                     let skuItems = [ ];
                     const { status, data, } = res.result;
-                    console.log( data );
+               
                     if ( status !== 200 ) { return; }
                     
                     // 判断是否有库存、设置sku的展示队列
@@ -119,6 +123,9 @@ Component({
                         hasStock: result,
                         selectedSku: skuItems[ 0 ]
                     });
+
+                    that.checkCart( skuItems[ 0 ])
+
                 },
                 fail: function( ) {
                     wx.showToast({
@@ -130,12 +137,15 @@ Component({
             });
         },
         /** 创建动画 */
-        toggleAnimate( ) {
-            const { openSku, pid } = this.data;
+        toggleAnimate( e ) {
             
-            // if ( !openSku ) {
-            //     this.fetchDetail( pid );
-            // }
+            const { openSku, pid } = this.data;
+
+            if ( !openSku && e ) {
+                this.setData({
+                    skuSelectType: e.currentTarget.dataset.type
+                })
+            }
 
             const animationSkuMeta = wx.createAnimation({ 
                 duration: 50,
@@ -184,6 +194,7 @@ Component({
                 selectdSkuCount: 1,
                 selectedSku: tappingSku
             });
+            this.checkCart( tappingSku );
         },
         /** sku 数量 */
         onSkuCount({ detail }) {
@@ -191,11 +202,102 @@ Component({
                 selectdSkuCount: detail.number
             });
         },
-        /** 确定购买 */
+        /** 选择购物车 */
         confirmSelect( ) {
-            const { selectedSku, selectdSkuCount } = this.data;
-            console.log( selectedSku, selectdSkuCount );
+            const { skuMapCart, selectedSku, selectdSkuCount, skuSelectType } = this.data;
+            // 寻找当前sku的cart记录，插入_id
+            const skuItem = {
+                _id: skuMapCart[ selectedSku._id ],
+                pid: this.data.pid,
+                count: selectdSkuCount,
+                standarad_id: selectedSku.sid,
+                current_price: selectedSku.price
+            };
             this.toggleAnimate( );
+
+            if ( skuSelectType === 'cart' ) {
+                this.putCart( skuItem );
+            } else if ( skuSelectType === 'buy' ) {
+                this.buy( skuItem );
+            }
+        },
+        /** 加入购物车 */
+        putCart( item ) {
+            const that = this;
+            wx.showLoading({
+                title: '添加中...',
+            });
+
+            wx.cloud.callFunction({
+                name: 'api-cart-edit',
+                data: {
+                    data: item
+                },
+                // 返回cart_id，插入到 skuMapCart 这个变量中，下次就是更新/而不是新增
+                success: res => {
+                    wx.hideLoading({ });
+                    const { status, data } = res.result;
+                    const { skuMapCart, selectedSku } = that.data;
+        
+                    if ( status !== 200 ) { return; }
+                    wx.showToast({
+                        title: '添加成功'
+                    });
+                    that.setData({
+                        skuMapCart: Object.assign({ }, skuMapCart, {
+                            [ selectedSku._id ]: data
+                        })
+                    });
+                },
+                fail: err => {
+                    wx.showToast({
+                        icon: 'none',
+                        title: '添加失败',
+                    });
+                    wx.hideLoading({ });
+                }
+            })
+        },
+        /** 立即购买 */
+        buy( item ) {
+
+        },
+        /** 查询当前sku的 cart记录 */
+        checkCart( sku ) {
+            const that = this;
+            const { sid, pid, _id } = sku;
+            const { skuMapCart } = this.data;
+            console.log(  sid, pid, _id )
+            if ( !!skuMapCart[ _id ]) { return; }
+
+            wx.cloud.callFunction({
+                name: 'api-cart-detail',
+                data: {
+                    data: {
+                        sid, pid
+                    }
+                },
+                // 返回cart_id，插入到 skuMapCart 这个变量中，用于更新
+                success: res => {
+                    wx.hideLoading({ });
+                    const { status, data } = res.result;
+                    const { skuMapCart, selectedSku } = that.data;
+             
+                    if ( status !== 200 ) { return; }
+
+                    that.setData({
+                        skuMapCart: Object.assign({ }, skuMapCart, {
+                            [ selectedSku._id ]: data._id
+                        })
+                    });
+                },
+                fail: err => {
+                    wx.showToast({
+                        icon: 'none',
+                        title: '查询购物车失败',
+                    });
+                }
+            })      
         }
     },
 

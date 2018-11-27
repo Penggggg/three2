@@ -44,12 +44,15 @@
                 class="gbs-btn-special-item"
             >
                 <view
+                    data-type="cart"
                     bindtap="toggleAnimate"
                     class="gbs-btn-special-item pink"
                 >   
                     加入购物车
                 </view>
                 <view
+                    data-type="buy"
+                    bindtap="toggleAnimate"
                     class="gbs-btn-special-item morepink"
                 >   
                     立即购买
