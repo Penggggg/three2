@@ -107,7 +107,7 @@ Component({
         /** 创建动画 */
         toggleAnimate( e ) {
             
-            const { openSku, pid } = this.data;
+            const { openSku } = this.data;
 
             if ( !openSku && e ) {
                 this.setData({
@@ -175,7 +175,7 @@ Component({
 
             // 寻找当前sku的cart记录，插入_id
             const skuItem = {
-                pid: this.data.pid,
+                pid: this.data.detail._id,
                 count: selectdSkuCount,
                 standarad_id: selectedSku.sid,
                 current_price: selectedSku.price

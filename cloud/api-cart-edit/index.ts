@@ -39,7 +39,7 @@ export const main = async (event, context) => {
                 })
                 .get( );
         const result = find$.data[ 0 ];
-
+        
         if ( !result ) {
             // 创建
             const create$ = await db.collection('cart').add({
