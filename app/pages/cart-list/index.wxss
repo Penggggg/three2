@@ -19,7 +19,7 @@
 
 .pcl-info-block {
     height: 250rpx;
-    padding: 25rpx;
+    padding: 0rpx 25rpx 25rpx;
     background: #ff5777;
     box-sizing: border-box;
 }

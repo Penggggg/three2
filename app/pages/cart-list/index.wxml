@@ -5,8 +5,16 @@
     <!-- 顶部栏、购物车、猜你喜欢列表 -->
     <scroll-view scroll-y class="pcl-cart-like-block">
 
-        <!-- 顶部宝贝数量 -->
+        <!-- 顶部通知栏、宝贝数量 -->
         <view class="pcl-info-block">
+
+            <wxc-notice
+                scroll="{{true}}"
+                close="{{true}}"
+                show-icon="{{true}}"
+                notice="香港代购将于8月11日出发，请放心购买～"
+            />
+
             <view class="pcl-info">
                 共{{ cartList.length }}件宝贝
             </view>

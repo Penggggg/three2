@@ -18,6 +18,7 @@
     "@minui/wxc-label": "^1.0.5",
     "@minui/wxc-list": "^1.0.1",
     "@minui/wxc-mask": "^1.0.8",
+    "@minui/wxc-notice": "^1.0.1",
     "@minui/wxc-popup": "^1.0.10",
     "@minui/wxc-price": "^1.0.8",
     "@minui/wxc-search": "^1.0.1",
