@@ -117,7 +117,7 @@ Page({
         const that = this;
 
         return list.map( x => {
-            console.log( x );
+         
             // 设置型号、库存的价格
             let stock = x.stock;
             let price = x.price;

@@ -118,7 +118,7 @@
                         class="sku-stock"
                         wx:if="{{ selectedSku.stock }}"
                     >
-                        库存{{  selectedSku.stock }}件
+                        库存{{ selectedSku.stock }}件<text wx:if="{{ selectedSku.limit }}">，限购{{ selectedSku.limit }}件</text>
                     </view>
                     <view
                         class="sku-title"
@@ -161,7 +161,7 @@
                     <wxc-counter
                         min="{{ 1 }}"
                         number="{{ selectdSkuCount }}"
-                        max="{{ selectedSku.stock || 99999999 }}"
+                        max="{{ selectedSku.limit || selectedSku.stock || 99999999 }}"
                         bind:changenumber="onSkuCount"
                     />
                 </view>
