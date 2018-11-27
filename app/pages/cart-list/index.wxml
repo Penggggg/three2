@@ -1,0 +1,6 @@
+<!--app/pages/cart-list/index.wxml-->
+
+<view class="p-cart-list">
+
+    <my-nav />
+</view>

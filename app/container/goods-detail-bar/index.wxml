@@ -10,6 +10,8 @@
             class="gbs-btn-item"
             wx:for="{{ btnList }}"
             wx:key="{{ index }}"
+            data-url="{{ item.url }}"
+            bindtap="navigate"
         >
             <image
                 mode="aspectFill"
@@ -100,7 +102,7 @@
                 <!-- 图片 -->
                 <view class="sku-img-block" wx:if="{{ selectedSku }}">
                     <image
-                        class="sku-img"
+                        class="sku-img {{ openSku ? '' : 'hide' }}"
                         mode="aspectFill"
                         bindtap='previewImg'
                         src="{{ selectedSku.img }}"

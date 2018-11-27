@@ -131,6 +131,10 @@
     box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
 }
 
+.sku-img.hide {
+    top: 0;
+}
+
 .sku-price-block {
     display: flex;
     flex-direction: column;
