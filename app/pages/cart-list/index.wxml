@@ -2,5 +2,115 @@
 
 <view class="p-cart-list">
 
+    <!-- 顶部栏、购物车、猜你喜欢列表 -->
+    <scroll-view scroll-y class="pcl-cart-like-block">
+
+        <!-- 顶部宝贝数量 -->
+        <view class="pcl-info-block">
+            <view class="pcl-info">
+                共{{ cartList.length }}件宝贝
+            </view>
+        </view>
+
+        <!-- 购物车列表 -->
+        <view class="pcl-cart-list-block">
+            <view
+                wx:key="{{ index }}"
+                class="pcl-cart-list-item"
+                wx:for="{{ cartList }}"
+            >
+                <!-- 选择框、图片、标题、限购、信息 -->
+                <view class="pcl-cart-item-top">
+
+                    <switch
+                        color='#ff5777'
+                        type="checkbox"
+                        bindchange="c"
+                        checked="{{ item.selected }}"
+                        class="pcl-cart-item-radio"
+                    />
+
+                    <image
+                        mode="aspectFill"
+                        class="pcl-cart-item-img"
+                        src="{{ item.current.img }}"
+                    />
+
+                    <view class="pcl-cart-item-msg-block">
+
+                        <!-- 标题 -->
+                        <view class="pcl-cart-item-title"> 
+                            {{ item.current.title }}
+                        </view> 
+
+                        <!-- 团购信息 -->
+                        <view
+                            class="pcl-cart-item-info"
+                        >
+                            立即购买可自动拼团
+                        </view>
+
+                        <!-- 优惠信息 -->
+                        <view
+                            class="pcl-cart-item-info"
+                            wx:if="{{ item.current.price < item.current.lastPrice }}"
+                        >
+                            比加入时，便宜{{ item.current.lastPrice - item.current.price }}元！
+                        </view>
+
+                        <!-- 限购信息 -->
+                        <view
+                            wx:if="{{ item.current.limit }}"
+                            class="pcl-cart-item-info grey"
+                        >
+                            限购{{ item.current.limit }}件
+                        </view>
+
+                        
+
+                    </view>
+
+                </view>
+
+                <!-- 价格、计数器 -->
+                
+            </view>
+        </view>
+
+    </scroll-view>
+    
+    <!-- 底部结算栏 -->
+    <view class="pcl-settlet-block">
+
+        <!-- 全选 -->
+        <view class="pcl-settlet-radio pcl-text">
+            <switch
+                checked
+                color='#ff5777'
+                type="checkbox"
+                bindchange="c"
+            />
+            全选
+        </view>
+
+        <!-- 合计、结算 -->
+        <view class="pcl-settlet-msg">
+            <view class="pcl-settlet-price pcl-text">
+                合计:
+                <wxc-price
+                    decimal="small"
+                    class="pcl-price"
+                > 
+                    0
+                </wxc-price>
+            </view>
+            <view class="pcl-settlet-btn">
+                结算
+            </view>
+        </view>
+
+    </view>
+
+    <!-- 底部导航栏 -->
     <my-nav />
 </view>

@@ -5,7 +5,8 @@ Page({
      * 页面的初始数据
      */
     data: {
-
+        /** 购物车列表 含商品详情、型号详情 */
+        cartList: [ ]
     },
 
     fetchList: function( ) {
@@ -20,7 +21,55 @@ Page({
             success: res => {
                 wx.hideLoading({ });
                 const { status, data } = res.result;
-                console.log( data );
+
+                if ( status !== 200 ) { return; }
+
+                // 处理：计算当前选择的sku，并设置为current
+                const dealed = data.map( x => {
+
+                    let current = null;
+                    const { cart, detail } = x;
+                    if ( !cart.standarad_id ) {
+                        const { _id, title, price, img, stock, limit } = detail;
+                        current = {
+                            sid: null,
+                            standaradName: null,
+                            stock,
+                            price,
+                            img: detail.img[ 0 ]
+                        }
+                    } else {
+                        const currentStandard = detail.standards.find( x => x._id === cart.standarad_id );
+                        const { name, price, img, stock } = currentStandard;
+                        current = {
+                            img,
+                            price,
+                            stock,
+                            standaradName: name,
+                            sid: cart.standarad_id,
+                        }
+                    }
+
+                    current = Object.assign({ }, current, {
+                        pid: detail._id,
+                        title: detail.title,
+                        limit: detail.limit,
+                        // 当前已选数量
+                        count: cart.count,
+                        // 之前选中时候的价格
+                        lastPrice: cart.current_price,
+                        // 勾选框
+                        selected: false
+                    })
+                    
+                    return Object.assign({ }, x , { current });
+                });
+
+                console.log( dealed );
+
+                this.setData({
+                    cartList: dealed
+                })
             },
             fail: err => {
                 wx.showToast({
@@ -30,6 +79,10 @@ Page({
                 wx.hideLoading({ });
             }
         })
+    },
+
+    c: function( e ) {
+        console.log(e)
     },
 
     /**
