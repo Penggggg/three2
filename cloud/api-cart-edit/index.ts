@@ -26,10 +26,21 @@ export const main = async (event, context) => {
 
     try {
 
-        let _id = event.data._id;
+        let _id: any = '';
+        let { pid, standarad_id } = event.data;
         const openid = event.userInfo.openId;
 
-        if ( !_id ) {
+        // 先用sid + pid查询有没有已有的cart，有则更新，无则创建
+        const find$ = await db.collection('cart')
+                .where({
+                    pid,
+                    openid,
+                    standarad_id,
+                })
+                .get( );
+        const result = find$.data[ 0 ];
+
+        if ( !result ) {
             // 创建
             const create$ = await db.collection('cart').add({
                 data: Object.assign({ }, event.data, {
@@ -41,10 +52,10 @@ export const main = async (event, context) => {
 
         } else {
             // 编辑
-            delete event.data[ _id ];
-            await db.collection('cart').doc( _id ).update({
+            await db.collection('cart').doc( (result as any)._id ).update({
                 data: event.data
             })
+            _id = find$.data[ 0 ]._id;
         }
 
         return new Promise( resolve => {

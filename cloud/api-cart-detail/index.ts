@@ -27,6 +27,8 @@ export const main = async (event, context) => {
         const { sid, pid } = event.data;
         const openid = event.userInfo.openId;
 
+        
+
         if ( !!sid ) {
             find$ = await db.collection('cart')
                             .where({

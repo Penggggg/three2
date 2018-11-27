@@ -220,6 +220,7 @@
         <!-- 商品下面的栏 -->
         <my-goods-detail-bar
             pid="{{ id }}"
+            detail="{{ detail }}"
         />
 
     </view> 
