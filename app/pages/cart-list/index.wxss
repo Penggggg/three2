@@ -164,6 +164,14 @@
     padding: 0 20rpx;
 }
 
+.pcl-counter-opt.del {
+    margin-right: 10rpx;
+}
+
+.pcl-counter-opt.add {
+    margin-left: 10rpx;
+}
+
 .pcl-counter-opt.del:after {
     top: 0;
     width: 1px;
