@@ -47,13 +47,13 @@
                     bindtap="toggleAnimate"
                     class="gbs-btn-special-item pink"
                 >   
-                    立即购买
+                    加入购物车
                 </view>
-                <!-- <view
+                <view
                     class="gbs-btn-special-item morepink"
                 >   
                     立即购买
-                </view> -->
+                </view>
             </view>
             
 

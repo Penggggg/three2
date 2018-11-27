@@ -117,16 +117,24 @@ Page({
         const that = this;
 
         return list.map( x => {
-
+            console.log( x );
             // 设置型号、库存的价格
             let stock = x.stock;
             let price = x.price;
 
-            // 型号只有1种
-            if ( x.standards.length === 1 ) {
+            // 是否需要显示红色字体的货存
+            const origin: any = [ ...that.data.stockNeed ];
 
+            // 没有型号
+            if ( x.standards.length === 0 ) {
+                stock = x.stock;
+                price = x.price;
+                origin.push( stock !== undefined && stock < 10 );
+                
+            } else if ( x.standards.length === 1 ) {
                 stock = x.standards[0].stock;
                 price = x.standards[ 0 ].price;
+                origin.push( stock !== undefined && stock < 10 );
             
             // 型号大于1种
             } else if ( x.standards.length > 1 ) {
@@ -151,13 +159,15 @@ Page({
                       stock = `${sortedStock[0].stock}~${sortedStock[sortedStock.length - 1].stock}`;
                   }
                 }
+
+                origin.push(((stock !== undefined) && (Number(String(stock).split('~')[0]) < 10)));
+
             }
           
-            const origin: any = [ ...that.data.stockNeed ];
-            origin.push(((stock !== undefined) && (Number(stock.split('~')[0]) < 10)));
             that.setData!({
                 stockNeed: origin
             });
+
             return Object.assign({ }, x, {
                 stock,
                 price
