@@ -9,9 +9,27 @@ Page({
     },
 
     fetchList: function( ) {
-        // wx.cloud.callFunction({
+        const that = this;
+        wx.showLoading({
+            title: '加载中...',
+        });
 
-        // })
+        wx.cloud.callFunction({
+            data: { },
+            name: 'api-cart-list',
+            success: res => {
+                wx.hideLoading({ });
+                const { status, data } = res.result;
+                console.log( data );
+            },
+            fail: err => {
+                wx.showToast({
+                    icon: 'none',
+                    title: '加载购物车错误',
+                });
+                wx.hideLoading({ });
+            }
+        })
     },
 
     /**

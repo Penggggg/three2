@@ -14,7 +14,10 @@ const db: DB.Database = cloud.database();
  * 
  * res: {
  *      status: 200/500
- *      data: 购物车列表
+ *      data: Array<{
+ *          cart: cart详情，
+ *          detail: product + standards详情
+ *      }>
  * }
  */
 export const main = async (event, context) => {
@@ -30,11 +33,16 @@ export const main = async (event, context) => {
         
         // 需要查询 商品详情
         const goodsDetails$ = await Promise.all( meta$.data.map( cart => {
-            return wx.cloud.callFunction({
+            return cloud.callFunction({
                 data: {
                     _id: cart.pid
                 },
                 name: 'api-goods-detail'
+            }).then( res => {
+                return {
+                    cart,
+                    detail: res.result.data
+                }
             })
         }));
 
