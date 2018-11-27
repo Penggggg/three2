@@ -19,7 +19,7 @@
                 class="pcl-cart-list-item"
                 wx:for="{{ cartList }}"
             >
-                <!-- 选择框、图片、标题、限购、信息 -->
+                <!-- 选择框、图片、标题、限购、信息、价格、计数器 -->
                 <view class="pcl-cart-item-top">
 
                     <switch
@@ -45,34 +45,50 @@
 
                         <!-- 团购信息 -->
                         <view
-                            class="pcl-cart-item-info"
+                            class="pcl-cart-item-info grey"
                         >
-                            立即购买可自动拼团
+                            立即购买<text class="pcl-text-red">自动拼团</text>
                         </view>
 
                         <!-- 优惠信息 -->
                         <view
-                            class="pcl-cart-item-info"
+                            class="pcl-cart-item-info grey"
                             wx:if="{{ item.current.price < item.current.lastPrice }}"
                         >
-                            比加入时，便宜{{ item.current.lastPrice - item.current.price }}元！
+                            比加入时<text class="pcl-text-red">便宜{{ item.current.lastPrice - item.current.price }}元！</text>
                         </view>
 
                         <!-- 限购信息 -->
-                        <view
+                        <!-- <view
                             wx:if="{{ item.current.limit }}"
                             class="pcl-cart-item-info grey"
                         >
                             限购{{ item.current.limit }}件
-                        </view>
+                        </view> -->
 
-                        
+                        <!-- 价格、数量 -->
+                        <view class="pcl-cart-item-price-block">
+                            <wxc-price
+                                decimal="small"
+                                class="pcl-price"
+                            > 
+                                {{ item.current.price }}
+                            </wxc-price>
+                            <view class="pcl-counter">
+                                <text class="pcl-counter-opt del">-</text>
+                                {{ item.current.count }}
+                                <text class="pcl-counter-opt add">+</text>
+                            </view>
+                        </view>
 
                     </view>
 
                 </view>
 
-                <!-- 价格、计数器 -->
+                <!-- 省钱icon -->
+                <view class="pcl-cart-item-icon">
+                    省钱
+                </view>
                 
             </view>
         </view>
