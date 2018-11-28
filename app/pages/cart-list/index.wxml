@@ -189,7 +189,11 @@
                             <!-- 加入购物车时的sku被删除，显示重选sku -->
                             <view class="pcl-cart-reselect">
                                 <view class="pcl-cart-reselect-tips">请重选规格</view>
-                                <view class="pcl-cart-reselect-btn">重选</view>
+                                <view
+                                    class="pcl-cart-reselect-btn"
+                                >
+                                    重选
+                                </view>
                             </view>
 
                         </view>
