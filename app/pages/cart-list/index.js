@@ -18,15 +18,20 @@ Page({
         /** 是否弹出sku */
         openSku: false,
         /** 当前的sku列表 */
-        skuItems: [ ]
+        skuItems: [ ],
+        /** 是否已经初始化过购物车清单 */
+        hasInitCart: false
     },
 
     /** 拉取商品列表 */
     fetchList: function( ) {
         const that = this;
-        wx.showLoading({
-            title: '加载中...',
-        });
+
+        if ( !this.data.hasInitCart ) {
+            wx.showLoading({
+                title: '加载中...',
+            });
+        }
 
         wx.cloud.callFunction({
             data: { },
@@ -80,10 +85,9 @@ Page({
                     });
                 });
 
-                console.log( dealed );
-
                 this.setData({
-                    cartList: dealed
+                    cartList: dealed,
+                    hasInitCart: true
                 })
             },
             fail: err => {
