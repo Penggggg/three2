@@ -14,7 +14,7 @@ const db: DB.Database = cloud.database();
  *      openid
  *      pid: 商品id
  *      count: 选购数量
- *      standarad_id: 型号id
+ *      standard_id: 型号id
  *      current_price: 当时的价格
  * }
  * 
@@ -28,7 +28,7 @@ export const main = async (event, context) => {
     try {
 
         let _id: any = '';
-        let { pid, standarad_id } = event.data;
+        let { pid, standard_id } = event.data;
         const openid = event.userInfo.openId;
 
         // 先用sid + pid查询有没有已有的cart，有则更新，无则创建
@@ -36,7 +36,7 @@ export const main = async (event, context) => {
                 .where({
                     pid,
                     openid,
-                    standarad_id,
+                    standard_id,
                 })
                 .get( );
         const result = find$.data[ 0 ];

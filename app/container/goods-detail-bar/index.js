@@ -85,7 +85,7 @@ Component({
             const skuItem = {
                 pid: this.data.detail._id,
                 count: selectedSku.count,
-                standarad_id: selectedSku.sid,
+                standard_id: selectedSku.sid,
                 current_price: selectedSku.price
             };
 

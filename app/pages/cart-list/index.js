@@ -67,12 +67,12 @@ Page({
                     });
 
                     // 如果只有主商品
-                    if ( !cart.standarad_id ) {
+                    if ( !cart.standard_id ) {
 
                         const { _id, title, price, img, stock, limit } = detail;
                         current = {
                             sid: null,
-                            standaradName: null,
+                            standardName: null,
                             stock,
                             price,
                             img: detail.img[ 0 ]
@@ -82,7 +82,7 @@ Page({
                     // 如果有型号sku
                     } else {
 
-                        const currentStandard = detail.standards.find( x => x._id === cart.standarad_id );
+                        const currentStandard = detail.standards.find( x => x._id === cart.standard_id );
 
                         // sku有可能被删除，当sku被删除时，要显示“请重选商品规格”
                         if ( currentStandard ) {
@@ -91,8 +91,8 @@ Page({
                                 img,
                                 price,
                                 stock,
-                                standaradName: name,
-                                sid: cart.standarad_id,
+                                standardName: name,
+                                sid: cart.standard_id,
                             };
                             current = decorateCurrent( current );
                         } else {
@@ -273,11 +273,11 @@ Page({
             }));
 
             // 当前已选中的型号
-            const currentCartInStandards = skuItems.find( x => x.sid === cart.standarad_id );
+            const currentCartInStandards = skuItems.find( x => x.sid === cart.standard_id );
             if ( currentCartInStandards ) {
 
                 // 当前已选中的型号下标
-                const currentCartInStandardsIndex = skuItems.findIndex( x => x.sid === cart.standarad_id );
+                const currentCartInStandardsIndex = skuItems.findIndex( x => x.sid === cart.standard_id );
                 // 重新插入到数组头部
                 skuItems.splice( currentCartInStandardsIndex, 1 );
                 skuItems.unshift( currentCartInStandards );
@@ -308,7 +308,7 @@ Page({
             pid,
             count,
             _id: cart_id,
-            standarad_id: sid,
+            standard_id: sid,
             current_price: price
         };
 

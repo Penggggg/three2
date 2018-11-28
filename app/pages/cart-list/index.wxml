@@ -131,10 +131,10 @@
                                 data-cart="{{ item }}"
                                 catch:tap="toggleSku"
                                 class="pcl-standar-block"
-                                wx:if="{{ !(item.current.hasBeenDelete) && item.current.standaradName }}"
+                                wx:if="{{ !(item.current.hasBeenDelete) && item.current.standardName }}"
                             >
                                 <view></view>
-                                <text class="pcl-standar">{{ item.current.standaradName }}</text>
+                                <text class="pcl-standar">{{ item.current.standardName }}</text>
                             </view>
 
                             <!-- 价格、数量 -->
@@ -187,7 +187,10 @@
                             </view>
 
                             <!-- 加入购物车时的sku被删除，显示重选sku -->
-                            <view class="pcl-cart-reselect">
+                            <view
+                                class="pcl-cart-reselect"
+                                wx:if="{{ item.current.hasBeenDelet }}"
+                            >
                                 <view class="pcl-cart-reselect-tips">请重选规格</view>
                                 <view
                                     data-cart="{{ item }}"

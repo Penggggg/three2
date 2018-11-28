@@ -13,7 +13,7 @@ const db: DB.Database = cloud.database();
  *      openid
  *      pid: 商品id
  *      count: 选购数量
- *      standarad_id: 型号id
+ *      standard_id: 型号id
  *      current_price: 当时的价格
  * }
  * 
@@ -26,13 +26,13 @@ export const main = async (event, context) => {
 
     try {
 
-        const { _id, standarad_id, current_price, count } = event;
+        const { _id, standard_id, current_price, count } = event;
         await db.collection('cart').doc( _id )
                 .update({
                     data: {
                         count,
                         current_price,
-                        standarad_id: standarad_id || null
+                        standard_id: standard_id || null
                     }
                 });
                 
