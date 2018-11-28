@@ -7,7 +7,8 @@ const db: DB.Database = cloud.database();
 
 
 /**
- * 创建、编辑单个购物车item
+ * 创建、编辑单个购物车item，只能在商品详情sku选择时使用
+ * 购物车更新sku，用cart-update
  * req: {
  *      _id
  *      openid

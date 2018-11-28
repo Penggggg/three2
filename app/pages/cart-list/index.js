@@ -254,7 +254,8 @@ Page({
     /** 确认选择sku */
     onConfirmSku( e ) {
         const selectedSku = e.detail;
-        const { cart_id, count, price, pid, sid } = e.detail.selectedSku;
+        const { cart_id, count, price, pid, sid } = selectedSku;
+
         // 重组
         const updateItem = {
             pid,
@@ -263,7 +264,34 @@ Page({
             standarad_id: sid,
             current_price: price
         }
+        
         // 更新当前cart
+        wx.showLoading({
+            title: '更新中...',
+        });
+
+        wx.cloud.callFunction({
+            name: 'api-cart-update',
+            data: updateItem,
+            success: res => {
+                wx.hideLoading({ });
+                const { status } = res.result;
+    
+                if ( status !== 200 ) { return; }
+                wx.showToast({
+                    title: '更新成功'
+                });
+                this.fetchList( );
+            },
+            fail: err => {
+                wx.showToast({
+                    icon: 'none',
+                    title: '更新失败',
+                });
+                wx.hideLoading({ });
+            }
+        })
+
     },
 
     /**
