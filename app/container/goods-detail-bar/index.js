@@ -45,10 +45,6 @@ Component({
         openSku: false,
         // sku展示队列 _id, canSelect是否能选、 title名称、price价格、stock库存、pid产品id、sid型号id、img图片、limit限购数量
         skuItems: [ ],
-        // 选中的 sku
-        selectedSku: null,
-        // 所选sku的购买数量
-        selectdSkuCount: 1,
         // 选择sku的类型：cart、buy，（购物车、立即购买）
         skuSelectType: null,
     },
@@ -141,8 +137,7 @@ Component({
             
             that.setData({
                 skuItems,
-                hasStock: result,
-                selectedSku: skuItems[ 0 ]
+                hasStock: result
             });
         },
         /** 加入购物车 */
@@ -161,7 +156,6 @@ Component({
                 success: res => {
                     wx.hideLoading({ });
                     const { status } = res.result;
-                    const { selectedSku } = that.data;
         
                     if ( status !== 200 ) { return; }
                     wx.showToast({

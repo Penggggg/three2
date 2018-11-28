@@ -14,7 +14,10 @@ Page({
         /** 选中购物车的总金额 */
         sum: 0,
         /** 是否全选 */
-        isSelectAll: false
+        isSelectAll: false,
+        /** 是否弹出sku */
+        openSku: false,
+        /** 当前的sku列表 */
     },
 
     /** 拉取商品列表 */
@@ -183,8 +186,23 @@ Page({
         })
     },
 
-    toggleSku( e ) {
-        console.log( e )
+    toggleSku({ currentTarget }) {
+        const productDetail = currentTarget.dataset.cart.detail;
+        const { _id, stock, standards, price, title, img, limit } = productDetail;
+
+    },
+
+    /** 关闭sku */
+    onCloseSku( e ) {
+        this.setData({
+            openSku: e.detail
+        })
+    },
+
+    /** 确认选择sku */
+    onConfirmSku( e ) {
+        const selectedSku = e.detail;
+        console.log( selectedSku );
     },
 
     /**

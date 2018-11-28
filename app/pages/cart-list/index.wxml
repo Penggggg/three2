@@ -83,6 +83,7 @@
 
                             <!-- 型号信息 -->
                             <view
+                                data-cart="{{ item }}"
                                 catch:tap="toggleSku"
                                 class="pcl-standar-block"
                                 wx:if="{{ item.current.standaradName }}"
@@ -112,6 +113,7 @@
                                     </wxc-price>
                                 </view>
                                 <view
+                                    data-cart="{{ item }}"
                                     class="pcl-counter"
                                     catch:tap="toggleSku"
                                 >
