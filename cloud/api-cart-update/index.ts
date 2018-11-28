@@ -30,10 +30,6 @@ export const main = async (event, context) => {
         const openid = event.userInfo.openId;
         const { _id, standard_id, current_price, count, pid } = event;
 
-        const data = {
-            
-        }
-
         await db.collection('cart').doc( _id )
                 .set({
                     data: {
