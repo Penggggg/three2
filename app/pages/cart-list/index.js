@@ -231,8 +231,11 @@ Page({
         const { selectCartIdList, cartList } = this.data;
         const total = selectCartIdList.reduce(( preSum, nextCid ) => {
             const currentCart = cartList.find( x => x.cart._id === nextCid );
-            const { count, price } = currentCart.current;
-            return preSum + count * price;
+            if ( currentCart ) {
+                const { count, price } = currentCart.current;
+                return preSum + count * price;
+            }
+                return preSum + 0;
         }, 0 );
         this.setData({
             sum: total

@@ -69,7 +69,7 @@
                         class="pcl-cart-item-radio"
                         checked="{{ item.selected }}"
                         catch:change="toggleSelectCart"
-                        disabled="{{ item.current.hasBeenDelete || !item.visiable }}"
+                        disabled="{{ !isInDelete && ( item.current.hasBeenDelete || !item.visiable )}}"
                     />
 
                     <view
