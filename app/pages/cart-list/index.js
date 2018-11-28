@@ -326,32 +326,50 @@ Page({
     confirmDelete( ) {
         const { selectCartIdList } = this.data;
 
-        wx.showLoading({
-            title: '加载中...',
-        });
-        wx.cloud.callFunction({
-            data: {
-                ids: selectCartIdList.join(',')
-            },
-            name: 'api-cart-delete',
+        wx.showModal({
+            title: '提示',
+            content: '您确认删除以下宝贝吗?',
+            cancelColor: '#ff5777',
+            confirmColor: '#999999',
             success: res => {
-                const { status, data } = res.result;
-                if ( status !== 200 ) { return; }
-                this.fetchList( );
-                wx.showToast({
-                    title: '删除成功',
-                });
-            },
-            fail: err => {
-                wx.showToast({
-                    icon: 'none',
-                    title: '删除购物车失败',
-                });
-            },
-            complete: ( ) => {
-                wx.hideLoading({ });
+                if (res.confirm) {
+
+                    wx.showLoading({
+                        title: '加载中...',
+                    });
+
+                    wx.cloud.callFunction({
+                        data: {
+                            ids: selectCartIdList.join(',')
+                        },
+                        name: 'api-cart-delete',
+                        success: res => {
+                            const { status, data } = res.result;
+                            if ( status !== 200 ) { return; }
+                            
+                            wx.showToast({
+                                title: '删除成功',
+                            });
+            
+                            this.fetchList( );
+                            this.setData({
+                                isInDelete: false
+                            });
+                        },
+                        fail: err => {
+                            wx.showToast({
+                                icon: 'none',
+                                title: '删除购物车失败',
+                            });
+                        },
+                        complete: ( ) => {
+                            wx.hideLoading({ });
+                        }
+                    });
+                }
             }
         });
+
     },
 
     /**
