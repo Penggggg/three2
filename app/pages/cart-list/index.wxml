@@ -15,9 +15,18 @@
                 notice="香港代购将于8月11日出发，请放心购买～"
             />
 
-            <view class="pcl-info">
-                共{{ cartList.length }}件宝贝
+            <view class="pcl-info-msg">
+
+                <view class="pcl-info">
+                    共{{ cartList.length }}件宝贝
+                </view>
+
+                <view class="pcl-info">
+                    管理
+                </view>
+
             </view>
+
         </view>
 
         <!-- 购物车列表 -->

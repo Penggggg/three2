@@ -86,8 +86,11 @@ Page({
                 });
 
                 this.setData({
+                    sum: 0,
                     cartList: dealed,
-                    hasInitCart: true
+                    hasInitCart: true,
+                    isSelectAll: false,
+                    selectCartIdList: [ ]
                 })
             },
             fail: err => {

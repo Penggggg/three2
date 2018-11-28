@@ -19,9 +19,16 @@
 
 .pcl-info-block {
     height: 250rpx;
-    padding: 0rpx 25rpx 25rpx;
     background: #ff5777;
     box-sizing: border-box;
+    padding: 0rpx 25rpx 25rpx;
+    
+}
+
+.pcl-info-msg {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .pcl-info {
@@ -37,7 +44,7 @@
 
 .pcl-cart-list-block {
     padding: 0 25rpx;
-    margin-top: -130rpx;
+    margin-top: -120rpx;
 }
 
 .pcl-cart-list-item {
