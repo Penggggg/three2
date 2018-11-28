@@ -9,9 +9,9 @@
         <view class="pcl-info-block">
 
             <wxc-notice
-                scroll="{{true}}"
-                close="{{true}}"
-                show-icon="{{true}}"
+                scroll="{{ true }}"
+                close="{{ true }}"
+                show-icon="{{ true }}"
                 notice="香港代购将于8月11日出发，请放心购买～"
             />
 
@@ -79,6 +79,16 @@
                             >
                                 限购{{ item.current.limit }}件
                             </view> -->
+
+                            <!-- 型号信息 -->
+                            <view
+                                catch:tap="toggleSku"
+                                class="pcl-standar-block"
+                                wx:if="{{ item.current.standaradName }}"
+                            >
+                                <view></view>
+                                <text class="pcl-standar">{{ item.current.standaradName }}</text>
+                            </view>
 
                             <!-- 价格、数量 -->
                             <view class="pcl-cart-item-price-block">
@@ -167,4 +177,5 @@
 
     <!-- 底部导航栏 -->
     <my-nav />
+
 </view>

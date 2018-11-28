@@ -82,7 +82,6 @@
 }
 
 .pcl-cart-item-msg-block {
-    height: 180rpx;
     display: flex;
     max-width: 400rpx;
     flex-direction: column;
@@ -103,11 +102,23 @@
 .pcl-cart-item-info {
     color: #ff5777;
     font-size: 28rpx;
-    margin-bottom: 5rpx;
+    margin-bottom: 8rpx;
 }
 
 .pcl-cart-item-info.grey {
     color: #999;
+}
+
+.pcl-standar-block {
+    display: flex;
+}
+
+.pcl-standar {
+    color: #999;
+    font-size: 24rpx;
+    padding: 2rpx 15rpx;
+    border-radius: 5px;
+    background: #eee;
 }
 
 .pcl-cart-item-price-block {
