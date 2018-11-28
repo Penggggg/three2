@@ -7,8 +7,6 @@ Page({
     data: {
         /** 购物车列表 含商品详情、型号详情 */
         cartList: [ ],
-        /** 弹出sku时，所选的cart */
-        selectedCart: null,
         /** 当前选中的购物车的id列表 */
         selectCartIdList: [ ],
         /** 选中购物车的总金额 */
@@ -81,17 +79,16 @@ Page({
                     return Object.assign({ }, x , {
                         current,
                         // 勾选框
-                        selected: false
+                        selected: !!this.data.selectCartIdList.find( x => x === cart._id )
                     });
                 });
 
                 this.setData({
-                    sum: 0,
                     cartList: dealed,
-                    hasInitCart: true,
-                    isSelectAll: false,
-                    selectCartIdList: [ ]
-                })
+                    hasInitCart: true
+                });
+
+                this.calculateSum( );
             },
             fail: err => {
                 wx.showToast({

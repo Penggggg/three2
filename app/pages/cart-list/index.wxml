@@ -90,6 +90,11 @@
                                 限购{{ item.current.limit }}件
                             </view> -->
 
+                            <!-- 商品标线 没有降价信息的时候才显示 -->
+                            <view class="pcl-cart-item-tags">
+                                <wxc-label>阿萨德</wxc-label>
+                            </view>
+
                             <!-- 型号信息 -->
                             <view
                                 data-cart="{{ item }}"
@@ -104,6 +109,7 @@
                             <!-- 价格、数量 -->
                             <view class="pcl-cart-item-price-block">
                                 <view>
+                                    <!-- 现价 -->
                                     <wxc-price
                                         icon="sub"
                                         decimal="small"
@@ -111,14 +117,27 @@
                                     > 
                                         {{ item.current.price }}
                                     </wxc-price>
+                                    <!-- 如果有降价信息，则显示降价前的原价，没有降价信息，应该显示划线价 -->
+                                    <text class="pcl-cart-cheap-tips" wx:if="{{ item.current.price < item.current.lastPrice }}">上次价格</text>
                                     <wxc-price
                                         icon="sub"
                                         status="del"
                                         decimal="small"
                                         class="pcl-price del"
                                         del-color="#999"
+                                        wx:if="{{ item.current.price < item.current.lastPrice }}"
                                     > 
                                         {{ item.current.lastPrice }}
+                                    </wxc-price>
+                                    <wxc-price
+                                        wx:else
+                                        icon="sub"
+                                        status="del"
+                                        decimal="small"
+                                        class="pcl-price del"
+                                        del-color="#999"
+                                    > 
+                                        {{ item.detail.fadePrice }}
                                     </wxc-price>
                                 </view>
                                 <view
