@@ -258,6 +258,27 @@
     margin-right: 15rpx;
 }
 
+.pcl-cart-reselect {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pcl-cart-reselect-tips {
+    color: #999;
+    font-size: 28rpx;
+}
+
+.pcl-cart-reselect-btn {
+    font-size: 28rpx;
+    text-align: center;
+    border-radius: 20px;
+    padding: 5rpx 10rpx;
+    color: #ff5777;
+    background: #fff;
+    border: 1px solid #ff5777;
+}
+
 .pcl-settlet-price {
     margin-right: 15rpx;
 }

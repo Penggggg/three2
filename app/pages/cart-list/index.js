@@ -3,6 +3,7 @@ Page({
 
     /**
      * 页面的初始数据
+     * ! sku被删除 或者 sku成变主体商品，要重选处理
      */
     data: {
         /** 加载状态 */
@@ -53,7 +54,21 @@ Page({
 
                     let current = null;
                     const { cart, detail } = x;
+
+                    // 为当前sku注入一些公共属性
+                    const decorateCurrent = current => Object.assign({ }, current, {
+                        pid: detail._id,
+                        title: detail.title,
+                        limit: detail.limit,
+                        // 当前已选数量
+                        count: cart.count,
+                        // 之前选中时候的价格
+                        lastPrice: cart.current_price
+                    });
+
+                    // 如果只有主商品
                     if ( !cart.standarad_id ) {
+
                         const { _id, title, price, img, stock, limit } = detail;
                         current = {
                             sid: null,
@@ -62,27 +77,34 @@ Page({
                             price,
                             img: detail.img[ 0 ]
                         }
-                    } else {
-                        const currentStandard = detail.standards.find( x => x._id === cart.standarad_id );
-                        const { name, price, img, stock } = currentStandard;
-                        current = {
-                            img,
-                            price,
-                            stock,
-                            standaradName: name,
-                            sid: cart.standarad_id,
-                        }
-                    }
+                        current = decorateCurrent( current );
 
-                    current = Object.assign({ }, current, {
-                        pid: detail._id,
-                        title: detail.title,
-                        limit: detail.limit,
-                        // 当前已选数量
-                        count: cart.count,
-                        // 之前选中时候的价格
-                        lastPrice: cart.current_price
-                    })
+                    // 如果有型号sku
+                    } else {
+
+                        const currentStandard = detail.standards.find( x => x._id === cart.standarad_id );
+
+                        // sku有可能被删除，当sku被删除时，要显示“请重选商品规格”
+                        if ( currentStandard ) {
+                            const { name, price, img, stock } = currentStandard;
+                            current = {
+                                img,
+                                price,
+                                stock,
+                                standaradName: name,
+                                sid: cart.standarad_id,
+                            };
+                            current = decorateCurrent( current );
+                        } else {
+                            // sku被删除
+                            current = {
+                                title: detail.title,
+                                img: detail.img[ 0 ],
+                                hasBeenDelete: true
+                            }
+                        }
+                        
+                    }
                     
                     return Object.assign({ }, x , {
                         current,
@@ -90,7 +112,7 @@ Page({
                         selected: !!this.data.selectCartIdList.find( x => x === cart._id )
                     });
                 });
-                
+                console.log( dealed )
                 this.setData({
                     cartList: dealed,
                     hasInitCart: true

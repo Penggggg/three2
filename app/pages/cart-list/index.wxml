@@ -69,6 +69,7 @@
                         class="pcl-cart-item-radio"
                         checked="{{ item.selected }}"
                         catch:change="toggleSelectCart"
+                        disabled="{{ item.current.hasBeenDelete }}"
                     />
 
                     <view
@@ -87,7 +88,7 @@
 
                             <!-- 标题 -->
                             <view class="pcl-cart-item-title"> 
-                                {{ item.current.title }}
+                                {{ item.current.hasBeenDelete }}{{ item.current.title }}
                             </view> 
 
                             <!-- 团购信息 -->
@@ -100,20 +101,20 @@
                             <!-- 优惠信息 -->
                             <view
                                 class="pcl-cart-item-info grey"
-                                wx:if="{{ item.current.price < item.current.lastPrice }}"
+                                wx:if="{{ !(item.current.hasBeenDelete) && (item.current.price < item.current.lastPrice) }}"
                             >
                                 该商品<text class="pcl-text-red">降价了{{ item.current.lastPrice - item.current.price }}元！</text>
                             </view>
 
                             <!-- 限购信息 -->
                             <!-- <view
-                                wx:if="{{ item.current.limit }}"
+                                wx:if="{{ !(item.current.hasBeenDelete) && ( item.current.limit )}}"
                                 class="pcl-cart-item-info grey"
                             >
                                 限购{{ item.current.limit }}件
                             </view> -->
 
-                            <!-- 商品标线 没有降价信息的时候才显示 -->
+                            <!-- 商品标签 没有降价信息的时候才显示 -->
                             <view class="pcl-cart-item-tags">
                                 <wxc-label
                                     class="pcl-tag"
@@ -130,14 +131,17 @@
                                 data-cart="{{ item }}"
                                 catch:tap="toggleSku"
                                 class="pcl-standar-block"
-                                wx:if="{{ item.current.standaradName }}"
+                                wx:if="{{ !(item.current.hasBeenDelete) && item.current.standaradName }}"
                             >
                                 <view></view>
                                 <text class="pcl-standar">{{ item.current.standaradName }}</text>
                             </view>
 
                             <!-- 价格、数量 -->
-                            <view class="pcl-cart-item-price-block">
+                            <view
+                                wx:if="{{ !(item.current.hasBeenDelete) }}"
+                                class="pcl-cart-item-price-block"
+                            >
                                 <view>
                                     <!-- 现价 -->
                                     <wxc-price
@@ -148,14 +152,14 @@
                                         {{ item.current.price }}
                                     </wxc-price>
                                     <!-- 如果有降价信息，则显示降价前的原价，没有降价信息，应该显示划线价 -->
-                                    <text class="pcl-cart-cheap-tips" wx:if="{{ item.current.price < item.current.lastPrice }}">上次价格</text>
+                                    <text class="pcl-cart-cheap-tips" wx:if="{{ (item.current.price < item.current.lastPrice) }}">上次价格</text>
                                     <wxc-price
                                         icon="sub"
                                         status="del"
                                         decimal="small"
                                         class="pcl-price del"
                                         del-color="#999"
-                                        wx:if="{{ item.current.price < item.current.lastPrice }}"
+                                        wx:if="{{ (item.current.price < item.current.lastPrice) }}"
                                     > 
                                         {{ item.current.lastPrice }}
                                     </wxc-price>
@@ -174,6 +178,7 @@
                                     data-cart="{{ item }}"
                                     class="pcl-counter"
                                     catch:tap="toggleSku"
+                                    wx:if="{{ !(item.current.hasBeenDelete) }}"
                                 >
                                     <text class="pcl-counter-opt del">-</text>
                                     {{ item.current.count }}
@@ -181,7 +186,14 @@
                                 </view>
                             </view>
 
+                            <!-- 加入购物车时的sku被删除，显示重选sku -->
+                            <view class="pcl-cart-reselect">
+                                <view class="pcl-cart-reselect-tips">请重选规格</view>
+                                <view class="pcl-cart-reselect-btn">重选</view>
+                            </view>
+
                         </view>
+
                     </view>
 
                 </view>
@@ -251,9 +263,6 @@
         </view>
 
     </view>
-
-    
-
 
     <!-- 底部导航栏 -->
     <my-nav />
