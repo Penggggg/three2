@@ -189,7 +189,7 @@
                             <!-- 加入购物车时的sku被删除，显示重选sku -->
                             <view
                                 class="pcl-cart-reselect"
-                                wx:if="{{ item.current.hasBeenDelet }}"
+                                wx:if="{{ item.current.hasBeenDelete }}"
                             >
                                 <view class="pcl-cart-reselect-tips">请重选规格</view>
                                 <view

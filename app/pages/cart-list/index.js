@@ -311,8 +311,6 @@ Page({
             standard_id: sid,
             current_price: price
         };
-
-        // return console.log( updateItem );
         
         // 更新当前cart
         wx.showLoading({

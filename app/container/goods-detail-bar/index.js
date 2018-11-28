@@ -142,7 +142,7 @@ Component({
         },
         /** 加入购物车 */
         putCart( item ) {
-
+            
             const that = this;
             wx.showLoading({
                 title: '添加中...',

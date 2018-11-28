@@ -8,6 +8,7 @@ const db: DB.Database = cloud.database();
 
 /**
  * 购物车更新sku，连同可能变更的standards_id一起更新
+ * ! 备注：由于开发时，云开发的doc.update有bug，standard_id无法更新为 null、''、0；因此更新符换用 .set
  * req: {
  *      _id
  *      openid
@@ -26,13 +27,21 @@ export const main = async (event, context) => {
 
     try {
 
-        const { _id, standard_id, current_price, count } = event;
+        const openid = event.userInfo.openId;
+        const { _id, standard_id, current_price, count, pid } = event;
+
+        const data = {
+            
+        }
+
         await db.collection('cart').doc( _id )
-                .update({
+                .set({
                     data: {
+                        pid,
                         count,
-                        current_price,
-                        standard_id: standard_id || null
+                        openid,
+                        standard_id,
+                        current_price
                     }
                 });
                 

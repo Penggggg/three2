@@ -4,6 +4,8 @@
     wx:for="{{ navList }}"
     wx:key="{{ index }}"
     class='con-nav-item'
+    data-url="{{ item.url }}"
+    bindtap="navigate"
   >
     <image
       mode="aspectFill"
