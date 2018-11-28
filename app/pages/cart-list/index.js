@@ -8,9 +8,16 @@ Page({
         /** 购物车列表 含商品详情、型号详情 */
         cartList: [ ],
         /** 弹出sku时，所选的cart */
-        selectedCart: null
+        selectedCart: null,
+        /** 当前选中的购物车的id列表 */
+        selectCartIdList: [ ],
+        /** 选中购物车的总金额 */
+        sum: 0,
+        /** 是否全选 */
+        isSelectAll: false
     },
 
+    /** 拉取商品列表 */
     fetchList: function( ) {
         const that = this;
         wx.showLoading({
@@ -59,12 +66,14 @@ Page({
                         // 当前已选数量
                         count: cart.count,
                         // 之前选中时候的价格
-                        lastPrice: cart.current_price,
-                        // 勾选框
-                        selected: false
+                        lastPrice: cart.current_price
                     })
                     
-                    return Object.assign({ }, x , { current });
+                    return Object.assign({ }, x , {
+                        current,
+                        // 勾选框
+                        selected: false
+                    });
                 });
 
                 console.log( dealed );
@@ -83,15 +92,96 @@ Page({
         })
     },
 
-    c: function( e ) {
-        console.log(e)
+    /**  选中、取消选中某个商品 */
+    toggleSelectCart: function( e ) {
+
+        const { selectCartIdList, cartList } = this.data;
+        const { detail, currentTarget } = e; 
+        const cart_id = currentTarget.dataset.cart.cart._id;
+        const currentCart = cartList.find( x => x.cart._id === cart_id );
+        const currentCartIndex = cartList.findIndex( x => x.cart._id === cart_id );
+
+        // 插入
+        if ( detail.value ) {
+            const isExisted = selectCartIdList.find( x => x === cart_id );
+            const newList = isExisted ? selectCartIdList : [ ...selectCartIdList, cart_id ];
+            this.setData({
+                selectCartIdList: newList,
+                isSelectAll: newList.length === cartList.length
+            });
+        } else {
+            // 移除
+            const index = selectCartIdList.findIndex( x => x === cart_id );
+            selectCartIdList.splice( index, 1 );
+            // 同时关闭全选
+            this.setData({
+                isSelectAll: false,
+                selectCartIdList: [ ...selectCartIdList ]
+            });
+        }
+
+        const tempList = [ ...cartList ];
+        tempList.splice( currentCartIndex, 1, Object.assign({ }, currentCart, {
+            selected: !currentCart.selected
+        }))
+        this.setData({
+            cartList: tempList
+        });
+
+        this.calculateSum( )
     },
 
+    /** 全选、取消全选 */
+    toggleSelectAll: function( e ) {
+        const { value } = e.detail;
+        const { cartList } = this.data;
+        // 全选
+        if ( value ) {
+            const { selectCartIdList, cartList } = this.data;
+            this.setData({
+                isSelectAll: true,
+                selectCartIdList: cartList.map( x => x.cart._id )
+            });
+            this.calculateSum( );
+        } else {
+            // 取消全选
+            this.setData({
+                sum: 0,
+                isSelectAll: false,
+                selectCartIdList: [ ]
+            });
+        }
+
+        const tempList = cartList.map( x => Object.assign({ }, x, {
+            selected: value
+        }));
+
+        this.setData({
+            cartList: tempList
+        });
+        
+    },
+
+    /** 跳往商品详情 */
     goDetail({ currentTarget }) {
         const pid = currentTarget.dataset.cart.detail._id;
         wx.navigateTo({
             url: `/pages/goods-detail/index?id=${pid}`
         });
+    },
+
+    /** 计算选中购物车总金额 */
+    calculateSum( ) {
+        console.log('...calculateSum', this.data.selectCartIdList )
+        const { selectCartIdList, cartList } = this.data;
+        const total = selectCartIdList.reduce(( preSum, nextCid ) => {
+            const currentCart = cartList.find( x => x.cart._id === nextCid );
+            const { count, price } = currentCart.current;
+            return preSum + count * price;
+        }, 0 );
+        this.setData({
+            sum: total
+        })
     },
 
     toggleSku( e ) {

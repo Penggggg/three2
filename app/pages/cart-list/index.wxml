@@ -1,7 +1,7 @@
 <!--app/pages/cart-list/index.wxml-->
 
 <view class="p-cart-list">
-
+   
     <!-- 顶部栏、购物车、猜你喜欢列表 -->
     <scroll-view scroll-y class="pcl-cart-like-block">
 
@@ -33,9 +33,10 @@
                     <switch
                         color='#ff5777'
                         type="checkbox"
-                        catch:change="c"
-                        checked="{{ item.selected }}"
+                        data-cart="{{ item }}"
                         class="pcl-cart-item-radio"
+                        checked="{{ item.selected }}"
+                        catch:change="toggleSelectCart"
                     />
 
                     <view
@@ -149,10 +150,10 @@
         <!-- 全选 -->
         <view class="pcl-settlet-radio pcl-text">
             <switch
-                checked
+                checked="{{ isSelectAll }}"
                 color='#ff5777'
                 type="checkbox"
-                bindchange="c"
+                bindchange="toggleSelectAll"
             />
             全选
         </view>
@@ -165,7 +166,7 @@
                     decimal="small"
                     class="pcl-price"
                 > 
-                    0
+                    {{ sum }}
                 </wxc-price>
             </view>
             <view class="pcl-settlet-btn">
