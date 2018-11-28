@@ -119,12 +119,13 @@ Page({
                     
                     return Object.assign({ }, x , {
                         current,
+                        visiable: detail.visiable,
                         // 勾选框
                         selected: !!this.data.selectCartIdList.find( x => x === cart._id )
                     });
                 });
                 
-                console.log( dealed )
+       
                 this.setData({
                     cartList: dealed,
                     hasInitCart: true
