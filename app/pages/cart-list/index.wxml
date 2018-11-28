@@ -190,6 +190,8 @@
                             <view class="pcl-cart-reselect">
                                 <view class="pcl-cart-reselect-tips">请重选规格</view>
                                 <view
+                                    data-cart="{{ item }}"
+                                    catch:tap="toggleSku"
                                     class="pcl-cart-reselect-btn"
                                 >
                                     重选

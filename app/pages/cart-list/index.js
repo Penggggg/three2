@@ -3,7 +3,7 @@ Page({
 
     /**
      * 页面的初始数据
-     * ! sku被删除 或者 sku成变主体商品，要重选处理
+     * ! 商品被下架后的处理
      */
     data: {
         /** 加载状态 */
@@ -112,7 +112,7 @@ Page({
                         selected: !!this.data.selectCartIdList.find( x => x === cart._id )
                     });
                 });
-                console.log( dealed )
+               
                 this.setData({
                     cartList: dealed,
                     hasInitCart: true
@@ -226,14 +226,15 @@ Page({
         })
     },
 
+    /** 展开sku */
     toggleSku({ currentTarget }) {
         
         if ( this.data.isInDelete ) {
             return; 
         }
-
+        
         let skuItems = [ ];
-        const { detail, cart } = currentTarget.dataset.cart;
+        const { detail, cart, current } = currentTarget.dataset.cart;
         const { _id, stock, standards, price, title, img, limit } = detail;
     
         if ( standards.length === 0 ) {
@@ -248,7 +249,7 @@ Page({
                 sid: null,
                 limit,
                 // 加入已有计数
-                count: cart.count,
+                count: current.hasBeenDelete ? 1 : cart.count,
                 // 购物车id
                 cart_id: cart._id,
                 canSelect: stock !== undefined && stock > 0
@@ -265,7 +266,7 @@ Page({
                 price: x.price,
                 limit: x.limit,
                 // 加入已有计数
-                count: cart.count,
+                count: current.hasBeenDelete ? 1 : cart.count,
                 // 购物车id
                 cart_id: cart._id,
                 canSelect: x.stock !== undefined && x.stock > 0
@@ -273,14 +274,17 @@ Page({
 
             // 当前已选中的型号
             const currentCartInStandards = skuItems.find( x => x.sid === cart.standarad_id );
-            // 当前已选中的型号下标
-            const currentCartInStandardsIndex = skuItems.findIndex( x => x.sid === cart.standarad_id );
+            if ( currentCartInStandards ) {
 
-            // 重新插入到数组头部
-            skuItems.splice( currentCartInStandardsIndex, 1 );
-            skuItems.unshift( currentCartInStandards );
+                // 当前已选中的型号下标
+                const currentCartInStandardsIndex = skuItems.findIndex( x => x.sid === cart.standarad_id );
+                // 重新插入到数组头部
+                skuItems.splice( currentCartInStandardsIndex, 1 );
+                skuItems.unshift( currentCartInStandards );
+            }
+            
         };
-       
+      
         this.setData({
             skuItems,
             openSku: true
@@ -306,7 +310,9 @@ Page({
             _id: cart_id,
             standarad_id: sid,
             current_price: price
-        }
+        };
+
+        // return console.log( updateItem );
         
         // 更新当前cart
         wx.showLoading({

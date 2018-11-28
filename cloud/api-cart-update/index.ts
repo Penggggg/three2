@@ -31,8 +31,8 @@ export const main = async (event, context) => {
                 .update({
                     data: {
                         count,
-                        standarad_id,
-                        current_price
+                        current_price,
+                        standarad_id: standarad_id || null
                     }
                 });
                 
