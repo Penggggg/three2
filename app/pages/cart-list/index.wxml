@@ -139,12 +139,12 @@
     </scroll-view>
 
     <!-- sku -->
-    <!-- <my-sku-popup
+    <my-sku-popup
         open="{{ openSku }}"
         skuItems="{{ skuItems }}"
         bind:close="onCloseSku"
         bind:confirm="onConfirmSku"
-    /> -->
+    />
     
     <!-- 底部结算栏 -->
     <view class="pcl-settlet-block">

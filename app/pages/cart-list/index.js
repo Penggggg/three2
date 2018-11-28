@@ -18,6 +18,7 @@ Page({
         /** 是否弹出sku */
         openSku: false,
         /** 当前的sku列表 */
+        skuItems: [ ]
     },
 
     /** 拉取商品列表 */
@@ -187,22 +188,82 @@ Page({
     },
 
     toggleSku({ currentTarget }) {
-        const productDetail = currentTarget.dataset.cart.detail;
-        const { _id, stock, standards, price, title, img, limit } = productDetail;
+        
+        let skuItems = [ ];
+        const { detail, cart } = currentTarget.dataset.cart;
+        const { _id, stock, standards, price, title, img, limit } = detail;
+    
+        if ( standards.length === 0 ) {
+            // 只有单品本身
+            skuItems = [{
+                _id,
+                title: '默认型号',
+                price,
+                stock,
+                pid: _id,
+                img: img[ 0 ],
+                sid: null,
+                limit,
+                // 加入已有计数
+                count: cart.count,
+                // 购物车id
+                cart_id: cart._id,
+                canSelect: stock !== undefined && stock > 0
+            }];
+        } else {
+            // 有型号 - 型号需要排序 - 目前购物车的型号，需要排在第一位，让sku默认选择上
+            skuItems = standards.map( x => ({
+                _id: x._id,
+                sid: x._id,
+                pid: x.pid,
+                title: x.name,
+                img: x.img,
+                stock: x.stock,
+                price: x.price,
+                limit: x.limit,
+                // 加入已有计数
+                count: cart.count,
+                // 购物车id
+                cart_id: cart._id,
+                canSelect: x.stock !== undefined && x.stock > 0
+            }));
 
+            // 当前已选中的型号
+            const currentCartInStandards = skuItems.find( x => x.sid === cart.standarad_id );
+            // 当前已选中的型号下标
+            const currentCartInStandardsIndex = skuItems.findIndex( x => x.sid === cart.standarad_id );
+
+            // 重新插入到数组头部
+            skuItems.splice( currentCartInStandardsIndex, 1 );
+            skuItems.unshift( currentCartInStandards );
+        };
+       
+        this.setData({
+            skuItems,
+            openSku: true
+        })
     },
 
     /** 关闭sku */
     onCloseSku( e ) {
         this.setData({
             openSku: e.detail
-        })
+        });
     },
 
     /** 确认选择sku */
     onConfirmSku( e ) {
         const selectedSku = e.detail;
-        console.log( selectedSku );
+        const { cart_id, count, price, pid, sid } = e.detail.selectedSku;
+        // 重组
+        const updateItem = {
+            pid,
+            count,
+            _id: cart_id,
+            standarad_id: sid,
+            current_price: price
+        }
+        // 更新当前cart
     },
 
     /**
