@@ -249,6 +249,15 @@
     background: rgba( 0, 0, 0, 0.1 );
 }
 
+.pcl-cart-item-tags {
+    margin-top: -10rpx;
+    margin-bottom: 12rpx;
+}
+
+.pcl-tag {
+    margin-right: 15rpx;
+}
+
 .pcl-settlet-price {
     margin-right: 15rpx;
 }

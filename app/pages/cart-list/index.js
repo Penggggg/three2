@@ -88,7 +88,7 @@ Page({
                         selected: !!this.data.selectCartIdList.find( x => x === cart._id )
                     });
                 });
-
+                
                 this.setData({
                     cartList: dealed,
                     hasInitCart: true

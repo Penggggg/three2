@@ -112,7 +112,14 @@
 
                             <!-- 商品标线 没有降价信息的时候才显示 -->
                             <view class="pcl-cart-item-tags">
-                                <wxc-label>阿萨德</wxc-label>
+                                <wxc-label
+                                    class="pcl-tag"
+                                    wx:for-item="tag"
+                                    wx:key="{{ index }}"
+                                    wx:for="{{ item.detail.tag }}"
+                                >
+                                    {{ tag }}
+                                </wxc-label>
                             </view>
 
                             <!-- 型号信息 -->
