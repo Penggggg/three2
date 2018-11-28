@@ -25,7 +25,7 @@
                     class="pcl-info"
                     bindtap="toggleDelete"
                 >
-                    管理
+                    {{ !isInDelete ? '管理' : '取消' }}
                 </view>
 
             </view>
