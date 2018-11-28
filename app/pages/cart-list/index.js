@@ -20,7 +20,9 @@ Page({
         /** 当前的sku列表 */
         skuItems: [ ],
         /** 是否已经初始化过购物车清单 */
-        hasInitCart: false
+        hasInitCart: false,
+        /** 是否在删除状态 */
+        isInDelete: false
     },
 
     /** 拉取商品列表 */
@@ -204,6 +206,10 @@ Page({
 
     toggleSku({ currentTarget }) {
         
+        if ( this.data.isInDelete ) {
+            return; 
+        }
+
         let skuItems = [ ];
         const { detail, cart } = currentTarget.dataset.cart;
         const { _id, stock, standards, price, title, img, limit } = detail;
@@ -307,6 +313,45 @@ Page({
             }
         })
 
+    },
+
+    /** 点击管理，进入删除状态 */
+    toggleDelete( ) {
+        this.setData({
+            isInDelete: !this.data.isInDelete
+        });
+    },
+
+    /** 确认删除 */
+    confirmDelete( ) {
+        const { selectCartIdList } = this.data;
+
+        wx.showLoading({
+            title: '加载中...',
+        });
+        wx.cloud.callFunction({
+            data: {
+                ids: selectCartIdList.join(',')
+            },
+            name: 'api-cart-delete',
+            success: res => {
+                const { status, data } = res.result;
+                if ( status !== 200 ) { return; }
+                this.fetchList( );
+                wx.showToast({
+                    title: '删除成功',
+                });
+            },
+            fail: err => {
+                wx.showToast({
+                    icon: 'none',
+                    title: '删除购物车失败',
+                });
+            },
+            complete: ( ) => {
+                wx.hideLoading({ });
+            }
+        });
     },
 
     /**

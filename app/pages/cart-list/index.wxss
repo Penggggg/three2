@@ -268,5 +268,12 @@
     text-align: center;
     border-radius: 20px;
     background: #ff5777;
-    padding: 8rpx 35rpx;
+    padding: 6rpx 33rpx;
+    border: 1px solid #ff5777;
+}
+
+.pcl-settlet-btn.blank {
+    color: #ff5777;
+    background: #fff;
+    border: 1px solid #ff5777;
 }

@@ -21,7 +21,10 @@
                     共{{ cartList.length }}件宝贝
                 </view>
 
-                <view class="pcl-info">
+                <view
+                    class="pcl-info"
+                    bindtap="toggleDelete"
+                >
                     管理
                 </view>
 
@@ -216,7 +219,10 @@
         </view>
 
         <!-- 合计、结算 -->
-        <view class="pcl-settlet-msg">
+        <view
+            wx:if="{{ !isInDelete }}"
+            class="pcl-settlet-msg"
+        >
             <view class="pcl-settlet-price pcl-text">
                 合计:
                 <wxc-price
@@ -231,7 +237,23 @@
             </view>
         </view>
 
+        <!-- 删除 -->
+        <view
+            wx:else 
+            class="pcl-settlet-msg" 
+        >
+            <view
+                bindtap="confirmDelete"
+                class="pcl-settlet-btn blank"
+            >
+                删除
+            </view>
+        </view>
+
     </view>
+
+    
+
 
     <!-- 底部导航栏 -->
     <my-nav />
