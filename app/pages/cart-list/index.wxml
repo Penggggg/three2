@@ -1,7 +1,7 @@
 <!--app/pages/cart-list/index.wxml-->
 
 <view class="p-cart-list">
-   
+
     <!-- 顶部栏、购物车、猜你喜欢列表 -->
     <scroll-view scroll-y class="pcl-cart-like-block">
 
@@ -31,6 +31,26 @@
 
         <!-- 购物车列表 -->
         <view class="pcl-cart-list-block">
+
+            <!-- 空的购物列表 -->
+            <view
+                class="pcl-cart-list-item"
+                wx:if="{{ !loading && cartList.length === 0 }}"
+            >
+                <view class="pcl-cart-img-block">
+                    <image
+                        mode="aspectFit"
+                        class="pcl-cart-img"
+                        src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/bg-cart.png"
+                    />
+                </view>
+
+                <view class="pcl-cart-img-tips">
+                    购物车空空如也, 记得对自己好一点哦～
+                </view>
+                
+            </view>
+
             <view
                 wx:key="{{ index }}"
                 wx:for="{{ cartList }}"

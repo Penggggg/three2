@@ -47,6 +47,23 @@
     margin-top: -120rpx;
 }
 
+.pcl-cart-img-block {
+    text-align: center;
+}
+
+.pcl-cart-img {
+    width: 150rpx;
+    height: 150rpx;
+}
+
+.pcl-cart-img-tips {
+    color: #999;
+    font-size: 24rpx;
+    margin-top: 20rpx;
+    margin-bottom: 20rpx;
+    text-align: center;
+}
+
 .pcl-cart-list-item {
     width: 100%;
     background: #fff;

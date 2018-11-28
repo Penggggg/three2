@@ -5,6 +5,8 @@ Page({
      * 页面的初始数据
      */
     data: {
+        /** 加载状态 */
+        loading: true,
         /** 购物车列表 含商品详情、型号详情 */
         cartList: [ ],
         /** 当前选中的购物车的id列表 */
@@ -30,6 +32,10 @@ Page({
                 title: '加载中...',
             });
         }
+
+        this.setData({
+            loading: true
+        });
 
         wx.cloud.callFunction({
             data: { },
@@ -96,6 +102,11 @@ Page({
                     title: '加载购物车错误',
                 });
                 wx.hideLoading({ });
+            },
+            complete: ( ) => {
+                this.setData({
+                    loading: false
+                });
             }
         })
     },
