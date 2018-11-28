@@ -172,7 +172,6 @@ Page({
 
     /** 计算选中购物车总金额 */
     calculateSum( ) {
-        console.log('...calculateSum', this.data.selectCartIdList )
         const { selectCartIdList, cartList } = this.data;
         const total = selectCartIdList.reduce(( preSum, nextCid ) => {
             const currentCart = cartList.find( x => x.cart._id === nextCid );
