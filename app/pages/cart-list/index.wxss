@@ -260,6 +260,7 @@
 
 .pcl-cart-reselect {
     display: flex;
+    width: 400rpx;
     align-items: center;
     justify-content: space-between;
 }

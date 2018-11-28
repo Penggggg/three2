@@ -3,7 +3,6 @@ Page({
 
     /**
      * 页面的初始数据
-     * ! 商品被下架后的处理
      */
     data: {
         /** 加载状态 */
@@ -70,14 +69,26 @@ Page({
                     if ( !cart.standard_id ) {
 
                         const { _id, title, price, img, stock, limit } = detail;
-                        current = {
-                            sid: null,
-                            standardName: null,
-                            stock,
-                            price,
-                            img: detail.img[ 0 ]
+
+                        // 如果商品的型号还是为 0 
+                        if ( detail.standards.length === 0 ) {
+                            current = {
+                                sid: null,
+                                standardName: null,
+                                stock,
+                                price,
+                                img: detail.img[ 0 ]
+                            }
+                            current = decorateCurrent( current );
+                        } else {
+                            // 重选型号
+                            current = {
+                                title: detail.title,
+                                img: detail.img[ 0 ],
+                                hasBeenDelete: true
+                            }
                         }
-                        current = decorateCurrent( current );
+                        
 
                     // 如果有型号sku
                     } else {
@@ -112,7 +123,8 @@ Page({
                         selected: !!this.data.selectCartIdList.find( x => x === cart._id )
                     });
                 });
-               
+                
+                console.log( dealed )
                 this.setData({
                     cartList: dealed,
                     hasInitCart: true
