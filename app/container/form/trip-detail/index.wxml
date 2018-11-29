@@ -9,7 +9,28 @@
 
     <!-- 商品推荐 -->
     <view class="recommend-block">
+
+        <!-- 商品推荐列表 -->
+        <scroll-view
+            scroll-x="{{ true }}"
+            wx:if="{{ selectedProducts.length > 0 }}"
+            class="recommend-list"
+        >
+            <view
+                class="recommend-item"
+                wx:key="{{ index }}"
+                wx:for="{{ selectedProducts }}"
+            >
+                <image
+                    mode="aspectFill"
+                    class="recommend-item-img"
+                    src="{{ item.img[ 0 ]}}"
+                />
+                <view class="recommend-item-title">{{ item.title }}</view>
+            </view>
+        </scroll-view>
         
+        <!-- 商品推荐按钮 -->
         <view class='recommend-btn-block'>
             <wxc-button
                 type="beauty"
@@ -26,6 +47,7 @@
     <my-product-selector
         show="{{ showProduct }}"
         bind:close="onToggleProduct"
+        bind:confirm="onConfirmProduct"
     />
 
 </view>

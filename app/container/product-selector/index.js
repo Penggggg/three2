@@ -1,4 +1,8 @@
 // container/product-selector/index.js
+
+/**
+ * @description 单个商品选择的组件
+ */
 Component({
     /**
      * 组件的属性列表

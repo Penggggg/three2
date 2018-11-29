@@ -1,6 +1,47 @@
 /* container/form/trip-detail/index.wxss */
 .recommend-btn-block {
-    margin-top: 50rpx;
+    margin-top: 30rpx;
     text-align: center;
     margin-bottom:50rpx;
+}
+
+.recommend-list {
+    /* display: flex; */
+    width: 100vw;
+    /* flex-direction: row; */
+    overflow-x: scroll;
+    height: 245rpx;
+    padding: 20rpx 25rpx;
+    box-sizing: border-box;
+    white-space: nowrap;
+    border-bottom: 1px dotted rgba( 0, 0, 0, 0.1 );
+}
+
+.recommend-item {
+    width: 180rpx;
+    text-align: center;
+    margin-right: 20rpx;
+    display: inline-block;
+    /* flex-direction: column;
+    justify-content: center; */
+}
+
+.recommend-item-img {
+    width: 150rpx;
+    height: 150rpx;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+}
+
+.recommend-item-title {
+    color: #666;
+    text-align: center;
+    font-size: 32rpx;
+    overflow:hidden; 
+    display:-webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;
 }

@@ -6,6 +6,10 @@
 }
 
 .modal-container {
+    /* padding: 0 35rpx; */
+}
+
+.search-header-container {
     padding: 0 35rpx;
 }
 
@@ -47,8 +51,8 @@
 
 .result-item {
     display: flex;
-    padding: 20rpx 0;
-    margin-bottom: 20rpx;
+    padding: 20rpx 20rpx;
+    /* margin-bottom: 20rpx; */
     border-bottom: 1px dotted rgba( 0, 0, 0, 0.1 );
 }
 

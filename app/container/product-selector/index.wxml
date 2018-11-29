@@ -11,24 +11,26 @@
         <view class="modal-container">
 
             <!-- 搜索框 -->
-            <view class='search-header'>
-                <view
-                    class='search-icon'
-                    bindtap='fetchList'
-                >
-                    <wxc-icon
-                        size="34"
-                        type="search"
-                        color='#999'
+            <view class="search-header-container">
+                <view class='search-header'>
+                    <view
+                        class='search-icon'
+                        bindtap='fetchList'
+                    >
+                        <wxc-icon
+                            size="34"
+                            type="search"
+                            color='#999'
+                        />
+                    </view>
+                    <input
+                        bindinput='onInput'
+                        value="{{ search }}"
+                        bindconfirm="fetchList"
+                        class='search-input text'
+                        placeholder="输入商品简称如：YSL"
                     />
                 </view>
-                <input
-                    bindinput='onInput'
-                    value="{{ search }}"
-                    bindconfirm="fetchList"
-                    class='search-input text'
-                    placeholder="输入商品简称如：YSL"
-                />
             </view>
 
             <!-- 结果列表 -->

@@ -21,7 +21,11 @@ Component({
         // 数据字典
         dic: { },
         // 展开商品选择
-        showProduct: false
+        showProduct: false,
+        // 选择推荐商品的id列表
+        selectedProductIds: [ ],
+        // 选择推荐商品的列表
+        selectedProducts: [ ]
     },
 
     computed: {
@@ -102,8 +106,28 @@ Component({
         onToggleProduct( ) {
             this.setData({
                 showProduct: !this.data.showProduct
-            })
+            });
         },
 
+        /** 选择商品 */
+        onConfirmProduct({ detail }) {
+            if ( !detail ) { return; }
+            const { _id } = detail;
+            const product = detail.detail;
+            const { selectedProductIds, selectedProducts } = this.data;
+            
+            // 如果未曾加入过
+            if ( !selectedProductIds.find( x => x === _id )) {
+
+                selectedProductIds.unshift( _id );
+                selectedProducts.unshift( product );
+
+                this.setData({
+                    selectedProducts,
+                    selectedProductIds
+                });
+            }
+
+        }
     }
 })
