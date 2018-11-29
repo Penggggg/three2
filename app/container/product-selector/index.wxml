@@ -3,30 +3,84 @@
 
     <!-- 弹窗 -->
     <i-modal
-        title="商品选择"
+        title=""
         bind:ok="onOk"
         visible="{{ show$ }}"
         bind:cancel="onCancel"
     >
-        <view class='search-header'>
-            <view
-                class='search-icon'
-                bindtap='fetchData'
-            >
-                <wxc-icon
-                    size="34"
-                    type="search"
-                    color='#999'
+        <view class="modal-container">
+
+            <!-- 搜索框 -->
+            <view class='search-header'>
+                <view
+                    class='search-icon'
+                    bindtap='fetchList'
+                >
+                    <wxc-icon
+                        size="34"
+                        type="search"
+                        color='#999'
+                    />
+                </view>
+                <input
+                    bindinput='onInput'
+                    value="{{ search }}"
+                    bindconfirm="fetchList"
+                    class='search-input text'
+                    placeholder="输入商品名称如：YSL"
                 />
             </view>
-            <input
-                value="{{ search }}"
-                placeholder="搜索商品"
-                bindconfirm="fetchData"
-                class='search-input text'
-            />
+
+            <!-- 结果列表 -->
+            <scroll-view
+                scroll-y
+                class="result-list"
+            >
+
+                <view
+                    wx:for="{{ list }}"
+                    wx:key="{{ index }}"
+                    class="result-item"
+                >
+                    <!-- 首图 -->
+                    <image
+                        mode="aspectFill"
+                        class="result-item-img"
+                        src="{{ item.img[ 0 ]}}"
+                    />
+
+                    <!-- 标题、价格、库存、加购、销量 -->
+                    <view class="result-item-info">
+                        <view class="result-item-title">
+                            {{ item.title }}
+                        </view>
+                        <view class="result-item-tips">
+                            <view class="result-item-count">销量: {{ item.saled }}</view>
+                            <view class="result-item-count">加购: {{ item.carts }}</view>
+                            <view class="result-item-count">库存: {{ item.stock || '不限' }}</view>
+                        </view>
+                        <view class="item-price-block">
+                            <wxc-price
+                                decimal="small"
+                                class="product-price"
+                            > 
+                                {{ item.price }}
+                            </wxc-price>
+                        </view>
+                    </view>
+                </view>
+
+            </scroll-view>
+
+            <!-- 提示 -->
+            <!-- <view
+                class="tips"
+                wx:if="{{ !loading && list.length === 0 }}"
+            >
+                ～ 空空如也 ～
+            </view> -->
+
         </view>
-        ?
     </i-modal>
 
 </view>
