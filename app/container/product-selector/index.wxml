@@ -27,7 +27,7 @@
                     value="{{ search }}"
                     bindconfirm="fetchList"
                     class='search-input text'
-                    placeholder="输入商品名称如：YSL"
+                    placeholder="输入商品简称如：YSL"
                 />
             </view>
 
@@ -40,7 +40,9 @@
                 <view
                     wx:for="{{ list }}"
                     wx:key="{{ index }}"
-                    class="result-item"
+                    data-item="{{ item }}"
+                    class="result-item {{ item._id === selectedProductId ? 'selected' : '' }}"
+                    bindtap="onChoice"
                 >
                     <!-- 首图 -->
                     <image

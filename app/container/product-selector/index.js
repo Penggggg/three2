@@ -25,7 +25,9 @@ Component({
         /** 列表 */
         list: [ ],
         /** 当前选中的商品id */
-        selectedProductId: null
+        selectedProductId: null,
+        /** 当前选中的商品 */
+        selectedProduct: null
     },
 
     /**
@@ -35,10 +37,21 @@ Component({
 
         /** 点击modal确定 */
         onOk( ) {
-            console.log('ok');
-            const { list } = this.data;
+
+            const { list, selectedProduct } = this.data;
+
             if ( list.length === 0 ) { 
                 return this.fetchList( );
+
+            } else {
+                this.setData({
+                    list: [ ],
+                    search: '',
+                    selectedProduct: null,
+                    selectedProductId: null
+                });
+                this.triggerEvent('confirm', selectedProduct );
+                this.onCancel( );
             }
         },
 
@@ -150,5 +163,14 @@ Component({
                 search: detail.value
             });
         },
+
+        /** 选择商品 */
+        onChoice({ currentTarget }) {
+            const { item } = currentTarget.dataset;
+            this.setData({ 
+                selectedProduct: item,
+                selectedProductId: item._id
+            });
+        }
     }
 })
