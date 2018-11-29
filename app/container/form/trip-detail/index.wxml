@@ -19,6 +19,8 @@
             <view
                 class="recommend-item"
                 wx:key="{{ index }}"
+                data-sid="{{ item._id }}"
+                bindtap="toggleDeleteRecommend"
                 wx:for="{{ selectedProducts }}"
             >
                 <image
@@ -49,5 +51,15 @@
         bind:close="onToggleProduct"
         bind:confirm="onConfirmProduct"
     />
+
+    <!-- 删除推荐 -->
+    <i-modal
+        title="提示"
+        bind:ok="confirmDelete"
+        visible="{{ showDelete }}"
+        bind:cancel="toggleDeleteRecommend"
+    >
+        确定去掉该推荐商品吗?
+    </i-modal>
 
 </view>
