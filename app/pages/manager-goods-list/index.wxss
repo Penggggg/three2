@@ -55,7 +55,7 @@
 .pmgl-list-container {
   height: 1080rpx;
   overflow: hidden;
-  padding: 170rpx 30rpx 30rpx;
+  padding: 170rpx 10rpx 30rpx;
   box-sizing: border-box;
   overflow-y: scroll;
 }
@@ -66,7 +66,7 @@
   width: 100%;
   position: fixed;
   height: auto;
-  padding: 25rpx 30rpx;
+  padding: 25rpx 10rpx;
   z-index: 50;
   background: #fff;
 }
@@ -78,7 +78,7 @@
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  padding: 25rpx 30rpx;
+  padding: 25rpx 10rpx;
   justify-content: space-around;
   border-bottom: 1px dotted rgba( 0, 0, 0, 0.19 );
 
@@ -87,6 +87,15 @@
 .pmgl-list-item-meta {
   flex: 1;
   text-align: center;
+}
+
+.pmgl-list-item-meta.ellipsis {
+  overflow:hidden; 
+  text-overflow:ellipsis;
+  display:-webkit-box; 
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  word-break: break-all;
 }
 
 .btn {

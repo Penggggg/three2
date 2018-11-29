@@ -27,6 +27,7 @@
       <view class="text pmgl-list-item-meta bold">商品名称</view>
       <view class="text pmgl-list-item-meta bold">单价</view>
       <view class="text pmgl-list-item-meta bold">销量</view>
+      <view class="text pmgl-list-item-meta bold">加购</view>
       <view class="text pmgl-list-item-meta bold">库存</view>
       <view class="text pmgl-list-item-meta bold">上下架</view>
     </view>
@@ -57,6 +58,7 @@
         </wxc-price>
       </view>
       <view class="text pmgl-list-item-meta">{{ item.saled }}</view>
+      <view class="text pmgl-list-item-meta">{{ item.carts }}</view>
       <view class="text pmgl-list-item-meta {{ stockNeed[ index ] ? 'red' : '' }}">
         {{ item.stock ? item.stock : '无限' }}
       </view>

@@ -6,7 +6,7 @@ cloud.init();
 const db: DB.Database = cloud.database();
 
 /**
- * @description 商品列表
+ * @description 管理端的商品列表
  * -------- 请求 ----------
  * {
  *      search: 搜索
@@ -76,7 +76,7 @@ export const main = async (event, context) => {
         })
       } else {
 
-          // 获取总数
+        // 获取总数
         const total$ = await db.collection('goods')
           .count( );
 
@@ -87,6 +87,7 @@ export const main = async (event, context) => {
             .orderBy('updateTime', 'desc')
             .get( );
 
+        // 查询型号
         const metaList = data$.data;
         const standards = await Promise.all( metaList.map( x => {
           return db.collection('standards')
@@ -101,6 +102,19 @@ export const main = async (event, context) => {
             standards: standards[ k ].data
         }));
 
+        // 查询被加入购物车数量
+        const carts = await Promise.all( insertStandars.map( x => {
+            return db.collection('cart')
+                    .where({
+                        pid: x._id
+                    })
+                    .count( );
+        }))
+
+        const insertCart = insertStandars.map(( x, k ) => Object.assign({ }, x, {
+            carts: carts[ k ].total
+        }));
+
         return new Promise( resolve => {
           resolve({
             status: 200,
@@ -108,7 +122,7 @@ export const main = async (event, context) => {
                 search: null,
                 pageSize: limit,
                 page: event.page,
-                data: insertStandars,
+                data: insertCart,
                 total: total$.total,
                 totalPage: Math.ceil( total$.total / limit )
             }
