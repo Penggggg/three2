@@ -1,19 +1,20 @@
 {
   "pages": [
     "pages/manager-trip-detail/index",
-    "pages/cart-list/index",
     "pages/manager-goods-list/index",
+    "pages/manager-goods-detail/index",
     "pages/goods-detail/index",
-    "pages/index/index",
-    "pages/manager-goods-detail/index"
+    "pages/cart-list/index",
+    "pages/index/index"
   ],
   "usingComponents": {
     "my-nav": "./container/nav-bar/index",
-    "my-manager-entry-btn": "./container/manager-entry-btn/index",
-    "my-active-form": "./components/active-form/index",
-    "my-img-upload": "./components/img-upload/index",
     "my-sku-popup": "./container/sku-popup/index",
+    "my-img-upload": "./components/img-upload/index",
+    "my-active-form": "./components/active-form/index",
+    "my-product-selector": "./container/product-selector/index",
     "my-goods-detail-bar": "./container/goods-detail-bar/index",
+    "my-manager-entry-btn": "./container/manager-entry-btn/index",
     "i-drawer": "./dist/iview/drawer/index",
     "i-modal": "./dist/iview/modal/index",
     "i-icon": "./dist/iview/icon/index",

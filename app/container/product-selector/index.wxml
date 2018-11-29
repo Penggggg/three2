@@ -1,0 +1,32 @@
+<!--container/product-selector/index.wxml-->
+<view>
+
+    <!-- 弹窗 -->
+    <i-modal
+        title="商品选择"
+        bind:ok="onOk"
+        visible="{{ show$ }}"
+        bind:cancel="onCancel"
+    >
+        <view class='search-header'>
+            <view
+                class='search-icon'
+                bindtap='fetchData'
+            >
+                <wxc-icon
+                    size="34"
+                    type="search"
+                    color='#999'
+                />
+            </view>
+            <input
+                value="{{ search }}"
+                placeholder="搜索商品"
+                bindconfirm="fetchData"
+                class='search-input text'
+            />
+        </view>
+        ?
+    </i-modal>
+
+</view>

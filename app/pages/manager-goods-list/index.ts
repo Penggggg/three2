@@ -27,7 +27,7 @@ Page({
     navigate( e ) {
         wx.navigateTo({
             url: e.currentTarget.dataset.url || '/pages/manager-goods-detail/index',
-        })
+        });
     },
   
     /** 拉取列表 */

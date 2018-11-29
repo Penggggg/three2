@@ -1,0 +1,37 @@
+/* container/product-selector/index.wxss */
+.text {
+    color: #666;
+    font-size: 26rpx;
+    line-height: 30rpx;
+}
+
+.search-header {
+    width: 100%;
+    z-index: 100;
+    position: relative;
+    background: #fff;
+    margin-bottom: 15rpx;
+}
+
+.search-header:after {
+    left: 0;
+    bottom: 0;
+    height: 1rpx;
+    width: 100%;
+    content: '';
+    position: absolute;
+    background: rgba( 0, 0, 0, 0.1 );
+}
+
+.search-icon {
+    left: 35rpx;
+    top: 28rpx;
+    position: absolute;
+}
+
+.search-input {
+    color: #999;
+    font-size: 30rpx;
+    text-align: left;
+    padding: 20rpx 25rpx 20rpx 90rpx;  
+}

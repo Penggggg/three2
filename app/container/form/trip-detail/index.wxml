@@ -1,10 +1,31 @@
 <!--container/form/trip-detail/index.wxml-->
 <view class='con-form-trip-detail'>
 
-<!-- 基本信息 -->
-  <my-active-form
-    id="form1"
-    meta="{{ meta }}"
-  />
+    <!-- 基本信息 -->
+    <my-active-form
+        id="form1"
+        meta="{{ meta }}"
+    />
+
+    <!-- 商品推荐 -->
+    <view class="recommend-block">
+        
+        <view class='recommend-btn-block'>
+            <wxc-button
+                type="beauty"
+                plain="{{ true }}"
+                bind:tap="onToggleProduct"
+            >
+                选择商品
+            </wxc-button>
+        </view>
+
+    </view>
+
+    <!-- 商品选择 -->
+    <my-product-selector
+        show="{{ showProduct }}"
+        bind:close="onToggleProduct"
+    />
 
 </view>

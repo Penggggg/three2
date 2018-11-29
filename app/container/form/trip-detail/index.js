@@ -20,6 +20,8 @@ Component({
     data: {
         // 数据字典
         dic: { },
+        // 展开商品选择
+        showProduct: false
     },
 
     computed: {
@@ -77,6 +79,9 @@ Component({
                       validate: val => !!val,
                       message: '结束时间不能为空'
                     }]
+                }, {
+                    title: '推荐商品',
+                    desc: ''
                 }
             ];
             return meta;
@@ -87,8 +92,18 @@ Component({
      * 组件的方法列表
      */
     methods: {
+
+        /** 拉取行程详情 */
         fetchDetail( tid ) {
             console.log( tid );
-        }
+        },
+
+        /** 展开/关闭商品选择 */
+        onToggleProduct( ) {
+            this.setData({
+                showProduct: !this.data.showProduct
+            })
+        },
+
     }
 })
