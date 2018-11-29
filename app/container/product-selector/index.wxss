@@ -42,7 +42,7 @@
 .result-list {
 
     min-height: 200rpx;
-    max-height: 450rpx;
+    max-height: 550rpx;
 }
 
 .result-item {

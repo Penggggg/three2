@@ -38,19 +38,30 @@ Component({
         /** 点击modal确定 */
         onOk( ) {
 
-            const { list, selectedProduct } = this.data;
+            const { list, selectedProduct, selectedProductId } = this.data;
 
+            // 如果没有搜索过 就变搜索
             if ( list.length === 0 ) { 
                 return this.fetchList( );
 
-            } else {
+            // 暴露已选
+            } else if ( !selectedProductId ) {
+                wx.showToast({
+                    icon: 'none',
+                    title: '请点击选中一个商品'
+                })
+
+            }else {
                 this.setData({
                     list: [ ],
                     search: '',
                     selectedProduct: null,
                     selectedProductId: null
                 });
-                this.triggerEvent('confirm', selectedProduct );
+                this.triggerEvent('confirm', {
+                    _id: selectedProductId,
+                    detail: selectedProduct
+                });
                 this.onCancel( );
             }
         },
@@ -140,9 +151,11 @@ Component({
                     });
 
                     this.setData({
-                        list: meta
-                    })
-                    console.log( meta );
+                        list: meta,
+                        selectedProduct: null,
+                        selectedProductId: null
+                    });
+                    
                 },
                 fail: function( ) {
                     wx.showToast({
