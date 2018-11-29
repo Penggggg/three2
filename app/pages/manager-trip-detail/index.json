@@ -1,5 +1,5 @@
 {
     "usingComponents": {
-      "my-form-goods-details": "../../container/form/goods-detail/index"
+      "my-form-trip-details": "../../container/form/trip-detail/index"
     }
   }

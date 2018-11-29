@@ -1,0 +1,10 @@
+<!--container/form/trip-detail/index.wxml-->
+<view class='con-form-trip-detail'>
+
+<!-- 基本信息 -->
+  <my-active-form
+    id="form1"
+    meta="{{ meta }}"
+  />
+
+</view>

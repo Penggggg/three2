@@ -93,6 +93,18 @@ Component({
       this.validateItem( formItemKey );
     },
 
+    /** Date输入 */
+    dateChange( e ) {
+        const { value } = e.detail;
+        const formItemKey = e.currentTarget.dataset.formkey;
+        this.setData({
+          formData: Object.assign({ }, this.data.formData, {
+            [ formItemKey ]: value 
+          })
+        });
+        this.validateItem( formItemKey );
+    },
+
     /** 展开tag */
     toogleTag( e ) {
       const { tagkey, tagindex } = e.currentTarget.dataset;

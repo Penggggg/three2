@@ -1,6 +1,7 @@
 <!--components/active-form/index.wxml-->
+
 <view class='c-active-form'>
-{{ errData.visiable }}
+
   <form>
     
     <view
@@ -197,6 +198,34 @@
             checked="{{ formData[ item.key ]}}"
           />
         </view>
+      </view>
+
+      <!-- 日期类型 -->
+      <view
+        class="caf-inputs caf-item no-padding"
+        wx:elif="{{ item.type === 'date' }}"
+      >
+          <picker
+            mode="date"
+            start="{{ item.start }}"
+            bindchange="dateChange"
+            data-formkey="{{ item.key }}"
+            value="{{ formData[ item.key ]}}"
+            class="date-picker"
+          >
+            <view class="picker date">
+              <text class="caf-item-label {{ !!errData[ item.key ] ? 'error' : '' }}">{{ item.label }}</text>
+              <view class="caf-item-input">
+                  <view
+                    class="error-tips"
+                    wx:if="{{errData[ item.key ]}}"
+                  >
+                      {{ errData[ item.key ] }}
+                  </view>
+                  <text>{{ formData[ item.key ] }}</text>
+              </view>
+            </view>
+          </picker>
       </view>
 
     </view>

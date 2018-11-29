@@ -73,8 +73,21 @@
   display: flex;
 }
 
+.picker.date {
+  width: 90vw;
+  display:flex;
+  flex:1;
+  height:80rpx;
+  align-items:center;
+  
+}
+
 .caf-item.error > .caf-item-label {
   color: red;
+}
+
+.caf-item.no-padding {
+  padding: 0rpx 30rpx;
 }
 
 .error-tips {
@@ -89,4 +102,12 @@
 
 .caf-item-label.error {
   color: red;
+}
+
+.date-picker {
+  width: 100%;
+  height:80rpx;
+  display:flex;
+  align-items:center;
+  
 }
