@@ -16,6 +16,8 @@ Component({
 
     /**
      * 组件的初始数据
+     * ! 发布后，部分字段已经不能被编辑
+     * ! 行程开始后，所有字段不能被编辑
      */
     data: {
         // 行程id
@@ -423,6 +425,8 @@ Component({
             const r2 = form2.getData( );
             const r3 = form3.getData( );
 
+            
+            const { start_date, end_date } = r1.data;
             const { fullreduce_atleast, fullreduce_values, cashcoupon_atleast, cashcoupon_values, selectedProductIds } = this.data;
 
             if ( !r1.result || !r2.result || !r3.result ) {
@@ -432,7 +436,7 @@ Component({
                 })
             }
 
-            let tripDetail = {
+            let tripDetail = Object.assign({
                 ...r1.data,
                 ...r2.data,
                 ...r3.data,
@@ -443,19 +447,49 @@ Component({
                 cashcoupon_values,
                 selectedProductIds,
                 updateTime: new Date( ).getTime( ),
-            };
+            }, {
+                end_date: new Date( end_date ).getTime( ),
+                start_date: new Date( start_date ).getTime( )
+            });
     
-            if ( tid ) {
-                isPassed: false,
+            if ( !tid ) {
                 tripDetail = Object.assign({ }, tripDetail, {
+                    isPassed: false,
                     createTime: new Date( ).getTime( )
                 });
             } else {
                 tripDetail = Object.assign({ }, tripDetail, {
-                    tid,
+                    _id: tid,
                     isPassed: false,
                 });
             }
+
+            wx.showLoading({
+                title: tid ? '更新中...' : '创建中..',
+            });
+
+            wx.cloud.callFunction({
+                name: 'api-trip-edit',
+                data: {
+                    data: tripDetail,
+                },
+                success: res => {
+                    if ( res.result.status === 200 ) {
+                        wx.showToast({
+                            title: tid ? '更新成功' : '创建成功！'
+                        });
+                    }
+                },
+                fail: ( ) => {
+                    wx.showToast({
+                        icon: 'none',
+                        title: tid ? '更新失败' : '创建失败',
+                    });
+                },
+                complete: ( ) => {
+                    wx.hideLoading({ });
+                }
+            });
 
         }
 

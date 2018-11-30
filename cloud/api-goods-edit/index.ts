@@ -37,6 +37,7 @@ const db: DB.Database = cloud.database();
  * }
  * -------- 请求 ----------
  * {
+ *      _id: string
  *      status: 200 / 500
  * }
  * ! 更新的时候，先判断型号有没有被引用
