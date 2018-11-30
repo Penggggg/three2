@@ -1,1 +1,103 @@
-/* app/pages/manager-trip-list/index.wxss */
+/* app/pages/manager-goods-list/index.wxss */
+.text {
+    color: #666;
+    font-size: 26rpx;
+    line-height: 30rpx;
+  }
+  
+  .bold {
+    font-weight: bold;
+  }
+  
+  .red {
+    color: #ff4422;
+  }
+  
+  .my-input {
+  
+    color: #999;
+    font-size: 30rpx;
+    padding: 20rpx 25rpx 20rpx 90rpx;
+  
+  }
+  
+  .my-icon {
+    left: 25rpx;
+    top: 19rpx;
+    position: absolute;
+  }
+  
+  .p-manager-goods-list {
+    min-height: 100vh;
+  }
+  
+  .pmgl-header {
+    top: 0;
+    left: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
+    background: #fff;
+    box-shadow: 5px 5px 10px rgba( 0, 0, 0, 0.10 );
+  }
+  
+  .pmgl-btn-container {
+    left: 0;
+    padding: 20rpx;
+    bottom: 20rpx;
+    width: 100%;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+  
+  .pmgl-list-container {
+    height: 1080rpx;
+    overflow: hidden;
+    padding: 170rpx 10rpx 30rpx;
+    box-sizing: border-box;
+    overflow-y: scroll;
+  }
+  
+  .pmgl-list-container.fixed {
+    top: 70rpx;
+    left: 0;
+    width: 100%;
+    position: fixed;
+    height: auto;
+    padding: 25rpx 10rpx;
+    z-index: 50;
+    background: #fff;
+  }
+  
+  .pmgl-list-item {
+  
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 25rpx 10rpx;
+    justify-content: space-around;
+    border-bottom: 1px dotted rgba( 0, 0, 0, 0.19 );
+  
+  }
+  
+  .pmgl-list-item-meta {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .pmgl-list-item-meta.ellipsis {
+    overflow:hidden; 
+    text-overflow:ellipsis;
+    display:-webkit-box; 
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    word-break: break-all;
+  }
+  
+  .btn {
+    width: 100% !important;
+  }

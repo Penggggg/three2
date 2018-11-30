@@ -1,2 +1,88 @@
-<!--app/pages/manager-trip-list/index.wxml-->
-<text>app/pages/manager-trip-list/index.wxml</text>
+<!--app/pages/manager-goods-list/index.wxml-->
+<view class="p-manager-goods-list">
+
+  <!-- 头部搜索栏 -->
+    <view class='pmgl-header'>
+        <view
+            class='my-icon'
+            bindtap='fetchData'
+        >
+            <wxc-icon
+                size="34"
+                type="search"
+                color='#999'
+            />
+        </view>
+        <input
+            class='my-input text'
+            value="{{ search }}"
+            placeholder="搜索行程"
+            bindinput='onInput'
+            bindconfirm="fetchData"
+        />
+    </view>
+
+    <view class='pmgl-list-container fixed'>
+        <view class='pmgl-list-header pmgl-list-item'>
+            <view class="text pmgl-list-item-meta bold">行程名称</view>
+            <view class="text pmgl-list-item-meta bold">销售额</view>
+            <view class="text pmgl-list-item-meta bold">订单数</view>
+            <view class="text pmgl-list-item-meta bold">状态</view>
+            <view class="text pmgl-list-item-meta bold">开始时间</view>
+        </view>
+    </view>
+
+    <!-- 中间列表 -->
+    <scroll-view
+        scroll-y
+        lower-threshold="100"
+        bindscrolltolower="fetchData"
+        class='pmgl-list-container'
+    >
+
+        <view
+            wx:for="{{ list }}"
+            wx:key="{{ index }}"
+            data-pid="{{ item._id }}"
+            class='pmgl-list-item'
+            bindtap="onTab"
+        >
+            <view class="text pmgl-list-item-meta">{{ item.title }}</view>
+            <view class="text pmgl-list-item-meta">
+                <wxc-price
+                    decimal="none"
+                > 
+                    {{ item.sales_volume }}
+                </wxc-price>
+            </view>
+            <view class="text pmgl-list-item-meta">
+                <wxc-price
+                    decimal="none"
+                > 
+                    {{ item.orders }}
+                </wxc-price>
+            </view>
+            <view
+                class="text pmgl-list-item-meta {{ item.state === '未发布' ? 'red' : '' }}"
+            >
+                {{ item.state }}
+            </view>
+            <view
+                class="text pmgl-list-item-meta"
+            >
+                {{ item.startDate }}
+            </view>
+        </view>
+    </scroll-view>
+
+    <!-- 按钮 -->
+    <view class='pmgl-btn-container'>
+        <wxc-button
+            size="large"
+            type="beauty"
+        >
+            创建行程
+        </wxc-button>
+    </view>
+
+</view>

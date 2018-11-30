@@ -31,14 +31,14 @@ export const main = async (event, context) => {
     const search = new RegExp( search$.replace(/\s+/g, ""), 'i');
 
     // 获取总数
-    const total$ = await db.collection('goods')
+    const total$ = await db.collection('trip')
         .where({
             title: search
         })
         .count( );
 
     // 获取数据
-    const data$ = await db.collection('goods')
+    const data$ = await db.collection('trip')
         .where({
             title: search
         })
