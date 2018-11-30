@@ -25,8 +25,9 @@ Component({
         url: '/pages/manager-goods-list/index',
         img: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-1.png'
       }, {
-        title: '商品分组',
-        desc: '批量推荐同类型商品',
+        title: '我的行程',
+        desc: '发布、编辑最新行程',
+        url: '/pages/manager-trip-list/index',
         img: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-2.png'
       }
     ]
