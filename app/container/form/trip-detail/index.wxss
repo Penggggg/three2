@@ -89,3 +89,9 @@
     color: red;
     font-size: 24rpx;
 }
+
+.btn-blockk {
+    margin-top: 50rpx;
+    text-align: center;
+    margin-bottom:50rpx;
+}

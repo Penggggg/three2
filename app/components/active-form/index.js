@@ -218,6 +218,7 @@ Component({
       const { formData, meta } = this.data;
       Object.keys( formData ).map( formKey => {
         const currentTarget = meta.find( x => x.key === formKey );
+        if ( !currentTarget ) { return; }
         temp = Object.assign({ }, temp, {
           [ formKey ]: ( formData[ formKey ] === null || formData[ formKey ] === undefined ) ?
             formData[ formKey ]:

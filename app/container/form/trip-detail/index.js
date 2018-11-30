@@ -18,6 +18,8 @@ Component({
      * 组件的初始数据
      */
     data: {
+        // 行程id
+        tid: '',
         // 数据字典
         dic: { },
         // 展开删除推荐
@@ -46,8 +48,6 @@ Component({
         postage: '0',
         // 付款类型
         payment: '0',
-        // 免邮门槛
-        postagefree_atleast: null,
         // 表单：邮费是否选择了满免
         postageFullFree: true
     },
@@ -88,7 +88,7 @@ Component({
                       message: '行程目的地不能为空'
                     }]
                 }, {
-                    key: 'startDate',
+                    key: 'start_date',
                     label: '开始时间',
                     type: 'date',
                     start: `${year}-${String( month ).length < 2 ? '0' + month  : month}-${String( date ).length < 2 ? '0' + date  : date}`,
@@ -98,7 +98,7 @@ Component({
                       message: '开始时间不能为空'
                     }]
                 }, {
-                    key: 'endDate',
+                    key: 'end_date',
                     label: '结束时间',
                     type: 'date',
                     start: `${year}-${String( month ).length < 2 ? '0' + month  : month}-${String( date ).length < 2 ? '0' + date  : date}`,
@@ -122,7 +122,7 @@ Component({
                     title: '营销工具',
                     desc: '裂变与粘性'
                 }, {
-                    key: 'reducePrice',
+                    key: 'reduce_price',
                     label: '行程立减',
                     type: 'number',
                     placeholder: '裂变：立减5元，客户转发才能获得优惠',
@@ -404,12 +404,59 @@ Component({
         /** 邮费监听 */
         onPostageChange( e ) {
             const { postage, payment } = e.detail;
-            console.log( e.detail )
             this.setData({
                 postage: postage || null,
                 payment: payment || null,
                 postageFullFree: postage === '0'
             });
+        },
+
+        /** 表单提交 */
+        submit( ) {
+
+            const { tid } = this.data;
+            const form1 = this.selectComponent('#form1');
+            const form2 = this.selectComponent('#form2');
+            const form3 = this.selectComponent('#form3');
+
+            const r1 = form1.getData( );
+            const r2 = form2.getData( );
+            const r3 = form3.getData( );
+
+            const { fullreduce_atleast, fullreduce_values, cashcoupon_atleast, cashcoupon_values, selectedProductIds } = this.data;
+
+            if ( !r1.result || !r2.result || !r3.result ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '请完善行程信息',
+                })
+            }
+
+            let tripDetail = {
+                ...r1.data,
+                ...r2.data,
+                ...r3.data,
+                sales_volume: 0,
+                fullreduce_atleast,
+                fullreduce_values,
+                cashcoupon_atleast,
+                cashcoupon_values,
+                selectedProductIds,
+                updateTime: new Date( ).getTime( ),
+            };
+    
+            if ( tid ) {
+                isPassed: false,
+                tripDetail = Object.assign({ }, tripDetail, {
+                    createTime: new Date( ).getTime( )
+                });
+            } else {
+                tripDetail = Object.assign({ }, tripDetail, {
+                    tid,
+                    isPassed: false,
+                });
+            }
+
         }
 
     },

@@ -100,6 +100,17 @@
         bind:change="onPostageChange"
     />
 
+    <!-- 按钮 -->
+    <view class='btn-blockk'>
+        <wxc-button
+            size="large"
+            type="beauty"
+            bindtap="submit"
+        >
+            确定
+        </wxc-button>
+    </view>
+
     <!-- 商品选择 -->
     <my-product-selector
         show="{{ showProduct }}"
@@ -166,7 +177,7 @@
             data-type="2"
             nocenter="{{ true }}"
             placeholder="消费指定金额，可选择是否使用代金券"
-            value='{{ fullreduce_values }}'
+            value='{{ cashcoupon_values }}'
             bindinput='onInputCashCoupon'
         />
     </i-modal>
