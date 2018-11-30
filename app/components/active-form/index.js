@@ -75,7 +75,7 @@ Component({
         })
       });
       this.validateItem( formItemKey );
-      this.triggerEvent('change', this.formData );
+      this.triggerEvent('change', this.data.formData );
     },
 
     /** select输入 */
@@ -92,7 +92,7 @@ Component({
         })
       })
       this.validateItem( formItemKey );
-      this.triggerEvent('change', this.formData );
+      this.triggerEvent('change', this.data.formData );
     },
 
     /** Date输入 */
@@ -105,7 +105,7 @@ Component({
           })
         });
         this.validateItem( formItemKey );
-        this.triggerEvent('change', this.formData );
+        this.triggerEvent('change', this.data.formData );
     },
 
     /** 展开tag */
@@ -154,7 +154,7 @@ Component({
         selecingTag: '',
       });
       this.validateItem( selectingTagKey );
-      this.triggerEvent('change', this.formData );
+      this.triggerEvent('change', this.data.formData );
     },
 
     /** 编辑ing标签 */
@@ -167,7 +167,7 @@ Component({
     /** 处理本地formData */
     dealFormData( ) {
       let selectTypeIndex = { };
-      let obj = Object.assign({ }, this.formData );
+      let obj = Object.assign({ }, this.data.formData );
       this.data.meta.map( formItem => {
         if ( !!formItem.key ) {
           // 处理formData
@@ -204,7 +204,7 @@ Component({
         })
       });
       this.validateItem( key );
-      this.triggerEvent('change', this.formData );
+      this.triggerEvent('change', this.data.formData );
     },
 
     /** 全部表单校验 */
@@ -302,7 +302,7 @@ Component({
           })
         })
       }
-      this.triggerEvent('change', this.formData );
+      this.triggerEvent('change', this.data.formData );
     },
 
     // 设置表单
@@ -311,7 +311,7 @@ Component({
         formData: Object.assign({ }, this.data.formData, { ...obj })
       });
       Object.keys( obj ).map( k => this.validateItem( k ));
-      this.triggerEvent('change', this.formData );
+      this.triggerEvent('change', this.data.formData );
     }
 
   },

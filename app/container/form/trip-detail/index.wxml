@@ -97,6 +97,7 @@
     <my-active-form
         id="form3"
         meta="{{ meta3 }}"
+        bind:change="onPostageChange"
     />
 
     <!-- 商品选择 -->

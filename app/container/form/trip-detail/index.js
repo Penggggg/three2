@@ -42,6 +42,14 @@ Component({
         cashcoupon_values: null,
         // 行程代金券modal
         showCashCoupon: false,
+        // 邮费类型
+        postage: '0',
+        // 付款类型
+        payment: '0',
+        // 免邮门槛
+        postagefree_atleast: null,
+        // 表单：邮费是否选择了满免
+        postageFullFree: true
     },
 
     computed: {
@@ -130,6 +138,7 @@ Component({
 
         // 表单数据3
         meta3( ) {
+            const { postageFullFree, postage, payment } = this.data;
             const meta = [
                 {
                     title: '其他资费',
@@ -139,10 +148,37 @@ Component({
                     label: '邮费类型',
                     type: 'select',
                     placeholder: '请选择类型',
-                    value: '0',
+                    value: postage,
                     options: this.data.dic['postage'] || [ ]
+                }, {
+                    key: 'payment',
+                    label: '付款类型',
+                    type: 'select',
+                    placeholder: '请付款类型',
+                    value: payment,
+                    options: this.data.dic['payment'] || [ ]
+                }, {
+                    key: 'published',
+                    label: '立即发布',
+                    type: 'switch',
+                    value: false
                 }
             ];
+
+            if ( postageFullFree ) {
+                meta.splice( 2, 0, {
+                    key: 'postagefree_atleast',
+                    label: '免邮门槛',
+                    type: 'number',
+                    placeholder: '达到指定消费金额才免邮',
+                    value: undefined,
+                    rules: [{
+                      validate: val => !!val,
+                      message: '请填写免邮门槛'
+                    }]
+                });
+            }
+
             return meta;
         },
 
@@ -364,6 +400,17 @@ Component({
                 });
             }
         },
+
+        /** 邮费监听 */
+        onPostageChange( e ) {
+            const { postage, payment } = e.detail;
+            console.log( e.detail )
+            this.setData({
+                postage: postage || null,
+                payment: payment || null,
+                postageFullFree: postage === '0'
+            });
+        }
 
     },
 
