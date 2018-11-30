@@ -45,6 +45,33 @@
 
     </view>
 
+    <!-- 基本信息 -->
+    <my-active-form
+        id="form2"
+        meta="{{ meta2 }}"
+    />
+
+    <!-- 行程满减 -->
+    <view
+        class="caf-inputs caf-item"
+        bindtap="toggleFullReduce"
+      >
+        <text class='caf-item-label'>行程满减</text>
+        <view
+            class="caf-item-input {{ !fullreducePrice ? 'no-content' : '' }}"
+        >
+            <view
+                class="error-tips"
+            >
+                
+            </view>
+            <view>
+                {{ fullreducePrice }}
+                {{ !fullreducePrice ? '如消费满200元,自动减10元' : '' }}
+            </view>
+        </view>
+    </view>
+
     <!-- 商品选择 -->
     <my-product-selector
         show="{{ showProduct }}"
@@ -60,6 +87,32 @@
         bind:cancel="toggleDeleteRecommend"
     >
         确定去掉该推荐商品吗?
+    </i-modal>
+
+    <!-- 行程满减 -->
+    <i-modal
+        title="行程满减"
+        bind:cancel="toggleFullReduce"
+        visible="{{ showFullReduce }}"
+    >
+        <wxc-input
+            title="满足金额"
+            type="number"
+            data-type="1"
+            nocenter="{{ true }}"
+            placeholder="行程消费至少达到指定金额"
+            value='{{ fullreduce_atleast }}'
+            bindinput='onInputFullReduce'
+        />
+        <wxc-input
+            title="减免金额"
+            type="number"
+            data-type="2"
+            nocenter="{{ true }}"
+            placeholder="达到指定金额后，减免一点金额"
+            value='{{ fullreduce_values }}'
+            bindinput='onInputFullReduce'
+        />
     </i-modal>
 
 </view>

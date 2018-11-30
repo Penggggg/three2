@@ -29,7 +29,13 @@ Component({
         // 选择推荐商品的列表
         selectedProducts: [ ],
         // 选择中的推荐id
-        selectingPid: ''
+        selectingPid: '',
+        // 行程满减 - 门槛
+        fullreduce_atleast: null,
+        // 行程满减 - 减多少
+        fullreduce_values: null,
+        // 行程满减modal
+        showFullReduce: false
     },
 
     computed: {
@@ -93,7 +99,38 @@ Component({
                 }
             ];
             return meta;
+        },
+
+        // 表单数据2
+        meta2( ) {
+            const meta = [
+                {
+                    title: '营销工具',
+                    desc: '裂变与粘性'
+                }, {
+                    key: 'reducePrice',
+                    label: '行程立减',
+                    type: 'number',
+                    placeholder: '如立减5元，转发就能获得优惠',
+                    value: undefined,
+                    rules: [{
+                        validate: val => !!val,
+                        message: '请设置行程立减多少元'
+                    }]
+                },
+            ];
+            return meta;
+        },
+
+        // 行程满减 文字
+        fullreducePrice( ) {
+            const { fullreduce_atleast, fullreduce_values } = this.data;
+            if ( fullreduce_atleast && fullreduce_values ) {
+                return `满${fullreduce_atleast}减${fullreduce_values}元`;
+            }
+            return '';
         }
+
     },
 
     /**
@@ -146,7 +183,7 @@ Component({
             }
         },
 
-        /** 确认删除 */
+        /** 确认删除推荐商品 */
         confirmDelete( ) {
             const { selectingPid, selectedProducts, selectedProductIds, showDelete } = this.data;
             const selectedProductIndex = selectedProducts.find( x => x._id === selectingPid );
@@ -165,6 +202,28 @@ Component({
                 selectedProducts,
                 selectedProductIds
             })
+        },
+
+        /** 展示/关闭推荐商品 */
+        toggleFullReduce( ) {
+            this.setData({
+                showFullReduce: !this.data.showFullReduce
+            });
+        },
+
+        /** 行程满减输入 */
+        onInputFullReduce( e ) {
+            const { value } = e.detail;
+            const { type } = e.currentTarget.dataset;
+            if ( type === '1' ) {
+                this.setData({
+                    fullreduce_atleast: value
+                });
+            } else {
+                this.setData({
+                    fullreduce_values: value
+                });
+            }
         }
 
     }

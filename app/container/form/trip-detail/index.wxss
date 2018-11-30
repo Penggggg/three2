@@ -1,8 +1,7 @@
 /* container/form/trip-detail/index.wxss */
 .recommend-btn-block {
-    margin-top: 30rpx;
     text-align: center;
-    margin-bottom:50rpx;
+    margin: 30rpx 0;
 }
 
 .recommend-list {
@@ -44,4 +43,49 @@
     word-break: break-all;
     text-overflow:ellipsis;
     -webkit-box-orient:vertical;
+}
+
+.caf-item {
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+  
+.caf-item::after {
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    content: '';
+    transform: scaleY( 0.5 );
+    background: rgba(0, 0, 0, 0.19);
+    position: absolute;
+}
+
+.caf-item-label {
+    color: #666;
+    font-size: 32rpx;
+    padding: 20rpx 0 20rpx 30rpx;
+    margin-right: 50rpx;
+}
+
+.caf-item-input {
+    flex: 1;
+    color: #666;
+    display: flex;
+    flex-direction: column;
+    height: 100rpx;
+    font-size: 28rpx;
+    box-sizing: border-box;
+    justify-content: center;
+    padding: 20rpx 30rpx 20rpx 0;
+}
+
+.caf-item-input.no-content {
+    color: rgba(0, 0, 0, 0.52 );
+}
+
+.error-tips {
+    color: red;
+    font-size: 24rpx;
 }
