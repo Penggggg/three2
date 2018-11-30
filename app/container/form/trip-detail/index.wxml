@@ -71,6 +71,27 @@
             </view>
         </view>
     </view>
+   
+    <!-- 行程代金券 -->
+    <view
+        class="caf-inputs caf-item"
+        bindtap="toggleCashCoupon"
+      >
+        <text class='caf-item-label'>代金券</text>
+        <view
+            class="caf-item-input {{ !cashCouponPrice ? 'no-content' : '' }}"
+        >
+            <view
+                class="error-tips"
+            >
+                
+            </view>
+            <view>
+                {{ cashCouponPrice }}
+                {{ !cashCouponPrice ? '行程结束后发放一张代金券，用于下次消费' : '' }}
+            </view>
+        </view>
+    </view>
 
     <!-- 商品选择 -->
     <my-product-selector
@@ -113,6 +134,33 @@
             placeholder="消费指定金额，自动减免"
             value='{{ fullreduce_values }}'
             bindinput='onInputFullReduce'
+        />
+    </i-modal>
+    
+    <!-- 行程代金券 -->
+    <i-modal
+        title="行程代金券"
+        bind:ok="toggleCashCoupon"
+        visible="{{ showCashCoupon }}"
+        bind:cancel="closeCashCoupon"
+    >
+        <wxc-input
+            title="满足金额"
+            type="number"
+            data-type="1"
+            nocenter="{{ true }}"
+            placeholder="行程消费至少达到指定金额"
+            value='{{ cashcoupon_atleast }}'
+            bindinput='onInputCashCoupon'
+        />
+        <wxc-input
+            title="减免金额"
+            type="number"
+            data-type="2"
+            nocenter="{{ true }}"
+            placeholder="消费指定金额，可选择是否使用代金券"
+            value='{{ fullreduce_values }}'
+            bindinput='onInputCashCoupon'
         />
     </i-modal>
 

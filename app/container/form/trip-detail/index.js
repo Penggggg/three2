@@ -35,7 +35,13 @@ Component({
         // 行程满减 - 减多少
         fullreduce_values: null,
         // 行程满减modal
-        showFullReduce: false
+        showFullReduce: false,
+        // 行程代金券 - 门槛
+        cashcoupon_atleast: null,
+        // 行程代金券 - 金额
+        cashcoupon_values: null,
+        // 行程代金券modal
+        showCashCoupon: false
     },
 
     computed: {
@@ -117,7 +123,7 @@ Component({
                         validate: val => !!val,
                         message: '请设置行程立减多少元'
                     }]
-                },
+                }
             ];
             return meta;
         },
@@ -129,6 +135,17 @@ Component({
                 return `满${fullreduce_atleast}减${fullreduce_values}元`;
             }
             return '';
+        },
+
+        // 行程代金券
+        cashCouponPrice( ) {
+            const { cashcoupon_values, cashcoupon_atleast } = this.data;
+            if ( !cashcoupon_atleast && cashcoupon_values ) {
+                return `无门槛${cashcoupon_values}元代金券`;
+            } else if ( cashcoupon_atleast &&  cashcoupon_values ) {
+                return `满${cashcoupon_atleast}减${cashcoupon_values}元代金券`;
+            }
+            return ``;
         }
 
     },
@@ -204,18 +221,23 @@ Component({
             })
         },
 
-        /** 展示/关闭推荐商品 */
+        /** 展示/关闭行程满减 */
         toggleFullReduce( ) {
-            const { showFullReduce, fullreduce_values } = this.data;
+            const { showFullReduce, fullreduce_values, fullreduce_atleast } = this.data;
             if ( !showFullReduce ) {
                 return this.setData({
                     showFullReduce: true
                 });
             } else {
-                if ( !fullreduce_values || !showFullReduce ) {
+                if ( fullreduce_atleast === null || !fullreduce_values ) {
                     return wx.showToast({
                         icon: 'none',
                         title: '请填写完整'
+                    })
+                } else if ( fullreduce_atleast === 0 ) {
+                    return wx.showToast({
+                        icon: 'none',
+                        title: '消费门槛不能为0元'
                     })
                 }
                 return this.setData({
@@ -225,7 +247,7 @@ Component({
             
         },
 
-        /** 关闭推荐商品 */
+        /** 关闭行程满减 */
         closeReduce( ) {
             const { showFullReduce, fullreduce_values, fullreduce_atleast } = this.data;
             this.setData({
@@ -245,14 +267,58 @@ Component({
             const { type } = e.currentTarget.dataset;
             if ( type === '1' ) {
                 this.setData({
-                    fullreduce_atleast: value
+                    fullreduce_atleast: Number( value )
                 });
             } else {
                 this.setData({
-                    fullreduce_values: value
+                    fullreduce_values: Number( value )
                 });
             }
-        }
+        },
+
+        /** 行程代金券弹框 */
+        toggleCashCoupon( ) {
+            const { showCashCoupon, cashcoupon_atleast, cashcoupon_values } = this.data;
+            if ( !showCashCoupon ) {
+                return this.setData({
+                    showCashCoupon: true
+                });
+            } else {
+                if ( !cashcoupon_values ) {
+                    return this.setData({
+                        showCashCoupon: false,
+                        cashcoupon_values: null,
+                        cashcoupon_atleast: null,
+                    });
+                } else {
+                    return this.setData({
+                        showCashCoupon: false
+                    });
+                }
+            }
+        },
+
+        /** 关闭代金券弹框 */
+        closeCashCoupon( ) {
+            return this.setData({
+                showCashCoupon: false
+            });
+        },
+
+        /** 代金券输入 */
+        onInputCashCoupon( e ) {
+            const { value } = e.detail;
+            const { type } = e.currentTarget.dataset;
+            if ( type === '1' ) {
+                this.setData({
+                    cashcoupon_atleast: Number( value )
+                });
+            } else {
+                this.setData({
+                    cashcoupon_values: Number( value )
+                });
+            }
+        },
 
     }
 })
