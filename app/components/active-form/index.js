@@ -75,6 +75,7 @@ Component({
         })
       });
       this.validateItem( formItemKey );
+      this.triggerEvent('change', this.formData );
     },
 
     /** select输入 */
@@ -91,6 +92,7 @@ Component({
         })
       })
       this.validateItem( formItemKey );
+      this.triggerEvent('change', this.formData );
     },
 
     /** Date输入 */
@@ -103,6 +105,7 @@ Component({
           })
         });
         this.validateItem( formItemKey );
+        this.triggerEvent('change', this.formData );
     },
 
     /** 展开tag */
@@ -151,6 +154,7 @@ Component({
         selecingTag: '',
       });
       this.validateItem( selectingTagKey );
+      this.triggerEvent('change', this.formData );
     },
 
     /** 编辑ing标签 */
@@ -200,6 +204,7 @@ Component({
         })
       });
       this.validateItem( key );
+      this.triggerEvent('change', this.formData );
     },
 
     /** 全部表单校验 */
@@ -230,7 +235,7 @@ Component({
     },
 
     /** 单个表单校验 */
-    validateItem( key ) {
+    validateItem( key, type ) {
       const formItem = this.data.meta.find( x => x.key === key );
       if ( !formItem || !formItem.rules || !formItem.key || !formItem.rules.length === 0 ) { return; }
       const isExistedErr = formItem.rules.some( rule => {
@@ -297,6 +302,7 @@ Component({
           })
         })
       }
+      this.triggerEvent('change', this.formData );
     },
 
     // 设置表单
@@ -305,6 +311,7 @@ Component({
         formData: Object.assign({ }, this.data.formData, { ...obj })
       });
       Object.keys( obj ).map( k => this.validateItem( k ));
+      this.triggerEvent('change', this.formData );
     }
 
   },

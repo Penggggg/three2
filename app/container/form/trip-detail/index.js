@@ -41,7 +41,7 @@ Component({
         // 行程代金券 - 金额
         cashcoupon_values: null,
         // 行程代金券modal
-        showCashCoupon: false
+        showCashCoupon: false,
     },
 
     computed: {
@@ -128,6 +128,24 @@ Component({
             return meta;
         },
 
+        // 表单数据3
+        meta3( ) {
+            const meta = [
+                {
+                    title: '其他资费',
+                    desc: ''
+                }, {
+                    key: 'postage',
+                    label: '邮费类型',
+                    type: 'select',
+                    placeholder: '请选择类型',
+                    value: '0',
+                    options: this.data.dic['postage'] || [ ]
+                }
+            ];
+            return meta;
+        },
+
         // 行程满减 文字
         fullreducePrice( ) {
             const { fullreduce_atleast, fullreduce_values } = this.data;
@@ -137,7 +155,7 @@ Component({
             return '';
         },
 
-        // 行程代金券
+        // 行程代金券 文字
         cashCouponPrice( ) {
             const { cashcoupon_values, cashcoupon_atleast } = this.data;
             if ( !cashcoupon_atleast && cashcoupon_values ) {
@@ -158,6 +176,33 @@ Component({
         /** 拉取行程详情 */
         fetchDetail( tid ) {
             console.log( tid );
+        },
+
+        /** 拉取数据字典 */
+        fetchDic( ) {
+            wx.cloud.callFunction({
+                name: 'api-dic',
+                data: {
+                    dicName: 'payment,postage',
+                },
+                success: res => {
+                    let temp = { };
+                    Object.keys( res.result ).map( dicKey => {
+                        temp = Object.assign({ }, temp, {
+                            [ dicKey ]: res.result[ dicKey]
+                        });
+                    });
+                    this.setData({
+                        dic: temp
+                    });
+                },
+                fail: function( ) {
+                    wx.showToast({
+                        icon: 'none',
+                        title: '获取数据错误',
+                    });
+                }
+            })
         },
 
         /** 展开/关闭商品选择 */
@@ -320,5 +365,9 @@ Component({
             }
         },
 
+    },
+
+    attached: function () {
+        this.fetchDic( );
     }
 })
