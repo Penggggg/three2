@@ -67,7 +67,7 @@
             </view>
             <view>
                 {{ fullreducePrice }}
-                {{ !fullreducePrice ? '如消费满200元,自动减10元' : '' }}
+                {{ !fullreducePrice ? '如消费满200元，立减10元' : '' }}
             </view>
         </view>
     </view>
@@ -92,8 +92,9 @@
     <!-- 行程满减 -->
     <i-modal
         title="行程满减"
-        bind:cancel="toggleFullReduce"
+        bind:ok="toggleFullReduce"
         visible="{{ showFullReduce }}"
+        bind:cancel="closeReduce"
     >
         <wxc-input
             title="满足金额"
@@ -109,7 +110,7 @@
             type="number"
             data-type="2"
             nocenter="{{ true }}"
-            placeholder="达到指定金额后，减免一点金额"
+            placeholder="消费指定金额，自动减免"
             value='{{ fullreduce_values }}'
             bindinput='onInputFullReduce'
         />

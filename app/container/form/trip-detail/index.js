@@ -111,7 +111,7 @@ Component({
                     key: 'reducePrice',
                     label: '行程立减',
                     type: 'number',
-                    placeholder: '如立减5元，转发就能获得优惠',
+                    placeholder: '裂变：立减5元，客户转发才能获得优惠',
                     value: undefined,
                     rules: [{
                         validate: val => !!val,
@@ -206,9 +206,37 @@ Component({
 
         /** 展示/关闭推荐商品 */
         toggleFullReduce( ) {
+            const { showFullReduce, fullreduce_values } = this.data;
+            if ( !showFullReduce ) {
+                return this.setData({
+                    showFullReduce: true
+                });
+            } else {
+                if ( !fullreduce_values || !showFullReduce ) {
+                    return wx.showToast({
+                        icon: 'none',
+                        title: '请填写完整'
+                    })
+                }
+                return this.setData({
+                    showFullReduce: false
+                });
+            }
+            
+        },
+
+        /** 关闭推荐商品 */
+        closeReduce( ) {
+            const { showFullReduce, fullreduce_values, fullreduce_atleast } = this.data;
             this.setData({
-                showFullReduce: !this.data.showFullReduce
-            });
+                showFullReduce: false
+            })
+            if ( !fullreduce_atleast || !fullreduce_values ) {
+                this.setData({
+                    fullreduce_atleast: null,
+                    fullreduce_values: null
+                })
+            }
         },
 
         /** 行程满减输入 */
