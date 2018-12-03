@@ -212,8 +212,76 @@ Component({
     methods: {
 
         /** 拉取行程详情 */
-        fetchDetail( tid ) {
-            console.log( tid );
+        fetchDetail( id ) {
+
+            if ( !id ) { return; }
+            wx.showLoading({
+                title: '加载中...',
+            });
+            wx.cloud.callFunction({
+                name: 'api-trip-detail',
+                data: {
+                    _id: id
+                },
+                success: res => {
+                    
+                    const { status, data } = res.result;
+                    if ( status !== 200 ) { return; }
+
+                    const { title, destination, start_date, end_date, cashcoupon_atleast,
+                        cashcoupon_values, postagefree_atleast, reduce_price, fullreduce_atleast,
+                        fullreduce_values, postage, payment, published, selectedProductIds, selectedProducts } = data;
+
+                    const dealDate = timeStamp => {
+                        const d = new Date( start_date );
+                        const year = d.getFullYear( );
+                        const month = d.getMonth( ) + 1;
+                        const date = d.getDate( );
+                        return `${year}-${String( month ).length > 1 ? month : '0' + month}-${String( date ).length > 1 ? date : '0' + date}`;
+                    }
+
+                    const form1 = this.selectComponent('#form1');
+                    const form2 = this.selectComponent('#form2');
+                    const form3 = this.selectComponent('#form3');
+
+                    form1 && form1.set({
+                        title,
+                        destination,
+                        end_date: dealDate( end_date ),
+                        start_date: dealDate( start_date )
+                    });
+
+                    form2 && form2.set({
+                        reduce_price
+                    });
+
+                    form3 && form3.set({
+                        postage,
+                        payment,
+                        published,
+                        postagefree_atleast
+                    });
+
+                    this.setData({
+                        selectedProducts,
+                        selectedProductIds,
+                        cashcoupon_atleast,
+                        cashcoupon_values,
+                        fullreduce_atleast,
+                        fullreduce_values
+                    });
+
+                },
+                fail: ( ) => {
+                    wx.showToast({
+                        icon: 'none',
+                        title: '获取行程错误',
+                    });
+                },
+                complete: ( ) => {
+                    wx.hideLoading({ });
+                }
+            });
         },
 
         /** 拉取数据字典 */
