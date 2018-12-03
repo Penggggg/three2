@@ -43,7 +43,7 @@
         <view
             wx:for="{{ list }}"
             wx:key="{{ index }}"
-            data-pid="{{ item._id }}"
+            data-tid="{{ item._id }}"
             class='pmgl-list-item'
             bindtap="onTab"
         >
@@ -80,6 +80,7 @@
         <wxc-button
             size="large"
             type="beauty"
+            bindtap="navigate"
         >
             创建行程
         </wxc-button>

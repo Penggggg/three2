@@ -424,7 +424,6 @@ Component({
             const r1 = form1.getData( );
             const r2 = form2.getData( );
             const r3 = form3.getData( );
-
             
             const { start_date, end_date } = r1.data;
             const { fullreduce_atleast, fullreduce_values, cashcoupon_atleast, cashcoupon_values, selectedProductIds } = this.data;
@@ -448,8 +447,8 @@ Component({
                 selectedProductIds,
                 updateTime: new Date( ).getTime( ),
             }, {
-                end_date: new Date( end_date ).getTime( ),
-                start_date: new Date( start_date ).getTime( )
+                end_date: new Date( `${new Date( end_date ).toDateString( ).replace(/\-/g, '/')} 08:00:00` ).getTime( ),
+                start_date: new Date( `${new Date( start_date ).toDateString( ).replace(/\-/g, '/')} 23:59:50` ).getTime( )
             });
     
             if ( !tid ) {
