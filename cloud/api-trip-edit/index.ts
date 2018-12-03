@@ -50,8 +50,6 @@ export const main = async ( event, context) => {
         // 编辑
         } else {
 
-            const { title, destination, start_date, end_date, 
-                postage, postagefree_atleast, payment } = event.data;
             const origin$ = await db.collection('trip')
                                 .where({
                                     _id
@@ -59,15 +57,13 @@ export const main = async ( event, context) => {
                                 .get( );
             
             const origin = origin$.data[ 0 ];
+
+            delete origin['_id'];
+            delete event.data['_id']
+
             const temp = Object.assign({ }, origin, {
-                title,
-                destination,
-                start_date,
-                end_date,
-                postage,
-                payment,
-                postagefree_atleast
-            });
+                ...event.data
+            })
 
             await db.collection('trip')
                     .doc( _id )

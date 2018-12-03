@@ -227,7 +227,7 @@ Component({
                     
                     const { status, data } = res.result;
                     if ( status !== 200 ) { return; }
-
+                    console.log( data );
                     const { title, destination, start_date, end_date, cashcoupon_atleast,
                         cashcoupon_values, postagefree_atleast, reduce_price, fullreduce_atleast,
                         fullreduce_values, postage, payment, published, selectedProductIds, selectedProducts } = data;
@@ -541,6 +541,7 @@ Component({
                     data: tripDetail,
                 },
                 success: res => {
+                    console.log( '...', tripDetail )
                     if ( res.result.status === 200 ) {
                         wx.showToast({
                             title: tid ? '更新成功' : '创建成功！'
