@@ -1,0 +1,30 @@
+<!--app/pages/trip-enter/index.wxml-->
+<view class="trip-enter">
+
+    <!-- 头部信息 -->
+    <view class="te-header">
+
+        <image
+            mode="aspectFill"
+            class="te-header-img"
+            src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/trip-banner.png"
+        />
+
+        <!-- 基本信息 -->
+        <view class="te-header-msg">
+            <view class="te-header-title">
+                香港
+            </view>
+            <view class="te-header-date">
+                12.7 ~ 12.10
+            </view>
+        </view>
+
+        <!-- 社交 - 参加人数，点击跳到拼团页面 -->
+        <view class="te-header-members">
+            
+        </view>
+
+    </view>
+
+</view>

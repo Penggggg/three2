@@ -269,12 +269,12 @@ Component({
                     });
 
                     this.setData({
-                        selectedProducts,
-                        selectedProductIds,
+                        selectedProducts: selectedProducts || [ ],
+                        selectedProductIds: selectedProductIds || [ ],
                         cashcoupon_atleast: cashcoupon_atleast || null,
-                        cashcoupon_values,
-                        fullreduce_atleast,
-                        fullreduce_values
+                        cashcoupon_values: cashcoupon_values || null,
+                        fullreduce_atleast: fullreduce_atleast || null,
+                        fullreduce_values: fullreduce_values || null
                     });
 
                 },
@@ -536,8 +536,8 @@ Component({
                 selectedProductIds,
                 updateTime: new Date( ).getTime( ),
             }, {
-                end_date: new Date( `${new Date( end_date ).toDateString( ).replace(/\-/g, '/')} 08:00:00` ).getTime( ),
-                start_date: new Date( `${new Date( start_date ).toDateString( ).replace(/\-/g, '/')} 23:59:50` ).getTime( )
+                end_date: new Date( `${new Date( end_date ).toDateString( ).replace(/\-/g, '/')} 23:59:50` ).getTime( ),
+                start_date: new Date( `${new Date( start_date ).toDateString( ).replace(/\-/g, '/')} 08:00:00` ).getTime( )
             });
     
             if ( !tid ) {
@@ -565,6 +565,11 @@ Component({
                     if ( res.result.status === 200 ) {
                         wx.showToast({
                             title: tid ? '更新成功' : '创建成功！'
+                        });
+                    } else {
+                        wx.showToast({
+                            icon: 'none',
+                            title: res.result.message
                         });
                     }
                 },

@@ -1,0 +1,27 @@
+/* app/pages/trip-enter/index.wxss */
+
+.te-header {
+    position: relative;
+}
+
+.te-header-img {
+    height: 25vh;
+    width: 100vw;
+}
+
+.te-header-msg {
+    left: 60rpx;
+    bottom: 25%;
+    position: absolute;
+}
+
+.te-header-title {
+    color: #fff;
+    font-size: 52rpx;
+    font-weight: bold;
+}
+
+.te-header-date {
+    color: #fff;
+    font-size: 32rpx;
+}

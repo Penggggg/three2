@@ -3,10 +3,12 @@ import * as cloud from 'wx-server-sdk';
 
 cloud.init();
 
-const db: DB.Database = cloud.database();
+const db: DB.Database = cloud.database( );
+const _ = db.command;
 
 /**
- * @description 创建/编辑商品
+ * @description 创建/编辑行程
+ * ! 创建行程，要判断开始日期大于上一趟行程的结束行程
  * -------- 请求 ----------
  * {
         title 标题 string
@@ -38,6 +40,22 @@ export const main = async ( event, context) => {
     try {
 
         let _id = event.data._id;
+
+        // 校验
+        const rule1$ = await db.collection('trip').where({
+            end_date: _.gte( event.data.start_date )
+        })
+        .count( );
+
+        if ( rule1$.total > 0 ) {
+            return new Promise( resolve => {
+                resolve({
+                    data: null,
+                    status: 500,
+                    message: '开始时间必须大于上趟行程的结束时间'
+                })
+            });
+        } 
 
         // 创建 
         if ( !_id ) {
@@ -78,7 +96,7 @@ export const main = async ( event, context) => {
                 data: _id,
                 status: 200
             })
-        })
+        });
 
     } catch ( e ) {
         return new Promise(( resolve, reject ) => {
