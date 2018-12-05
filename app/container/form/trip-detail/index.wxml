@@ -1,5 +1,14 @@
 <!--container/form/trip-detail/index.wxml-->
+
 <view class='con-form-trip-detail'>
+
+    <!-- 顶部公告 -->
+    <wxc-notice
+        scroll="{{ true }}"
+        close="{{ true }}"
+        show-icon="{{ true }}"
+        notice="{{ !!tid ? '已发布行程仅能修改基本信息，已开始行程将无法修改任何信息！' : '【通知】奶粉等特殊限购类目，请让顾客通过个性化加单进行处理！' }}"
+    />
 
     <!-- 表单：基本信息 -->
     <my-active-form

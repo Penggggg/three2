@@ -33,6 +33,7 @@
             {{ errData[ item.key ] }}
           </view>
           <input
+            disabled="{{ item.disabled }}"
             data-key="{{ item.key }}"
             value="{{ formData[ item.key ]}}"
             maxlength='{{ item.max || 99999 }}'
@@ -57,6 +58,7 @@
           </view>
           <textarea
             auto-height
+            disabled="{{ item.disabled }}"
             data-key="{{ item.key }}"
             value="{{ formData[ item.key ]}}"
             placeholder="{{ item.placeholder || '' }}"
@@ -116,6 +118,7 @@
         <picker
           class='picker'
           range-key="label"
+          disabled="{{ item.disabled }}"
           range="{{ item.options }}"
           bindchange="selectChange"
           data-formkey="{{ item.key }}"
@@ -170,6 +173,7 @@
           </view>
           <input
             type="digit"
+            disabled="{{ item.disabled }}"
             data-key="{{ item.key }}"
             bindinput='textInput'
             value="{{ formData[ item.key ]}}"
@@ -195,6 +199,7 @@
             data-key="{{ item.key }}"
             color='#ff5777'
             bindchange="textInput"
+            disabled="{{ item.disabled }}"
             checked="{{ formData[ item.key ]}}"
           />
         </view>

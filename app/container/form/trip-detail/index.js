@@ -20,8 +20,6 @@ Component({
      * ! 行程开始后，所有字段不能被编辑
      */
     data: {
-        // 行程id
-        tid: '',
         // 数据字典
         dic: { },
         // 展开删除推荐
@@ -51,7 +49,9 @@ Component({
         // 付款类型
         payment: '0',
         // 表单：邮费是否选择了满免
-        postageFullFree: true
+        postageFullFree: true,
+        // 是否已发布
+        published: false
     },
 
     computed: {
@@ -119,6 +119,7 @@ Component({
 
         // 表单数据2
         meta2( ) {
+            const { published, tid } = this.data;
             const meta = [
                 {
                     title: '营销工具',
@@ -129,6 +130,7 @@ Component({
                     type: 'number',
                     placeholder: '裂变：立减5元，客户转发才能获得优惠',
                     value: undefined,
+                    disabled: published && !!tid,
                     rules: [{
                         validate: val => !!val,
                         message: '请设置行程立减多少元'
@@ -140,7 +142,7 @@ Component({
 
         // 表单数据3
         meta3( ) {
-            const { postageFullFree, postage, payment } = this.data;
+            const { postageFullFree, postage, payment, published, tid } = this.data;
             const meta = [
                 {
                     title: '其他资费',
@@ -151,6 +153,7 @@ Component({
                     type: 'select',
                     placeholder: '请选择类型',
                     value: postage,
+                    disabled: published && !!tid,
                     options: this.data.dic['postage'] || [ ]
                 }, {
                     key: 'payment',
@@ -158,11 +161,13 @@ Component({
                     type: 'select',
                     placeholder: '请付款类型',
                     value: payment,
+                    disabled: published && !!tid,
                     options: this.data.dic['payment'] || [ ]
                 }, {
                     key: 'published',
                     label: '立即发布',
                     type: 'switch',
+                    disabled: published && !!tid,
                     value: false
                 }
             ];
@@ -174,6 +179,7 @@ Component({
                     type: 'number',
                     placeholder: '达到指定消费金额才免邮',
                     value: undefined,
+                    disabled: published && !!tid,
                     rules: [{
                       validate: val => !!val,
                       message: '请填写免邮门槛'
@@ -227,7 +233,7 @@ Component({
                     
                     const { status, data } = res.result;
                     if ( status !== 200 ) { return; }
-                    console.log( data );
+                  
                     const { title, destination, start_date, end_date, cashcoupon_atleast,
                         cashcoupon_values, postagefree_atleast, reduce_price, fullreduce_atleast,
                         fullreduce_values, postage, payment, published, selectedProductIds, selectedProducts } = data;
@@ -265,7 +271,7 @@ Component({
                     this.setData({
                         selectedProducts,
                         selectedProductIds,
-                        cashcoupon_atleast,
+                        cashcoupon_atleast: cashcoupon_atleast || null,
                         cashcoupon_values,
                         fullreduce_atleast,
                         fullreduce_values
@@ -374,11 +380,18 @@ Component({
 
         /** 展示/关闭行程满减 */
         toggleFullReduce( ) {
-            const { showFullReduce, fullreduce_values, fullreduce_atleast } = this.data;
+            const { published, tid, showFullReduce, fullreduce_values, fullreduce_atleast } = this.data;
             if ( !showFullReduce ) {
-                return this.setData({
-                    showFullReduce: true
-                });
+                if ( !!tid && published ) {
+                    return wx.showToast({
+                        icon: 'none',
+                        title: '已发布行程不能修改'
+                    });
+                } else {
+                    return this.setData({
+                        showFullReduce: true
+                    });
+                }
             } else {
                 if ( fullreduce_atleast === null || !fullreduce_values ) {
                     return wx.showToast({
@@ -429,11 +442,18 @@ Component({
 
         /** 行程代金券弹框 */
         toggleCashCoupon( ) {
-            const { showCashCoupon, cashcoupon_atleast, cashcoupon_values } = this.data;
+            const { published, tid, showCashCoupon, cashcoupon_atleast, cashcoupon_values } = this.data;
             if ( !showCashCoupon ) {
-                return this.setData({
-                    showCashCoupon: true
-                });
+                if ( !!tid && published ) {
+                    return wx.showToast({
+                        icon: 'none',
+                        title: '已发布行程不能修改'
+                    });
+                } else {
+                    return this.setData({
+                        showCashCoupon: true
+                    });
+                }
             } else {
                 if ( !cashcoupon_values ) {
                     return this.setData({
@@ -473,10 +493,11 @@ Component({
 
         /** 邮费监听 */
         onPostageChange( e ) {
-            const { postage, payment } = e.detail;
+            const { postage, payment, published } = e.detail;
             this.setData({
                 postage: postage || null,
                 payment: payment || null,
+                published: published,
                 postageFullFree: postage === '0'
             });
         },
@@ -541,7 +562,6 @@ Component({
                     data: tripDetail,
                 },
                 success: res => {
-                    console.log( '...', tripDetail )
                     if ( res.result.status === 200 ) {
                         wx.showToast({
                             title: tid ? '更新成功' : '创建成功！'
