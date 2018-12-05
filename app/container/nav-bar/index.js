@@ -29,7 +29,7 @@ Component({
                 active: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-6.png"
             }, {
                 label: '购物车',
-                url: "/pages/index/index",
+                url: "/pages/cart-list/index",
                 normal: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-3.png",
                 active: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-4.png"
             }, {
