@@ -10,7 +10,9 @@ Page({
         /** 最快可用行程 */
         current: null,
         /** 下一趟可用行程 */
-        next: null
+        next: null,
+        /** 顶部公共 */
+        notice: ''
     },
 
     /** 拉取两个最新行程 */
@@ -32,15 +34,34 @@ Page({
             name: 'api-trip-enter',
             success: res => {
                 const { status, data } = res.result;
+                const current = data[ 0 ];
+
                 if ( status !== 200 ) {
                     return getError( );
                 }
-
+                console.log( current )
                 this.setData({
                     loaded: true,
                     next: data[ 1 ] ? this.dealTrip( data[ 1 ]) : null,
                     current: data[ 0 ] ? this.dealTrip( data[ 0 ]) : null
                 });
+
+                // 顶部公共
+                if ( current ) {
+                    let text = '';
+                    if ( current.fullreduce_values ) {
+                        text += `【超值优惠】消费满${current.fullreduce_atleast}元，立减${current.fullreduce_values}元!`;
+                    }
+                    if ( current.postage === '0' ) {
+                        text += `【免邮】消费满${current.postagefree_atleast}元立即免邮!`
+                    } else if ( current.postage === '1' ) {
+                        text += `【包邮】消费任意金额均包邮费！`
+                    }
+                    this.setData({
+                        notice: text
+                    })
+                }
+
             },
             fail: err => getError( ),
             complete: ( ) => {
