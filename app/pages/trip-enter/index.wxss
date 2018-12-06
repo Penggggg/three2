@@ -25,3 +25,9 @@
     color: #fff;
     font-size: 32rpx;
 }
+
+.te-header-members {
+    top: 10%;
+    left: 50rpx;
+    position: absolute;
+}

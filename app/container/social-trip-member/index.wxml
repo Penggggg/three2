@@ -1,0 +1,35 @@
+<!--container/social-trip-member/index.wxml-->
+<view
+    bindtap="go"
+    class="con-social-trip-member"
+>
+
+    <!-- 头像列表 -->
+    <swiper
+        class="avatar-swiper"
+        autoplay="{{ true }}"
+        duration="{{ 1000 }}"
+        circular="{{ true }}"
+        interval="{{ 2000 }}"
+        display-multiple-items="{{ 3 }}"
+    >
+        <block
+            wx:key="{{ index }}"
+            wx:for="{{ imgList }}"
+        >
+            <swiper-item>
+                <image
+                    src="{{ item }}"
+                    mode="scaleToFill"
+                    class="swiper-image"
+                />
+            </swiper-item>
+        </block>
+    </swiper>
+
+    <!-- 文字信息 -->
+    <view class="info">
+        她们抢先参加啦~
+    </view>
+
+</view>

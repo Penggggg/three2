@@ -22,7 +22,8 @@
 
         <!-- 社交 - 参加人数，点击跳到拼团页面 -->
         <view class="te-header-members">
-            
+            <my-social-trip-member
+            />
         </view>
 
     </view>

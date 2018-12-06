@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/manager-trip-list/index",
     "pages/trip-enter/index",
+    "pages/manager-trip-list/index",
     "pages/index/index",
     "pages/manager-trip-detail/index",
     "pages/manager-goods-detail/index",
@@ -17,6 +17,7 @@
     "my-product-selector": "./container/product-selector/index",
     "my-goods-detail-bar": "./container/goods-detail-bar/index",
     "my-manager-entry-btn": "./container/manager-entry-btn/index",
+    "my-social-trip-member": "./container/social-trip-member/index",
     "i-drawer": "./dist/iview/drawer/index",
     "i-modal": "./dist/iview/modal/index",
     "i-icon": "./dist/iview/icon/index",

@@ -1,0 +1,29 @@
+/* container/social-trip-member/index.wxss */
+
+.con-social-trip-member {
+    display: flex;
+    align-items: center;
+    padding: 10rpx 20rpx;
+    border-radius: 20px;
+    background: rgba( 0, 0, 0, 0.35 );
+}
+
+.avatar-swiper {
+    height: 50rpx;
+    width: 130rpx;
+}
+
+.swiper-image {
+    width: 40rpx;
+    height: 40rpx;
+    padding: 5rpx;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 5px 5px 10px rgba( 0, 0, 0, 0.2 );
+}
+
+.info {
+    color: #fff;
+    font-size: 24rpx;
+    margin-left: 20rpx;
+}
