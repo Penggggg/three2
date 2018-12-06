@@ -51,13 +51,16 @@ Component({
         // 表单：邮费是否选择了满免
         postageFullFree: true,
         // 是否已发布
-        published: false
+        published: false,
+        // 是否已过了开始时间
+        hasBeenPassStart: false
     },
 
     computed: {
         
         // 表单数据
         meta( ) {
+            const { published, hasBeenPassStart } = this.data;
             const now = new Date( );
             const year = now.getFullYear( );
             const month = now.getMonth( ) + 1;
@@ -74,6 +77,7 @@ Component({
                     max: 50,
                     placeholder: '如：28号香港之旅',
                     value: undefined,
+                    disabled: published && hasBeenPassStart,
                     rules: [{
                       validate: val => !!val,
                       message: '行程名称不能为空'
@@ -85,6 +89,7 @@ Component({
                     max: 50,
                     placeholder: '如：香港',
                     value: undefined,
+                    disabled: published && hasBeenPassStart,
                     rules: [{
                       validate: val => !!val,
                       message: '行程目的地不能为空'
@@ -95,6 +100,7 @@ Component({
                     type: 'date',
                     start: `${year}-${String( month ).length < 2 ? '0' + month  : month}-${String( date ).length < 2 ? '0' + date  : date}`,
                     value: undefined,
+                    disabled: published && hasBeenPassStart,
                     rules: [{
                       validate: val => !!val,
                       message: '开始时间不能为空'
@@ -105,6 +111,7 @@ Component({
                     type: 'date',
                     start: `${year}-${String( month ).length < 2 ? '0' + month  : month}-${String( date ).length < 2 ? '0' + date  : date}`,
                     value: undefined,
+                    disabled: published && hasBeenPassStart,
                     rules: [{
                       validate: val => !!val,
                       message: '结束时间不能为空'
@@ -269,6 +276,8 @@ Component({
                     });
 
                     this.setData({
+                        published,
+                        hasBeenPassStart: new Date( ).getTime( ) > start_date,
                         selectedProducts: selectedProducts || [ ],
                         selectedProductIds: selectedProductIds || [ ],
                         cashcoupon_atleast: cashcoupon_atleast || null,

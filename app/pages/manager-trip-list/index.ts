@@ -122,13 +122,11 @@ Page({
                 sales_volume,
                 orders: 0,
                 startDate: new Date( start_date ).toLocaleDateString( ),
-                state: new Date( ).getTime( ) >= end_date ? 
-                        '已结束' :
-                        new Date( ).getTime( ) >= start_date ? 
-                            '已开始' :
-                            published ?
-                                '已发布' :
-                                '未发布'
+                state: !published ?
+                            '未发布' :
+                            new Date( ).getTime( ) >= end_date ?
+                                '已结束' :
+                                '已开始'
             }
         })
     },

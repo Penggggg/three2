@@ -212,6 +212,7 @@
       >
           <picker
             mode="date"
+            disabled="{{ item.disabled }}"
             start="{{ item.start }}"
             bindchange="dateChange"
             data-formkey="{{ item.key }}"
