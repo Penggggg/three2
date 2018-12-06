@@ -21,6 +21,7 @@ const _ = db.command;
 export const main = async ( event, context) => {
 
     try {
+
         
 
         return new Promise( resolve => {

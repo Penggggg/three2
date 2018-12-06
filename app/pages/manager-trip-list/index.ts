@@ -126,7 +126,9 @@ Page({
                             '未发布' :
                             new Date( ).getTime( ) >= end_date ?
                                 '已结束' :
-                                '已开始'
+                                new Date( ).getTime( ) >= start_date ?
+                                    '进行中' :
+                                    '即将到来'
             }
         })
     },
