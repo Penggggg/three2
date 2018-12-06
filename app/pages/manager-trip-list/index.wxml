@@ -1,8 +1,17 @@
 <!--app/pages/manager-goods-list/index.wxml-->
 <view class="p-manager-goods-list">
 
-  <!-- 头部搜索栏 -->
-    <view class='pmgl-header'>
+    <!-- 顶部通知栏 -->
+    <wxc-notice
+        class="pmgl-notice"
+        scroll="{{ true }}"
+        show-icon="{{ true }}"
+        wx:if="{{ isNotAvailableTrip }}"
+        notice="没有下一个可用行程，请尽快创建！"
+    />
+
+    <!-- 头部搜索栏 -->
+    <view class="pmgl-header {{ isNotAvailableTrip ? 'has-notification' : '' }}">
         <view
             class='my-icon'
             bindtap='fetchData'
@@ -22,7 +31,7 @@
         />
     </view>
 
-    <view class='pmgl-list-container fixed'>
+    <view class="pmgl-list-container fixed {{ isNotAvailableTrip ? 'has-notification' : '' }}">
         <view class='pmgl-list-header pmgl-list-item'>
             <view class="text pmgl-list-item-meta bold">行程名称</view>
             <view class="text pmgl-list-item-meta bold">销售额</view>
@@ -37,7 +46,7 @@
         scroll-y
         lower-threshold="100"
         bindscrolltolower="fetchData"
-        class='pmgl-list-container'
+        class="pmgl-list-container {{ isNotAvailableTrip ? 'has-notification' : '' }}" 
     >
 
         <view

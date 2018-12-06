@@ -19,7 +19,9 @@ Page({
         // 能否继续加载
         canLoadMore: true,
         // 上次搜索的文本
-        lastSearch: ''
+        lastSearch: '',
+        // 是否已经没有下一个可用行程
+        isNotAvailableTrip: false
     },
 
     /** 跳页 */
@@ -63,11 +65,13 @@ Page({
                 const { status, data } = res.result;
                 if ( status === 200 ) {
                     const { page, totalPage, search } = data;
+                    
                     this.setData!({
                         page,
                         totalPage,
                         lastSearch: search || '',
-                        canLoadMore: totalPage > page
+                        canLoadMore: totalPage > page,
+                        isNotAvailableTrip: !data.data.some( x => x.published === true && new Date( ).getTime( ) < x.start_date )
                     });
                     
                     if ( data.data && data.data.length > 0 ) {
