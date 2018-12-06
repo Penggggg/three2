@@ -1,31 +1,83 @@
 <!--app/pages/trip-enter/index.wxml-->
 <view class="trip-enter">
 
-    <!-- 头部信息 -->
-    <view class="te-header">
+    <!-- 加载栏 -->
+    <view
+        class="te-tips-skt"
+        wx:if="{{ !loaded }}"
+    >
+        <view class="text">正在加载...</view> 
+    </view>
 
-        <image
-            mode="aspectFill"
-            class="te-header-img"
-            src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/trip-banner.png"
-        />
-
-        <!-- 基本信息 -->
-        <view class="te-header-msg">
-            <view class="te-header-title">
-                香港
-            </view>
-            <view class="te-header-date">
-                12.7 ~ 12.10
-            </view>
+    <view
+        wx:else
+    >
+        <!-- 没有行程的时候，显示商品获取其他列表，吸引加入购物车 -->
+        <view
+            wx:if="{{ !current && !next }}"
+        >
+            没有信和广场
         </view>
 
-        <!-- 社交 - 参加人数，点击跳到拼团页面 -->
-        <view class="te-header-members">
-            <my-social-trip-member
-            />
-        </view>
+        <view
+            wx:else
+            class="te-container"
+        >
 
+            <!-- 中间滚动信息 -->
+            <view class="te-content">
+
+                <!-- 头部信息 -->
+                <view class="te-header">
+
+                    <image
+                        mode="aspectFill"
+                        class="te-header-img"
+                        src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/trip-banner.png"
+                    />
+
+                    <!-- 基本信息 -->
+                    <view class="te-header-msg">
+                        <view class="te-header-title">
+                            {{ current.title }}
+                        </view>
+                        <view class="te-header-date">
+                            {{ current.start_date$ }} ~ {{ current.end_date$ }}
+                        </view>
+                    </view>
+
+                    <!-- 社交 - 参加人数，点击跳到拼团页面 -->
+                    <view class="te-header-members">
+                        <my-social-trip-member
+                            tid="{{ current._id }}"
+                        />
+                    </view>
+
+                </view>
+
+                <!-- 优惠信息 -->
+
+                <!-- 仙女购物单 / 拼团列表 -->
+
+                <!-- 本期优惠 -->
+
+                <!-- 热门销售 -->
+
+                <!-- 下期信息 -->
+
+                <!-- 商品列表 -->
+
+            </view>
+
+            <!-- 按钮 -->
+            <view class="te-btn-container">
+                <view class="te-btn">
+                    立即加入
+                </view>
+            </view>
+
+        </view>
+        
     </view>
 
 </view>

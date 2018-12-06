@@ -1,5 +1,15 @@
 /* app/pages/trip-enter/index.wxss */
 
+.text {
+    color: #999;
+    font-size: 28rpx;
+}
+
+.te-tips-skt {
+    padding-top: 50%;    
+    text-align: center;
+}
+
 .te-header {
     position: relative;
 }
@@ -30,4 +40,30 @@
     top: 10%;
     left: 50rpx;
     position: absolute;
+}
+
+.te-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    flex-direction: column;
+}
+
+.te-content {
+    flex: 1;
+    overflow-y: scroll;
+}
+
+.te-btn-container {
+    padding: 0 20rpx 25rpx;
+}
+
+.te-btn {
+    color: #ff0077;
+    padding: 15rpx 0;
+    font-size: 36rpx;
+    text-align: center;
+    border-radius: 6px;
+    background: #ffe8ee;
 }

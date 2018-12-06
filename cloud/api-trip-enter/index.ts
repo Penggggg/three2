@@ -22,14 +22,24 @@ export const main = async ( event, context) => {
 
     try {
 
-        
+        return db.collection('trip')
+            .where({
+                published: true
+            })
+            .limit( 2 )
+            .orderBy('start_date', 'asc')
+            .get( )
+            .then( data$ => {
+                return {
+                    status: 200,
+                    data: data$.data
+                }
+            }).catch( e => {
+                return {
+                    status: 500
+                }
+            })
 
-        return new Promise( resolve => {
-              resolve({
-                  status: 200,
-                  data: [ ]
-              });
-        });
     } catch ( e ) {
         return new Promise(( resolve, reject ) => {
             reject({
