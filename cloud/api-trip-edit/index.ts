@@ -41,20 +41,22 @@ export const main = async ( event, context) => {
 
         let _id = event.data._id;
 
-        // 校验
-        const rule1$ = await db.collection('trip').where({
-            end_date: _.gte( event.data.start_date )
-        })
-        .count( );
-
-        if ( rule1$.total > 0 ) {
-            return new Promise( resolve => {
-                resolve({
-                    data: null,
-                    status: 500,
-                    message: '开始时间必须大于上趟行程的结束时间'
-                })
-            });
+        // 校验1：如果是想要发布当前行程，则检查是否有“已发布行程的结束时间大于等于当前新建行程的开始时间要”
+        if ( event.data.published ) {
+            const rule1$ = await db.collection('trip').where({
+                end_date: _.gte( event.data.start_date )
+            })
+            .count( );
+    
+            if ( rule1$.total > 0 ) {
+                return new Promise( resolve => {
+                    resolve({
+                        data: null,
+                        status: 500,
+                        message: '开始时间必须大于上趟行程的结束时间'
+                    })
+                });
+            }
         } 
 
         // 创建 
