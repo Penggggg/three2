@@ -13,7 +13,7 @@
     "inlineSourceMap": true,
     "inlineSources": true,
     "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "strict": true,
     "removeComments": true,
     "pretty": true,

@@ -1,3 +1,5 @@
+const { delayeringGood } = require('../../util/goods.js');
+
 // app/pages/trip-enter/index.js
 Page({
 
@@ -17,6 +19,7 @@ Page({
 
     /** 拉取两个最新行程 */
     fetchLast( ) {
+
         const { loaded } = this.data;
         if ( loaded ) { return; }
 
@@ -39,7 +42,11 @@ Page({
                 if ( status !== 200 ) {
                     return getError( );
                 }
-                console.log( data )
+                
+                if ( current ) {
+                    current.products$ = current.products.map( delayeringGood );
+                }
+                
                 this.setData({
                     loaded: true,
                     next: data[ 1 ] ? this.dealTrip( data[ 1 ]) : null,
@@ -59,7 +66,7 @@ Page({
                     }
                     this.setData({
                         notice: text
-                    })
+                    });
                 }
 
             },

@@ -115,7 +115,7 @@ Page({
                     }
                 }
             },
-            // 商品详情
+            // 商品详情 - 分行显示
             detailIntro: function( ) {
                 const { detail } = this.data;
                 if ( !detail || ( !!detail && !detail.detail )) {
