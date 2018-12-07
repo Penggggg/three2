@@ -4,7 +4,6 @@ import * as cloud from 'wx-server-sdk';
 cloud.init( );
 
 const db: DB.Database = cloud.database( );
-const _ = db.command;
 
 /**
  * @description 返回两个行程，一个在用/即将到来，另一个下一趟即将到来
@@ -22,23 +21,36 @@ export const main = async ( event, context) => {
 
     try {
 
-        return db.collection('trip')
+        // 按开始日期正序，获取最多2条已发布行程
+        const data$ = await db.collection('trip')
             .where({
                 published: true
             })
             .limit( 2 )
             .orderBy('start_date', 'asc')
-            .get( )
-            .then( data$ => {
-                return {
-                    status: 200,
-                    data: data$.data
-                }
-            }).catch( e => {
-                return {
-                    status: 500
-                }
-            })
+            .get( );
+
+        let trips = data$.data;
+        // 拉取最新行程的推荐商品
+        if ( !!trips[ 0 ]) {
+            const tripOneProducts$ = await Promise.all( trips[ 0 ].selectedProductIds.map( pid => {
+                return cloud.callFunction({
+                    data: {
+                        _id: pid
+                    },
+                    name: 'api-goods-detail'
+                }).then( res => res.result.data );
+            }));
+            trips[ 0 ] = Object.assign({ }, trips[ 0 ], {
+                products: tripOneProducts$
+            });
+
+        }
+
+        return {
+            status: 200,
+            data: trips
+        }
 
     } catch ( e ) {
         return new Promise(( resolve, reject ) => {

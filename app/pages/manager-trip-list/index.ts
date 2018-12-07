@@ -128,7 +128,7 @@ Page({
                                 '已结束' :
                                 new Date( ).getTime( ) >= start_date ?
                                     '进行中' :
-                                    '即将到来'
+                                    '即将开始'
             }
         })
     },

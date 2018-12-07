@@ -7,7 +7,7 @@
         scroll="{{ true }}"
         show-icon="{{ true }}"
         wx:if="{{ isNotAvailableTrip }}"
-        notice="没有下一个可用行程，请尽快创建！"
+        notice="没有下一个【即将开始】的行程，请尽快创建！"
     />
 
     <!-- 头部搜索栏 -->

@@ -39,7 +39,7 @@ Page({
                 if ( status !== 200 ) {
                     return getError( );
                 }
-                console.log( current )
+                console.log( data )
                 this.setData({
                     loaded: true,
                     next: data[ 1 ] ? this.dealTrip( data[ 1 ]) : null,
