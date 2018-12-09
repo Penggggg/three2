@@ -4,6 +4,10 @@
  * ! 差价排序计算有问题，没有根据差价排序
  */
 const delayeringGood = x => {
+
+    if ( !x ) {
+        return null
+    }
     
     // 设置型号、库存的价格
     let stock = x.stock;

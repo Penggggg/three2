@@ -1,0 +1,60 @@
+<!--container/good-item-1/index.wxml-->
+<view class="good-item-1">
+
+    <!-- 标题、标签 -->
+    <view class="title">
+        <view class="title-bar-container">
+            <view class="title-bar-top"></view>
+            <view class="title-bar-bottom"></view>
+            <!-- 标题 -->
+            <view class="title-content">
+                {{ good.title }}
+            </view>
+            <!-- 标题 -->
+            <view class="title-tag">
+                #补水、#新款
+            </view>
+        </view>
+    </view>
+
+    <!-- 图片 -->
+    <view class="img-block">
+        <image
+            class="gi1-image"
+            mode="aspectFill"
+            src="{{ good.img[ 0 ]}}"
+        />
+    </view>
+
+    <!-- 三角形 -->
+    <view class="gi1-trinagle">
+    </view>
+
+    <!-- 三角形 -->
+    <view class="gi1-trinagle2">
+    </view>
+
+    <!-- 文字ICON -->
+    <view class="gi1-text-info">
+        热门推荐
+    </view>
+
+    <!-- 价格 -->
+    <view class="gi1-price-block">
+        <view class="gi1-price-title">
+            划算价格
+        </view>
+        <view class="gi1-price-content">
+            <wxc-price
+                icon="sub"
+                decimal="small"
+                class="gi1-price"
+            > 
+                {{ good.price$ }}
+            </wxc-price>
+        </view>
+    </view>
+
+    
+
+</view>

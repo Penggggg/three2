@@ -14,7 +14,9 @@ Page({
         /** 下一趟可用行程 */
         next: null,
         /** 顶部公共 */
-        notice: ''
+        notice: '',
+        /** 热门推荐 */
+        recommendGoods: [ ]
     },
 
     /** 拉取两个最新行程 */
@@ -43,15 +45,14 @@ Page({
                     return getError( );
                 }
                 
-                if ( current ) {
-                    current.products$ = current.products.map( delayeringGood );
-                }
-                
                 this.setData({
                     loaded: true,
+                    recommendGoods: current.products.map( delayeringGood ),
                     next: data[ 1 ] ? this.dealTrip( data[ 1 ]) : null,
                     current: data[ 0 ] ? this.dealTrip( data[ 0 ]) : null
                 });
+
+                console.log( current.products.map( delayeringGood ))
 
                 // 顶部公共
                 if ( current ) {
