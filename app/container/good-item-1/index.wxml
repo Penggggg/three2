@@ -12,7 +12,7 @@
             </view>
             <!-- 标题 -->
             <view class="title-tag">
-                #补水、#新款
+                {{ tags }}
             </view>
         </view>
     </view>
