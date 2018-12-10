@@ -1,4 +1,8 @@
 // container/good-item-1/index.js
+
+/**
+ * 单个商品框，用在行程入口的热门推荐、普通商品列表
+ */
 Component({
     /**
      * 组件的属性列表

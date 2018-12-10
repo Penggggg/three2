@@ -52,8 +52,6 @@ Page({
                     current: data[ 0 ] ? this.dealTrip( data[ 0 ]) : null
                 });
 
-                console.log( current.products.map( delayeringGood ))
-
                 // 顶部公共
                 if ( current ) {
                     let text = '';
@@ -70,6 +68,37 @@ Page({
                     });
                 }
 
+            },
+            fail: err => getError( ),
+            complete: ( ) => {
+                wx.hideLoading({ });
+            }
+        });
+    },
+
+    /** 拉取商品销量排行榜 */
+    fetchRank( ) {
+     
+        wx.showLoading({
+            title: '加载中...',
+        });
+
+        const getError = ( ) => wx.showToast({
+            icon: 'none',
+            title: '加载排行榜错误，请重试',
+        });
+
+        wx.cloud.callFunction({
+            data: {
+                page: 1
+            },
+            name: 'api-goods-rank',
+            success: res => {
+                const { status, data } = res.result;
+                console.log( data );
+                if ( status !== 200 ) {
+                    return getError( );
+                }
             },
             fail: err => getError( ),
             complete: ( ) => {
@@ -112,6 +141,7 @@ Page({
      */
     onShow: function ( ) {
         this.fetchLast( );
+        this.fetchRank( );
     },
 
     /**
