@@ -67,8 +67,7 @@
                 <!-- ~仙女购物单 / 拼团列表~ -->
 
                 <!-- 本期推荐 -->
-
-                <scroll-view
+                <view
                     scroll-x
                     class="te-recommond-list"
                 >
@@ -86,7 +85,7 @@
                             />
                         </view>
                     <!-- </view> -->
-                </scroll-view>
+                </view>
 
                 <!-- ~热门销售~ -->
 

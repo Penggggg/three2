@@ -47,7 +47,7 @@
     width: 20rpx;
     content: '';
     position: absolute;
-    background-image: -webkit-linear-gradient( top, #a0f2fd, #a0f2fd, #c3caf7 ); 
+    background-image: -webkit-linear-gradient( top, #c7c4fa, #c7c4fa, #d0bff1 ); 
 }
 
 .title-bar-bottom:after {
@@ -130,8 +130,8 @@
     bottom: -6rpx;
     position: absolute;
     font-size: 32rpx;
-    letter-spacing: 2rpx;
-    /* font-style: italic; */
+    /* letter-spacing: 2rpx; */
+    font-style: italic;
     /* color: transparent;
     -webkit-text-stroke: 2px #9c54df; */
     -webkit-text-fill-color:transparent;   
@@ -165,7 +165,7 @@
     padding: 0rpx 20rpx;
     text-align: center;
     border-radius: 0 0  3px 3px;
-    background-image: -webkit-linear-gradient( left, #9e3ce7, #dd55cb ); 
+    background-image: -webkit-linear-gradient( left, #9e3ce7, #d250d2, #dd55cb ); 
 }
 
 .gi1-price {

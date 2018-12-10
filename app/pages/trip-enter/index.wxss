@@ -71,7 +71,7 @@
 .te-recommond-list {
     height: 430rpx;
     width: 100vw;
-    padding: 20rpx 40rpx;
+    padding: 5rpx 40rpx;
     white-space: nowrap;
     overflow-x: scroll;
     box-sizing: border-box;
@@ -89,4 +89,15 @@
 
 .te-recommond-item:not(:last-child) {
     margin-right: 70rpx;
+}
+
+.te-bar {
+    display: flex;
+    margin-top: 5rpx;
+    justify-content: center;
+}
+
+.te-bar-img {
+    border-radius: 6px;
+    height: 125rpx;
 }
