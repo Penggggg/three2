@@ -71,21 +71,16 @@
                     scroll-x
                     class="te-recommond-list"
                 >
-                    <!-- <view
+                    <view
+                        class="te-recommond-item"
                         wx:key="{{ index }}"
                         wx:for="{{ recommendGoods }}"
-                    > -->
-                        <view
-                            class="te-recommond-item"
-                            wx:key="{{ index }}"
-                            wx:for="{{ recommendGoods }}"
-                        >
-                            <my-good-item-1
-                                thin="{{ true }}"
-                                good="{{ item }}"
-                            />
-                        </view>
-                    <!-- </view> -->
+                    >
+                        <my-good-item-1
+                            thin="{{ true }}"
+                            good="{{ item }}"
+                        />
+                    </view>
                 </view>
 
                 <!-- ~热门销售~ -->
