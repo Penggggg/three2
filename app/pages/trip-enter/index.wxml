@@ -89,6 +89,21 @@
                 </view>
 
                 <!-- ~热门销售~ -->
+                <view class="te-rank-block">
+                    <my-good-item-2
+                        rank="{{ 1 }}"
+                        good="{{ rankGoods[ 0 ]}}"
+                    />
+                    <my-good-item-2
+                        rank="{{ 2 }}"
+                        mode="right"
+                        good="{{ rankGoods[ 1 ]}}"
+                    />
+                    <my-good-item-2
+                        rank="{{ 3 }}"
+                        good="{{ rankGoods[ 2 ]}}"
+                    />
+                </view>
 
                 <!-- 下期信息 -->
 

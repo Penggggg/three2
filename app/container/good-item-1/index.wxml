@@ -1,5 +1,8 @@
 <!--container/good-item-1/index.wxml-->
-<view class="good-item-1 {{ thin ? 'thin' : ''}}">
+<view
+    bindtap="goDetail"
+    class="good-item-1 {{ thin ? 'thin' : ''}}"
+>
 
     <!-- 标题、标签 -->
     <view class="title">

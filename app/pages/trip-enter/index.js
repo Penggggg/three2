@@ -16,7 +16,9 @@ Page({
         /** 顶部公共 */
         notice: '',
         /** 热门推荐 */
-        recommendGoods: [ ]
+        recommendGoods: [ ],
+        /** 排行榜商品 */
+        rankGoods: [ ]
     },
 
     /** 拉取两个最新行程 */
@@ -95,10 +97,12 @@ Page({
             name: 'api-goods-rank',
             success: res => {
                 const { status, data } = res.result;
-                console.log( data );
                 if ( status !== 200 ) {
                     return getError( );
                 }
+                this.setData({
+                    rankGoods: data.data.map( delayeringGood )
+                });
             },
             fail: err => getError( ),
             complete: ( ) => {

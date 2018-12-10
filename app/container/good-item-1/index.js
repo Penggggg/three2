@@ -31,10 +31,20 @@ Component({
      * 组件的方法列表
      */
     methods: {
+
+        // 处理商品
         dealDetail( good ) {
             this.setData({
                 tags: good.tag.map( x => `#${x}`).join(' ')
             })
+        },
+
+        // 详情
+        goDetail( ) {
+            const { _id } = this.data.good;
+            wx.navigateTo({
+                url: `/pages/goods-detail/index?id=${_id}`
+            });
         }
     }
 })

@@ -1,0 +1,58 @@
+<!--container/good-item-2/index.wxml-->
+<view
+    class="good-item-2"
+    bindtap="goDetail"
+>
+
+    <!-- 背景颜色层 -->
+    <view class="gi2-bg-container {{ rank === 1 ? 'rank1' : rank === 2 ? 'rank2' : rank === 3 ? 'rank3' : '' }}">
+        
+    </view>
+
+    <!-- 内容层 -->
+    <view class="gi2-container">
+
+        <!-- 图片 -->
+        <view class="gi2-img-block {{ mode === 'right' ? 'right' : '' }}">
+            <image
+                mode="aspectFill"
+                class="gi2-img"
+                src="{{ good.img[ 0 ]}}"
+            />
+        </view>
+
+        <!-- 文字信息类，标题、标签、价格 -->
+        <view class="gi2-good-info-block {{ mode === 'right' ? 'right' : '' }}">
+            <view class="gi2-good-title">
+                {{ good.title }}
+            </view>
+            <view class="gi2-good-tag">
+                {{ tag }}
+            </view>
+            <view class="gi2-good-tips">
+                超值特价：
+            </view>
+            <wxc-price
+                icon="sub"
+                decimal="small"
+                class="gi2-price"
+            > 
+                {{ good.price$ }}
+            </wxc-price>
+        </view>
+
+        <!-- 抢购按钮 -->
+        <view class="gi2-good-buy-btn {{ mode === 'right' ? 'right' : '' }}">
+            立即抢购>
+        </view>
+
+        <!-- top 标签 -->
+        <view class="gi2-top-label-contianer {{ mode === 'right' ? 'right' : '' }}">
+            <view class="gi2-top-label">
+                <view class="gi2-top-pre">top</view><view class="gi2-rank">{{ rank }}</view>
+            </view>
+        </view>
+
+    </view>
+
+</view>
