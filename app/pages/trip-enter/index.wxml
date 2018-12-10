@@ -67,15 +67,26 @@
                 <!-- ~仙女购物单 / 拼团列表~ -->
 
                 <!-- 本期推荐 -->
-                <view
-                    wx:key="{{ index }}"
-                    wx:for="{{ recommendGoods }}"
-                >
-                    <my-good-item-1
-                        good="{{ item }}"
-                    />
 
-                </view>
+                <scroll-view
+                    scroll-x
+                    class="te-recommond-list"
+                >
+                    <!-- <view
+                        wx:key="{{ index }}"
+                        wx:for="{{ recommendGoods }}"
+                    > -->
+                        <view
+                            class="te-recommond-item"
+                            wx:key="{{ index }}"
+                            wx:for="{{ recommendGoods }}"
+                        >
+                            <my-good-item-1
+                                good="{{ item }}"
+                            />
+                        </view>
+                    <!-- </view> -->
+                </scroll-view>
 
                 <!-- ~热门销售~ -->
 

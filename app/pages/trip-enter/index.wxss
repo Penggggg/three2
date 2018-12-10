@@ -67,3 +67,26 @@
     border-radius: 6px;
     background: #ffe8ee;
 }
+
+.te-recommond-list {
+    height: 430rpx;
+    width: 100vw;
+    padding: 20rpx 40rpx;
+    white-space: nowrap;
+    overflow-x: scroll;
+    box-sizing: border-box;
+}
+
+.te-recommond-list::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    color: transparent;
+}
+
+.te-recommond-item {
+    display: inline-block;
+}
+
+.te-recommond-item:not(:last-child) {
+    margin-right: 70rpx;
+}
