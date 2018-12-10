@@ -4,9 +4,15 @@ Component({
      * 组件的属性列表
      */
     properties: {
+        // 商品详情
         good: {
             type: Object,
             observer: 'dealDetail'
+        },
+        // 显示更窄
+        thin: {
+            type: Boolean,
+            value: false
         }
     },
 

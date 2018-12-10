@@ -16,7 +16,7 @@
         <view
             wx:if="{{ !current && !next }}"
         >
-            没有信和广场
+            暂无行程
         </view>
 
         <view
@@ -81,6 +81,7 @@
                             wx:for="{{ recommendGoods }}"
                         >
                             <my-good-item-1
+                                thin="{{ true }}"
                                 good="{{ item }}"
                             />
                         </view>

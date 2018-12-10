@@ -1,17 +1,17 @@
 <!--container/good-item-1/index.wxml-->
-<view class="good-item-1">
+<view class="good-item-1 {{ thin ? 'thin' : ''}}">
 
     <!-- 标题、标签 -->
     <view class="title">
         <view class="title-bar-container">
             <view class="title-bar-top"></view>
-            <view class="title-bar-bottom"></view>
+            <view class="title-bar-bottom {{ thin ? 'thin' : ''}}"></view>
             <!-- 标题 -->
-            <view class="title-content">
+            <view class="title-content {{ thin ? 'thin' : ''}}">
                 {{ good.title }}
             </view>
             <!-- 标题 -->
-            <view class="title-tag">
+            <view class="title-tag {{ thin ? 'thin' : ''}}">
                 {{ tags }}
             </view>
         </view>
