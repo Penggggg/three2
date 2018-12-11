@@ -18,6 +18,7 @@
     "my-goods-detail-bar": "./container/goods-detail-bar/index",
     "my-good-item-1": "./container/good-item-1/index",
     "my-good-item-2": "./container/good-item-2/index",
+    "my-good-item-3": "./container/good-item-3/index",
     "my-manager-entry-btn": "./container/manager-entry-btn/index",
     "my-social-trip-member": "./container/social-trip-member/index",
     "i-drawer": "./dist/iview/drawer/index",

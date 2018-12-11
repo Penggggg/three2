@@ -18,7 +18,9 @@ Page({
         /** 热门推荐 */
         recommendGoods: [ ],
         /** 排行榜商品 */
-        rankGoods: [ ]
+        rankGoods: [ ],
+        /** 3~20名商品 */
+        otherGoods: [ ]
     },
 
     /** 拉取两个最新行程 */
@@ -101,7 +103,8 @@ Page({
                     return getError( );
                 }
                 this.setData({
-                    rankGoods: data.data.map( delayeringGood )
+                    rankGoods: data.data.map( delayeringGood ),
+                    otherGoods: data.data.map( delayeringGood ).slice( 3 )
                 });
             },
             fail: err => getError( ),

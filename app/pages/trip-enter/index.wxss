@@ -105,3 +105,7 @@
     border-radius: 6px;
     box-shadow: 3px 2px 12px rgba(0, 0, 0, 0.2);
 }
+
+.te-good-list {
+    padding: 20rpx 25rpx;
+}

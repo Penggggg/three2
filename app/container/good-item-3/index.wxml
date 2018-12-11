@@ -1,0 +1,39 @@
+<!--container/good-item-3/index.wxml-->
+<view
+    class="good-item-3"
+    bindtap="goDetail"
+>
+
+    <!-- 图片 -->
+    <image 
+        class="gi2-image"
+        mode="aspectFill"
+        src="{{ good.img[ 0 ]}}"
+    />
+
+    <!-- 标题 -->
+    <view class="gi2-title">
+        {{ good.title }}
+    </view>
+
+    <!-- 原价 -->
+    <view class="gi2-fadeprice">
+        市场售价:¥{{ good.fadePrice }}
+    </view>
+
+    <!-- 最低价 -->
+    <view class="gi2-price-block">
+        超值特价<view class="gi2-price">¥{{ good.lowest_price$ }}</view>
+    </view>
+
+    <!-- 标签 -->
+    <view class="gi2-label">
+        {{ tag }}
+    </view>
+
+    <!-- 标签2 -->
+    <view class="gi2-tips-label">
+        热销宝贝
+    </view>
+
+</view>

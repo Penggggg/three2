@@ -99,19 +99,31 @@
                     <my-good-item-2
                         rank="{{ 1 }}"
                         good="{{ rankGoods[ 0 ]}}"
+                        wx:if="{{ rankGoods[ 0 ]}}"
                     />
                     <my-good-item-2
                         rank="{{ 2 }}"
                         mode="right"
                         good="{{ rankGoods[ 1 ]}}"
+                        wx:if="{{ rankGoods[ 1 ]}}"
                     />
                     <my-good-item-2
                         rank="{{ 3 }}"
                         good="{{ rankGoods[ 2 ]}}"
+                        wx:if="{{ rankGoods[ 2 ]}}"
                     />
                 </view>
 
                 <!-- 商品列表 -->
+                <view
+                    class="te-good-list"
+                >
+                    <my-good-item-3
+                        wx:for="{{ otherGoods }}"
+                        wx:key="{{ index }}"
+                        good="{{ item }}"
+                    />
+                </view>
 
                 <!-- 下期信息 -->
 
