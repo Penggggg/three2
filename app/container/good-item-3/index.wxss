@@ -8,7 +8,7 @@
     padding-bottom: 20rpx;
     border: 1px solid rgba( 0, 0, 0, 0.05 );
     /* box-shadow: 3px 2px 12px rgba(0, 0, 0, 0.2); */
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.10);
 }
 
 .g2-img-block {
@@ -23,7 +23,7 @@
 
 .gi2-title {
     width: 100%;
-    color: rgba( 0, 0, 0, 0.6 );
+    color: rgba( 0, 0, 0, 0.53 );
     font-size: 28rpx;
     overflow: hidden; 
     display: -webkit-box; 
@@ -41,10 +41,12 @@
 .gi2-tips-label {
     top: 287rpx;
     left: 20rpx;
+    font-weight: bold;
     font-size: 20rpx;
     position: absolute;
     padding: 2rpx 5rpx;
     border: 2px solid;
+    border-bottom: 3px solid;
     border-radius: 4px;
     -webkit-background-clip: text;
     border-image: linear-gradient(to right, #487be6, #6328d9, #f93175 );
@@ -52,8 +54,9 @@
     -webkit-text-fill-color: transparent;
     background-image: -webkit-linear-gradient( left, #487be6, #6328d9, #f93175 );
     box-shadow:
-        1px 1px 0 #6328d9, 
-        2px 2px 0 #6328d9;
+        0px 1px 0 #f93175, 
+        1px 0px 0 #f93175, 
+        2px 1px 0 #f93175;
 }
 
 .gi2-fadeprice {
@@ -61,7 +64,7 @@
     text-indent: 20rpx;
     display: flex;
     align-items: flex-end;
-    color: rgba( 0, 0, 0, 0.5 );
+    color: rgba( 0, 0, 0, 0.4 );
 }
 
 .gi2-price-block {
@@ -73,6 +76,7 @@
 
 .gi2-price {
     font-size: 30rpx;
+    text-indent: 0rpx;
     display: inline-block;
 }
 
