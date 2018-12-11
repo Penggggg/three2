@@ -69,7 +69,7 @@
 }
 
 .te-recommond-list {
-    height: 400rpx;
+    height: 350rpx;
     width: 100vw;
     margin-top: 15rpx;
     padding: 5rpx 40rpx;

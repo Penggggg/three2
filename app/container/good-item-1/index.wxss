@@ -115,7 +115,7 @@
 
 .gi1-image {
     width: 100%;
-    height: 280rpx;
+    height: 230rpx;
     border-right: 1px solid #f199cc;
     border-bottom: 1px solid #f199cc;
     border-left: 1px solid #f199cc;
