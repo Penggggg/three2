@@ -71,6 +71,7 @@
 .te-recommond-list {
     height: 400rpx;
     width: 100vw;
+    margin-top: 15rpx;
     padding: 5rpx 40rpx;
     white-space: nowrap;
     overflow-x: scroll;
@@ -91,13 +92,16 @@
     margin-right: 70rpx;
 }
 
-.te-bar {
+.te-logo-bar {
     display: flex;
     margin-top: 5rpx;
+    padding: 0 20rpx;
+    box-sizing: border-box;
     justify-content: center;
 }
 
 .te-bar-img {
+    width: 100%;
     border-radius: 6px;
-    height: 125rpx;
+    box-shadow: 3px 2px 12px rgba(0, 0, 0, 0.2);
 }

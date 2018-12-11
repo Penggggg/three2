@@ -64,7 +64,18 @@
 
                 </view>
 
-                <!-- ~仙女购物单 / 拼团列表~ -->
+                <!-- 拼团列表 -->
+
+                <!-- 仙女购物单 -->
+
+                <!-- logo -->
+                <view class="te-logo-bar">
+                    <image
+                        mode="widthFix"
+                        class="te-bar-img"
+                        src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/bar-recommend.png"
+                    />
+                </view>
 
                 <!-- 本期推荐 -->
                 <view
@@ -83,7 +94,7 @@
                     </view>
                 </view>
 
-                <!-- ~热门销售~ -->
+                <!-- 热门销售 -->
                 <view class="te-rank-block">
                     <my-good-item-2
                         rank="{{ 1 }}"
@@ -100,9 +111,9 @@
                     />
                 </view>
 
-                <!-- 下期信息 -->
-
                 <!-- 商品列表 -->
+
+                <!-- 下期信息 -->
 
             </view>
 
