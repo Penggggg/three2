@@ -1,7 +1,8 @@
 
 /** 
- * 商品 ～ 转扁平化价格、库存、差价
+ * 商品 ～ 价格区间、库存区间、差价、最低价格（含团购价）
  * ! 差价排序计算有问题，没有根据差价排序
+ * ! 此处默认 团购价小于原价，但不一定有团购价
  */
 const delayeringGood = x => {
 
@@ -9,11 +10,13 @@ const delayeringGood = x => {
         return null
     }
     
-    // 设置型号、库存的价格
+    // 初始化 库存、价格、差价、最低价格
     let stock = x.stock;
     let price = x.price;
     let priceGap: any = 0;
+    let lowest_price = x.groupPrice || x.price;
 
+    // 处理 库存、价格、最低价格
     // 没有型号
     if ( x.standards.length === 0 ) {
         stock = x.stock;
@@ -23,6 +26,18 @@ const delayeringGood = x => {
     } else if ( x.standards.length === 1 ) {
         stock = x.standards[ 0 ].stock;
         price = x.standards[ 0 ].price;
+        
+        // 型号没有团购价
+        if ( !x.standards[ 0 ].groupPrice ) {
+            lowest_price = lowest_price < x.standards[ 0 ].price ?
+                lowest_price :
+                x.standards[ 0 ].price;
+        // 型号有团购价
+        } else {
+            lowest_price = lowest_price < x.standards[ 0 ].groupPrice ?
+                lowest_price :
+                x.standards[ 0 ].groupPrice;
+        }
     
     // 型号大于1种
     }  else if ( x.standards.length > 1 ) {
@@ -46,9 +61,26 @@ const delayeringGood = x => {
           } else {
               stock = `${sortedStock[0].stock}~${sortedStock[sortedStock.length - 1].stock}`;
           }
-        }            
+        }    
+        
+        // 拿到型号列表的最低价格，含团购价
+        let priceList: number[] = [ ];
+        x.standards.map( s => {
+            if ( !x.groupPrice ) {
+                priceList.push( x.price )
+            } else {
+                priceList.push( x.groupPrice < x.price ?
+                    x.groupPrice :
+                    x.price
+                )
+            }
+        });
+        priceList = priceList.sort(( x, y ) => x - y );
+        lowest_price = priceList[ 0 ];
+        
     }
 
+    // 处理差价
     if ( x.standards.length === 0 ) {
         // 有团购的
         if ( x.groupPrice !== null && x.groupPrice !== undefined ) {
@@ -74,9 +106,14 @@ const delayeringGood = x => {
     }
 
     return Object.assign({ }, x, {
+        // 库存区间
         stock$: stock,
+        // 价格区间
         price$: price,
-        priceGap: price
+        // 差价
+        priceGap,
+        // 最低价格（含团购价）
+        lowest_price$: lowest_price
     })
 
 };

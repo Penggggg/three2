@@ -1,4 +1,7 @@
 // container/form/goods-detail/index.js
+/**
+ * ! 数值之间的关系校验，如：团购价必须大于原价
+ */
 Component({
 
   behaviors: [require('../../../behaviores/computed/index.js')],
