@@ -272,7 +272,7 @@
                 open-type="getUserInfo"
                 bindgetuserinfo="getUserAuth"
             >
-                结算1
+                结算
             </button>
 
             <!-- 结算按钮 -->
@@ -280,7 +280,7 @@
                 wx:else
                 class="pcl-settlet-btn"
             >
-                结算2
+                结算
             </button>
 
         </view>
