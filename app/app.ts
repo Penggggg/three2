@@ -9,7 +9,7 @@ App<MyApp>({
         // 登录人id
         openid: '',
         // 是否已经授权用户信息
-        isUserAuth: true,
+        isUserAuth: false,
         // 用户信息
         userInfo: null
     },
@@ -18,7 +18,7 @@ App<MyApp>({
     globalData: {
         role: 0,
         openid: '',
-        isUserAuth: true,
+        isUserAuth: false,
         userInfo: null
     },
 
@@ -44,26 +44,26 @@ App<MyApp>({
                 // 是否已经授权
                 const isUserAuth = res.authSetting['scope.userInfo'];
                 this.setGlobalData({
-                    isUserAuth
+                    isUserAuth: isUserAuth === undefined ? false : isUserAuth
                 });
             }
         });
     },
 
     /** 获取微信用户登录信息、授权、上传保存 */
-    getWxUserInfo( ) {
+    getWxUserInfo( cb ) {
         wx.getUserInfo({
             success: res => {
                 http({
                     data: res.userInfo,
                     url: 'api-user-edit',
-                    success: res => {
-                        console.log( res );
-                        if ( res.result && res.result.status === 200 ) {
+                    success: res2 => {
+                        if ( res2.result && res2.result.status === 200 ) {
                             this.setGlobalData({
                                 isUserAuth: true,
                                 userInfo: res.userInfo
                             });
+                            cb && cb( );
                         }
                     }
                 });
@@ -71,7 +71,7 @@ App<MyApp>({
         })
     },
 
-    /** 获取用户权限信息 */
+    /** 获取用户权限信息 role/ openid */
     getUserInfo( ) {
         wx.cloud.callFunction({
             name: 'login'
@@ -82,10 +82,10 @@ App<MyApp>({
 
     /** 设置全局数据 */
     setGlobalData( obj ) {
+        console.log( 'setGlobalData...', obj )
         Object.keys( obj ).map( key => {
             this.globalData[ key ] = obj[ key ];
         });
-        this.globalData = Object.assign({ }, this.globalData, { ...(obj as object)});
     },
 
     /** watch函数 */
@@ -94,12 +94,12 @@ App<MyApp>({
             [ key ]: this.watchCallBack[ key ] || [ ]
         });
         this.watchCallBack[ key ].push( cb );
-
+        console.log( 'watch$....', key );
         // 立马执行一下cb
         const old = this.globalData[ key ];
         cb( old, old );
 
-        // 执行的时候，set的时候，再执行一下cb
+        // 执行set的时候，再执行一下cb
         if ( !this.watchingKeys.find( x => x === key )) {
             const that = this;
             this.watchingKeys.push( key );
@@ -107,12 +107,13 @@ App<MyApp>({
                 configurable: true,
                 enumerable: true,
                 set: function( val ) {
+                    console.log(`${key}被set`, val );
                     const old = that.globalData$[ key ];
                     that.globalData$[ key ] = val;
                     that.watchCallBack[ key ].map(func => func( val, old ));
                 },
                 get: function( ) {
-                    return that.globalData$[key];
+                    return that.globalData$[ key ];
                 }
             });
         }
@@ -122,23 +123,6 @@ App<MyApp>({
     onLaunch: function( ) {
         this.init( );
         this.getUserInfo( );
-        wx.getUserInfo({
-            success: res => {
-                http({
-                    data: res.userInfo,
-                    url: 'api-user-edit',
-                    success: res => {
-                        console.log( res );
-                        if ( res.result && res.result.status === 200 ) {
-                            this.setGlobalData({
-                                isUserAuth: true,
-                                userInfo: res.userInfo
-                            });
-                        }
-                    }
-                });
-            }
-        })
     }
 });
 
@@ -151,7 +135,7 @@ export interface MyApp {
     watchingKeys: string[ ]
     init: ( ) => void
     getUserInfo: ( ) => void,
-    getWxUserInfo: ( ) => void,
+    getWxUserInfo: ( cb?: ( ) => void ) => void,
     setGlobalData: <K extends keyof globalState>( data: globalState | Pick<globalState, K> ) => void,
     watch$: ( key: keyof globalState, any ) => void
 }

@@ -422,6 +422,7 @@ Page({
     /** 确认用户授权情况 */
     checkAuth( ) {
         app.watch$('isUserAuth', val => {
+            if ( val === undefined ) { return; }
             this.setData({
                 isUserAuth: val
             })
