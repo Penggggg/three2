@@ -431,7 +431,9 @@ Page({
 
     /** 获取用户信息授权 */
     getUserAuth( ) {
-        app.getWxUserInfo( );
+        app.getWxUserInfo(( ) => {
+            // 进行结算
+        });
     },
 
     /**
