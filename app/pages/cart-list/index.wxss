@@ -285,12 +285,14 @@
 }
 
 .pcl-settlet-btn {
+    height: 60rpx;
+    line-height: 60rpx;
     color: #fff;
     font-size: 34rpx;
     text-align: center;
     border-radius: 20px;
     background: #ff5777;
-    padding: 6rpx 33rpx;
+    padding: 0rpx 28rpx;
     border: 1px solid #ff5777;
 }
 

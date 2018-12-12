@@ -264,9 +264,25 @@
                     {{ sum }}
                 </wxc-price>
             </view>
-            <view class="pcl-settlet-btn">
-                结算
-            </view>
+
+            <!-- 用户授权按钮 -->
+            <button
+                wx:if="{{ !isUserAuth }}"
+                class="pcl-settlet-btn"
+                open-type="getUserInfo"
+                bindgetuserinfo="getUserAuth"
+            >
+                结算1
+            </button>
+
+            <!-- 结算按钮 -->
+            <button
+                wx:else
+                class="pcl-settlet-btn"
+            >
+                结算2
+            </button>
+
         </view>
 
         <!-- 删除 -->

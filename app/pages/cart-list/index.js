@@ -1,4 +1,7 @@
 // app/pages/cart-list/index.js
+
+const app = getApp( );
+
 Page({
 
     /**
@@ -22,7 +25,9 @@ Page({
         /** 是否已经初始化过购物车清单 */
         hasInitCart: false,
         /** 是否在删除状态 */
-        isInDelete: false
+        isInDelete: false,
+        /** 是否进行了用户授权 */
+        isUserAuth: false
     },
 
     /** 拉取商品列表 */
@@ -414,6 +419,20 @@ Page({
 
     },
 
+    /** 确认用户授权情况 */
+    checkAuth( ) {
+        app.watch$('isUserAuth', val => {
+            this.setData({
+                isUserAuth: val
+            })
+        });
+    },
+
+    /** 获取用户信息授权 */
+    getUserAuth( ) {
+        app.getWxUserInfo( );
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
@@ -431,8 +450,9 @@ Page({
     /**
      * 生命周期函数--监听页面显示
      */
-    onShow: function () {
+    onShow: function ( ) {
         this.fetchList( );
+        this.checkAuth( );
     },
 
     /**

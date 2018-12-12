@@ -1,16 +1,25 @@
+import { http } from './util/http';
 
 App<MyApp>({
 
     /** fade globalData */
     globalData$: {
+        // 登录人权限
         role: 0,
-        openid: ''
+        // 登录人id
+        openid: '',
+        // 是否已经授权用户信息
+        isUserAuth: true,
+        // 用户信息
+        userInfo: null
     },
 
     /** 全局store */
     globalData: {
         role: 0,
-        openid: ''
+        openid: '',
+        isUserAuth: true,
+        userInfo: null
     },
 
     /** 监听函数的对象数组 */
@@ -25,11 +34,40 @@ App<MyApp>({
         wx.cloud.init({
             traceUser: true
         });
+        
         // 全局数据
         this.globalData$ = Object.assign({ }, this.globalData );
+
+        // 用户信息
+        wx.getSetting({
+            success: res => {
+                // 是否已经授权
+                const isUserAuth = res.authSetting['scope.userInfo'];
+                this.setGlobalData({
+                    isUserAuth
+                });
+            }
+        });
     },
 
-    /** 获取用户信息 */
+    /** 获取微信用户登录信息、授权、上传保存 */
+    getWxUserInfo( ) {
+        wx.getUserInfo({
+            success(res) {
+                console.log( res.userInfo )
+                // 上传成功后，isUserAuth设为true
+                http({
+                    data: res.userInfo,
+                    url: 'api-user-edit',
+                    success: res => {
+                        console.log( res );
+                    }
+                });
+            }
+        })
+    },
+
+    /** 获取用户权限信息 */
     getUserInfo( ) {
         wx.cloud.callFunction({
             name: 'login'
@@ -48,10 +86,16 @@ App<MyApp>({
 
     /** watch函数 */
     watch$( key, cb ) {
-        this.watchCallBack = Object.assign({}, this.watchCallBack, {
+        this.watchCallBack = Object.assign({ }, this.watchCallBack, {
             [ key ]: this.watchCallBack[ key ] || [ ]
         });
         this.watchCallBack[ key ].push( cb );
+
+        // 立马执行一下cb
+        const old = this.globalData[ key ];
+        cb( old, old );
+
+        // 执行的时候，set的时候，再执行一下cb
         if ( !this.watchingKeys.find( x => x === key )) {
             const that = this;
             this.watchingKeys.push( key );
@@ -59,7 +103,7 @@ App<MyApp>({
                 configurable: true,
                 enumerable: true,
                 set: function( val ) {
-                    const old = that.globalData$[key];
+                    const old = that.globalData$[ key ];
                     that.globalData$[ key ] = val;
                     that.watchCallBack[ key ].map(func => func( val, old ));
                 },
@@ -70,9 +114,10 @@ App<MyApp>({
         }
     },
   
+    /** 生命周期 */
     onLaunch: function( ) {
       this.init( );
-      setTimeout(() => this.getUserInfo(), 200 );
+      this.getUserInfo( );
     }
 });
 
@@ -85,6 +130,7 @@ export interface MyApp {
     watchingKeys: string[ ]
     init: ( ) => void
     getUserInfo: ( ) => void,
+    getWxUserInfo: ( ) => void,
     setGlobalData: <K extends keyof globalState>( data: globalState | Pick<globalState, K> ) => void,
     watch$: ( key: keyof globalState, any ) => void
 }
@@ -96,5 +142,7 @@ enum Role {
 
 type globalState = {
     role: Role,
-    openid: string
+    openid: string,
+    isUserAuth: boolean,
+    userInfo: any
 }
