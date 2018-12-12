@@ -42,8 +42,29 @@
         </view>
 
         <!-- 抢购按钮 -->
-        <view class="gi2-good-buy-btn {{ mode === 'right' ? 'right' : '' }}">
+        <!-- <view class="gi2-good-buy-btn {{ mode === 'right' ? 'right' : '' }}">
             立即抢购>
+        </view> -->
+
+        <!-- 社交 多少人已买 -->
+        <view
+            class="gi2-social-trip-member {{ mode === 'right' ? 'right' : '' }}"
+        >
+
+            <!-- 头像列表 -->
+            <image
+                wx:key="{{ index }}"
+                wx:for="{{ imgList }}"
+                src="{{ item }}"
+                mode="scaleToFill"
+                class="gi2-swiper-image {{ index !== 0 ? 'child' : '' }}"
+            />
+
+            <!-- 文字信息 -->
+            <view class="gi2-info">
+                3人已买
+            </view>
+
         </view>
 
         <!-- top 标签 -->

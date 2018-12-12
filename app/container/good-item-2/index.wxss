@@ -157,3 +157,37 @@
 .gi2-rank {
     font-size: 48rpx;
 }
+
+.gi2-social-trip-member {
+    top:155rpx;
+    left:500rpx;
+    display: flex;
+    align-items: center;
+    padding: 5rpx 10rpx;
+    border-radius: 20px;
+    position: absolute;
+    background: rgba( 0, 0, 0, 0.55 );
+}
+
+.gi2-social-trip-member.right {
+    left: 230rpx;
+}
+
+.gi2-swiper-image {
+    width: 40rpx;
+    height: 40rpx;
+    padding: 5rpx;
+    background: #fff;
+    border-radius: 50%;
+    /* box-shadow: 5px 5px 10px rgba( 0, 0, 0, 0.2 ); */
+}
+
+.gi2-swiper-image.child {
+    margin-left: -10rpx;
+}
+
+.gi2-info {
+    color: #fff;
+    font-size: 24rpx;
+    margin-left: 5rpx;
+}

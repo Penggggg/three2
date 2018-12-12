@@ -6,34 +6,56 @@
 
     <!-- 图片 -->
     <image 
-        class="gi2-image"
+        class="gi3-image"
         mode="aspectFill"
         src="{{ good.img[ 0 ]}}"
     />
 
     <!-- 标题 -->
-    <view class="gi2-title">
+    <view class="gi3-title">
         {{ good.title }}
     </view>
 
     <!-- 原价 -->
-    <view class="gi2-fadeprice">
+    <view class="gi3-fadeprice">
         市场售价:¥{{ good.fadePrice }}
     </view>
 
     <!-- 最低价 -->
-    <view class="gi2-price-block">
-        超值特价<view class="gi2-price">¥{{ good.lowest_price$ }}</view>
+    <view class="gi3-price-block">
+        超值¥<view class="gi3-price">{{ good.lowest_price$ }}</view>
     </view>
 
     <!-- 标签 -->
-    <view class="gi2-label">
+    <view class="gi3-label">
         {{ tag }}
     </view>
 
     <!-- 标签2 -->
-    <view class="gi2-tips-label">
+    <view class="gi3-tips-label">
         热销宝贝
     </view>
+
+    <!-- 社交，多少人已买 -->
+    <view
+        class="gi3-social-trip-member"
+    >
+
+        <!-- 头像列表 -->
+        <image
+            wx:key="{{ index }}"
+            wx:for="{{ imgList }}"
+            src="{{ item }}"
+            mode="scaleToFill"
+            class="gi3-swiper-image {{ index !== 0 ? 'child' : '' }}"
+        />
+
+        <!-- 文字信息 -->
+        <view class="gi3-info">
+            3人已买
+        </view>
+
+    </view>
+
 
 </view>
