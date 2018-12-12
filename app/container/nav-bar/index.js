@@ -19,7 +19,7 @@ Component({
         navList: [
             {
                 label: '代购',
-                url: "/pages/manager-goods-list/index",
+                url: "/pages/trip-enter/index",
                 normal: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-7.png",
                 active: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-8.png"
             }, {
@@ -62,9 +62,15 @@ Component({
         },
         /** 点击导航 */
         navigate({ currentTarget }) {
-            wx.navigateTo({
-                url: currentTarget.dataset.url
-            })
+            const pages = getCurrentPages( )
+            const current = pages[ pages.length - 1 ];
+            const url = current.route;
+
+            if ( currentTarget.dataset.url.indexOf( url ) === -1 ) {
+                wx.navigateTo({
+                    url: currentTarget.dataset.url
+                });
+            }
         }
     },
 
