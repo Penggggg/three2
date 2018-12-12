@@ -53,14 +53,18 @@ App<MyApp>({
     /** 获取微信用户登录信息、授权、上传保存 */
     getWxUserInfo( ) {
         wx.getUserInfo({
-            success(res) {
-                console.log( res.userInfo )
-                // 上传成功后，isUserAuth设为true
+            success: res => {
                 http({
                     data: res.userInfo,
                     url: 'api-user-edit',
                     success: res => {
                         console.log( res );
+                        if ( res.result && res.result.status === 200 ) {
+                            this.setGlobalData({
+                                isUserAuth: true,
+                                userInfo: res.userInfo
+                            });
+                        }
                     }
                 });
             }
@@ -116,8 +120,25 @@ App<MyApp>({
   
     /** 生命周期 */
     onLaunch: function( ) {
-      this.init( );
-      this.getUserInfo( );
+        this.init( );
+        this.getUserInfo( );
+        wx.getUserInfo({
+            success: res => {
+                http({
+                    data: res.userInfo,
+                    url: 'api-user-edit',
+                    success: res => {
+                        console.log( res );
+                        if ( res.result && res.result.status === 200 ) {
+                            this.setGlobalData({
+                                isUserAuth: true,
+                                userInfo: res.userInfo
+                            });
+                        }
+                    }
+                });
+            }
+        })
     }
 });
 

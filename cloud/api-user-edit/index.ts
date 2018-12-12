@@ -17,20 +17,40 @@ const db: DB.Database = cloud.database();
  *      status
  * }
  */
-export const main = async (event, context) => {
+export const main = async ( event, context ) => {
 
   try {
 
-    const total$ = await db.collection('user')
+    const openid = event.userInfo.openId;
+    const data$ = await db.collection('user')
         .where({
-            _id: ''
+            openid
         })
-        .count( );
+        .get( )
+        .catch( err => { throw `${err}`});
+
+    // 如果不存在，则创建
+    if ( data$.data.length === 0 ) {
+
+        await db.collection('user')
+            .add({
+                data: Object.assign({ }, event.data, { openid })
+            }).catch( err => { throw `${err}`});
+
+    // 如果存在，则更新
+    } else {
+        const meta = Object.assign({ }, data$.data[ 0 ], event.data );
+        delete meta._id;
+        
+        await db.collection('user').doc(( data$.data[ 0 ] as any)._id )
+            .set({
+                data: meta
+            }).catch( err => { throw `${err}`});
+    }    
 
     return new Promise( resolve => {
         resolve({
-            status: 200,
-            data: total$.total
+            status: 200
         })
     })
 

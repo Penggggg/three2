@@ -49,13 +49,13 @@ exports.main = function (event, context) { return __awaiter(_this, void 0, void 
                 _id_1 = event._id, standard_id = event.standard_id, current_price = event.current_price, count = event.count, pid = event.pid;
                 return [4, db.collection('cart').doc(_id_1)
                         .set({
-                        data: {
-                            pid: pid,
-                            count: count,
-                            openid: openid,
-                            standard_id: standard_id,
-                            current_price: current_price
-                        }
+                            data: {
+                                pid: pid,
+                                count: count,
+                                openid: openid,
+                                standard_id: standard_id,
+                                current_price: current_price
+                            }
                     })];
             case 1:
                 _a.sent();

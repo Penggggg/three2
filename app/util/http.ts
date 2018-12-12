@@ -24,11 +24,14 @@ const http = ( params$: httpParam ) => {
     }
     
     wx.cloud.callFunction({
-        data: params.data,
+        data: {
+            data: params.data
+        },
         name: params.url,
         success: ( res: any ) => {
             const { result } = res;
             if ( !result ) { return getError( );}
+            
             const { status, data, message } = result;
             if ( status !== 200 ) {
                 return getError( message || null );
