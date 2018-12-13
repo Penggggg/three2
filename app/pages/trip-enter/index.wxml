@@ -13,14 +13,13 @@
         wx:else
     >
         <!-- 没有行程的时候，显示商品获取其他列表，吸引加入购物车 -->
-        <view
+        <!-- <view
             wx:if="{{ !current && !next }}"
         >
             暂无行程
-        </view>
+        </view> -->
 
         <view
-            wx:else
             class="te-container"
         >
 
@@ -46,17 +45,25 @@
                     />
 
                     <!-- 基本信息 -->
-                    <view class="te-header-msg">
+                    <view
+                        class="te-header-msg"
+                    >
                         <view class="te-header-title">
-                            {{ current.title }}
+                            {{ current ? current.title : '' }}
                         </view>
-                        <view class="te-header-date">
+                        <view 
+                            class="te-header-date"
+                            wx:if="{{ current }}"
+                        >
                             {{ current.start_date$ }} ~ {{ current.end_date$ }}
                         </view>
                     </view>
 
                     <!-- 社交 - 参加人数，点击跳到拼团页面 -->
-                    <view class="te-header-members">
+                    <view
+                        class="te-header-members"
+                        wx:if="{{ current }}"
+                    >
                         <my-social-trip-member
                             tid="{{ current._id }}"
                         />
@@ -78,6 +85,7 @@
                 <!-- 本期推荐 -->
                 <view
                     scroll-x
+                    wx:if="{{ recommendGoods.length > 0 }}"
                     class="te-recommond-list"
                 >
                     <view

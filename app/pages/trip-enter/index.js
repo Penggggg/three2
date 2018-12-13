@@ -44,6 +44,7 @@ Page({
             success: res => {
                 const { status, data } = res.result;
                 const current = data[ 0 ];
+                const next = data[ 1 ];
 
                 if ( status !== 200 ) {
                     return getError( );
@@ -51,7 +52,7 @@ Page({
                 
                 this.setData({
                     loaded: true,
-                    recommendGoods: current.products.map( delayeringGood ),
+                    recommendGoods: current? current.products.map( delayeringGood ) : [ ],
                     next: data[ 1 ] ? this.dealTrip( data[ 1 ]) : null,
                     current: data[ 0 ] ? this.dealTrip( data[ 0 ]) : null
                 });
@@ -69,6 +70,10 @@ Page({
                     }
                     this.setData({
                         notice: text
+                    });
+                } else if ( !next ) {
+                    this.setData({
+                        notice: `暂无下一趟行程 T.T`
                     });
                 }
 
