@@ -30,7 +30,7 @@ Page({
         isUserAuth: false
     },
 
-    /** 拉取商品列表 */
+    /** 拉取购物车列表 */
     fetchList: function( ) {
         const that = this;
 
@@ -419,7 +419,7 @@ Page({
 
     },
 
-    /** 确认用户授权情况 */
+    /** 监听用户授权情况 */
     checkAuth( ) {
         app.watch$('isUserAuth', val => {
             if ( val === undefined ) { return; }
@@ -433,7 +433,48 @@ Page({
     getUserAuth( ) {
         app.getWxUserInfo(( ) => {
             // 进行结算
+            this.batchSettle( );
         });
+    },
+
+    /** 批量进行购物车结算 */
+    batchSettle( ) {
+        const { cartList, selectCartIdList } = this.data;
+        if ( selectCartIdList.length === 0 ) { return; }
+
+        // 地址选择
+        wx.chooseAddress({
+            success: res => {
+                
+                const { userName, provinceName, cityName, countyName, detailInfo, postalCode, telNumber } = res;
+                const selected = selectCartIdList.map( cid => {
+
+                    const temp = cartList.find( x => x.cart._id === cid );
+                    if ( temp ) {
+                        const { current } = temp;
+                        const { pid, price, img, sid, count } = current;
+                        return {
+                            sid,
+                            pid,
+                            price,
+                            count,
+                            desc: '',
+                            img: [ img ],
+                            type: 'NORMAL',
+                            username: userName,
+                            postalcode: postalCode,
+                            phone: telNumber,
+                            address: `${provinceName}${cityName}${countyName}${detailInfo}`
+                        }
+                    }
+                    return null; 
+                });
+
+                console.log( selected );
+
+            }
+        });
+
     },
 
     /**
