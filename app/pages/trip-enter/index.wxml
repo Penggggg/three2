@@ -136,7 +136,10 @@
             </view>
 
             <!-- 按钮 -->
-            <view class="te-btn-container">
+            <view
+                class="te-btn-container"
+                wx:if="{{ current }}"
+            >
                 <view class="te-btn">
                     立即加入
                 </view>
