@@ -1,5 +1,7 @@
 // app/pages/cart-list/index.js
 
+const { http } = require('../../util/http.js');
+
 const app = getApp( );
 
 Page({
@@ -442,6 +444,14 @@ Page({
         const { cartList, selectCartIdList } = this.data;
         if ( selectCartIdList.length === 0 ) { return; }
 
+        http({
+            data: { },
+            url: `api-order-create`,
+            success: ( res ) => {
+                console.log( res )
+            }
+        })
+
         // 地址选择
         wx.chooseAddress({
             success: res => {
@@ -461,10 +471,12 @@ Page({
                             desc: '',
                             img: [ img ],
                             type: 'NORMAL',
-                            username: userName,
-                            postalcode: postalCode,
-                            phone: telNumber,
-                            address: `${provinceName}${cityName}${countyName}${detailInfo}`
+                            address: {
+                                name: userName,
+                                postalcode: postalCode,
+                                phone: telNumber,
+                                detail: `${provinceName}${cityName}${countyName}${detailInfo}`
+                            }
                         }
                     }
                     return null; 

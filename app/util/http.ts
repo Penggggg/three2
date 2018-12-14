@@ -15,7 +15,7 @@ const http = ( params$: httpParam ) => {
         title: params.loadingMsg
     });
 
-    const getError = ( msg = params.errMsg , err?: any ) => {
+    const getError = ( msg = params.errMsg, err?: any ) => {
         console.log( err );
         wx.showToast({
             icon: 'none',
@@ -34,7 +34,7 @@ const http = ( params$: httpParam ) => {
             
             const { status, data, message } = result;
             if ( status !== 200 ) {
-                return getError( message || null );
+                return getError( message || params.errMsg );
             }
 
             params.success( res );

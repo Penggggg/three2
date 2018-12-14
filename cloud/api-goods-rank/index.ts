@@ -80,7 +80,7 @@ export const main = async (event, context) => {
 
   } catch ( e ) {
       return new Promise(( resolve, reject ) => {
-          reject({
+        resolve({
               status: 500,
               message: e
           })
