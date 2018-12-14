@@ -23,8 +23,8 @@ const http = ( params$: httpParam ) => {
         });
     }
 
-    const name = params.url.split('-')[ 0 ];
-    const $url = params.url.split('-')[ 1 ];
+    const name = params.url.split('_')[ 0 ];
+    const $url = params.url.split('_')[ 1 ];
 
     wx.cloud.callFunction({
         data: {

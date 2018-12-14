@@ -73,6 +73,8 @@ export const main = async ( event, context ) => {
             }
 
             const trip = trips$.result.data[ 0 ];
+
+            // 
     
             return ctx.body = trip;
 

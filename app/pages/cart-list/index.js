@@ -475,6 +475,16 @@ Page({
                 });
 
                 console.log( selected );
+                http({
+                    data: {
+                        from: 'cart',
+                        orders: selected
+                    },
+                    url: `order_create`,
+                    success: ( res ) => {
+                        console.log( '...', res )
+                    }
+                })
 
             }
         });
@@ -501,13 +511,6 @@ Page({
     onShow: function ( ) {
         this.fetchList( );
         this.checkAuth( );
-        http({
-            data: { },
-            url: `order-create`,
-            success: ( res ) => {
-                console.log( '...', res )
-            }
-        })
     },
 
     /**
