@@ -1,7 +1,7 @@
 /**
  * @param 
  */
-const find$ = async( openid, data: { address?: string, username?: string, phone?: string }, db: DB.Database ) => {
+const find$ = async( openid, data: { address?: string, username?: string, phone?: string }, db: DB.Database, ctx ) => {
     try {
         
         let filterData = { };
@@ -24,7 +24,7 @@ const find$ = async( openid, data: { address?: string, username?: string, phone?
         }
 
     } catch ( e ) {
-        return { status: 500, message: e };
+        return ctx.body = { status: 500, message: e };
     }
 }
 

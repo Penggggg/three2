@@ -30,15 +30,29 @@ export const main = async ( event, context ) => {
     app.router('getAddressId', async( ctx, next ) => {
         try {
 
-            const sameAddress$ = await find$( event.userInfo.openId, { 
+            const { openId } = event.userInfo;
+
+            const sameAddress$ = await find$( openId, { 
                 address: event.data.address
-            }, db );
+            }, db, ctx );
 
-            if ( sameAddress$ .status !== 200 ) {
-                return ctx.body = sameAddress$;
+            // 查询到旧的相同地址
+            if ( sameAddress$.data && sameAddress$.data.length > 0 ) {
+                return ctx.body = {
+                    status: 200,
+                    data: sameAddress$.data[ 0 ]._id
+                }
             }
+            
+            // 创建新的地址
+            const cerateAddress$ = await create$( openId, {
+                ...event.data
+            }, db, ctx );
 
-            return ctx.body = sameAddress$;
+            return ctx.body = {
+                status: 200,
+                data: (cerateAddress$.data as any)._id
+            }
 
         } catch ( e ) {
             return ctx.body = {

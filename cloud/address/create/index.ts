@@ -1,4 +1,4 @@
-const create$ = async( openid, data, db: DB.Database ) => {
+const create$ = async( openid, data, db: DB.Database, ctx ) => {
     try {
         const create$ = await db.collection('address')
             .add({
@@ -6,12 +6,13 @@ const create$ = async( openid, data, db: DB.Database ) => {
                     openid
                 })
             });
+
         return {
             status: 200,
             data: create$
         }
     } catch ( e ) {
-        return { status: 500, message: e };
+        return ctx.body = { status: 500, message: e };
     }
 }
 
