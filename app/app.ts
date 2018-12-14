@@ -58,7 +58,7 @@ App<MyApp>({
                     data: res.userInfo,
                     url: 'api-user-edit',
                     success: res2 => {
-                        if ( res2.result && res2.result.status === 200 ) {
+                        if ( res2 && res2.status === 200 ) {
                             this.setGlobalData({
                                 isUserAuth: true,
                                 userInfo: res.userInfo
