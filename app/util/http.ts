@@ -40,7 +40,7 @@ const http = ( params$: httpParam ) => {
             params.success( res );
 
         },
-        fail: err => getError( 'null', err ),
+        fail: err => getError( '网络错误', err ),
         complete: ( ) => wx.hideLoading({ })
     })
 

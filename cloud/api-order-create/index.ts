@@ -56,28 +56,34 @@ const db: DB.Database = cloud.database( );
  * ! 地址管理，先对比用旧地址id或新建的地址id
  */
 export const main = async ( event, context ) => {
+    return new Promise( async resolve => {
+        try {
+            
+            const trips$ = await cloud.callFunction({
+                data: { },
+                name: 'api-trip-enter'
+            });
 
-  try {
+            if ( trips$.result.status !== 200 || !trips$.result.data || !trips$.result.data[ 0 ]) {
+                return resolve({
+                    status: 400,
+                    message: `没有最新行程，暂时无法结算！`
+                });
+            }
 
-    const trips$ = await cloud.callFunction({
-        data: { },
-        name: 'api-trip-enter'
-    });
+            const trip = trips$.result.data[ 0 ];
 
-    return new Promise( resolve => {
-        resolve({
-            data: trips$,
-            status: 200
-        })
-    })
+            return resolve({
+                status: 200,
+                data: trip
+            });
 
-  } catch ( e ) {
-      return new Promise(( resolve, reject ) => {
-            resolve({
+        } catch ( e ) {
+            return resolve({
                 status: 500,
                 message: e
-            })
-      })
-  }
+            });
+        }
+    });
 
 }

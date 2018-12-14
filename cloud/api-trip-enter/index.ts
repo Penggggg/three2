@@ -19,48 +19,47 @@ const _ = db.command;
  * }
  */
 export const main = async ( event, context) => {
+    return new Promise( async resolve => {
+        try {
 
-    try {
+            // 按开始日期正序，获取最多2条已发布，未结束的行程
+            const data$ = await db.collection('trip')
+                .where({
+                    published: true,
+                    end_date: _.gt( new Date( ).getTime( ))
+                })
+                .limit( 2 )
+                .orderBy('start_date', 'asc')
+                .get( );
 
-        // 按开始日期正序，获取最多2条已发布，未结束的行程
-        const data$ = await db.collection('trip')
-            .where({
-                published: true,
-                end_date: _.gt( new Date( ).getTime( ))
+            let trips = data$.data;
+            // 拉取最新行程的推荐商品
+            if ( !!trips[ 0 ]) {
+                const tripOneProducts$ = await Promise.all( trips[ 0 ].selectedProductIds.map( pid => {
+                    return cloud.callFunction({
+                        data: {
+                            _id: pid
+                        },
+                        name: 'api-goods-detail'
+                    }).then( res => res.result.data );
+                }));
+                trips[ 0 ] = Object.assign({ }, trips[ 0 ], {
+                    products: tripOneProducts$
+                });
+
+            }
+
+            return resolve({
+                status: 200,
+                data: trips
             })
-            .limit( 2 )
-            .orderBy('start_date', 'asc')
-            .get( );
 
-        let trips = data$.data;
-        // 拉取最新行程的推荐商品
-        if ( !!trips[ 0 ]) {
-            const tripOneProducts$ = await Promise.all( trips[ 0 ].selectedProductIds.map( pid => {
-                return cloud.callFunction({
-                    data: {
-                        _id: pid
-                    },
-                    name: 'api-goods-detail'
-                }).then( res => res.result.data );
-            }));
-            trips[ 0 ] = Object.assign({ }, trips[ 0 ], {
-                products: tripOneProducts$
-            });
-
-        }
-
-        return {
-            status: 200,
-            data: trips
-        }
-
-    } catch ( e ) {
-        return new Promise(( resolve, reject ) => {
-            resolve({
+        } catch ( e ) {
+            return resolve({
                 status: 500,
                 message: e
-            })
-        })
-    }
+            });
+        }
+    });
 
 }
