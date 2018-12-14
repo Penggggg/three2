@@ -1,7 +1,7 @@
 
 import * as cloud from 'wx-server-sdk';
 import * as TcbRouter from 'tcb-router';
-import { main as create$ } from './create';
+import { create$ } from './create';
 
 cloud.init( );
 
@@ -11,7 +11,7 @@ export const main = async ( event, context ) => {
 
     const app = new TcbRouter({ event });
 
-    app.router('test', async( ctx, next ) => {
+    app.router('create', async( ctx, next ) => {
         ctx.body = create$( event, context );
     });
 

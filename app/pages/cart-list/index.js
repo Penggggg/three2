@@ -444,14 +444,6 @@ Page({
         const { cartList, selectCartIdList } = this.data;
         if ( selectCartIdList.length === 0 ) { return; }
 
-        http({
-            data: { },
-            url: `api-order-create`,
-            success: ( res ) => {
-                console.log( res )
-            }
-        })
-
         // 地址选择
         wx.chooseAddress({
             success: res => {
@@ -509,6 +501,13 @@ Page({
     onShow: function ( ) {
         this.fetchList( );
         this.checkAuth( );
+        http({
+            data: { },
+            url: `order-create`,
+            success: ( res ) => {
+                console.log( '...', res )
+            }
+        })
     },
 
     /**

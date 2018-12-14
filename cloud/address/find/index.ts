@@ -1,4 +1,4 @@
-const create$ = async( event, context ) => {
+const find$ = async( event, context ) => {
     try {
         return { data: event };
     } catch ( e ) {
@@ -6,4 +6,4 @@ const create$ = async( event, context ) => {
     }
 }
 
-export { create$ }
+export { find$ }
