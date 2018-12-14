@@ -511,6 +511,15 @@ Page({
     onShow: function ( ) {
         this.fetchList( );
         this.checkAuth( );
+        http({
+            data: {
+                address: 111
+            },
+            url: `address_getAddressId`,
+            success: ( res ) => {
+                console.log( '...', res )
+            }
+        })
     },
 
     /**

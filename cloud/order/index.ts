@@ -8,7 +8,7 @@ const db: DB.Database = cloud.database( );
 
 /**
  * 
- * @description 
+ * @description 订单模块
  * -------- 字段 ----------
  * _id
  * openid,
@@ -38,7 +38,7 @@ export const main = async ( event, context ) => {
      * @description 创建订单
      * -------- 请求 ----------
      * {
-     *      from: 'cart' | 'buy' | 'custom' | 'agents'
+     *      from: 'cart' | 'buy' | 'custom' | 'agents' 来源：购物车、直接购买、自定义下单、代购下单
      *      data: Array<{
      *          sid
      *          pid
@@ -74,11 +74,12 @@ export const main = async ( event, context ) => {
 
             const trip = trips$.result.data[ 0 ];
 
-            // 
+            // 根据地址对象，拿到地址id
     
             return ctx.body = trip;
 
         } catch ( e ) {
+     
             return ctx.body = {
                 status: 500,
                 message: e
