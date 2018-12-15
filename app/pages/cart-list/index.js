@@ -484,7 +484,7 @@ Page({
                     success: ( res ) => {
                         console.log( '...', res )
                     }
-                })
+                });
 
             }
         });
@@ -511,15 +511,6 @@ Page({
     onShow: function ( ) {
         this.fetchList( );
         this.checkAuth( );
-        http({
-            data: {
-                address: '?????'
-            },
-            url: `address_getAddressId`,
-            success: ( res ) => {
-                console.log( '...', res )
-            }
-        })
     },
 
     /**

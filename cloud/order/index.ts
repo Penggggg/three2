@@ -39,7 +39,7 @@ export const main = async ( event, context ) => {
      * -------- 请求 ----------
      * {
      *      from: 'cart' | 'buy' | 'custom' | 'agents' 来源：购物车、直接购买、自定义下单、代购下单
-     *      data: Array<{
+     *      orders: Array<{
      *          sid
      *          pid
      *          price
@@ -58,7 +58,8 @@ export const main = async ( event, context ) => {
      */
     app.router('create', async( ctx, next ) => {
         try {
-
+            
+            const { from, orders } = event.data;
             const trips$ = await cloud.callFunction({
                 data: { },
                 name: 'api-trip-enter'
@@ -72,11 +73,36 @@ export const main = async ( event, context ) => {
                 };
             }
 
+            // 最新可用行程
             const trip = trips$.result.data[ 0 ];
 
             // 根据地址对象，拿到地址id
+            const addressid$ = await cloud.callFunction({
+                data: { 
+                    data: {
+                        address: event.data.orders[ 0 ].address
+                    },
+                    $url: 'getAddressId'
+                },
+                name: 'address'
+            });
+
+            if ( addressid$.result.status !== 200 ) {
+                return ctx.body = {
+                    status: 500,
+                    message: '查询地址错误'
+                };
+            }
+
+            // 可用地址id
+            const aid = addressid$.result.data;
+
+            
     
-            return ctx.body = trip;
+            return ctx.body = {
+                status: 200,
+                data: addressid$
+            };
 
         } catch ( e ) {
      

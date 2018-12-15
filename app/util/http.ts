@@ -38,7 +38,7 @@ const http = ( params$: httpParam ) => {
             
             const { status, data, message } = result;
             if ( status !== 200 ) {
-                getError( message || params.errMsg );
+                getError( message && message !== { } ? message : params.errMsg );
             }
 
             params.success( res.result );
