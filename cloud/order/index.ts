@@ -68,18 +68,21 @@ export const main = async ( event, context ) => {
                 name: 'api-trip-enter'
             });
     
-            // 判断有没有可用行程
+            // 1、判断有没有可用行程
             if ( trips$.result.status !== 200 || !trips$.result.data || !trips$.result.data[ 0 ]) {
                 return ctx.body = {
                     status: 400,
-                    message: `没有最新行程，暂时无法结算！`
+                    message: `暂无行程计划，暂时不能购买～`
                 };
             }
 
             // 最新可用行程
             const trip = trips$.result.data[ 0 ];
+
+            // 2、判断在该行程清单，这些商品是否存在已经买不全、买不到
+
             // 订单主人的openid
-            let openid = event.data.openId;
+            let openid;
 
             // 根据地址对象，拿到地址id
             let addressid$ = {
@@ -91,10 +94,10 @@ export const main = async ( event, context ) => {
             let base_status = '0';
             let deliver_status = '0'
 
-
-            // 根据来源，整理地址id、基本状态、快递状态
+            // 3、根据来源，整理地址id
             // 订单来源：购物车
             if ( event.data.from === 'cart' ) {
+                openid = event.data.openId;
                 addressid$ = await cloud.callFunction({
                     data: { 
                         data: {
@@ -116,7 +119,7 @@ export const main = async ( event, context ) => {
             // 可用地址id
             const aid = addressid$.result.data;
 
-            // 批量存储订单对象
+            // 4、批量存储订单对象
             const temp = event.data.orders.map( meta => {
                 return Object.assign({ }, meta, {
                     aid,

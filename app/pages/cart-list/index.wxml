@@ -12,7 +12,8 @@
                 scroll="{{ true }}"
                 close="{{ true }}"
                 show-icon="{{ true }}"
-                notice="香港代购将于8月11日出发，请放心购买～"
+                wx:if="{{ trip }}"
+                notice="{{ trip.title + '于' +  trip.start_date$ + '出发，请放心购买～' }}"
             />
 
             <view class="pcl-info-msg">

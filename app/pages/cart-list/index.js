@@ -29,7 +29,9 @@ Page({
         /** 是否在删除状态 */
         isInDelete: false,
         /** 是否进行了用户授权 */
-        isUserAuth: false
+        isUserAuth: false,
+        /** 当前行程 */
+        trip: null
     },
 
     /** 拉取购物车列表 */
@@ -443,8 +445,20 @@ Page({
 
     /** 批量进行购物车结算 */
     batchSettle( ) {
-        const { cartList, selectCartIdList } = this.data;
+        const { cartList, selectCartIdList, trip } = this.data;
         if ( selectCartIdList.length === 0 ) { return; }
+
+        // 判断是否没有最新行程、最新行程是否被关闭
+        if ( !trip || ( !!trip && trip.isClosed )) {
+
+        }
+
+        if ( !trip ) {
+            return wx.showToast({
+                icon: 'none',
+                title: '暂无行程计划，暂时不能购买～'
+            })
+        }
 
         // 地址选择
         wx.chooseAddress({
@@ -477,14 +491,13 @@ Page({
                     return null; 
                 });
 
-                console.log( selected );
                 http({
                     data: {
                         from: 'cart',
                         orders: selected
                     },
                     url: `order_create`,
-                    success: ( res ) => {
+                    success: res => {
                         console.log( '...', res )
                     }
                 });
@@ -492,6 +505,36 @@ Page({
             }
         });
 
+    },
+
+    /** 拉取最新可用行程 */
+    fetchTrip( ) {
+        http({
+            data: { },
+            url: `api-trip-enter`,
+            success: res => {
+                if ( res.status === 200 ) {
+                    this.setData({
+                        trip: res.data[ 0 ] ? this.dealTrip( res.data[ 0 ]) : null
+                    });
+                }
+            }
+        });  
+    },
+
+    /** 处理详情 */
+    dealTrip( tripDetail ) {
+
+        const { start_date, end_date } = tripDetail;
+        const MMdd = timestamp => {
+            const d = new Date( timestamp );
+            return `${d.getMonth( ) + 1}月${d.getDate( )}日`
+        }
+
+        return Object.assign({ }, tripDetail, {
+            end_date$: MMdd( end_date ),
+            start_date$: MMdd( start_date )
+        });
     },
 
     /**
@@ -514,6 +557,7 @@ Page({
     onShow: function ( ) {
         this.fetchList( );
         this.checkAuth( );
+        this.fetchTrip( );
     },
 
     /**
