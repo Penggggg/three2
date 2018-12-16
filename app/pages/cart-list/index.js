@@ -75,7 +75,7 @@ Page({
                     // 如果只有主商品
                     if ( !cart.standard_id ) {
 
-                        const { _id, title, price, img, stock, limit } = detail;
+                        const { _id, title, price, img, stock, limit, groupPrice } = detail;
 
                         // 如果商品的型号还是为 0 
                         if ( detail.standards.length === 0 ) {
@@ -84,6 +84,7 @@ Page({
                                 standardName: null,
                                 stock,
                                 price,
+                                groupPrice,
                                 img: detail.img[ 0 ]
                             }
                             current = decorateCurrent( current );
@@ -104,11 +105,12 @@ Page({
 
                         // sku有可能被删除，当sku被删除时，要显示“请重选商品规格”
                         if ( currentStandard ) {
-                            const { name, price, img, stock } = currentStandard;
+                            const { name, price, img, stock, groupPrice } = currentStandard;
                             current = {
                                 img,
                                 price,
                                 stock,
+                                groupPrice,
                                 standardName: name,
                                 sid: cart.standard_id,
                             };
@@ -454,7 +456,7 @@ Page({
                     const temp = cartList.find( x => x.cart._id === cid );
                     if ( temp ) {
                         const { current } = temp;
-                        const { pid, price, img, sid, count } = current;
+                        const { pid, price, img, sid, count, groupPrice } = current;
                         return {
                             sid,
                             pid,
@@ -463,6 +465,7 @@ Page({
                             desc: '',
                             img: [ img ],
                             type: 'NORMAL',
+                            group_price: groupPrice,
                             address: {
                                 name: userName,
                                 postalcode: postalCode,

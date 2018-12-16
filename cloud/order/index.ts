@@ -18,6 +18,7 @@ const db: DB.Database = cloud.database( );
  * ! sid, (可为空)
  * count,
  * price,
+ * ! group_price (可为空)
  * type: 'custom' | 'normal' 自定义加单、普通加单
  * img: Array[ string ]
  * desc,
@@ -26,7 +27,7 @@ const db: DB.Database = cloud.database( );
         * postalcode, 邮政
         * phone, 收获电话
         * address, 收获地址
- * base_status: 0,1,2,3 准备中，进行中，已调整，已结算
+ * base_status: 0,1,2,3,4 进行中（客户还可以调整自己的订单），已购买，已调整，已结算，已取消
  * pay_status: 0,1,2 未付款，已付订金，已付全款
  * deliver_status: 0,1 未发布，已发布、
  */
@@ -43,6 +44,7 @@ export const main = async ( event, context ) => {
      *          sid
      *          pid
      *          price
+     *          group_price
      *          count
      *          desc
      *          img
@@ -114,7 +116,7 @@ export const main = async ( event, context ) => {
             // 可用地址id
             const aid = addressid$.result.data;
 
-            // 批量存储对象存储
+            // 批量存储订单对象
             const temp = event.data.orders.map( meta => {
                 return Object.assign({ }, meta, {
                     aid,
@@ -126,7 +128,7 @@ export const main = async ( event, context ) => {
     
             return ctx.body = {
                 status: 200,
-                data: aid
+                data: temp
             };
 
         } catch ( e ) {
