@@ -15,7 +15,7 @@ const db: DB.Database = cloud.database( );
  * createtime
  * tid,
  * pid,
- * sid,
+ * ! sid, (可为空)
  * count,
  * price,
  * type: 'custom' | 'normal' 自定义加单、普通加单
@@ -47,6 +47,7 @@ export const main = async ( event, context ) => {
      *          desc
      *          img
      *          type
+     *          pay_status,
      *          address: {
      *              name,
      *              phone,
@@ -75,18 +76,34 @@ export const main = async ( event, context ) => {
 
             // 最新可用行程
             const trip = trips$.result.data[ 0 ];
+            // 订单主人的openid
+            let openid = event.data.openId;
 
             // 根据地址对象，拿到地址id
-            const addressid$ = await cloud.callFunction({
-                data: { 
-                    data: {
-                        address: event.data.orders[ 0 ].address
-                    },
-                    $url: 'getAddressId'
-                },
-                name: 'address'
-            });
+            let addressid$ = {
+                result: {
+                    data: null,
+                    status: 500
+                }
+            };
+            let base_status = '0';
+            let deliver_status = '0'
 
+
+            // 根据来源，整理地址id、基本状态、快递状态
+            // 订单来源：购物车
+            if ( event.data.from === 'cart' ) {
+                addressid$ = await cloud.callFunction({
+                    data: { 
+                        data: {
+                            address: event.data.orders[ 0 ].address
+                        },
+                        $url: 'getAddressId'
+                    },
+                    name: 'address'
+                });
+            }
+            
             if ( addressid$.result.status !== 200 ) {
                 return ctx.body = {
                     status: 500,
@@ -97,11 +114,19 @@ export const main = async ( event, context ) => {
             // 可用地址id
             const aid = addressid$.result.data;
 
-            
+            // 批量存储对象存储
+            const temp = event.data.orders.map( meta => {
+                return Object.assign({ }, meta, {
+                    aid,
+                    tid: trip._id,
+                    openid: openid,
+                    createTime: new Date( ).getTime( ),
+                });
+            });
     
             return ctx.body = {
                 status: 200,
-                data: addressid$
+                data: aid
             };
 
         } catch ( e ) {

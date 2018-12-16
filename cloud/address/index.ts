@@ -30,7 +30,8 @@ export const main = async ( event, context ) => {
     app.router('getAddressId', async( ctx, next ) => {
         try {
 
-            const { openId } = event.userInfo;
+            // 此处openId可被传值，用于代购为客户增加自定义订单
+            const openId = event.data.openId || event.userInfo.openId;
 
             const sameAddress$ = await find$( openId, { 
                 address: event.data.address

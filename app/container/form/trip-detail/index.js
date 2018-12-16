@@ -53,7 +53,9 @@ Component({
         // 是否已发布
         published: false,
         // 是否已过了开始时间
-        hasBeenPassStart: false
+        hasBeenPassStart: false,
+        // 是否可以显示结束行程、首款按钮
+        canBeEnd: false
     },
 
     computed: {
@@ -246,7 +248,7 @@ Component({
                         fullreduce_values, postage, payment, published, selectedProductIds, selectedProducts } = data;
 
                     const dealDate = timeStamp => {
-                        const d = new Date( start_date );
+                        const d = new Date( timeStamp );
                         const year = d.getFullYear( );
                         const month = d.getMonth( ) + 1;
                         const date = d.getDate( );
@@ -277,13 +279,14 @@ Component({
 
                     this.setData({
                         published,
-                        hasBeenPassStart: new Date( ).getTime( ) > start_date,
                         selectedProducts: selectedProducts || [ ],
                         selectedProductIds: selectedProductIds || [ ],
                         cashcoupon_atleast: cashcoupon_atleast || null,
                         cashcoupon_values: cashcoupon_values || null,
                         fullreduce_atleast: fullreduce_atleast || null,
-                        fullreduce_values: fullreduce_values || null
+                        fullreduce_values: fullreduce_values || null,
+                        hasBeenPassStart: new Date( ).getTime( ) > start_date,
+                        canBeEnd: dealDate( end_date ) === dealDate( new Date( ).getTime( ))
                     });
 
                 },
@@ -551,6 +554,7 @@ Component({
     
             if ( !tid ) {
                 tripDetail = Object.assign({ }, tripDetail, {
+                    isClosed: flase,
                     isPassed: false,
                     createTime: new Date( ).getTime( )
                 });

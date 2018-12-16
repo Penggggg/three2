@@ -28,6 +28,7 @@ const _ = db.command;
         isPassed 是否过期
         createTime 创建时间
         updateTime 更新时间
+        isClosed: 是否已经手动关闭
  * }
  * -------- 请求 ----------
  * {
@@ -42,7 +43,7 @@ export const main = async ( event, context) => {
         let _id = event.data._id;
 
         // 校验1：如果是想要发布当前行程，则检查是否有“已发布行程的结束时间大于等于当前新建行程的开始时间要”
-        if ( event.data.published ) {
+        if ( event.data.published && !_id ) {
             const rule1$ = await db.collection('trip').where({
                 end_date: _.gte( event.data.start_date )
             })

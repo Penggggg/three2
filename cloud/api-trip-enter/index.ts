@@ -25,6 +25,7 @@ export const main = async ( event, context) => {
             // 按开始日期正序，获取最多2条已发布，未结束的行程
             const data$ = await db.collection('trip')
                 .where({
+                    isClosed: false,
                     published: true,
                     end_date: _.gt( new Date( ).getTime( ))
                 })

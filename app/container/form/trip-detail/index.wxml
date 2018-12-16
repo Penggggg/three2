@@ -110,13 +110,26 @@
     />
 
     <!-- 按钮 -->
-    <view class='btn-blockk'>
+    <view class="btn-blockk {{ canBeEnd ? '' : 'bottom' }}">
         <wxc-button
             size="large"
             type="beauty"
             bindtap="submit"
         >
             确定
+        </wxc-button>
+    </view>
+
+    <view
+        class='btn-blockk2'
+        wx:if="{{ canBeEnd }}"
+    >
+        <wxc-button
+            size="large"
+            type="beauty"
+            bindtap="submit"
+        >
+            结束行程( 收尾款 )
         </wxc-button>
     </view>
 
