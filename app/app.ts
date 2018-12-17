@@ -56,7 +56,7 @@ App<MyApp>({
             success: res => {
                 http({
                     data: res.userInfo,
-                    url: 'api-user-edit',
+                    url: 'common_userEdit',
                     success: res2 => {
                         if ( res2 && res2.status === 200 ) {
                             this.setGlobalData({

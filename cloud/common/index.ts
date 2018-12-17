@@ -46,6 +46,48 @@ export const main = async ( event, context ) => {
         }
     });
 
+    app.router('userEdit', async( ctx, next ) => {
+        try {
+            console.log( event );
+            const openid = event.userInfo.openId;
+            const data$ = await db.collection('user')
+                .where({
+                    openid
+                })
+                .get( )
+                .catch( err => { throw `${err}`});
+        
+            // 如果不存在，则创建
+            if ( data$.data.length === 0 ) {
+        
+                await db.collection('user')
+                    .add({
+                        data: Object.assign({ }, event.data, { openid })
+                    }).catch( err => { throw `${err}`});
+        
+            // 如果存在，则更新
+            } else {
+                const meta = Object.assign({ }, data$.data[ 0 ], event.data );
+                delete meta._id;
+                
+                await db.collection('user').doc(( data$.data[ 0 ] as any)._id )
+                    .set({
+                        data: meta
+                    }).catch( err => { throw `${err}`});
+            }    
+
+            return ctx.body = {
+                status: 200
+            };
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500,
+                message: e
+            };
+        }
+    });
+
     return app.serve( );
 
 }
