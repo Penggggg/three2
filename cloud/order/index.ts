@@ -40,7 +40,8 @@ export const main = async ( event, context ) => {
      * -------- 请求 ----------
      * {
      *      from: 'cart' | 'buy' | 'custom' | 'agents' 来源：购物车、直接购买、自定义下单、代购下单
-     *      orders: Array<{
+     *      orders: Array<{ 
+     *          cid
      *          sid
      *          pid
      *          price
@@ -81,18 +82,20 @@ export const main = async ( event, context ) => {
 
             // 2、判断在该行程购物清单，这些商品是否存在已经买不全、买不到，不是的话，则创建行程购物清单
 
-            // 订单主人的openid
+            /**
+             * ! 订单主人的openid
+             */
             let openid;
 
-            // 根据地址对象，拿到地址id
+            /**
+             * ! 根据地址对象，拿到地址id
+             */
             let addressid$ = {
                 result: {
                     data: null,
                     status: 500
                 }
             };
-            let base_status = '0';
-            let deliver_status = '0'
 
             // 3、根据来源，整理地址id
             // 订单来源：购物车
@@ -128,6 +131,10 @@ export const main = async ( event, context ) => {
                     createTime: new Date( ).getTime( ),
                 });
             });
+
+            // 5、批量加入或创建购物清单
+
+            // 6、批量删除已加入购物清单的购物车商品
     
             return ctx.body = {
                 status: 200,

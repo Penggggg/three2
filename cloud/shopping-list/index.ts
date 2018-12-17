@@ -34,6 +34,8 @@ export const main = async ( event, context ) => {
      *       sid
      *    }[ ]
      * }
+     * -------- 返回 ----------
+     * 同上
      */
     app.router('findCannotBuy', async( ctx, next ) => {
         try {

@@ -522,7 +522,7 @@ Page({
 
                         /**
                          * ! 提示无法加入订单的商品
-                         * ! 重新刷新购物车，因为成功购物车的商品，这个商品的购物车会被删除掉
+                         * ! 重新刷新购物车，因为成功加入清单的购物车的商品，这个商品的购物车会被删除掉
                          */
                     }
                 });
@@ -539,6 +539,7 @@ Page({
                 //         const { current } = temp;
                 //         const { pid, price, img, sid, count, groupPrice } = current;
                 //         return {
+                //             cid,
                 //             sid,
                 //             pid,
                 //             price,
