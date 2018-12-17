@@ -7,15 +7,15 @@ const db: DB.Database = cloud.database( );
 
 /**
  *
- * @description 地址模块
+ * @description 购物车模块
  * -------- 字段 ----------
  *      _id
  *      openid
-        username, 收货人
-        postalcode, 邮政
-        phone, 收获电话
-        address, 收获地址
- * 
+ *      pid: 商品id
+ *      count: 选购数量
+ *      standard_id: 型号id
+ *      current_price: 当时的价格
+
  */
 export const main = async ( event, context ) => {
 
