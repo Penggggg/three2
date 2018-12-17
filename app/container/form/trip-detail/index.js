@@ -1,3 +1,5 @@
+const { http } = require('../../../util/http.js');
+
 // container/form/trip-detail/index.js
 Component({
 
@@ -230,76 +232,67 @@ Component({
         fetchDetail( id ) {
 
             if ( !id ) { return; }
-            wx.showLoading({
-                title: '加载中...',
-            });
-            wx.cloud.callFunction({
-                name: 'api-trip-detail',
+
+            http({
                 data: {
                     _id: id
                 },
+                errMsg: '加载失败，请重试',
+                loadingMsg: '加载中...',
+                url: `trip_detail`,
                 success: res => {
-                    
-                    const { status, data } = res.result;
+                    const { status, data } = res;
                     if ( status !== 200 ) { return; }
-                  
+
                     const { title, destination, start_date, end_date, cashcoupon_atleast,
                         cashcoupon_values, postagefree_atleast, reduce_price, fullreduce_atleast,
                         fullreduce_values, postage, payment, published, selectedProductIds, selectedProducts } = data;
-
-                    const dealDate = timeStamp => {
-                        const d = new Date( timeStamp );
-                        const year = d.getFullYear( );
-                        const month = d.getMonth( ) + 1;
-                        const date = d.getDate( );
-                        return `${year}-${String( month ).length > 1 ? month : '0' + month}-${String( date ).length > 1 ? date : '0' + date}`;
-                    }
-
-                    const form1 = this.selectComponent('#form1');
-                    const form2 = this.selectComponent('#form2');
-                    const form3 = this.selectComponent('#form3');
-
-                    form1 && form1.set({
-                        title,
-                        destination,
-                        end_date: dealDate( end_date ),
-                        start_date: dealDate( start_date )
-                    });
-
-                    form2 && form2.set({
-                        reduce_price
-                    });
-
-                    form3 && form3.set({
-                        postage,
-                        payment,
-                        published,
-                        postagefree_atleast
-                    });
-
-                    this.setData({
-                        published,
-                        selectedProducts: selectedProducts || [ ],
-                        selectedProductIds: selectedProductIds || [ ],
-                        cashcoupon_atleast: cashcoupon_atleast || null,
-                        cashcoupon_values: cashcoupon_values || null,
-                        fullreduce_atleast: fullreduce_atleast || null,
-                        fullreduce_values: fullreduce_values || null,
-                        hasBeenPassStart: new Date( ).getTime( ) > start_date,
-                        canBeEnd: dealDate( end_date ) === dealDate( new Date( ).getTime( ))
-                    });
-
-                },
-                fail: ( ) => {
-                    wx.showToast({
-                        icon: 'none',
-                        title: '获取行程错误',
-                    });
-                },
-                complete: ( ) => {
-                    wx.hideLoading({ });
+                  
+                        const dealDate = timeStamp => {
+                            const d = new Date( timeStamp );
+                            const year = d.getFullYear( );
+                            const month = d.getMonth( ) + 1;
+                            const date = d.getDate( );
+                            return `${year}-${String( month ).length > 1 ? month : '0' + month}-${String( date ).length > 1 ? date : '0' + date}`;
+                        }
+    
+                        const form1 = this.selectComponent('#form1');
+                        const form2 = this.selectComponent('#form2');
+                        const form3 = this.selectComponent('#form3');
+    
+                        form1 && form1.set({
+                            title,
+                            destination,
+                            end_date: dealDate( end_date ),
+                            start_date: dealDate( start_date )
+                        });
+    
+                        form2 && form2.set({
+                            reduce_price
+                        });
+    
+                        form3 && form3.set({
+                            postage,
+                            payment,
+                            published,
+                            postagefree_atleast
+                        });
+    
+                        this.setData({
+                            published,
+                            selectedProducts: selectedProducts || [ ],
+                            selectedProductIds: selectedProductIds || [ ],
+                            cashcoupon_atleast: cashcoupon_atleast || null,
+                            cashcoupon_values: cashcoupon_values || null,
+                            fullreduce_atleast: fullreduce_atleast || null,
+                            fullreduce_values: fullreduce_values || null,
+                            hasBeenPassStart: new Date( ).getTime( ) > start_date,
+                            canBeEnd: dealDate( end_date ) === dealDate( new Date( ).getTime( ))
+                        });
+                        
                 }
             });
+ 
         },
 
         /** 拉取数据字典 */
@@ -565,35 +558,18 @@ Component({
                 });
             }
 
-            wx.showLoading({
-                title: tid ? '更新中...' : '创建中..',
-            });
-
-            wx.cloud.callFunction({
-                name: 'api-trip-edit',
-                data: {
-                    data: tripDetail,
-                },
+            http({
+                data: tripDetail,
+                errMsg: '加载失败，请重试',
+                loadingMsg: tid ? '更新中...' : '创建中..',
+                url: `trip_edit`,
                 success: res => {
-                    if ( res.result.status === 200 ) {
+                    const { status, data } = res;
+                    if ( status === 200 ) {
                         wx.showToast({
                             title: tid ? '更新成功' : '创建成功！'
                         });
-                    } else {
-                        wx.showToast({
-                            icon: 'none',
-                            title: res.result.message
-                        });
                     }
-                },
-                fail: ( ) => {
-                    wx.showToast({
-                        icon: 'none',
-                        title: tid ? '更新失败' : '创建失败',
-                    });
-                },
-                complete: ( ) => {
-                    wx.hideLoading({ });
                 }
             });
 
