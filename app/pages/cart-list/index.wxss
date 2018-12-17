@@ -15,6 +15,10 @@
 
 .p-cart-list {
     height: 100vh;
+    display: flex;
+    padding-bottom: 210rpx;
+    box-sizing: border-box;
+    flex-direction: column;
 }
 
 .pcl-info-block {
@@ -37,8 +41,10 @@
 }
 
 .pcl-cart-like-block {
-    height: 970rpx;
+    /* height: 970rpx; */
+    flex: 1;
     background: #fff;
+    overflow-y: scroll;
     box-sizing: border-box;
 }
 
@@ -125,7 +131,7 @@
 
 .pcl-cart-item-info {
     color: #ff5777;
-    font-size: 28rpx;
+    font-size: 22rpx;
     margin-bottom: 8rpx;
 }
 

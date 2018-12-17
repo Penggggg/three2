@@ -89,7 +89,10 @@ Page({
                                 stock,
                                 price,
                                 groupPrice,
-                                img: detail.img[ 0 ]
+                                img: detail.img[ 0 ],
+                                outOfStock: stock === 0,
+                                // 团购差价
+                                groupPriceGap: groupPrice ? Math.floor( price - groupPrice ) : 0
                             }
                             current = decorateCurrent( current );
                         } else {
@@ -110,6 +113,7 @@ Page({
                         // sku有可能被删除，当sku被删除时，要显示“请重选商品规格”
                         if ( currentStandard ) {
                             const { name, price, img, stock, groupPrice } = currentStandard;
+
                             current = {
                                 img,
                                 price,
@@ -117,6 +121,9 @@ Page({
                                 groupPrice,
                                 standardName: name,
                                 sid: cart.standard_id,
+                                outOfStock: stock === 0,
+                                // 团购差价
+                                groupPriceGap: groupPrice ? Math.floor( price - groupPrice ) : 0
                             };
                             current = decorateCurrent( current );
                         } else {
@@ -248,7 +255,7 @@ Page({
     /** 展开sku */
     toggleSku({ currentTarget }) {
         
-        if ( this.data.isInDelete ) {
+        if ( this.data.isInDelete ||  currentTarget.dataset.cart.current.outOfStock ) {
             return; 
         }
         

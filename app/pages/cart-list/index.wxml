@@ -70,7 +70,7 @@
                         class="pcl-cart-item-radio"
                         checked="{{ item.selected }}"
                         catch:change="toggleSelectCart"
-                        disabled="{{ !isInDelete && ( item.current.hasBeenDelete || !item.visiable )}}"
+                        disabled="{{ !isInDelete && ( item.current.hasBeenDelete || !item.visiable || item.current.outOfStock )}}"
                     />
 
                     <view
@@ -99,10 +99,35 @@
                                 立即购买<text class="pcl-text-red">自动拼团</text>
                             </view> -->
 
+                            <!-- 库存不足信息 -->
+                            <view
+                                class="pcl-cart-item-info grey"
+                                wx:if="{{ item.current.outOfStock }}"
+                            >
+                                赞无货存，请联系群主!
+                            </view>
+
+                            <!-- 库存变动信息 -->
+                            <view
+                                class="pcl-cart-item-info grey"
+                                wx:if="{{ item.current.stock && item.current.stock < item.current.count }}"
+                            >
+                                仅剩<text class="pcl-text-red">{{ item.current.stock }}件！</text>
+                            </view>
+
+                            <!-- 拼团价格信息 -->
+                            <view
+                                class="pcl-cart-item-info grey"
+                                wx:if="{{ item.current.groupPriceGap }}"
+                            >
+                                成功拼团<text class="pcl-text-red">立减{{ item.current.groupPriceGap }}元！</text>
+                            </view>
+
+
                             <!-- 优惠信息 -->
                             <view
                                 class="pcl-cart-item-info grey"
-                                wx:if="{{ !(item.current.hasBeenDelete) && ( item.visiable ) && (item.current.price < item.current.lastPrice) }}"
+                                wx:if="{{ !(item.current.hasBeenDelete) && ( item.visiable ) && ( !item.current.outOfStock ) && (item.current.price < item.current.lastPrice) }}"
                             >
                                 该商品<text class="pcl-text-red">降价了{{ item.current.lastPrice - item.current.price }}元！</text>
                             </view>
@@ -140,7 +165,6 @@
 
                             <!-- 价格、数量 -->
                             <view
-                                wx:if="{{ !(item.current.hasBeenDelete) && item.visiable }}"
                                 class="pcl-cart-item-price-block"
                             >
                                 <view>
@@ -179,7 +203,7 @@
                                     data-cart="{{ item }}"
                                     class="pcl-counter"
                                     catch:tap="toggleSku"
-                                    wx:if="{{ !(item.current.hasBeenDelete) }}"
+                                    wx:if="{{ !(item.current.hasBeenDelete) && item.visiable && !item.current.outOfStock }}"
                                 >
                                     <text class="pcl-counter-opt del">-</text>
                                     {{ item.current.count$ }}

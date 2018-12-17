@@ -48,7 +48,8 @@ export const main = async ( event, context ) => {
      *          tid, 
      *          pid,
      *          sid,
-     *          count
+     *          count,
+     *          stock
      *      }[ ]
      *      * 型号已被删除 / 商品已下架
      *      hasBeenDelete: {
