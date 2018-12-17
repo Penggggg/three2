@@ -1,3 +1,4 @@
+const { http } = require('../../util/http.js');
 const { delayeringGood } = require('../../util/goods.js');
 
 // app/pages/trip-enter/index.js
@@ -29,27 +30,17 @@ Page({
         const { loaded } = this.data;
         if ( loaded ) { return; }
 
-        wx.showLoading({
-            title: '加载中...',
-        });
-
-        const getError = ( ) => wx.showToast({
-            icon: 'none',
-            title: '加载行程错误，请重试',
-        });
-
-        wx.cloud.callFunction({
+        http({
             data: { },
-            name: 'api-trip-enter',
+            errMsg: '加载失败，请重试',
+            loadingMsg: '加载中...',
+            url: `trip_enter`,
             success: res => {
-                const { status, data } = res.result;
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
                 const current = data[ 0 ];
                 const next = data[ 1 ];
-
-                if ( status !== 200 ) {
-                    return getError( );
-                }
-                
                 this.setData({
                     loaded: true,
                     recommendGoods: current? current.products.map( delayeringGood ) : [ ],
@@ -77,12 +68,9 @@ Page({
                     });
                 }
 
-            },
-            fail: err => getError( ),
-            complete: ( ) => {
-                wx.hideLoading({ });
             }
         });
+
     },
 
     /** 拉取商品销量排行榜 */

@@ -540,7 +540,7 @@ Page({
     fetchTrip( ) {
         http({
             data: { },
-            url: `api-trip-enter`,
+            url: `trip_enter`,
             success: res => {
                 if ( res.status === 200 ) {
                     this.setData({

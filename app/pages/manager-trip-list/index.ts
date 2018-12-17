@@ -1,3 +1,6 @@
+
+import { http } from '../../util/http';
+
 // app/pages/manager-goods-detail/index.js
 Page({
 
@@ -51,18 +54,17 @@ Page({
             loadingList: true
         });
 
-        wx.showLoading({
-            title: '加载中...',
-        });
-
-        wx.cloud.callFunction({
-            name: 'api-trip-list',
+        http({
             data: {
                 page: this.data.page + 1,
                 title: this.data.search
             },
-            success: (res: any) => {
-                const { status, data } = res.result;
+            errMsg: '加载失败，请重试',
+            loadingMsg: '加载中...',
+            url: `trip_list`,
+            success: res => {
+                const { status, data } = res;
+                
                 if ( status === 200 ) {
                     const { page, totalPage, search } = data;
                     
@@ -92,19 +94,6 @@ Page({
                 this.setData!({
                     loadingList: false
                 });
-            },
-            fail: ( ) => {
-                wx.showToast({
-                    icon: 'none',
-                    title: '获取行程错误',
-                });
-                
-                this.setData!({
-                    loadingList: false
-                });
-            },
-            complete: ( ) => {
-                wx.hideLoading({ });
             }
         });
     },

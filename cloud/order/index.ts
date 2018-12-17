@@ -65,8 +65,10 @@ export const main = async ( event, context ) => {
             
             const { from, orders } = event.data;
             const trips$ = await cloud.callFunction({
-                data: { },
-                name: 'api-trip-enter'
+                data: {
+                    $url: 'enter'
+                },
+                name: 'trip'
             });
     
             // 1、判断有没有可用行程
