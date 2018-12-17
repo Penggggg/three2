@@ -25,36 +25,115 @@ export const main = async ( event, context ) => {
 
     /**
      * @description
-     * 判断请求的sid + tid + pid数组，返回不能进行购买的数组
+     * 判断请求的sid + tid + pid + count数组，返回不能购买的商品列表（清单里面买不到、买不全）、货全不足的商品（返回最新货存）
      * -------- 请求 ----------
      * {
      *    list: { 
      *       tid, 
      *       pid,
-     *       sid
+     *       sid,
+     *       count
      *    }[ ]
      * }
      * -------- 返回 ----------
-     * 同上
+     * {
+     *      * 买不到
+     *      cannotBuy: { 
+     *          tid, 
+     *          pid,
+     *          sid
+     *      }[ ]
+     *      * 货存不足
+     *       lowStock: { 
+     *          tid, 
+     *          pid,
+     *          sid,
+     *          count
+     *      }[ ]
+     *      * 型号已被删除 / 商品已下架
+     *      hasBeenDelete: {
+     *          tid, 
+     *          pid,
+     *          sid
+     *      }[ ]
+     * }
      */
     app.router('findCannotBuy', async( ctx, next ) => {
         try {
 
-            const finding$: any = await Promise.all( event.data.list.map( i => {
+            // 不能购买的商品列表（清单里面买不到、买不全）
+            const findings$: any = await Promise.all( event.data.list.map( i => {
                 return find$({
                     tid: i.tid,
                     pid: i.pid,
                     sid: i.sid,
                     status: _.or( _.eq('2'), _.eq('3'))
-                }, db, ctx );
-            }));
+                }, db, ctx )
+            }))
 
-            if ( finding$.some( x => x.status !== 200 )) {
+            if ( findings$.some( x => x.status !== 200 )) {
                 throw '查询购物清单错误';
             }
 
+            // 查询商品详情、或者型号详情
+            const goodDetails$: any = await Promise.all( event.data.list.map( i => {
+
+                if ( !!i.sid ) {
+                    return db.collection('standards')
+                        .where({
+                            _id: i.sid
+                        })
+                        .get( )
+                } else {
+                    return db.collection('goods')
+                        .where({
+                            _id: i.pid
+                        })
+                        .get( )
+                }
+
+            }));
+           
+            const goods = goodDetails$.map( x => x.data[ 0 ]).filter( y => !!y ).filter( z => !z.pid );
+            const standards = goodDetails$.map( x => x.data[ 0 ]).filter( y => !!y ).filter( z => !!z.pid );
+
+            // 库存不足
+            let lowStock: any = [ ];
+
+            // 被删除
+            let hasBeenDelete: any = [ ];
+
+            event.data.list.map( i => {
+                // 型号
+                if ( !!i.sid ) {
+                    const standard = standards.find( x => x._id === i.sid && x.pid === i.pid );
+                    if ( !standard ) {
+                        hasBeenDelete.push( i );
+                    } else if ( standard.stock !== undefined &&  standard.stock < i.count ) {
+                        lowStock.push( Object.assign({ }, i, {
+                            stock: standard.stock
+                        }));
+                    }
+                // 主体商品
+                } else {
+                    const good = goods.find( x => x._id === i.pid );
+                    if ( !good || ( !!good && !good.visiable )) {
+                        hasBeenDelete.push( i )
+                    } else if ( good.stock !== undefined &&  good.stock < i.count ) {
+                        lowStock.push( Object.assign({ }, i, {
+                            stock: good.stock
+                        }));
+                    }
+
+                }
+            });
+
             return ctx.body = {
-                data: finding$.map( x => x.data[ 0 ]).filter( y => !!y ),
+                data: {
+                    lowStock,
+                    hasBeenDelete,
+                    cannotBuy: findings$.map( x => x.data[ 0 ]).filter( y => !!y )
+                },
                 status: 200
             }
 

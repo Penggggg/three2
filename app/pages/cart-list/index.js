@@ -54,7 +54,7 @@ Page({
             success: res => {
      
                 const { status, data } = res;
-
+                
                 if ( status !== 200 ) { return; }
 
                 // 处理：计算当前选择的sku，并设置为current
@@ -64,12 +64,14 @@ Page({
                     const { cart, detail } = x;
 
                     // 为当前sku注入一些公共属性
+                    // 数量使用 库存、所选数量的最小值
                     const decorateCurrent = current => Object.assign({ }, current, {
                         pid: detail._id,
                         title: detail.title,
                         limit: detail.limit,
                         // 当前已选数量
                         count: cart.count,
+                        count$: current.stock && current.stock < cart.count ? current.stock : cart.count,
                         // 之前选中时候的价格
                         lastPrice: cart.current_price
                     });
@@ -140,6 +142,8 @@ Page({
                     cartList: dealed,
                     hasInitCart: true
                 });
+
+                console.log( dealed )
 
                 this.calculateSum( );
             }
@@ -264,7 +268,7 @@ Page({
                 sid: null,
                 limit,
                 // 加入已有计数
-                count: current.hasBeenDelete ? 1 : cart.count,
+                count: current.hasBeenDelete ? 1 : current.count$,
                 // 购物车id
                 cart_id: cart._id,
                 canSelect: stock !== undefined && stock > 0
@@ -281,7 +285,7 @@ Page({
                 price: x.price,
                 limit: x.limit,
                 // 加入已有计数
-                count: current.hasBeenDelete ? 1 : cart.count,
+                count: current.hasBeenDelete ? 1 : current.count$,
                 // 购物车id
                 cart_id: cart._id,
                 canSelect: x.stock !== undefined && x.stock > 0
@@ -428,10 +432,11 @@ Page({
                 const selectedCheck = selectCartIdList.map( cid => {
                     const temp = cartList.find( x => x.cart._id === cid );
                     if ( temp ) {
-                        const { pid, sid } = temp.current;
+                        const { pid, sid, count } = temp.current;
                         return {
                             sid,
                             pid,
+                            count,
                             tid: trip._id
                         }
                     }
@@ -439,7 +444,10 @@ Page({
                 }).filter( x => !!x );
 
                 
-                // 判断在该行程购物清单，这些商品是否存在 买不全、买不到
+                /**
+                 * 判断在购物清单，这些商品是否存在 买不全、买不到
+                 * ! 或货存不足
+                 */
                 http({
                     data: {
                         list: selectedCheck
@@ -453,23 +461,35 @@ Page({
                         const cannotBuy = [ ];
                         // 该期可以买的商品
                         const canBuy = [ ];
+                        // 货存不足的商品
+                        const lowStock = [ ];
 
-                        this.data.cartList.map( cart => {
-                            if ( data.find( y => y.pid === cart.current.pid && y.sid === cart.current.sid )) {
-                                cannotBuy.push( cart );
-                            } else {
-                                canBuy.push( cart );
-                            }
-                        });
+                        // this.data.cartList.map( cart => {
+                        //     if ( data.cannotBuy.find( y => y.pid === cart.current.pid && y.sid === cart.current.sid )) {
+                        //         cannotBuy.push( cart );
+                        //     } 
+                        // });
+
+                        // 如果全都买不到、买不全，则提示
+                        // if ( cannotBuy.length === this.data.cartList.length ) {
+                        //     wx.showToast({
+                        //         icon: 'none',
+                        //         title: '商品火爆，暂时缺货！'
+                        //     });
+                        //     return this.fetchList( );
+                        // }
+
+                        console.log('...', data );
+                        return;
 
                         // 计算需要交的订金
                         const allDepositPrice = canBuy.reduce(( x, y ) => {
-                            return x + y.current.count * ( y.detail.depositPrice || 0 );
+                            return x + y.current.count$ * ( y.detail.depositPrice || 0 );
                         }, 0 );
 
                         // 计算需要交的
                         const allPrice = canBuy.reduce(( x, y ) => {
-                            return x + y.current.count * y.current.price;
+                            return x + y.current.count$ * y.current.price;
                         }, 0 );
                         
                         // 发起支付

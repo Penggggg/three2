@@ -14,6 +14,7 @@ export const main = async ( event, context ) => {
 
     const app = new TcbRouter({ event });
 
+    /** 数据字典 */
     app.router('dic', async( ctx, next ) => {
         try {
 
@@ -46,6 +47,7 @@ export const main = async ( event, context ) => {
         }
     });
 
+    /** 微信用户信息存储 */
     app.router('userEdit', async( ctx, next ) => {
         try {
             console.log( event );

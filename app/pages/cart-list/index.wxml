@@ -182,7 +182,7 @@
                                     wx:if="{{ !(item.current.hasBeenDelete) }}"
                                 >
                                     <text class="pcl-counter-opt del">-</text>
-                                    {{ item.current.count }}
+                                    {{ item.current.count$ }}
                                     <text class="pcl-counter-opt add">+</text>
                                 </view>
                             </view>
