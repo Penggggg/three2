@@ -136,7 +136,7 @@ Page({
                     });
                 });
                 
-       
+                console.log( dealed );
                 this.setData({
                     cartList: dealed,
                     hasInitCart: true
@@ -448,16 +448,12 @@ Page({
         const { cartList, selectCartIdList, trip } = this.data;
         if ( selectCartIdList.length === 0 ) { return; }
 
-        // 判断是否没有最新行程、最新行程是否被关闭
-        if ( !trip || ( !!trip && trip.isClosed )) {
-
-        }
-
+        // 判断是否没有最新行程
         if ( !trip ) {
             return wx.showToast({
                 icon: 'none',
                 title: '暂无行程计划，暂时不能购买～'
-            })
+            });
         }
 
         // 地址选择
@@ -465,42 +461,113 @@ Page({
             success: res => {
                 
                 const { userName, provinceName, cityName, countyName, detailInfo, postalCode, telNumber } = res;
-                const selected = selectCartIdList.map( cid => {
 
+                // 订单商品简略
+                const selectedCheck = selectCartIdList.map( cid => {
                     const temp = cartList.find( x => x.cart._id === cid );
                     if ( temp ) {
-                        const { current } = temp;
-                        const { pid, price, img, sid, count, groupPrice } = current;
+                        const { pid, sid } = temp.current;
                         return {
                             sid,
                             pid,
-                            price,
-                            count,
-                            desc: '',
-                            img: [ img ],
-                            type: 'NORMAL',
-                            group_price: groupPrice,
-                            address: {
-                                name: userName,
-                                postalcode: postalCode,
-                                phone: telNumber,
-                                detail: `${provinceName}${cityName}${countyName}${detailInfo}`
-                            }
+                            tid: trip._id
                         }
                     }
                     return null; 
-                });
+                }).filter( x => !!x );
 
+                
+                // 判断在该行程购物清单，这些商品是否存在 买不全、买不到，不存在的话，则创建、新增购物清单
                 http({
                     data: {
-                        from: 'cart',
-                        orders: selected
+                        list: selectedCheck
                     },
-                    url: `order_create`,
+                    url: `shopping-list_findCannotBuy`,
                     success: res => {
-                        console.log( '...', res )
+                        const { status, data } = res;
+                        if ( status !== 200 ) { return; }
+
+                        // 该期行程买不到的商品，
+                        const cannotBuy = [ ];
+                        // 该期可以买的商品
+                        const canBuy = [ ];
+
+                        this.data.cartList.map( cart => {
+                            if ( data.find( y => y.pid === cart.current.pid && y.sid === cart.current.sid )) {
+                                cannotBuy.push( cart );
+                            } else {
+                                canBuy.push( cart );
+                            }
+                        });
+
+                        // 计算需要交的订金
+                        const allDepositPrice = canBuy.reduce(( x, y ) => {
+                            return x + y.current.count * ( y.detail.depositPrice || 0 );
+                        }, 0 );
+
+                        // 计算需要交的
+                        const allPrice = canBuy.reduce(( x, y ) => {
+                            return x + y.current.count * y.current.price;
+                        }, 0 );
+                        
+                        // 判断支付对象：0: 新客付订金/旧客免订金;1: 所有人付定金; 2: 所有人免定金; 3: 所有人付全额
+                        const { payment } = this.data.trip
+                        if ( payment !== '2' ) {
+
+                        }
+
+                        // 发起支付
+
+                        // 创建订单
+
+                        /**
+                         * ! 提示无法加入订单的商品
+                         * ! 重新刷新购物车，因为成功购物车的商品，这个商品的购物车会被删除掉
+                         */
                     }
                 });
+
+                
+
+
+                return; 
+
+                // 订单商品详细
+                // const selected = selectCartIdList.map( cid => {
+                //     const temp = cartList.find( x => x.cart._id === cid );
+                //     if ( temp ) {
+                //         const { current } = temp;
+                //         const { pid, price, img, sid, count, groupPrice } = current;
+                //         return {
+                //             sid,
+                //             pid,
+                //             price,
+                //             count,
+                //             desc: '',
+                //             img: [ img ],
+                //             type: 'NORMAL',
+                //             group_price: groupPrice,
+                //             address: {
+                //                 name: userName,
+                //                 postalcode: postalCode,
+                //                 phone: telNumber,
+                //                 detail: `${provinceName}${cityName}${countyName}${detailInfo}`
+                //             }
+                //         }
+                //     }
+                //     return null; 
+                // }).filter( x => !!x );
+
+                // http({
+                //     data: {
+                //         from: 'cart',
+                //         orders: selected
+                //     },
+                //     url: `order_create`,
+                //     success: res => {
+                //         console.log( '...', res )
+                //     }
+                // });
 
             }
         });

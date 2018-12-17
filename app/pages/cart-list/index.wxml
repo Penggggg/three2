@@ -208,10 +208,10 @@
 
                 </view>
 
-                <!-- 省钱icon -->
+                <!-- 拼团icon 代表这趟行程有人购买 -->
                 <view
                     class="pcl-cart-item-icon"
-                    wx:if="{{ !item.current.hasBeenDelete && item.visiable }}"
+                    wx:if="{{ !item.current.hasBeenDelete && item.visiable && item.current.groupPrice }}"
                 >
                     可拼团
                 </view>

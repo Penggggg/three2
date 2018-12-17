@@ -1,7 +1,7 @@
 /**
  * @param 
  */
-const find$ = async( openid, data: { address?: string, username?: string, phone?: string }, db: DB.Database, ctx ) => {
+const find$ = async( data: { tid?: string, pid?: string, sid?: string, status?: any }, db: DB.Database, ctx ) => {
     try {
         
         let filterData = { };
@@ -11,9 +11,8 @@ const find$ = async( openid, data: { address?: string, username?: string, phone?
             }
         });
 
-        const data$ = await db.collection('address')
+        const data$ = await db.collection('shopping-list')
             .where({
-                openid,
                 ...filterData
             })
             .get( );
