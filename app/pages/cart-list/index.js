@@ -48,12 +48,12 @@ Page({
             loading: true
         });
 
-        wx.cloud.callFunction({
+        http({
             data: { },
-            name: 'api-cart-list',
+            url: `cart_list`,
             success: res => {
-                wx.hideLoading({ });
-                const { status, data } = res.result;
+     
+                const { status, data } = res;
 
                 if ( status !== 200 ) { return; }
 
@@ -136,27 +136,15 @@ Page({
                     });
                 });
                 
-                console.log( dealed );
                 this.setData({
                     cartList: dealed,
                     hasInitCart: true
                 });
 
                 this.calculateSum( );
-            },
-            fail: err => {
-                wx.showToast({
-                    icon: 'none',
-                    title: '加载购物车错误',
-                });
-                wx.hideLoading({ });
-            },
-            complete: ( ) => {
-                this.setData({
-                    loading: false
-                });
             }
-        })
+        });
+
     },
 
     /**  选中、取消选中某个商品 */
@@ -338,34 +326,18 @@ Page({
             standard_id: sid,
             current_price: price
         };
-        
-        // 更新当前cart
-        wx.showLoading({
-            title: '更新中...',
-        });
 
-        wx.cloud.callFunction({
-            name: 'api-cart-update',
+        http({
             data: updateItem,
+            errMsg: '更新失败，请重试',
+            loadingMsg: '更新中...',
+            url: `cart_update`,
             success: res => {
-                wx.hideLoading({ });
-                const { status } = res.result;
-    
-                if ( status !== 200 ) { return; }
-                wx.showToast({
-                    title: '更新成功'
-                });
-                this.fetchList( );
-            },
-            fail: err => {
-                wx.showToast({
-                    icon: 'none',
-                    title: '更新失败',
-                });
-                wx.hideLoading({ });
+                if ( res.status === 200 ) {
+                    this.fetchList( );
+                }
             }
-        })
-
+        });
     },
 
     /** 点击管理，进入删除状态 */
@@ -387,17 +359,15 @@ Page({
             success: res => {
                 if (res.confirm) {
 
-                    wx.showLoading({
-                        title: '加载中...',
-                    });
-
-                    wx.cloud.callFunction({
+                    http({
                         data: {
                             ids: selectCartIdList.join(',')
                         },
-                        name: 'api-cart-delete',
+                        errMsg: '删除失败，请重试',
+                        loadingMsg: '删除中...',
+                        url: `cart_delete`,
                         success: res => {
-                            const { status, data } = res.result;
+                            const { status, } = res;
                             if ( status !== 200 ) { return; }
                             
                             wx.showToast({
@@ -408,17 +378,9 @@ Page({
                             this.setData({
                                 isInDelete: false
                             });
-                        },
-                        fail: err => {
-                            wx.showToast({
-                                icon: 'none',
-                                title: '删除购物车失败',
-                            });
-                        },
-                        complete: ( ) => {
-                            wx.hideLoading({ });
                         }
                     });
+
                 }
             }
         });

@@ -1,4 +1,5 @@
 // container/goods-detail-bar/index.js
+const { http } = require('../../util/http.js');
 
 Component({
 
@@ -144,32 +145,21 @@ Component({
         putCart( item ) {
             
             const that = this;
-            wx.showLoading({
-                title: '添加中...',
+
+            http({
+                data: item,
+                errMsg: '添加失败，请重试',
+                loadingMsg: '添加中...',
+                url: `cart_edit`,
+                success: res => {
+                    if ( res.status === 200 ) {
+                        wx.showToast({
+                            title: '添加成功'
+                        });
+                    }
+                }
             });
 
-            wx.cloud.callFunction({
-                name: 'api-cart-edit',
-                data: {
-                    data: item
-                },
-                success: res => {
-                    wx.hideLoading({ });
-                    const { status } = res.result;
-        
-                    if ( status !== 200 ) { return; }
-                    wx.showToast({
-                        title: '添加成功'
-                    });
-                },
-                fail: err => {
-                    wx.showToast({
-                        icon: 'none',
-                        title: '添加失败',
-                    });
-                    wx.hideLoading({ });
-                }
-            })
         },
         /** 立即购买 */
         buy( item ) {
