@@ -1,5 +1,6 @@
-// app/pages/manager-goods-list/index.js
 
+// app/pages/manager-goods-list/index.js
+import { http } from '../../util/http.js';
 import { computed } from '../../lib/vuefy/index.js';
 
 Page({
@@ -63,24 +64,19 @@ Page({
 
     /** 拉取数据字典 */
     fetchDic( ) {
-        const that = this;
-        wx.cloud.callFunction({
-            name: 'api-dic',
+        http({
             data: {
-                dicName: 'goods_category',
+              dicName: 'goods_category',
             },
-            success: function( res: any ) {
-                that.setData!({
-                    dic: res.result
-                });
-            },
-            fail: function( ) {
-                wx.showToast({
-                    icon: 'none',
-                    title: '获取数据错误',
-                })
+            errMsg: '加载失败，请重试',
+            url: `common_dic`,
+            success: res => {
+              if ( res.status !== 200 ) { return; }
+              this.setData!({
+                dic: res.data
+              });
             }
-        })
+        });
     },
 
     /** 预览图片 */

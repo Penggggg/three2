@@ -1,3 +1,4 @@
+const { http } = require('../../../util/http.js');
 // container/form/goods-detail/index.js
 /**
  * ! 数值之间的关系校验，如：团购价必须大于原价
@@ -204,24 +205,19 @@ Component({
 
     /** 拉取数据字典 */
     fetchDic( ) {
-      const that = this;
-      wx.cloud.callFunction({
-        name: 'api-dic',
-        data: {
-          dicName: 'goods_category',
-        },
-        success: function( res ) {
-          that.setData({
-            dic: res.result
-          });
-        },
-        fail: function( ) {
-          wx.showToast({
-            icon: 'none',
-            title: '获取数据错误',
-          })
-        }
-      })
+      http({
+          data: {
+            dicName: 'goods_category',
+          },
+          errMsg: '加载失败，请重试',
+          url: `common_dic`,
+          success: res => {
+            if ( res.status !== 200 ) { return; }
+            this.setData({
+              dic: res.data
+            });
+          }
+      });
     },
 
     /** 开启关闭规格信息 */

@@ -33,7 +33,6 @@ export const main = async ( event, context ) => {
 
     const app = new TcbRouter({ event });
 
-
     app.router('enter', async( ctx, next ) => {
         try {
 

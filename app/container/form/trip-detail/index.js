@@ -297,29 +297,19 @@ Component({
 
         /** 拉取数据字典 */
         fetchDic( ) {
-            wx.cloud.callFunction({
-                name: 'api-dic',
+            http({
                 data: {
-                    dicName: 'payment,postage',
+                  dicName: 'payment,postage',
                 },
+                errMsg: '加载失败，请重试',
+                url: `common_dic`,
                 success: res => {
-                    let temp = { };
-                    Object.keys( res.result ).map( dicKey => {
-                        temp = Object.assign({ }, temp, {
-                            [ dicKey ]: res.result[ dicKey]
-                        });
-                    });
-                    this.setData({
-                        dic: temp
-                    });
-                },
-                fail: function( ) {
-                    wx.showToast({
-                        icon: 'none',
-                        title: '获取数据错误',
-                    });
+                  if ( res.status !== 200 ) { return; }
+                  this.setData({
+                    dic: res.data
+                  });
                 }
-            })
+            });
         },
 
         /** 展开/关闭商品选择 */
