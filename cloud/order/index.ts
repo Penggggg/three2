@@ -80,8 +80,6 @@ export const main = async ( event, context ) => {
             // 最新可用行程
             const trip = trips$.result.data[ 0 ];
 
-            // 2、判断在该行程购物清单，这些商品是否存在已经买不全、买不到，不是的话，则创建行程购物清单
-
             /**
              * ! 订单主人的openid
              */
@@ -97,7 +95,7 @@ export const main = async ( event, context ) => {
                 }
             };
 
-            // 3、根据来源，整理地址id
+            // 2、根据来源，整理地址id
             // 订单来源：购物车
             if ( event.data.from === 'cart' ) {
                 openid = event.data.openId;
@@ -122,7 +120,7 @@ export const main = async ( event, context ) => {
             // 可用地址id
             const aid = addressid$.result.data;
 
-            // 4、批量创建订单，（过滤掉不能创建购物清单的商品）
+            // 3、批量创建订单，（过滤掉不能创建购物清单的商品）
             const temp = event.data.orders.map( meta => {
                 return Object.assign({ }, meta, {
                     aid,
@@ -132,9 +130,9 @@ export const main = async ( event, context ) => {
                 });
             });
 
-            // 5、批量加入或创建购物清单
+            // 4、批量加入或创建购物清单
 
-            // 6、批量删除已加入购物清单的购物车商品
+            // 5、批量删除已加入购物清单的购物车商品
     
             return ctx.body = {
                 status: 200,
