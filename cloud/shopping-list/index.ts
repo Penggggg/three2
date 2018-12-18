@@ -37,6 +37,12 @@ export const main = async ( event, context ) => {
      * }
      * -------- 返回 ----------
      * {
+     *      * 已购买( 风险单 )
+     *      hasBeenBuy: {
+     *          tid, 
+     *          pid,
+     *          sid
+     *      }[ ]
      *      * 买不到
      *      cannotBuy: { 
      *          tid, 
@@ -75,6 +81,16 @@ export const main = async ( event, context ) => {
             if ( findings$.some( x => x.status !== 200 )) {
                 throw '查询购物清单错误';
             }
+
+            // 已完成购买的商品列表
+            const hasBeenBuy$: any = await Promise.all( event.data.list.map( i => {
+                return find$({
+                    tid: i.tid,
+                    pid: i.pid,
+                    sid: i.sid,
+                    status: '1'
+                }, db, ctx )
+            }));
 
             // 查询商品详情、或者型号详情
             const goodDetails$: any = await Promise.all( event.data.list.map( i => {
@@ -133,7 +149,8 @@ export const main = async ( event, context ) => {
                 data: {
                     lowStock,
                     hasBeenDelete,
-                    cannotBuy: findings$.map( x => x.data[ 0 ]).filter( y => !!y )
+                    cannotBuy: findings$.map( x => x.data[ 0 ]).filter( y => !!y ),
+                    hasBeenBuy: hasBeenBuy$.map( x => x.data[ 0 ]).filter( y => !!y )
                 },
                 status: 200
             }

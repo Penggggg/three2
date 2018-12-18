@@ -463,30 +463,61 @@ Page({
                     success: res => {
                         const { status, data } = res;
                         if ( status !== 200 ) { return; }
+                        const { hasBeenBuy, cannotBuy, hasBeenDelete, lowStock } = data;
 
-                        // 该期行程买不到的商品，
-                        const cannotBuy = [ ];
-                        // 该期可以买的商品
-                        const canBuy = [ ];
-                        // 货存不足的商品
-                        const lowStock = [ ];
+                        console.log('...selectedCheck', selectedCheck );
+                        console.log('...', data )
 
-                        // this.data.cartList.map( cart => {
-                        //     if ( data.cannotBuy.find( y => y.pid === cart.current.pid && y.sid === cart.current.sid )) {
-                        //         cannotBuy.push( cart );
-                        //     } 
-                        // });
+                        /** 提示行程无货 */
+                        const cannotBuy$ = cannotBuy.map( x => {
+                            return this.data.cartList.find( y => ( y.current.pid === x.pid && y.current.sid === x.sid ) 
+                                || ( y.current.pid === x.pid && !y.current.sid && !x.sid ));
+                        });
+                        if ( cannotBuy.length > 0 ) {
+                            return wx.showModal({
+                                title: '提示',
+                                content: `火爆缺货！${cannotBuy$.map( x => `${x.current.title}${x.current.standardName}`).join('、')}暂时无货！`
+                            });
+                        }
 
-                        // 如果全都买不到、买不全，则提示
-                        // if ( cannotBuy.length === this.data.cartList.length ) {
-                        //     wx.showToast({
-                        //         icon: 'none',
-                        //         title: '商品火爆，暂时缺货！'
-                        //     });
-                        //     return this.fetchList( );
-                        // }
+                        /** 商品被删除 */
+                        const hasBeenDelete$ = hasBeenDelete.map( x => {
+                            return this.data.cartList.find( y => ( y.current.pid === x.pid && y.current.sid === x.sid )
+                                || ( y.current.pid === x.pid && !y.current.sid && !x.sid ));
+                        });
+                        if ( hasBeenDelete.length > 0 ) {
+                            return wx.showModal({
+                                title: '提示',
+                                content: `${hasBeenDelete$.map( x => `${x.current.title}${x.current.standardName}`).join('、')}已被删除，请重新选择！`
+                            });
+                        }
 
-                        console.log('...', data );
+                        /** 提示低库存 */
+                        const lowStock$ = lowStock.map( x => {
+                            return this.data.cartList.find( y => ( y.current.pid === x.pid && y.current.sid === x.sid )
+                                || ( y.current.pid === x.pid && !y.current.sid && !x.sid ))
+                        });
+                        if ( lowStock.length > 0 ) {
+                            return wx.showModal({
+                                title: '提示',
+                                content: `${lowStock$.map( x => `${x.current.title}${x.current.standardName}`).join('、')}货存不足，请重新选择！`
+                            });
+                        }
+
+                        /** 已经购买提示 */
+                        const hasBeenBuy$ = hasBeenBuy.map( x => {
+                            return this.data.cartList.find( y => ( y.current.pid === x.pid && y.current.sid === x.sid )
+                                || ( y.current.pid === x.pid && !y.current.sid && !x.sid ))
+                        });
+
+                        if ( hasBeenBuy.length > 0 ) {
+                            return wx.showToast({
+                                icon: 'none',
+                                duration: 3000,
+                                title: `群主已经买了${hasBeenBuy$.map( x => `${x.current.title}${x.current.standardName}`).join('、')}，不一定会返程购买，请联系群主！`
+                            });
+                        }
+                        
                         return;
 
                         // 计算需要交的订金
@@ -494,7 +525,7 @@ Page({
                             return x + y.current.count$ * ( y.detail.depositPrice || 0 );
                         }, 0 );
 
-                        // 计算需要交的
+                        // 计算需要交全款的
                         const allPrice = canBuy.reduce(( x, y ) => {
                             return x + y.current.count$ * y.current.price;
                         }, 0 );

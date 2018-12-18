@@ -537,7 +537,7 @@ Component({
     
             if ( !tid ) {
                 tripDetail = Object.assign({ }, tripDetail, {
-                    isClosed: flase,
+                    isClosed: false,
                     isPassed: false,
                     createTime: new Date( ).getTime( )
                 });

@@ -206,7 +206,7 @@
                                     wx:if="{{ !(item.current.hasBeenDelete) && item.visiable && !item.current.outOfStock }}"
                                 >
                                     <text class="pcl-counter-opt del">-</text>
-                                    {{ item.current.count$ }}
+                                    {{ item.current.count }}
                                     <text class="pcl-counter-opt add">+</text>
                                 </view>
                             </view>
