@@ -62,7 +62,8 @@ export const main = async ( event, context ) => {
      *          tid, 
      *          pid,
      *          sid
-     *      }[ ]
+     *      }[ ],
+     *      * 预付订单号列表
      * }
      */
     app.router('findCannotBuy', async( ctx, next ) => {
@@ -144,6 +145,8 @@ export const main = async ( event, context ) => {
 
                 }
             });
+
+            // 如果可以买，则创建预付订单
 
             return ctx.body = {
                 data: {

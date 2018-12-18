@@ -465,9 +465,6 @@ Page({
                         if ( status !== 200 ) { return; }
                         const { hasBeenBuy, cannotBuy, hasBeenDelete, lowStock } = data;
 
-                        console.log('...selectedCheck', selectedCheck );
-                        console.log('...', data )
-
                         /** 提示行程无货 */
                         const cannotBuy$ = cannotBuy.map( x => {
                             return this.data.cartList.find( y => ( y.current.pid === x.pid && y.current.sid === x.sid ) 
@@ -511,14 +508,14 @@ Page({
                         });
 
                         if ( hasBeenBuy.length > 0 ) {
-                            return wx.showToast({
+                            wx.showToast({
                                 icon: 'none',
                                 duration: 3000,
                                 title: `群主已经买了${hasBeenBuy$.map( x => `${x.current.title}${x.current.standardName}`).join('、')}，不一定会返程购买，请联系群主！`
                             });
                         }
                         
-                        return;
+                        return console.log('????');
 
                         // 计算需要交的订金
                         const allDepositPrice = canBuy.reduce(( x, y ) => {

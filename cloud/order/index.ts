@@ -19,7 +19,7 @@ const db: DB.Database = cloud.database( );
  * count,
  * price,
  * ! group_price (可为空)
- * type: 'custom' | 'normal' 自定义加单、普通加单
+ * type: 'custom' | 'normal' | 'pre' 自定义加单、普通加单、预订单
  * img: Array[ string ]
  * desc,
  * aid
@@ -27,9 +27,9 @@ const db: DB.Database = cloud.database( );
         * postalcode, 邮政
         * phone, 收获电话
         * address, 收获地址
- * base_status: 0,1,2,3,4 进行中（客户还可以调整自己的订单），已购买，已调整，已结算，已取消
- * pay_status: 0,1,2 未付款，已付订金，已付全款
- * deliver_status: 0,1 未发布，已发布、
+ * ! base_status: 0,1,2,3,4 进行中（客户还可以调整自己的订单），已购买，已调整，已结算，已取消
+ * ! pay_status: 0,1,2 未付款，已付订金，已付全款
+ * ! deliver_status: 0,1 未发布，已发布、
  */
 export const main = async ( event, context ) => {
 
