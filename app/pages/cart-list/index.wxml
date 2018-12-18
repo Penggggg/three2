@@ -13,7 +13,7 @@
                 close="{{ true }}"
                 show-icon="{{ true }}"
                 wx:if="{{ trip }}"
-                notice="{{ trip.title + '于' +  trip.start_date$ + '出发，请放心购买～' }}"
+                notice="{{ '【' + trip.title + '】' + '于' +  trip.start_date$ + '出发，请放心购买～' }}"
             />
 
             <view class="pcl-info-msg">

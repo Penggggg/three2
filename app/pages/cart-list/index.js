@@ -435,28 +435,39 @@ Page({
                 
                 const { userName, provinceName, cityName, countyName, detailInfo, postalCode, telNumber } = res;
 
-                // 订单商品简略
+                // 购物车商品
                 const selectedCheck = selectCartIdList.map( cid => {
                     const temp = cartList.find( x => x.cart._id === cid );
                     if ( temp ) {
-                        const { pid, sid, count } = temp.current;
+                        const { pid, sid, count, price, groupPrice, img } = temp.current;
                         return {
                             sid,
                             pid,
                             count,
-                            tid: trip._id
+                            price,
+                            img: [ img ],
+                            groupPrice,
+                            tid: trip._id,
+                            type: 'pre', // 预付类型订单
+                            cid: temp.cart._id,
+                            address: {
+                                username: userName,
+                                postalcode: postalCode,
+                                phone: telNumber,
+                                address: `${provinceName}${cityName}${countyName}${detailInfo}`
+                            }
                         }
                     }
                     return null; 
                 }).filter( x => !!x );
 
-                
                 /**
                  * 判断在购物清单，这些商品是否存在 买不全、买不到
                  * ! 或货存不足
                  */
                 http({
                     data: {
+                        tid: trip._id,
                         list: selectedCheck
                     },
                     url: `shopping-list_findCannotBuy`,
@@ -515,7 +526,8 @@ Page({
                             });
                         }
                         
-                        return console.log('????');
+
+                        return console.log('????', data );
 
                         // 计算需要交的订金
                         const allDepositPrice = canBuy.reduce(( x, y ) => {
@@ -527,7 +539,7 @@ Page({
                             return x + y.current.count$ * y.current.price;
                         }, 0 );
                         
-                        // 发起支付
+                        // 发起支付：类型为，订金支付、全款支付，然后更新所有预付订单号状态
                         // 判断支付对象：0: 新客付订金/旧客免订金;1: 所有人付定金; 2: 所有人免定金; 3: 所有人付全额
                         const { payment } = this.data.trip
                         if ( payment !== '2' ) {
@@ -555,6 +567,7 @@ Page({
                 //         const { current } = temp;
                 //         const { pid, price, img, sid, count, groupPrice } = current;
                 //         return {
+                //             tid: trip._id
                 //             cid,
                 //             sid,
                 //             pid,
@@ -564,12 +577,12 @@ Page({
                 //             img: [ img ],
                 //             type: 'NORMAL',
                 //             group_price: groupPrice,
-                //             address: {
-                //                 name: userName,
-                //                 postalcode: postalCode,
-                //                 phone: telNumber,
-                //                 detail: `${provinceName}${cityName}${countyName}${detailInfo}`
-                //             }
+                            // address: {
+                            //     name: userName,
+                            //     postalcode: postalCode,
+                            //     phone: telNumber,
+                            //     detail: `${provinceName}${cityName}${countyName}${detailInfo}`
+                            // }
                 //         }
                 //     }
                 //     return null; 

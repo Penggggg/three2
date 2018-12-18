@@ -28,12 +28,27 @@ export const main = async ( event, context ) => {
      * 判断请求的sid + tid + pid + count数组，返回不能购买的商品列表（清单里面买不到、买不全）、货全不足的商品（返回最新货存）
      * -------- 请求 ----------
      * {
+     *     tid: string
+     *!    openid?: string,
      *    list: { 
-     *       tid, 
-     *       pid,
-     *       sid,
-     *       count
-     *    }[ ]
+     *      tid
+*           cid
+*           sid
+*           pid
+*           price
+*           groupPrice
+*           count
+*           desc
+*           img
+*           type
+*           pay_status,
+*           address: {
+*              name,
+*              phone,
+*              detail,
+*              postalcode
+*           }
+     *     }[ ]
      * }
      * -------- 返回 ----------
      * {
@@ -63,11 +78,14 @@ export const main = async ( event, context ) => {
      *          pid,
      *          sid
      *      }[ ],
-     *      * 预付订单号列表
+     *      * 订单号列表
      * }
      */
     app.router('findCannotBuy', async( ctx, next ) => {
         try {
+
+            const { tid, list } = event.data;
+            const openId = event.data.openId || event.userInfo.openId;
 
             // 不能购买的商品列表（清单里面买不到、买不全）
             const findings$: any = await Promise.all( event.data.list.map( i => {
@@ -121,6 +139,12 @@ export const main = async ( event, context ) => {
             // 被删除
             let hasBeenDelete: any = [ ];
 
+            // 买不到
+            const cannotBuy = findings$.map( x => x.data[ 0 ]).filter( y => !!y );
+
+            // 已经被购买了（风险单）
+            const hasBeenBuy = hasBeenBuy$.map( x => x.data[ 0 ]).filter( y => !!y )
+
             event.data.list.map( i => {
                 // 型号
                 if ( !!i.sid ) {
@@ -146,14 +170,43 @@ export const main = async ( event, context ) => {
                 }
             });
 
-            // 如果可以买，则创建预付订单
+            let orders = [ ];
+            /**
+             * 如果可以购买
+             * ! 批量创建预付订单
+             */
+            if ( lowStock.length === 0 && cannotBuy.length === 0 && hasBeenDelete.length === 0 ) {
+                const reqData = {
+                    tid,
+                    openId,
+                    from: 'system',
+                    orders: event.data.list
+                }
+
+                const createOrder$ = await cloud.callFunction({
+                    data: {
+                        data: reqData,
+                        $url: 'create'
+                    },
+                    name: 'order'
+                });
+
+                if ( createOrder$.result.status !== 200 ) {
+                    return ctx.body = {
+                        status: 500,
+                        message: '创建预付订单失败！'
+                    };
+                }
+                orders = createOrder$.result.data;
+            }
 
             return ctx.body = {
                 data: {
                     lowStock,
                     hasBeenDelete,
-                    cannotBuy: findings$.map( x => x.data[ 0 ]).filter( y => !!y ),
-                    hasBeenBuy: hasBeenBuy$.map( x => x.data[ 0 ]).filter( y => !!y )
+                    cannotBuy,
+                    hasBeenBuy,
+                    orders
                 },
                 status: 200
             }
