@@ -1,4 +1,5 @@
 // container/product-selector/index.js
+const { http } = require('../../util/http.js');
 
 /**
  * @description 单个商品选择的组件
@@ -92,18 +93,15 @@ Component({
                 })
             }
 
-            wx.showLoading({
-                title: '加载中...',
-            });
-
-            wx.cloud.callFunction({
-                name: 'api-goods-list',
+            http({
                 data: {
                     page: 1,
                     title: search.replace(/\s+/g, "")
                 },
+                errMsg: '加载失败，请重试',
+                url: `good_list`,
                 success: res => {
-                    const { status, data } = res.result;
+                    const { status, data } = res;
                     if ( status !== 200 ) { return; }
 
                     const meta = data.data.map( x => {
@@ -159,18 +157,8 @@ Component({
                         selectedProduct: null,
                         selectedProductId: null
                     });
-                    
-                },
-                fail: function( ) {
-                    wx.showToast({
-                        icon: 'none',
-                        title: '获取数据错误',
-                    });
-                },
-                complete: ( ) => {
-                    wx.hideLoading({ });
+
                 }
-                
             });
         },
 

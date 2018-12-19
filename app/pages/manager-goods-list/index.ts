@@ -1,3 +1,5 @@
+import { http } from '../../util/http.js';
+
 // app/pages/manager-goods-list/index.js
 Page({
 
@@ -50,23 +52,22 @@ Page({
             loadingList: true
         });
 
-        wx.showLoading({
-            title: '加载中...',
-        });
-
-        wx.cloud.callFunction({
-            name: 'api-goods-list',
+        http({
             data: {
                 page: this.data.page + 1,
                 title: this.data.search
             },
-            success: function ( res: any ) {
-                const { status, data } = res.result;
+            url: `good_list`,
+            success: res => {
+                const { status, data } = res;
+         
                 if ( status === 200 ) {
                     const { page, totalPage, search } = data;
+
                     that.setData!({
                         page,
                         totalPage,
+                        loadingList: false,
                         lastSearch: search || '',
                         canLoadMore: totalPage > page
                     });
@@ -86,21 +87,8 @@ Page({
                     }
 
                 }
-                wx.hideLoading({ });
-                that.setData!({
-                    loadingList: false
-                });
-            },
-            fail: function( ) {
-                wx.showToast({
-                    icon: 'none',
-                    title: '获取数据错误',
-                });
-                wx.hideLoading({ });
-                that.setData!({
-                    loadingList: false
-                });
             }
+
         });
     },
   

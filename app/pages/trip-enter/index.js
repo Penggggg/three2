@@ -76,33 +76,19 @@ Page({
     /** 拉取商品销量排行榜 */
     fetchRank( ) {
      
-        wx.showLoading({
-            title: '加载中...',
-        });
-
-        const getError = ( ) => wx.showToast({
-            icon: 'none',
-            title: '加载排行榜错误，请重试',
-        });
-
-        wx.cloud.callFunction({
+        http({
             data: {
                 page: 1
             },
-            name: 'api-goods-rank',
+            errMsg: '加载排行榜错误，请重试',
+            url: `good_rank`,
             success: res => {
-                const { status, data } = res.result;
-                if ( status !== 200 ) {
-                    return getError( );
-                }
+                const { status, data } = res;
+            
                 this.setData({
                     rankGoods: data.data.map( delayeringGood ),
                     otherGoods: data.data.map( delayeringGood ).slice( 3 )
                 });
-            },
-            fail: err => getError( ),
-            complete: ( ) => {
-                wx.hideLoading({ });
             }
         });
     },
