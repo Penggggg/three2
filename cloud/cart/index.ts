@@ -35,17 +35,21 @@ export const main = async ( event, context ) => {
             const goodsDetails$ = await Promise.all( meta$.data.map( cart => {
                 return cloud.callFunction({
                     data: {
-                        _id: cart.pid
+                        data: {
+                            _id: cart.pid,
+                        },
+                        $url: 'detail'
                     },
-                    name: 'api-goods-detail'
+                    name: 'good'
                 }).then( res => {
+                    console.log('11111111', res )
                     return {
                         cart,
                         detail: res.result.data
                     }
                 })
             }));
-
+            console.log('2222222')
             return ctx.body = {
                 status: 200,
                 data: goodsDetails$

@@ -347,57 +347,44 @@ Component({
 
       const that = this;
       if ( !id ) { return; }
-      wx.showLoading({
-          title: '加载中...',
-      });
 
-      wx.cloud.callFunction({
-          name: 'api-goods-detail',
-          data: {
-              _id: this.data.pid
-          },
-          success: function ( res ) {
-              
-              const { status, data, } = res.result;
-              if ( status !== 200 ) { return; }
-              wx.hideLoading({ });
-              
-              const { title, detail, tag, category, img, fadePrice, price,
-                groupPrice, stock, standards, depositPrice, limit, visiable } = data;
+      http({
+        data: {
+            _id: id,
+        },
+        errMsg: '获取商品错误，请重试',
+        url: `good_detail`,
+        success: res => {
+            if ( res.status !== 200 ) { return; }
+            const { title, detail, tag, category, img, fadePrice, price,
+              groupPrice, stock, standards, depositPrice, limit, visiable } = res.data;
 
-              const form1 = that.selectComponent('#form1');
-              const form2 = that.selectComponent('#form2');
+            const form1 = that.selectComponent('#form1');
+            const form2 = that.selectComponent('#form2');
 
-              that.setData({
-                standards,
-                category,
-                hasBeenUploaded: img
-              });
+            that.setData({
+              standards,
+              category,
+              hasBeenUploaded: img
+            });
 
-              form1 && form1.set({
-                tag,
-                img,
-                title,
-                stock,
-                price,
-                detail,
-                category,
-                fadePrice,
-                groupPrice
-              });
+            form1 && form1.set({
+              tag,
+              img,
+              title,
+              stock,
+              price,
+              detail,
+              category,
+              fadePrice,
+              groupPrice
+            });
 
-              form2 && form2.set({
-                limit,
-                visiable,
-                depositPrice
-              })
-          },
-          fail: function( ) {
-              wx.showToast({
-                  icon: 'none',
-                  title: '获取数据错误',
-              });
-              wx.hideLoading({ });
+            form2 && form2.set({
+              limit,
+              visiable,
+              depositPrice
+            })
           }
       });
     },

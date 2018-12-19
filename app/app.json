@@ -1,11 +1,11 @@
 {
   "pages": [
+    "pages/trip-enter/index",
     "pages/cart-list/index",
-    "pages/manager-trip-list/index",
     "pages/manager-goods-list/index",
     "pages/manager-trip-detail/index",
+    "pages/manager-trip-list/index",
     "pages/manager-goods-detail/index",
-    "pages/trip-enter/index",
     "pages/index/index",
     "pages/goods-detail/index"
   ],
@@ -38,7 +38,7 @@
   },
   "window": {
     "navigationBarTextStyle": "white",
-    "navigationBarTitleText": "香港真品代购",
+    "navigationBarTitleText": "小香优选",
     "navigationBarBackgroundColor": "#ff5777"
   }
 }

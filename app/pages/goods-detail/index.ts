@@ -34,30 +34,18 @@ Page({
     
     /** 拉取商品详情 */
     fetDetail( id ) {
-        const that = this;
-        wx.cloud.callFunction({
-            name: 'api-goods-detail',
+        http({
             data: {
-                _id: this.data.id
+                _id: id,
             },
-            success: function ( res: any ) {
-                
-                const { status, data } = res.result;
-                if ( status !== 200 ) { return; }
-             
-                wx.hideLoading({ });
-                that.setData!({
-                    detail: data,
+            errMsg: '获取商品错误，请重试',
+            url: `good_detail`,
+            success: res => {
+              if ( res.status !== 200 ) { return; }
+                this.setData!({
+                    detail: res.data,
                     loading: false
                 });
-
-            },
-            fail: function( ) {
-                wx.showToast({
-                    icon: 'none',
-                    title: '获取商品详情错误',
-                });
-                wx.hideLoading({ });
             }
         });
     },

@@ -18,7 +18,7 @@ Component({
         // 导航nav
         navList: [
             {
-                label: '代购',
+                label: '行程',
                 url: "/pages/trip-enter/index",
                 normal: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-7.png",
                 active: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-8.png"

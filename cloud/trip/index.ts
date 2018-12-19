@@ -54,9 +54,12 @@ export const main = async ( event, context ) => {
                 const tripOneProducts$ = await Promise.all( trips[ 0 ].selectedProductIds.map( pid => {
                     return cloud.callFunction({
                         data: {
-                            _id: pid
+                            data: {
+                                _id: pid,
+                            },
+                            $url: 'detail'
                         },
-                        name: 'api-goods-detail'
+                        name: 'good'
                     }).then( res => res.result.data );
                 }));
                 trips[ 0 ] = Object.assign({ }, trips[ 0 ], {
