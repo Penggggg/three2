@@ -19,7 +19,7 @@ const db: DB.Database = cloud.database( );
  * ! sid, (可为空)
  * count,
  * price,
- * isOccupied, 是否占库存
+ *! isOccupied, 是否占库存
  * ! group_price (可为空)
  * type: 'custom' | 'normal' | 'pre' 自定义加单、普通加单、预订单
  * img: Array[ string ]
@@ -129,7 +129,7 @@ export const main = async ( event, context ) => {
                      * ! deliver_status为未发布 可能有问题
                      */
                     aid,
-                    isOccupied: true,
+                    isOccupied: true, // 占领库存标志
                     openid: openid,
                     deliver_status: '0', 
                     base_status: '0', // 统一为未付款，订单支付后再去更新
@@ -149,8 +149,8 @@ export const main = async ( event, context ) => {
             }
 
             const orderIds = save$.map( x => x.data._id );
+            // 4、更新订单状态
             // 5、批量加入或创建购物清单
-
             // 6、批量删除已加入购物清单或预付订单的购物车商品，如果有cid的话
     
             return ctx.body = {
