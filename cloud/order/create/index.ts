@@ -1,3 +1,4 @@
+import * as cloud from 'wx-server-sdk';
 /**
  * sid
  * pid
@@ -8,8 +9,17 @@ const create$ = async( openid, data, db: DB.Database, ctx ) => {
 
         // 创建之前，处理占领货存的问题
         if ( data.isOccupied ) {
-            // 如果是型号
-            // 如果是主体商品
+            const deal$ = await cloud.callFunction({
+                name: 'good',
+                data: {
+                    $url: 'update-stock',
+                    data: data
+                }
+            });
+    
+            if ( deal$.result.status !== 200 ) {
+                throw '创建订单错误：整理库存失败'
+            }
         }
 
         const create$ = await db.collection('order')
@@ -24,6 +34,7 @@ const create$ = async( openid, data, db: DB.Database, ctx ) => {
             data: create$
         }
     } catch ( e ) {
+        console.log(`----【Error-Order-Create】----：${JSON.stringify( e )}`);
         return ctx.body = { status: 500, message: e };
     }
 }

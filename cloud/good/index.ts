@@ -362,6 +362,87 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /**
+     * @description
+     * 根据预付订单的相关信息，减少、更新指定商品的库存
+     * ---------- 请求 -----------
+     * {
+     *      sid,
+     *      pid,
+     *      count
+     * }
+     */
+    app.router('update-stock', async( ctx, next ) => {
+        try {
+
+            const { sid, pid, count } = event.data;
+
+            let target: any = null;
+
+            // 找到型号
+            if ( !!sid ) {
+                const standard$ = await db.collection('standards')
+                    .where({
+                        _id: sid
+                    })
+                    .get( );
+                if ( standard$.data.length === 0 ) {
+                    throw '更新库存异常, 当前型号不存在';
+                }
+                target = standard$.data[ 0 ];
+            // 找到商品
+            } else {
+                const good$ = await db.collection('goods')
+                    .where({
+                        _id: pid
+                    })
+                    .get( );
+                if ( good$.data.length === 0 ) {
+                    throw '更新库存异常, 当前商品不存在';
+                }
+                target = good$.data[ 0 ];
+            }
+
+            // 无限库存
+            if ( target.stock === null || target.stock === undefined ) {
+                return ctx.body = {
+                    status: 200
+                }
+            }
+
+            // 判断库存是否足够
+            if ( target.stock - count < 0 ) {
+                throw '更新库存异常, 当前商品库存不足';
+            }
+
+            target = Object.assign({ }, target, {
+                stock: target.stock - count
+            });
+            delete target['_id'];
+
+            // 更新商品型号库存
+            if ( !!sid ) {
+                await db.collection('standards').doc( sid )
+                    .set({
+                        data: target
+                    });
+            } else {
+                await db.collection('goods').doc( pid )
+                    .set({
+                        data: target
+                    });
+            }
+
+            return ctx.body = {
+                status: 200
+            }
+
+        } catch ( e ) {
+            console.log(`----【Error-Good】----：${JSON.stringify( e )}`);
+            return ctx.body = { status: 500, message: e };
+        }
+    })
+
     return app.serve( );
 
 };
