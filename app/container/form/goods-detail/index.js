@@ -434,33 +434,18 @@ Component({
           });
       }
 
-      wx.showLoading({
-        title: _id ? '更新中...' : '创建中..',
-      })
-      
-      wx.cloud.callFunction({
-        name: 'api-goods-edit',
-        data: {
+      http({
           data: goodsDetail,
-        },
-        success: function (res) {
-          wx.hideLoading({ });
-          
-          if ( res.result.status === 200 ) {
-           
+          loadingMsg: _id ? '更新中...' : '创建中..',
+          errMsg: _id ? '更新失败' : '创建失败',
+          url: `good_edit`,
+          success: res => {
+            if ( res.status !== 200 ) { return; }
             wx.showToast({
-              title: _id ? '更新成功' : '创建成功！'
-            })
+                title: _id ? '更新成功' : '创建成功'
+            });
           }
-        },
-        fail: function () {
-          wx.showToast({
-            icon: 'none',
-            title: _id ? '更新失败' : '创建失败',
-          });
-          wx.hideLoading({ });
-        }
-      })
+      });
 
     }
 
