@@ -1,6 +1,7 @@
 
 import * as cloud from 'wx-server-sdk';
 import * as TcbRouter from 'tcb-router';
+import { create$ } from './create';
 
 cloud.init( );
 
@@ -18,6 +19,7 @@ const db: DB.Database = cloud.database( );
  * ! sid, (可为空)
  * count,
  * price,
+ * isOccupied, 是否占库存
  * ! group_price (可为空)
  * type: 'custom' | 'normal' | 'pre' 自定义加单、普通加单、预订单
  * img: Array[ string ]
@@ -44,6 +46,7 @@ export const main = async ( event, context ) => {
      *          sid
      *          pid
      *          price
+     *          name
      *          groupPrice
      *          count
      *          desc
@@ -81,15 +84,11 @@ export const main = async ( event, context ) => {
                     || !trips$.data 
                     || ( !!trips$.data && trips$.data.isClosed ) 
                     || ( !!trips$.data && new Date( ).getTime( ) >= trips$.data.end_date )) {
-                return ctx.body = {
-                    status: 400,
-                    message: `暂无行程计划，暂时不能购买～`
-                };
+                throw '暂无行程计划，暂时不能购买～'
             }
 
             // 最新可用行程
             const trip = trips$.data;
-
 
             /**
              * 根据地址对象，拿到地址id
@@ -117,10 +116,7 @@ export const main = async ( event, context ) => {
             
             // 订单来源：购物车、系统加单
             if (( event.data.from === 'cart' || event.data.from === 'system' ) && addressid$.result.status !== 200 ) {
-                return ctx.body = {
-                    status: 500,
-                    message: '查询地址错误'
-                };
+                throw '查询地址错误';
             }
 
             // 可用地址id
@@ -133,6 +129,7 @@ export const main = async ( event, context ) => {
                      * ! deliver_status为未发布 可能有问题
                      */
                     aid,
+                    isOccupied: true,
                     openid: openid,
                     deliver_status: '0', 
                     base_status: '0', // 统一为未付款，订单支付后再去更新
@@ -142,16 +139,23 @@ export const main = async ( event, context ) => {
                 return t;
             });
 
-            // 4、批量创建订单
+            // 4、批量创建订单 ( 同时处理占领货存的问题 )
+            const save$: any = await Promise.all( temp.map( o => {
+                return create$( openid, o, db, ctx );
+            }));
+        
+            if ( save$.some( x => x.status !== 200 )) {
+                throw '创建订单错误！'
+            }
 
+            const orderIds = save$.map( x => x.data._id );
             // 5、批量加入或创建购物清单
 
             // 6、批量删除已加入购物清单或预付订单的购物车商品，如果有cid的话
     
             return ctx.body = {
                 status: 200,
-                data: temp,
-                message: '购买成功！'
+                data: orderIds
             };
 
         } catch ( e ) {

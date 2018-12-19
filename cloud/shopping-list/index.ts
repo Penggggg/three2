@@ -39,6 +39,7 @@ export const main = async ( event, context ) => {
 *           groupPrice
 *           count
 *           desc
+*           name
 *           img
 *           type
 *           pay_status,

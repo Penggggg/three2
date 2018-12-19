@@ -439,7 +439,7 @@ Page({
                 const selectedCheck = selectCartIdList.map( cid => {
                     const temp = cartList.find( x => x.cart._id === cid );
                     if ( temp ) {
-                        const { pid, sid, count, price, groupPrice, img } = temp.current;
+                        const { pid, sid, count, price, groupPrice, img, standardName, title } = temp.current;
                         return {
                             sid,
                             pid,
@@ -450,6 +450,7 @@ Page({
                             tid: trip._id,
                             type: 'pre', // 预付类型订单
                             cid: temp.cart._id,
+                            name: `${title}${standardName ? '-' + standardName : ''}`,
                             address: {
                                 username: userName,
                                 postalcode: postalCode,
