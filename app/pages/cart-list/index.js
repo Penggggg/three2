@@ -547,8 +547,6 @@ Page({
                             
                         }
 
-                        // 创建订单 - 这里也会创建购物清单
-
                         /**
                          * ! 提示无法加入订单的商品
                          * ! 重新刷新购物车，因为成功加入清单的购物车的商品，这个商品的购物车会被删除掉
@@ -556,52 +554,14 @@ Page({
                     }
                 });
 
-                
-
-
-                return; 
-
-                // 订单商品详细
-                // const selected = selectCartIdList.map( cid => {
-                //     const temp = cartList.find( x => x.cart._id === cid );
-                //     if ( temp ) {
-                //         const { current } = temp;
-                //         const { pid, price, img, sid, count, groupPrice } = current;
-                //         return {
-                //             tid: trip._id
-                //             cid,
-                //             sid,
-                //             pid,
-                //             price,
-                //             count,
-                //             desc: '',
-                //             img: [ img ],
-                //             type: 'NORMAL',
-                //             group_price: groupPrice,
-                            // address: {
-                            //     name: userName,
-                            //     postalcode: postalCode,
-                            //     phone: telNumber,
-                            //     detail: `${provinceName}${cityName}${countyName}${detailInfo}`
-                            // }
-                //         }
-                //     }
-                //     return null; 
-                // }).filter( x => !!x );
-
-                // http({
-                //     data: {
-                //         from: 'cart',
-                //         orders: selected
-                //     },
-                //     url: `order_create`,
-                //     success: res => {
-                //         console.log( '...', res )
-                //     }
-                // });
 
             }
         });
+
+    },
+
+    /** 发起微信支付 */
+    wxPay( ) {
 
     },
 

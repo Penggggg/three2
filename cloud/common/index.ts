@@ -90,6 +90,10 @@ export const main = async ( event, context ) => {
         }
     });
 
+    app.router('wxpay', async( ctx, next ) => {
+        
+    });
+
     return app.serve( );
 
 }

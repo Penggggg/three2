@@ -1,4 +1,4 @@
-const config = require('../../config/cos/index.js');
+const config = require('../../config/cos/index.js').default;
 const COS = require('../../lib/cos-v5/index.js');
 
 // components/img-upload/index.js

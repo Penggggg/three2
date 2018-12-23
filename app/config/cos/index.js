@@ -1,8 +1,9 @@
-var config = {
-  Bucket: 'wx60bf7f745ce31ef0-1257764567',//replace with yours
-  Region: 'ap-guangzhou',//replace with yours
-  SecretId: 'AKIDtoZ8XAx4JNGxZ09KCsRp10nZ9XqyE61o',//replace with yours
-  SecretKey: 'kGnCRZmnlW4PI6tTs7C5nKfBsV1MUQBn'//replace with yours
-}
-
-module.exports = config
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    Bucket: 'wx60bf7f745ce31ef0-1257764567',
+    Region: 'ap-guangzhou',
+    SecretId: 'AKIDtoZ8XAx4JNGxZ09KCsRp10nZ9XqyE61o',
+    SecretKey: 'kGnCRZmnlW4PI6tTs7C5nKfBsV1MUQBn'
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJpbmRleC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFBLGtCQUFlO0lBQ1gsTUFBTSxFQUFFLCtCQUErQjtJQUN2QyxNQUFNLEVBQUUsY0FBYztJQUN0QixRQUFRLEVBQUUsc0NBQXNDO0lBQ2hELFNBQVMsRUFBRSxrQ0FBa0M7Q0FDaEQsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBkZWZhdWx0IHtcbiAgICBCdWNrZXQ6ICd3eDYwYmY3Zjc0NWNlMzFlZjAtMTI1Nzc2NDU2NycsLy9yZXBsYWNlIHdpdGggeW91cnNcbiAgICBSZWdpb246ICdhcC1ndWFuZ3pob3UnLC8vcmVwbGFjZSB3aXRoIHlvdXJzXG4gICAgU2VjcmV0SWQ6ICdBS0lEdG9aOFhBeDRKTkd4WjA5S0NzUnAxMG5aOVhxeUU2MW8nLC8vcmVwbGFjZSB3aXRoIHlvdXJzXG4gICAgU2VjcmV0S2V5OiAna0duQ1JabW5sVzRQSTZ0VHM3QzVuS2ZCc1YxTVVRQm4nLy9yZXBsYWNlIHdpdGggeW91cnNcbn07XG4gIFxuIl19
