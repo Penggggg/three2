@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "crypto": "^1.0.1",
+    "request-promise": "^4.2.2",
     "tcb-router": "1.1.2",
     "wx-server-sdk": "latest"
   }

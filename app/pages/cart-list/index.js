@@ -562,7 +562,32 @@ Page({
 
     /** 发起微信支付 */
     wxPay( ) {
-
+        http({
+            url: 'common_wxpay',
+            data: {
+                total_fee: 100
+            },
+            success: res => {
+                if ( res.status !== 200 ) { return; }
+                const { nonce_str, paySign, prepay_id, timeStamp } = res.data;
+                wx.requestPayment({
+                    paySign,
+                    timeStamp,
+                    signType: 'MD5',
+                    nonceStr: nonce_str,
+                    package: `prepay_id=${prepay_id}`,
+                    success: res => {
+                        const { errMsg } = res;
+                        if ( errMsg === 'requestPayment:ok' ) {
+                            // 支付成功
+                        }
+                    },
+                    fail: err => {
+                        console.log( 'err', err );
+                    }
+                });
+            }
+        })
     },
 
     /** 拉取最新可用行程 */
