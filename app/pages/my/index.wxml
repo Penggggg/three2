@@ -1,0 +1,80 @@
+<view class="page-my">
+
+    <!-- 顶部 -->
+    <view class="pm-header-block">
+
+        <!-- 头像、昵称 -->
+        <view class="pm-userInfo-block">
+            <view class="pm-userInfo-avatar">
+                <open-data type="userAvatarUrl"></open-data>
+            </view>
+            <view class="pm-userInfo-nick">
+                <open-data type="userNickName"></open-data>
+            </view>
+        </view>
+
+        <!-- 头部bar -->
+        <view class="pm-header-bar">
+            <view class="pm-header-bar-item">
+                <view class="pm-bar-item-content">1078</view>
+                <view class="pm-bar-item-title">订单</view>
+            </view>
+            <view class="pm-header-bar-item line">
+                <view class="pm-bar-item-content">0</view>
+                <view class="pm-bar-item-title">卡券</view>
+            </view>
+            <view class="pm-header-bar-item">
+                <view class="pm-bar-item-content">
+                    <image
+                        class="pm-bar-item-image"
+                        src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/header.png"
+                    />
+                </view>
+                <view class="pm-bar-item-title">我的收藏</view>
+            </view>
+        </view>
+
+    </view>
+
+    <!-- 行程导流 -->
+    <view class="pm-trp-block">
+        <image
+            mode="scaleToFill"
+            class="pm-img-banner"
+            src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/my-banner.png"
+        />
+    </view>
+
+    <!-- 其他选项 -->
+    <view class="pm-other-block">
+        <view class="pm-other-container">
+            <view
+                wx:for="{{ icons }}"
+                wx:key="{{ index }}"
+                class="pm-other-item"
+                data-data="{{ item }}"
+                bindtap="onTabIcon"
+            >
+                <image
+                    mode="scaleToFill"
+                    class="pm-other-img"
+                    wx:if="{{ item.iconImg }}"
+                    src="{{ item.iconImg }}"
+                />
+                <view class="pm-other-title">
+                    {{ item.title }}
+                </view>
+                <wxc-icon
+                    size="20"
+                    color="#999"
+                    class="pm-other-icon"
+                    type="arrow-right"
+                />
+            </view>
+        </view>
+    </view>
+
+    <!-- 底部按钮 -->
+    <my-nav />
+
+</view>

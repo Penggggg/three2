@@ -34,7 +34,7 @@ Component({
                 active: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-4.png"
             }, {
                 label: '我的',
-                url: "/pages/index/index",
+                url: "/pages/my/index",
                 normal: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-2-2.png",
                 active: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-2.png"
             }
