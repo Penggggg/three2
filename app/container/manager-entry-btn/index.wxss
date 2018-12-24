@@ -50,5 +50,5 @@
 .con-manager-entry-btn-list-image {
   width: 102rpx;
   height: 102rpx;
-  background: #d8d8d8;
+  /* background: #d8d8d8; */
 }

@@ -45,7 +45,7 @@ Component({
      * 组件的方法列表
      */
     methods: {
-      // 初始化动画
+        // 初始化动画
         initAnimation( ) {
 
             const animation = wx.createAnimation({

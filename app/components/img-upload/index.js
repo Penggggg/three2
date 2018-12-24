@@ -21,6 +21,10 @@ Component({
           has: [ ...val ]
         });
         this.judgeIcon( );
+        // 发送事件
+        setTimeout(( ) => {
+          this.triggerEvent('change', [ ...this.data.has, ...this.data.list ]);
+        }, 0 );
       }
     }
   },

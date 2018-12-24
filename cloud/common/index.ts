@@ -52,7 +52,7 @@ export const main = async ( event, context ) => {
     /** 微信用户信息存储 */
     app.router('userEdit', async( ctx, next ) => {
         try {
-            console.log( event );
+
             const openid = event.userInfo.openId;
             const data$ = await db.collection('user')
                 .where({
@@ -155,7 +155,6 @@ export const main = async ( event, context ) => {
             let res = await rp({ url: "https://api.mch.weixin.qq.com/pay/unifiedorder", method: 'POST',body: formData });
     
             let xml = res.toString("utf-8");
-            console.log('......', formData, res )
     
             if ( xml.indexOf('prepay_id') < 0 ) {
                 return ctx.body = {
@@ -176,6 +175,89 @@ export const main = async ( event, context ) => {
             return ctx.body = {
                 status: 500
             }
+        }
+    });
+
+    /**
+     * 代购个人微信二维码、群二维码
+     * ------ 请求 ------
+     * {
+     *      wx_qrcode: string[]
+     *      group_qrcode: string[]
+     * }
+     */
+    app.router('wxinfo-edit', async( ctx, next ) => {
+        try {
+            
+            const temp: any = [ ];
+            Object.keys( event.data ).map( key => {
+                if ( !!event.data[ key ]) {
+                    temp.push({
+                        type: key,
+                        value: event.data[ key ]
+                    })
+                }
+            });
+
+            await Promise.all( temp.map( async x => {
+                
+                const find$ = await db.collection('manager-wx-info')
+                    .where({
+                        type: x.type
+                    })
+                    .get( );
+
+                if ( find$.data.length > 0 ) {
+                    await db.collection('manager-wx-info').doc( (find$.data[ 0 ] as any)._id )
+                        .set({
+                            data: x
+                        });
+                    
+                } else {
+                    await db.collection('manager-wx-info')
+                        .add({
+                            data: x
+                        });
+                }
+
+            }));
+
+            return ctx.body = {
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    });
+
+    /** 查询代购个人二维码信息 */
+    app.router('wxinfo', async( ctx, next ) => {
+        try {
+
+            const target = ['wx_qrcode', 'group_qrcode'];
+            const finds$ = await Promise.all( target.map( type => {
+                return db.collection('manager-wx-info')
+                    .where({
+                        type
+                    })
+                    .get( );
+            }));
+
+            const temp = { };
+            finds$.map(( find$, index ) => {
+                if ( find$.data.length > 0 ) {
+                    temp[ target[ index ]] = find$.data[ 0 ].value;
+                }
+            });
+
+            return ctx.body = {
+                status: 200,
+                data: temp
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
         }
     });
 

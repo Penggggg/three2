@@ -1,0 +1,12 @@
+.pmpi-page {
+    position: relative;
+    min-height: 100vh;
+}
+
+.pmpi-btn-block {
+    left: 0;
+    width: 100%;
+    bottom: 100rpx;
+    position: absolute;
+    text-align: center;
+}
