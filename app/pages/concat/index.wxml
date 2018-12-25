@@ -41,7 +41,7 @@
             wx:if="{{ group_qrcode.length > 0 }}"
         >
             <view class="pc-popup-content">
-                社群 · 微信群号
+                社群 · 看看大家买了啥
             </view>
         </view>
 
