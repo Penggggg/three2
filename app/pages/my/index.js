@@ -1,4 +1,5 @@
-// app/pages/my/index.js
+const { http } = require('../../util/http.js');
+
 Page({
 
     /**
@@ -9,10 +10,14 @@ Page({
             {
                 title: '联系客服',
                 url: '/pages/concat/index',
-                handler: 'test',
+                handler: '',
                 iconImg: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/icon-kefu2.png'
             }
-        ]
+        ],
+        baseInfo: {
+            orders: 0,
+            cards: 0
+        }
     },
 
     onTabIcon({ currentTarget }) {
@@ -26,8 +31,21 @@ Page({
         }
     },
 
-    test( ) {
-        console.log('???')
+    fetchData( ) {
+        http({
+            loadMsg: '加载中...',
+            url: 'common_mypage-info',
+            success: res => {
+                if ( res.status !== 200 ) { return; }
+                const temp = { };
+                Object.keys( res.data ).map( key => {
+                    temp[ key ] = res.data[ key ];
+                });
+                this.setData({
+                    baseInfo: Object.assign({ }, this.data.baseInfo, temp )
+                });
+            }
+        })
     },
 
     /**
@@ -48,7 +66,7 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function () {
-
+        this.fetchData( );
     },
 
     /**

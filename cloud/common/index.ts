@@ -261,6 +261,27 @@ export const main = async ( event, context ) => {
         }
     });
 
+    /** 获取“我的页面”的基本信息，诸如订单、卡券数量 */
+    app.router('mypage-info', async( ctx, next ) => {
+        try {
+            
+            // 订单数
+            const orders$ = await db.collection('order')
+                .where({
+                    openid: event.userInfo.openId
+                })
+                .count( );
+            
+            return ctx.body = {
+                status: 200,
+                data: {
+                    orders: orders$.total
+                }
+            }
+
+        } catch ( e ) { return ctx.body = { status: 500 };}
+    })
+
     return app.serve( );
 
 }
