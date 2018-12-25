@@ -1,5 +1,6 @@
 <view class="page-order-list">
 
+    <!-- 上方tab -->
     <view class="pol-tabs">
         <view
             wx:for="{{ tabs }}"
@@ -10,6 +11,11 @@
         >
             {{ item.label }}
         </view>
+    </view>
+
+    <!-- 下方列表 -->
+    <view class="pol-content-block">
+        
     </view>
 
 </view>

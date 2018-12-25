@@ -199,13 +199,15 @@ export const main = async ( event, context ) => {
 
             // 未付款
             } else if ( type === 'my-notpay' ) {
-                where$ = _.or([
+                where$ = _.and({
+                    openid
+                }, _.or([
                     {
                         type: 'pre'
                     }, {
                         pay_status: _.or( _.eq('0'), _.eq('1'))
                     }
-                ]);
+                ]));
             
             // 未发货
             } else if ( type === 'my-delive' ) {

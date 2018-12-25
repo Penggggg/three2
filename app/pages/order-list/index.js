@@ -6,7 +6,9 @@ Page({
      * 页面的初始数据
      */
     data: {
+        // 上方活动tab
         active: 0,
+        // 上方tabs
         tabs: [{
             key: 0,
             label: '全部'
@@ -20,24 +22,36 @@ Page({
             key: 3,
             label: '已完成'
         }],
+        // tab跟查询的关系
         keyMapType: {
             0: 'my-all',
             1: 'my-notpay',
             2: 'my-delive',
             3: 'my-finish'
         },
+        // 滚动加载page
         page: 0,
-        totalPage: 1,
+        // 滚动加载 是否能加载更多
+        canloadMore: true,
+        // 订单列表
+        list: [ ]
     },
 
+    /** 点击上方各类订单 */
     onTab({ currentTarget }) {
         const { index } = currentTarget.dataset;
+        if ( index === this.data.active )  { return; }
+        
         this.setData({
+            list:[ ],
+            page: 0,
+            totalPage: 1,
             active: index
         });
         this.fetchList( index );
     },
 
+    /** 拉取订单数据 */
     fetchList( index ) {
         const { page, keyMapType } = this.data;
         const type = keyMapType[ index ];
