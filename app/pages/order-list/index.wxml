@@ -1,0 +1,15 @@
+<view class="page-order-list">
+
+    <view class="pol-tabs">
+        <view
+            wx:for="{{ tabs }}"
+            bindtap="onTab"
+            data-index="{{ index }}"
+            wx:key="{{ index }}"
+            class="pol-tabs-item {{ active === index ? 'active' : '' }}"
+        >
+            {{ item.label }}
+        </view>
+    </view>
+
+</view>

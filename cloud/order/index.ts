@@ -7,6 +7,8 @@ cloud.init( );
 
 const db: DB.Database = cloud.database( );
 
+const _ = db.command;
+
 /**
  * 
  * @description 订单模块
@@ -166,6 +168,88 @@ export const main = async ( event, context ) => {
             };
         }
     });
+
+    /**
+     * 分页 + query 查询订单列表
+     * ----- 请求 ------
+     * {
+     *     page: number
+     *     type: 我的全部 | 未付款订单 | 待发货 | 已完成 | 管理员（行程订单）| 管理员（所有订单）
+     *     type: my-all | my-notpay | my-deliver | my-finish | manager-trip | manager-all
+     * }
+     * ! 未付款订单：pay_status: 未付款/已付订金 或 type: pre
+     * ! 待发货：deliver_status：未发货 且 pay_status 已付款
+     * ! 已完成：deliver_status：已发货 且 pay_status 已付全款
+     */
+    app.router('list', async( ctx, next ) => {
+        try {
+
+            // 查询条数
+            const limit = 20;
+
+            let where$ = { };
+            const { type } = event.data;
+            const openid = event.userInfo.openId;
+
+            // 我的全部
+            if ( type === 'my-all' ) {
+                where$ = {
+                    openid: openid
+                }
+
+            // 未付款
+            } else if ( type === 'my-notpay' ) {
+                where$ = _.or([
+                    {
+                        type: 'pre'
+                    }, {
+                        pay_status: _.or( _.eq('0'), _.eq('1'))
+                    }
+                ]);
+            
+            // 未发货
+            } else if ( type === 'my-delive' ) {
+                where$ = {
+                    openid,
+                    pay_status: '2',
+                    deliver_status: '0'
+                };
+
+            // 已完成
+            } else if ( type === 'my-finish' ) {
+                where$ = {
+                    openid,
+                    pay_status: '2',
+                    deliver_status: '1'
+                };
+            }
+
+            // 获取总数
+            const total$ = await db.collection('order')
+                .where( where$ )
+                .count( );
+
+            // 获取数据
+            const data$ = await db.collection('order')
+                .where( where$ )
+                .limit( limit )
+                .skip(( event.data.page - 1 ) * limit )
+                .orderBy('createTime', 'desc')
+                .get( );
+
+            return ctx.body = {
+                status: 200,
+                data: {
+                    data: data$.data,
+                    pageSize: limit,
+                    page: event.data.page,
+                    total: total$.total,
+                    totalPage: Math.ceil( total$.total / limit )
+                }
+            }
+            
+        } catch ( e ) { return ctx.body = { status: 500};}
+    })
 
     return app.serve( );
 

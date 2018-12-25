@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/order-list/index",
     "pages/my/index",
     "pages/concat/index",
     "pages/manager-person-info/index",
