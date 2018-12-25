@@ -1,33 +1,33 @@
-// app/pages/my/index.js
+const { http } = require('../../util/http.js');
+
 Page({
 
     /**
      * 页面的初始数据
      */
     data: {
-        icons: [
-            {
-                title: '联系客服',
-                url: '/pages/concat/index',
-                handler: 'test',
-                iconImg: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/icon-kefu2.png'
+        wx_qrcode: [ ],
+        group_qrcode: [ ]
+    },
+
+    /** 拉取已有二维码信息 */
+    fetchQrCode( ) {
+        http({
+            url: `common_wxinfo`,
+            success: res => {
+     
+                if ( res.status !== 200 ) { return; }
+
+                const keys = ['wx_qrcode', 'group_qrcode'];
+                keys.map( key => {
+                    if ( !!res.data[ key ]) {
+                        this.setData({
+                            [ key ]: res.data[ key ]
+                        });
+                    }
+                });
             }
-        ]
-    },
-
-    onTabIcon({ currentTarget }) {
-        const { data } = currentTarget.dataset;
-        if ( data.url ) {
-            wx.navigateTo({
-                url: data.url
-            });
-        } else {
-            !!this[ data.handler ] && !!this[ data.handler ]( );
-        }
-    },
-
-    test( ) {
-        console.log('???')
+        });
     },
 
     /**
@@ -48,7 +48,7 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function () {
-
+        this.fetchQrCode( );
     },
 
     /**

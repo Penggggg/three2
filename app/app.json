@@ -1,9 +1,10 @@
 {
   "pages": [
-    "pages/manager-goods-detail/index",
+    "pages/my/index",
+    "pages/concat/index",
     "pages/manager-person-info/index",
     "pages/index/index",
-    "pages/my/index",
+    "pages/manager-goods-detail/index",
     "pages/trip-enter/index",
     "pages/cart-list/index",
     "pages/manager-goods-list/index",

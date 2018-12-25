@@ -1,0 +1,70 @@
+<view class="page-contact">
+
+    <!-- 顶部毛玻璃 -->
+    <view class="pc-header-block"></view>
+
+    <!-- 内容层 -->
+    <view class="pc-content-block">
+        
+        <!-- 微信号 -->
+        <view
+            class="pc-popup-item"
+            wx:if="{{ wx_qrcode.length > 0 }}"
+        >
+            <view class="pc-popup-content">
+                个人 · 微信号
+            </view>
+        </view>
+
+        <view
+            class="pc-img-item"
+            wx:if="{{ wx_qrcode.length > 0 }}"
+        >
+            <image
+                mode="widthFix"
+                class="pc-item-img"
+                src="{{ wx_qrcode[ 0 ]}}"
+            />
+            <view class="pc-item-info">
+                <view class="pc-item-title">
+                    正品·特价 限时优惠
+                </view>
+                <view class="pc-item-param">
+                    添加微信，了解最新行程动态
+                </view>
+            </view>
+        </view>
+
+        <!-- 群号 -->
+        <view
+            class="pc-popup-item"
+            wx:if="{{ group_qrcode.length > 0 }}"
+        >
+            <view class="pc-popup-content">
+                社群 · 微信群号
+            </view>
+        </view>
+
+        <view
+            class="pc-img-item"
+            wx:for="{{ group_qrcode }}"
+            wx:key="{{ index }}"
+        >
+            <image
+                mode="widthFix"
+                class="pc-item-img"
+                src="{{ item }}"
+            />
+            <view class="pc-item-info">
+                <view class="pc-item-title">
+                    团购·特价 聚划算
+                </view>
+                <view class="pc-item-param">
+                    加入社群，看看大家买了啥
+                </view>
+            </view>
+        </view>
+
+    </view>
+
+</view>
