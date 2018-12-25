@@ -20,6 +20,7 @@ Page({
         }
     },
 
+    /** 点击下方的客服等模块 */
     onTabIcon({ currentTarget }) {
         const { data } = currentTarget.dataset;
         if ( data.url ) {
@@ -31,6 +32,7 @@ Page({
         }
     },
 
+    /** 拉取订单、卡券数据 */
     fetchData( ) {
         http({
             loadMsg: '加载中...',
@@ -45,6 +47,13 @@ Page({
                     baseInfo: Object.assign({ }, this.data.baseInfo, temp )
                 });
             }
+        })
+    },
+
+    /** 跳到订单列表 */
+    goOrderList( ) {
+        wx.navigateTo({
+            url: "/pages/order-list/index"
         })
     },
 

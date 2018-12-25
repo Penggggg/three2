@@ -15,7 +15,10 @@
 
         <!-- 头部bar -->
         <view class="pm-header-bar">
-            <view class="pm-header-bar-item">
+            <view
+                class="pm-header-bar-item"
+                bindtap="goOrderList"
+            >
                 <view class="pm-bar-item-content">{{ baseInfo.orders }}</view>
                 <view class="pm-bar-item-title">订单</view>
             </view>
