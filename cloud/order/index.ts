@@ -186,7 +186,7 @@ export const main = async ( event, context ) => {
         try {
 
             // 查询条数
-            const limit = 2;
+            const limit = 5;
 
             let where$ = { };
             const { type } = event.data;
