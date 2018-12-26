@@ -27,7 +27,7 @@ const _ = db.command;
  * img: Array[ string ]
  * ! desc（可为空）,
  * aid
- * ! base_status: 0,1,2,3,4 进行中（客户还可以调整自己的订单），已购买，已调整，已结算，已取消
+ * ! base_status: 0,1,2,3,4 进行中（客户还可以调整自己的订单），代购已购买，已调整，已结算，已取消（买不到）
  * ! pay_status: 0,1,2 未付款，已付订金，已付全款
  * ! deliver_status: 0,1 未发布，已发布、
  */
@@ -170,10 +170,11 @@ export const main = async ( event, context ) => {
     });
 
     /**
-     * 分页 + query 查询订单列表
+     * 分页 + query 查询订单列表（未聚合）
      * ----- 请求 ------
      * {
      *     page: number
+     *     skip: number
      *     type: 我的全部 | 未付款订单 | 待发货 | 已完成 | 管理员（行程订单）| 管理员（所有订单）
      *     type: my-all | my-notpay | my-deliver | my-finish | manager-trip | manager-all
      * }
@@ -185,7 +186,7 @@ export const main = async ( event, context ) => {
         try {
 
             // 查询条数
-            const limit = 20;
+            const limit = 3;
 
             let where$ = { };
             const { type } = event.data;
@@ -200,7 +201,8 @@ export const main = async ( event, context ) => {
             // 未付款
             } else if ( type === 'my-notpay' ) {
                 where$ = _.and({
-                    openid
+                    openid,
+                    base_status: '2'
                 }, _.or([
                     {
                         type: 'pre'
@@ -235,24 +237,66 @@ export const main = async ( event, context ) => {
             const data$ = await db.collection('order')
                 .where( where$ )
                 .limit( limit )
-                .skip(( event.data.page - 1 ) * limit )
+                .skip( event.data.skip || ( event.data.page - 1 ) * limit )
                 .orderBy('createTime', 'desc')
                 .get( );
+
+            /**
+             * ! 由于查询是按分页，但是显示是按行程来聚合显示
+             * ! 因此有可能，N页最后一位，跟N+1页第一位依然属于同一行程
+             * ! 如不进行处理，客户查询订单列表显示行程订单时，会“有可能”显示不全
+             * ! 特殊处理：用最后一位的tid，查询最后一位以后同tid的order，然后修正所返回的page
+             */
+
+            const last = data$.data[ data$.data.length - 1 ];
+
+            let fix$: any = {
+                data: [ ]
+            };
+
+            if ( last ) { 
+                fix$ = await db.collection('order')
+                    .where({
+                        openid,
+                        tid: last.tid
+                    })
+                    .skip( event.data.skip ? event.data.skip + data$.data.length : ( event.data.page - 1 ) * limit + data$.data.length - 1 )
+                    .get( );
+            }
+
+            const meta = [ ...data$.data, ...fix$.data ];
+            const trips$ = await Promise.all( meta.map( x => {
+                return db.collection('trip')
+                    .where({
+                        _id: x.tid
+                    })
+                    .field({
+                        title: true,
+                        start_date: true
+                    })
+                    .get( );
+            }));
+     
+            // 聚合行程数据
+            const meta2 = meta.map(( x, i ) => Object.assign({ }, x, {
+                trip: trips$[ i ].data[ 0 ]
+            }));
 
             return ctx.body = {
                 status: 200,
                 data: {
-                    data: data$.data,
+                    data: meta2,
                     pageSize: limit,
-                    page: event.data.page,
                     total: total$.total,
+                    page: fix$.data.length === 0 ? event.data.page : event.data.page + Math.ceil( fix$.data.length / limit ),
+                    current: event.data.skip ? event.data.skip + meta.length : ( event.data.page - 1 ) * limit + meta.length,
                     totalPage: Math.ceil( total$.total / limit )
                 }
             }
             
         } catch ( e ) { return ctx.body = { status: 500};}
     })
-
-    return app.serve( );
+ 
+   return app.serve( );
 
 }

@@ -31,6 +31,8 @@ Page({
         },
         // 滚动加载page
         page: 0,
+        // 滚动skip
+        skip: 0,
         // 滚动加载 是否能加载更多
         canloadMore: true,
         // 订单列表
@@ -53,17 +55,30 @@ Page({
 
     /** 拉取订单数据 */
     fetchList( index ) {
-        const { page, keyMapType } = this.data;
+        const { page, keyMapType, skip } = this.data;
         const type = keyMapType[ index ];
         http({
             data: {
                 type,
+                skip,
                 page: page + 1
             },
             url: 'order_list',
             loadMsg: '加载中...',
             success: res => {
+                // 本来订单跟商品是 1:1 的关系
+                // 但是直接就这样子显示，会不够直观，部分操作麻烦，不够直观
+                // 所以这边要以“行程”为基调，重新组织订单的显示方式
                 console.log( res );
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                const { page, current, totalPage } = data;
+                this.setData({
+                    page,
+                    skip: current,
+                    canloadMore: page < totalPage
+                });
             }
         })
     },

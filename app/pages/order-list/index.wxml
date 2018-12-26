@@ -13,9 +13,18 @@
         </view>
     </view>
 
-    <!-- 下方列表 -->
+    <!-- 内容信息，订单、可能附带推荐、拼团信息 -->
     <view class="pol-content-block">
-        
+
+        <!-- 订单列表，需要“加载更多”的按钮 -->
+        <view class="pol-order-list-block">
+
+            <view class="pol-order-item">
+                
+            </view>
+
+        </view>
+
     </view>
 
 </view>

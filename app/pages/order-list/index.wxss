@@ -35,3 +35,7 @@
     flex: 1;
     overflow-y: scroll;
 }
+
+.pol-order-list-block {
+    padding: 50rpx 30rpx;
+}
