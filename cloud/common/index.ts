@@ -93,6 +93,34 @@ export const main = async ( event, context ) => {
     });
 
     /**
+     * 是新客还是旧客
+     * 新客，成功支付订单 <= 3
+    */
+    app.router('is-new-customer', async( ctx, next ) => {
+        try {
+            
+            const openid = event.data.openId || event.userInfo.openId;
+            const find$ = await db.collection('order')
+                .where({
+                    openid,
+                    base_status: '3'
+                })
+                .count( );
+            
+            return ctx.body = {
+                status: 200,
+                data: find$.total < 3
+            }
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500,
+                data: true
+            }
+        }
+    });
+
+    /**
      * 微信支付，返回支付api必要参数
      * ----------- 请求 ----------
      * {

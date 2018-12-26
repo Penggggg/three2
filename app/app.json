@@ -1,15 +1,15 @@
 {
   "pages": [
-    "pages/order-list/index",
+    "pages/cart-list/index",
+    "pages/manager-goods-list/index",
     "pages/trip-enter/index",
+    "pages/manager-trip-detail/index",
+    "pages/order-list/index",
     "pages/my/index",
     "pages/concat/index",
     "pages/manager-person-info/index",
     "pages/index/index",
     "pages/manager-goods-detail/index",
-    "pages/cart-list/index",
-    "pages/manager-goods-list/index",
-    "pages/manager-trip-detail/index",
     "pages/manager-trip-list/index",
     "pages/goods-detail/index"
   ],

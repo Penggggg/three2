@@ -39,7 +39,7 @@
             <!-- 空的购物列表 -->
             <view
                 class="pcl-cart-list-item"
-                wx:if="{{ !loading && cartList.length === 0 }}"
+                wx:if="{{ cartList.length === 0 }}"
             >
                 <view class="pcl-cart-img-block">
                     <image
@@ -123,6 +123,21 @@
                                 成功拼团<text class="pcl-text-red">立减{{ item.current.groupPriceGap }}元！</text>
                             </view>
 
+                            <!-- 订金信息 免订金 -->
+                            <view
+                                class="pcl-cart-item-info grey"
+                                wx:if="{{ trip && trip.payment === '2' }}"
+                            >
+                                <text class="pcl-text-red">本次行程免订金</text>
+                            </view>
+
+                            <!-- 订金信息 熟客免订金 -->
+                            <view
+                                class="pcl-cart-item-info grey"
+                                wx:if="{{ trip && trip.payment === '0' && !isNew }}"
+                            >
+                                <text class="pcl-text-red">熟客免订金</text>
+                            </view>
 
                             <!-- 优惠信息 -->
                             <view
@@ -168,6 +183,8 @@
                                 class="pcl-cart-item-price-block"
                             >
                                 <view>
+                                    <!-- 订金信息 -->
+
                                     <!-- 现价 -->
                                     <wxc-price
                                         icon="sub"

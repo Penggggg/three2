@@ -10,8 +10,6 @@ Page({
      * 页面的初始数据
      */
     data: {
-        /** 加载状态 */
-        loading: true,
         /** 购物车列表 含商品详情、型号详情 */
         cartList: [ ],
         /** 当前选中的购物车的id列表 */
@@ -31,7 +29,19 @@ Page({
         /** 是否进行了用户授权 */
         isUserAuth: false,
         /** 当前行程 */
-        trip: null
+        trip: null,
+        // 是否新客户
+        isNew: true,
+        
+    },
+
+    /** 监听全局新旧客 */
+    watchRole( ) {
+        app.watch$('isNew', val => {
+            this.setData({
+                isNew: val
+            })
+        });
     },
 
     /** 拉取购物车列表 */
@@ -43,11 +53,7 @@ Page({
                 title: '加载中...',
             });
         }
-
-        this.setData({
-            loading: true
-        });
-
+        
         http({
             data: { },
             url: `cart_list`,
@@ -56,7 +62,7 @@ Page({
                 const { status, data } = res;
                 
                 if ( status !== 200 ) { return; }
-
+        
                 // 处理：计算当前选择的sku，并设置为current
                 const dealed = data.map( x => {
 
@@ -66,6 +72,7 @@ Page({
                     // 为当前sku注入一些公共属性
                     // 数量使用 库存、所选数量的最小值
                     const decorateCurrent = current => Object.assign({ }, current, {
+                        depositPrice: detail.depositPrice || 0,
                         pid: detail._id,
                         title: detail.title,
                         limit: detail.limit,
@@ -73,7 +80,9 @@ Page({
                         count: cart.count,
                         count$: current.stock && current.stock < cart.count ? current.stock : cart.count,
                         // 之前选中时候的价格
-                        lastPrice: cart.current_price
+                        lastPrice: cart.current_price,
+                        // 是否需要支付订金
+
                     });
 
                     // 如果只有主商品
@@ -149,8 +158,6 @@ Page({
                     cartList: dealed,
                     hasInitCart: true
                 });
-
-                console.log( dealed )
 
                 this.calculateSum( );
             }
@@ -439,7 +446,7 @@ Page({
                 const selectedCheck = selectCartIdList.map( cid => {
                     const temp = cartList.find( x => x.cart._id === cid );
                     if ( temp ) {
-                        const { pid, sid, count, price, groupPrice, img, standardName, title } = temp.current;
+                        const { pid, sid, count, price, groupPrice, img, standardName, title, depositPrice } = temp.current;
                         return {
                             sid,
                             pid,
@@ -448,9 +455,11 @@ Page({
                             img: [ img ],
                             groupPrice,
                             tid: trip._id,
+                            depositPrice,
                             type: 'pre', // 预付类型订单
                             cid: temp.cart._id,
-                            name: `${title}${standardName ? '-' + standardName : ''}`,
+                            name: `${title}`,
+                            standername: standardName,
                             address: {
                                 username: userName,
                                 postalcode: postalCode,
@@ -624,7 +633,8 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-
+        this.watchRole( );
+        this.checkAuth( );
     },
 
     /**
@@ -639,7 +649,6 @@ Page({
      */
     onShow: function ( ) {
         this.fetchList( );
-        this.checkAuth( );
         this.fetchTrip( );
     },
 

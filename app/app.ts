@@ -11,7 +11,9 @@ App<MyApp>({
         // 是否已经授权用户信息
         isUserAuth: false,
         // 用户信息
-        userInfo: null
+        userInfo: null,
+        /** 是否是新客户 */
+        isNew: true
     },
 
     /** 全局store */
@@ -19,7 +21,8 @@ App<MyApp>({
         role: 0,
         openid: '',
         isUserAuth: false,
-        userInfo: null
+        userInfo: null,
+        isNew: true
     },
 
     /** 监听函数的对象数组 */
@@ -30,6 +33,7 @@ App<MyApp>({
 
     /** 初始化 */
     init( ) {
+
         // 云
         wx.cloud.init({
             traceUser: true
@@ -48,6 +52,18 @@ App<MyApp>({
                 });
             }
         });
+
+    },
+
+    getIsNewCustom( ) {
+        http({
+            url: 'common_is-new-customer',
+            success: res => {
+                this.setGlobalData({
+                    isNew: res.data
+                })
+            }
+        })
     },
 
     /** 获取微信用户登录信息、授权、上传保存 */
@@ -123,6 +139,7 @@ App<MyApp>({
     onLaunch: function( ) {
         this.init( );
         this.getUserInfo( );
+        this.getIsNewCustom( );
     }
 });
 
@@ -135,6 +152,7 @@ export interface MyApp {
     watchingKeys: string[ ]
     init: ( ) => void
     getUserInfo: ( ) => void,
+    getIsNewCustom:  ( ) => void,
     getWxUserInfo: ( cb?: ( ) => void ) => void,
     setGlobalData: <K extends keyof globalState>( data: globalState | Pick<globalState, K> ) => void,
     watch$: ( key: keyof globalState, any ) => void
@@ -150,4 +168,5 @@ type globalState = {
     openid: string,
     isUserAuth: boolean,
     userInfo: any
+    isNew: boolean
 }

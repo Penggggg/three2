@@ -39,3 +39,101 @@
 .pol-order-list-block {
     padding: 50rpx 30rpx;
 }
+
+.pol-order-item {
+    background: #fff;
+    border-radius: 10px;
+    padding-bottom: 10rpx;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.20);
+}
+
+.pol-trip-header-block {
+    display: flex;
+    align-items: center;
+    padding: 10rpx 20rpx;
+    margin-bottom: 20rpx;
+    border-radius: 10px 10px 0 0;
+    justify-content: space-between;
+}
+
+.pol-trip-header-info {
+    display: flex;
+    align-items: center;
+}
+
+.pol-trip-item-image {
+    width: 25rpx;
+    height: 20rpx;
+    margin-right: 14rpx;
+}
+
+.pol-trip-name {
+    color: #666;
+    font-size: 24rpx;
+    margin-right: 10rpx;
+}
+
+.pol-trip-time {
+    color: #999;
+    font-size: 20rpx;
+    display: inline;
+    margin-right: 15rpx;
+}
+
+.pol-trip-icon {
+    margin-top: -10rpx;
+}
+
+.pol-trip-header-status {
+    color: #ff5777;
+    font-size: 24rpx;
+}
+
+.pol-trip-order-item {
+    padding: 10rpx 20rpx;
+    margin-bottom: 15rpx;
+}
+
+.pol-trip-order-img {
+    width: 120rpx;
+    height: 120rpx;
+    padding: 5rpx;
+    background: #fff;
+    border-radius: 5px;
+    margin-right: 20rpx;
+    box-shadow: 3px 3px 13px rgba(0, 0, 0, 0.15);
+}
+
+.pol-trip-order-info {
+    display: flex;
+}
+
+.pol-trip-order-title-block {
+    flex: 5;
+    margin-right: 30rpx;
+}
+
+.pol-trip-order-name {
+    color: #666;
+    font-size: 24rpx;
+}
+
+.pol-trip-order-standar {
+    color: #999;
+    font-size: 24rpx;
+}
+
+.pol-trip-order-price-block {
+    flex: 1;
+    text-align: right;
+}
+
+.pol-trip-order-price {
+    color: #333;
+    font-size: 24rpx;
+}
+
+.pol-trip-order-count {
+    color: #999;
+    font-size: 22rpx;
+}

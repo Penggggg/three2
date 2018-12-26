@@ -21,6 +21,7 @@ const _ = db.command;
  * ! sid, (可为空)
  * count,
  * price,
+ * deposit_price: 商品订金 (可为空)
  *! isOccupied, 是否占库存
  * ! group_price (可为空)
  * type: 'custom' | 'normal' | 'pre' 自定义加单、普通加单、预订单
@@ -49,6 +50,7 @@ export const main = async ( event, context ) => {
      *          pid
      *          price
      *          name
+     *          standername
      *          groupPrice
      *          count
      *          desc
@@ -124,6 +126,53 @@ export const main = async ( event, context ) => {
             // 可用地址id
             const aid = addressid$.result.data;
 
+            // 是否新客户
+            const isNew$ = await cloud.callFunction({
+                name: 'common',
+                data: {
+                    $url: 'is-new-customer',
+                    data: {
+                        openId: openid
+                    }
+                }
+            })
+
+            const isNew = isNew$.result.data;
+
+            /**
+             * 新客 + 新客要订金 = '0',
+             * 新客 + 要订金 = '0',
+             * 新客 + 免订金 = '1',
+             * 旧客 + 旧客免订金 = '1',
+             * 旧客 + 要订金 = '0',
+             * 旧客 + 免订金 = '1',
+             */
+            let pay_status = '0';
+            const p = trip.payment;
+
+            if ( isNew && p === '0' ) {
+                pay_status = '0'
+
+            } else if ( isNew && p === '1' ) {
+                pay_status = '0'
+
+            } else if ( isNew && p === '2' ) {
+                pay_status = '1'
+                
+            } else if ( !isNew && p === '0' ) {
+                pay_status = '1'
+                
+            } else if ( !isNew && p === '1' ) {
+                pay_status = '0'
+                
+            } else if ( !isNew && p === '2' ) {
+                pay_status = '1'
+                
+            } else {
+                pay_status = '0'
+                
+            }
+
             // 3、批量创建订单，（过滤掉不能创建购物清单的商品）
             const temp = event.data.orders.map( meta => {
                 const t = Object.assign({ }, meta, {
@@ -134,7 +183,8 @@ export const main = async ( event, context ) => {
                     isOccupied: true, // 占领库存标志
                     openid: openid,
                     deliver_status: '0', 
-                    base_status: '0', // 统一为未付款，订单支付后再去更新
+                    base_status: '0', //
+                    pay_status,
                     createTime: new Date( ).getTime( ),
                 });
                 delete t['address'];
@@ -186,7 +236,7 @@ export const main = async ( event, context ) => {
         try {
 
             // 查询条数
-            const limit = 5;
+            const limit = 2;
 
             let where$ = { };
             const { type } = event.data;
@@ -273,7 +323,8 @@ export const main = async ( event, context ) => {
                     })
                     .field({
                         title: true,
-                        start_date: true
+                        start_date: true,
+                        payment: true
                     })
                     .get( );
             }));

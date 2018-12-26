@@ -19,8 +19,86 @@
         <!-- 订单列表，需要“加载更多”的按钮 -->
         <view class="pol-order-list-block">
 
-            <view class="pol-order-item">
-                
+            <!-- 行程订单 -->
+            <view
+                wx:key="{{ index }}"
+                class="pol-order-item"
+                wx:for="{{ tripOrders }}"
+            >
+                <!-- 行程订单头 -->
+                <view class="pol-trip-header-block">
+                    <view class="pol-trip-header-info">
+                        <image
+                            class="pol-trip-item-image"
+                            src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/header.png"
+                        />
+                        <view class="pol-trip-name">
+                            {{ item.tripName }} <view class="pol-trip-time">( {{ item.tripTime }} )</view>
+                        </view>
+                        <view class="pol-trip-icon">
+                            <wxc-icon
+                                size="15"
+                                color="#999"
+                                class="pm-other-icon"
+                                type="arrow-right"
+                            />
+                        </view>
+                    </view>
+                    <view class="pol-trip-header-status">
+                        已发货
+                    </view>
+                </view>
+
+                <!-- 订单列表 -->
+                <view
+                    wx:for-item="order"
+                    wx:for-index="k"
+                    wx:key="{{ k }}"
+                    class="pol-trip-order-item"
+                    wx:for="{{ item.meta }}"
+                >
+                    <!-- 基本信息 -->
+                    <view class="pol-trip-order-info">
+
+                        <!-- 图片 -->
+                        <image
+                            mode="scaleToFill"
+                            class="pol-trip-order-img"
+                            src="{{ order.img[ 0 ]}}"
+                        />
+
+                        <!-- 产品、型号、状态 -->
+                        <view class="pol-trip-order-title-block">
+                            <view class="pol-trip-order-name">
+                                {{ order.name }}
+                            </view>
+                            <view class="pol-trip-order-standar">
+                                {{ order.standername }}
+                            </view>
+                        </view>
+
+                        <!-- 价格、数量 -->
+                        <view class="pol-trip-order-price-block">
+                            <view class="pol-trip-order-price">
+                                ¥ {{ order.price }}
+                            </view>
+                            <view
+                                class="pol-trip-order-price"
+                                wx:if="{{ groupPrice }}"
+                            >
+                                团购价¥ {{ order.groupPrice }}
+                            </view>
+                            <view class="pol-trip-order-count">
+                                x {{ order.count }}
+                            </view>
+                        </view>
+
+                    </view>
+                    <!-- 货款信息 -->
+
+                    <!-- 其他按钮 -->
+                </view>
+
             </view>
 
         </view>

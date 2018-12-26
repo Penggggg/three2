@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const app = getApp( );
 
 Page({
 
@@ -36,7 +37,9 @@ Page({
         // 滚动加载 是否能加载更多
         canloadMore: true,
         // 以行程为基调的订单列表
-        list: [ ]
+        tripOrders: [ ],
+        // 是否新客户
+        isNew: true
     },
 
     /** 点击上方各类订单 */
@@ -95,6 +98,8 @@ Page({
          *   [ key: string ]: {
          *     tid
          *     tripName
+         *     tripTime
+         *     isNeedPrePay // 是否要付订金
          *     pay_status
          *     base_status
          *     meta: metaOrder[ ]
@@ -107,25 +112,73 @@ Page({
         metaList.map( order => {
 
             if ( !orderObj[ order.tid ]) {
+
+                let isNeedPrePay = true;
+                const { isNew } = this.data;
+                const p = order.trip.payment;
+                const d = new Date( order.trip.start_date );
+
+                if ( isNew && p === '0' ) {
+                    isNeedPrePay = true;
+
+                } else if ( isNew && p === '1' ) {
+                    isNeedPrePay = true;
+
+                } else if ( isNew && p === '2' ) {
+                    isNeedPrePay = false;
+
+                }  else if ( !isNew && p === '0' ) {
+                    isNeedPrePay = false;
+
+                }  else if ( !isNew && p === '1' ) {
+                    isNeedPrePay = true;
+
+                }  else if ( !isNew && p === '2' ) {
+                    isNeedPrePay = false;
+
+                }  else {
+                    isNeedPrePay = true;
+                } 
+
                 orderObj[ order.tid ] = {
                     tid: order.tid,
+                    isNeedPrePay,
                     tripName: order.trip.title,
+                    tripPayment: order.trip.payment,
+                    tripTime: `${d.getMonth( )+1}月${d.getDate( )}`,
                     meta: [ order ]
-                }
+                };
 
             } else {
                 orderObj[ order.tid ] = Object.assign({ }, orderObj[ order.tid ], {
                     meta: [ ...orderObj[ order.tid ].meta, order ]
                 });
             }
+
+            // 处理 pay_status base_status
+
+
+            this.setData({
+                tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
+            })
         }); 
-        console.log( orderObj );
+        
+    },
+
+    /** 监听全局新旧客 */
+    watchRole( ) {
+        app.watch$('isNew', val => {
+            this.setData({
+                isNew: val
+            })
+        });
     },
 
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+        this.watchRole( );
         this.fetchList( this.data.active );
     },
 
