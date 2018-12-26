@@ -183,8 +183,8 @@ export const main = async ( event, context ) => {
                     isOccupied: true, // 占领库存标志
                     openid: openid,
                     deliver_status: '0', 
-                    base_status: '0', //
-                    pay_status,
+                    base_status: '0',
+                    pay_status: meta.depositPrice === 0 ? '1' : pay_status , // 商品订金额度为0
                     createTime: new Date( ).getTime( ),
                 });
                 delete t['address'];

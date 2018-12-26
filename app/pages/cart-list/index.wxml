@@ -352,7 +352,7 @@
             <!-- 结算按钮 -->
             <button
                 wx:else
-                bindtap="wxPay"
+                bindtap="batchSettle"
                 class="pcl-settlet-btn"
             >
                 结算
