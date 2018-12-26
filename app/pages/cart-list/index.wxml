@@ -126,17 +126,9 @@
                             <!-- 订金信息 免订金 -->
                             <view
                                 class="pcl-cart-item-info grey"
-                                wx:if="{{ trip && trip.payment === '2' }}"
+                                wx:if="{{ !needPrePay && !!item.current.depositPrice }}"
                             >
-                                <text class="pcl-text-red">本次行程免订金</text>
-                            </view>
-
-                            <!-- 订金信息 熟客免订金 -->
-                            <view
-                                class="pcl-cart-item-info grey"
-                                wx:if="{{ trip && trip.payment === '0' && !isNew }}"
-                            >
-                                <text class="pcl-text-red">熟客免订金</text>
+                                <text class="pcl-text-red">{{ isNew ? '本次行程免订金' : '熟客免订金' }}</text>
                             </view>
 
                             <!-- 优惠信息 -->
@@ -183,8 +175,7 @@
                                 class="pcl-cart-item-price-block"
                             >
                                 <view>
-                                    <!-- 订金信息 -->
-
+                               
                                     <!-- 现价 -->
                                     <wxc-price
                                         icon="sub"
@@ -227,6 +218,21 @@
                                     <text class="pcl-counter-opt add">+</text>
                                 </view>
                             </view>
+
+                            <view 
+                                class="pcl-cart-item-depositprice-block"
+                            >
+                                <!-- 如果需要付订金，则展示订金信息 -->
+                                订金：<wxc-price
+                                    icon="sub"
+                                    decimal="small"
+                                    class="pcl-price small"
+                                    wx:if="{{ needPrePay && !!item.current.depositPrice }}"
+                                > 
+                                    {{ item.current.depositPrice }}
+                                </wxc-price>
+                            </view>
+
 
                             <!-- 加入购物车时的sku被删除，显示重选sku -->
                             <view
@@ -297,7 +303,10 @@
             wx:if="{{ !isInDelete }}"
             class="pcl-settlet-msg"
         >
-            <view class="pcl-settlet-price pcl-text">
+            <view
+                wx:if="{{ !needPrePay }}"
+                class="pcl-settlet-price pcl-text"
+            >
                 合计:
                 <wxc-price
                     decimal="small"
@@ -305,6 +314,29 @@
                 > 
                     {{ sum }}
                 </wxc-price>
+            </view>
+
+            <view
+                wx:else
+                class="pcl-settlet-price pcl-text"
+            >
+                订金:
+                <wxc-price
+                    decimal="small"
+                    class="pcl-price"
+                > 
+                {{ sum2 }}
+                </wxc-price>
+                <view
+                    class="pcl-settlet-deposit-price"
+                >
+                    总计<wxc-price
+                            decimal="small"
+                            class="pcl-price small"
+                        > 
+                        {{ sum }}
+                    </wxc-price>
+                </view>
             </view>
 
             <!-- 用户授权按钮 -->

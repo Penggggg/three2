@@ -1,6 +1,7 @@
 // app/pages/cart-list/index.js
 
 const { http } = require('../../util/http.js');
+const { computed } = require('../../lib/vuefy/index.js');
 
 const app = getApp( );
 
@@ -32,7 +33,40 @@ Page({
         trip: null,
         // 是否新客户
         isNew: true,
-        
+        // 订金总额
+        sum2: 0
+    },
+
+    /** 设置computed */
+    runComputed( ) {
+        computed( this, {
+            // 是否需要付订金
+            needPrePay: function( ) {
+                const { isNew, trip } = this.data;
+                if ( !trip ) { return true; }
+                if ( isNew && trip.payment === '0' ) {
+                    return true;
+
+                } else if ( isNew && trip.payment === '1' ) {
+                    return true;
+
+                }  else if ( isNew && trip.payment === '2' ) {
+                    return false;
+                    
+                } else if ( !isNew && trip.payment === '0' ) {
+                    return false;
+                    
+                }  else if ( !isNew && trip.payment === '1' ) {
+                    return true;
+                    
+                } else if ( isNew && trip.payment === '2' ) {
+                    return false;
+                    
+                } else {
+                    return true;
+                }
+            }
+        });
     },
 
     /** 监听全局新旧客 */
@@ -220,6 +254,7 @@ Page({
             // 取消全选
             this.setData({
                 sum: 0,
+                sum2: 0,
                 isSelectAll: false,
                 selectCartIdList: [ ]
             });
@@ -254,8 +289,18 @@ Page({
             }
                 return preSum + 0;
         }, 0 );
+        const total2 = selectCartIdList.reduce(( preSum, nextCid ) => {
+            const currentCart = cartList.find( x => x.cart._id === nextCid );
+            if ( currentCart ) {
+                const { count, depositPrice } = currentCart.current;
+                return preSum + count * depositPrice;
+            }
+                return preSum + 0;
+        }, 0 );
+
         this.setData({
-            sum: total
+            sum: total,
+            sum2: total2
         })
     },
 
@@ -576,6 +621,7 @@ Page({
             data: {
                 total_fee: 100
             },
+            errMsg: '支付失败，请重试',
             success: res => {
                 if ( res.status !== 200 ) { return; }
                 const { nonce_str, paySign, prepay_id, timeStamp } = res.data;
@@ -593,6 +639,10 @@ Page({
                     },
                     fail: err => {
                         console.log( 'err', err );
+                        wx.showToast({
+                            icon: 'none',
+                            title: '支付失败，请重试'
+                        })
                     }
                 });
             }
@@ -635,6 +685,7 @@ Page({
     onLoad: function (options) {
         this.watchRole( );
         this.checkAuth( );
+        this.runComputed( );
     },
 
     /**
