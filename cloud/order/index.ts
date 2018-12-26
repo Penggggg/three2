@@ -186,7 +186,7 @@ export const main = async ( event, context ) => {
         try {
 
             // 查询条数
-            const limit = 3;
+            const limit = 2;
 
             let where$ = { };
             const { type } = event.data;
@@ -236,9 +236,9 @@ export const main = async ( event, context ) => {
             // 获取数据
             const data$ = await db.collection('order')
                 .where( where$ )
+                .orderBy('createTime', 'desc')
                 .limit( limit )
                 .skip( event.data.skip || ( event.data.page - 1 ) * limit )
-                .orderBy('createTime', 'desc')
                 .get( );
 
             /**
@@ -260,7 +260,8 @@ export const main = async ( event, context ) => {
                         openid,
                         tid: last.tid
                     })
-                    .skip( event.data.skip ? event.data.skip + data$.data.length : ( event.data.page - 1 ) * limit + data$.data.length - 1 )
+                    .orderBy('createTime', 'desc')
+                    .skip( event.data.skip ? event.data.skip + data$.data.length : ( event.data.page - 1 ) * limit + data$.data.length )
                     .get( );
             }
 

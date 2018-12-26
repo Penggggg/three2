@@ -35,7 +35,7 @@ Page({
         skip: 0,
         // 滚动加载 是否能加载更多
         canloadMore: true,
-        // 订单列表
+        // 以行程为基调的订单列表
         list: [ ]
     },
 
@@ -67,20 +67,59 @@ Page({
             loadMsg: '加载中...',
             success: res => {
                 // 本来订单跟商品是 1:1 的关系
-                // 但是直接就这样子显示，会不够直观，部分操作麻烦，不够直观
+                // 但是直接就这样子显示，会不够直观，部分操作麻烦
                 // 所以这边要以“行程”为基调，重新组织订单的显示方式
                 console.log( res );
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
 
-                const { page, current, totalPage } = data;
+                const { page, current, totalPage, total } = data;
+                const metaList = data.data;
+
+                this.covertOrder( metaList )
+
                 this.setData({
                     page,
                     skip: current,
-                    canloadMore: page < totalPage
+                    canloadMore: total > current
                 });
             }
         })
+    },
+
+    /** 转换订单列表，为行程订单列表 */
+    covertOrder( metaList ) {
+
+        /**
+         * type orderObj = {
+         *   [ key: string ]: {
+         *     tid
+         *     tripName
+         *     pay_status
+         *     base_status
+         *     meta: metaOrder[ ]
+         *     
+         *  }
+         */
+
+        const orderObj = { };
+
+        metaList.map( order => {
+
+            if ( !orderObj[ order.tid ]) {
+                orderObj[ order.tid ] = {
+                    tid: order.tid,
+                    tripName: order.trip.title,
+                    meta: [ order ]
+                }
+
+            } else {
+                orderObj[ order.tid ] = Object.assign({ }, orderObj[ order.tid ], {
+                    meta: [ ...orderObj[ order.tid ].meta, order ]
+                });
+            }
+        }); 
+        console.log( orderObj );
     },
 
     /**
