@@ -47,7 +47,8 @@
 .pol-content-block {
     top: 0;
     left: 0;
-    height: 100vh;
+    height: 90vh;
+    flex: 1;
     width: 100%;
     z-index: 10;
     position: absolute;
@@ -70,7 +71,7 @@
     display: flex;
     align-items: center;
     padding: 10rpx 20rpx;
-    margin-bottom: 20rpx;
+    margin-bottom: 10rpx;
     border-radius: 10px 10px 0 0;
     justify-content: space-between;
 }
@@ -109,8 +110,16 @@
 }
 
 .pol-trip-order-item {
-    padding: 10rpx 20rpx;
-    margin-bottom: 15rpx;
+    padding: 20rpx 20rpx;
+    /* margin-bottom: 15rpx; */
+}
+
+.pol-trip-order-item.disabled {
+    background: #eee;
+}
+
+.pol-trip-img-block {
+    position: relative;
 }
 
 .pol-trip-order-img {
@@ -119,8 +128,19 @@
     padding: 5rpx;
     background: #fff;
     border-radius: 5px;
-    margin-right: 20rpx;
+    /* margin-right: 20rpx; */
     box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+}
+
+.pol-trip-order-img-cover.disabled {
+    /* top: 0;
+    left: 0;
+    width: 120rpx;
+    height: 120rpx;
+    padding: 5rpx;
+    border-radius: 5px;
+    position: absolute;
+    background: rgba( 0, 0, 0, 0. 5 ); */
 }
 
 .pol-trip-order-info {
@@ -130,11 +150,16 @@
 .pol-trip-order-title-block {
     flex: 5;
     margin-right: 30rpx;
+    margin-left: 20rpx;
 }
 
 .pol-trip-order-name {
     color: #666;
     font-size: 24rpx;
+}
+
+.pol-trip-order-name.disabled {
+    color: #999;
 }
 
 .pol-trip-order-standar {
@@ -150,6 +175,10 @@
 .pol-trip-order-price {
     color: #333;
     font-size: 24rpx;
+}
+
+.pol-trip-order-price.disabled {
+    color: #999;
 }
 
 .pol-trip-order-count {
@@ -237,4 +266,32 @@
 .pol-order-more {
     color: #666;
     font-size: 22rpx;
+}
+
+.pol-cart-list-item {
+    width: 100%;
+    background: #fff;
+    padding: 25rpx 20rpx;
+    border-radius: 10px;
+    margin-bottom: 30rpx;
+    position: relative;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1 );
+}
+
+.pol-cart-img-block {
+    text-align: center;
+}
+
+.pol-cart-img {
+    width: 150rpx;
+    height: 150rpx;
+}
+
+.pol-cart-img-tips {
+    color: #999;
+    font-size: 24rpx;
+    margin-top: 20rpx;
+    margin-bottom: 20rpx;
+    text-align: center;
 }

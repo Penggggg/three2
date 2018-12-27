@@ -21,6 +21,25 @@
         <!-- 订单列表，需要“加载更多”的按钮 -->
         <view class="pol-order-list-block">
 
+            <!-- 为空的情况 -->
+            <view
+                class="pol-cart-list-item"
+                wx:if="{{ tripOrders.length === 0 }}"
+            >
+                <view class="pol-cart-img-block">
+                    <image
+                        mode="aspectFit"
+                        class="pol-cart-img"
+                        src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/bg-cart.png"
+                    />
+                </view>
+
+                <view class="pol-cart-img-tips">
+                    空空如也, 记得对自己好一点哦～
+                </view>
+                
+            </view>
+
             <!-- 行程订单 -->
             <view
                 wx:key="{{ index }}"
@@ -57,7 +76,7 @@
                     wx:key="{{ k }}"
                     wx:for-item="order"
                     wx:for="{{ item.meta }}"
-                    class="pol-trip-order-item"
+                    class="pol-trip-order-item {{ order.b === '4' || order.b === '5' ? 'disabled' : '' }}"
                     bindtap="goGoodDetail"
                     data-data="{{ order }}"
                 >
@@ -65,15 +84,18 @@
                     <view class="pol-trip-order-info">
 
                         <!-- 图片 -->
-                        <image
-                            mode="scaleToFill"
-                            class="pol-trip-order-img"
-                            src="{{ order.img[ 0 ]}}"
-                        />
+                        <view class="pol-trip-img-block">
+                            <image
+                                mode="scaleToFill"
+                                class="pol-trip-order-img"
+                                src="{{ order.img[ 0 ]}}"
+                            />
+                            <view class="pol-trip-order-img-cover {{ order.b === '4' || order.b === '5' ? 'disabled' : '' }}"></view>
+                        </view>
 
                         <!-- 产品、型号、状态 -->
                         <view class="pol-trip-order-title-block">
-                            <view class="pol-trip-order-name">
+                            <view class="pol-trip-order-name {{ order.b === '4' || order.b === '5' ? 'disabled' : '' }}">
                                 {{ order.name }}
                             </view>
                             <view class="pol-trip-order-standar">
@@ -86,7 +108,7 @@
 
                         <!-- 价格、数量 -->
                         <view class="pol-trip-order-price-block">
-                            <view class="pol-trip-order-price">
+                            <view class="pol-trip-order-price {{ order.b === '4' || order.b === '5' ? 'disabled' : '' }}">
                                 ¥ {{ order.price }}
                             </view>
                             <view
@@ -115,7 +137,10 @@
                 </view>
 
                 <!-- 最大拼团优惠信息 -->
-                <view class="pol-trip-order-sum-block">
+                <view
+                    wx:if="{{ item.totalPrice - item.totalGroupPrice > 0 }}"
+                    class="pol-trip-order-sum-block"
+                >
                     <view class="pol-trip-order-sum">
                         共{{ item.sum }}件拼团
                     </view>
@@ -133,7 +158,7 @@
                         预计：
                     </view>
                     <view class="pol-trip-order-totalprice">
-                        <view class="pol-pay-price">¥{{ item.totalPrice }}</view>
+                        <view class="pol-pay-price">¥{{ item.totalGroupPrice }}</view>
                     </view>
                 </view>
 
@@ -166,7 +191,7 @@
                         
                         <!-- 订金按钮 -->
                         <view
-                            wx:if="{{ item.tripStatusCN === '未付订金' }}"
+                            wx:if="{{ item.tripStatusCN === '有未付订金' }}"
                             class="pol-trip-order-btn purple"
                         >
                             付订金 ¥{{ item.lastDepositPrice || 0 }}
@@ -180,7 +205,13 @@
                             付尾款 ¥{{ item.lastPrice || 0 }}
                         </view>
 
-                        <!-- 再次购买 -->
+                        <!-- 查看物流 -->
+                        <view
+                            wx:if="{{ item.tripStatusCN.indexOf('已付款') === 0 }}"
+                            class="pol-trip-order-btn purple"
+                        >
+                            查看物流 
+                        </view>
 
 
                     </view>

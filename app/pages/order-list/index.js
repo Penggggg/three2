@@ -74,6 +74,7 @@ Page({
 
     /** 拉取订单数据 */
     fetchList( index ) {
+        return;
         const { page, keyMapType, skip } = this.data;
         const type = keyMapType[ index ];
         http({
@@ -170,7 +171,10 @@ Page({
                 const b = order.base_status;
                 const d = order.deliver_status;
 
-                if ( isNeedPrePay && p === '0' ) {
+                if ( isNeedPrePay && p === '0' && b === '5' ) {
+                    statusCN = '支付过期，请重新购买'
+
+                } else if ( isNeedPrePay && p === '0' && b !== '5' && b !== '4' ) {
                     statusCN = '待付订金'
 
                 } else if ( p === '1' && b === '0' ) {
@@ -227,53 +231,67 @@ Page({
             const orders = tripOrders.meta;
             
             //  处理订单整体状态
-            if ( orders.some( x => x.statusCN === '待付订金' )) {
-                tripStatusCN = '未付订金';
+            if ( orders.filter( x => x.b !== '4' && x.b !== '5').some( x => x.statusCN === '待付订金' )) {
+                tripStatusCN = '有未付订金';
 
-            } else if ( orders.every( x => x.p === '1' && ( x.b === '2' ))) {
+            } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '1' && ( x.b === '0' || x.b === '1' ))) {
+                tripStatusCN = '跑腿购买中';
+
+            } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '1' && x.b === '2' )) {
                 tripStatusCN = '待付尾款';
 
-            } else if ( orders.every( x => x.p === '2') && orders.every( x => x.d === '0')) {
+            } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
+                && orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.d === '0')) {
                 tripStatusCN = '已付款，未发货';
 
-            } else if ( orders.every( x => x.p === '2') && orders.every( x => x.d === '1')) {
+            } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
+                && orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.d === '1')) {
                 tripStatusCN = '已付款，已发货';
 
-            } else if ( orders.every( x => x.p === '2') && orders.some( x => x.d === '0') && orders.some( x => x.d === '1')) {
+            } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
+                && orders.some( x => x.d === '0') && orders.some( x => x.d === '1')) {
                 tripStatusCN = '已付款，部分发货';
             }
             tripOrders['tripStatusCN'] = tripStatusCN;
 
             // 处理订单商品数量
             const sum = orders.reduce(( x, y ) => {
-                return x + y.count;
+                const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
+                return x + count;
             }, 0 );
             tripOrders['sum'] = sum;
 
             // 处理订单商品价格
             const totalPrice = orders.reduce(( x, y ) => {
-                return x + y.price * y.count;
+                const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
+                return x + y.price * count;
             }, 0 );
             tripOrders['totalPrice'] = totalPrice;
 
-            // 处理订单商品团购价
+            /**
+             * 处理订单商品团购价
+             * ! 团购总价为0，则团购价为原总价
+             */
             const totalGroupPrice = orders.reduce(( x, y ) => {
-                return x + y.groupPrice ? y.groupPrice * y.count : 0
+                const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
+                return x + y.groupPrice ? y.groupPrice * count : 0
             }, 0 );
-            tripOrders['totalGroupPrice'] = totalGroupPrice;
+            tripOrders['totalGroupPrice'] = totalGroupPrice || totalPrice;
 
             // 剩余订金
             const lastDepositPrice = orders.reduce(( x, y ) => {
+                const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
                 let currentDepositPrice = y.p === '0' && !!y.depositPrice ? y.depositPrice : 0;
-                return x + currentDepositPrice * y.count;
+                return x + currentDepositPrice * count;
             }, 0 );
             tripOrders['lastDepositPrice'] = lastDepositPrice;
 
             // 剩余尾款
             const lastPrice = orders.reduce(( x, y ) => {
                 const depositPrice = y.depositPrice || 0;
+                const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
                 let currentPrice = y.p === '1' && y.b === '2' ? y.price - depositPrice : 0;
-                return x + currentPrice * y.count;
+                return x + currentPrice * count;
             }, 0 );
             tripOrders['lastPrice'] = lastPrice;
 
