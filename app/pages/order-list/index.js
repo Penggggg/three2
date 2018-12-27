@@ -74,7 +74,6 @@ Page({
 
     /** 拉取订单数据 */
     fetchList( index ) {
-        return;
         const { page, keyMapType, skip } = this.data;
         const type = keyMapType[ index ];
         http({
