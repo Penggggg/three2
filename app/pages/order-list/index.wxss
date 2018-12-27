@@ -1,5 +1,5 @@
 .page-order-list {
-    min-height: 100vh;
+    min-height: 90vh;
     background: #fafafa;
     display: flex;
     flex-direction: column;
