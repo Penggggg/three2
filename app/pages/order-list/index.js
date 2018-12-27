@@ -10,18 +10,31 @@ Page({
         // 上方活动tab
         active: 0,
         // 上方tabs
+        // tabs: [{
+        //     key: 0,
+        //     label: '全部'
+        // }, {
+        //     key: 1,
+        //     label: '待付款'
+        // }, {
+        //     key: 2,
+        //     label: '待发货'
+        // }, {
+        //     key: 3,
+        //     label: '已完成'
+        // }],
         tabs: [{
             key: 0,
-            label: '全部'
+            label: '全部订单'
         }, {
             key: 1,
-            label: '待付款'
+            label: ''
         }, {
             key: 2,
-            label: '待发货'
+            label: ''
         }, {
             key: 3,
-            label: '已完成'
+            label: ''
         }],
         // tab跟查询的关系
         keyMapType: {

@@ -5,6 +5,19 @@
     flex-direction: column;
 }
 
+.pol-header-block {
+    top: -25rpx;
+    left: -10%;
+    width: 120%;
+    height: 380rpx;
+    position: fixed;
+    background: linear-gradient(to bottom, #ff5777, #ffe8ee );
+    -webkit-filter: blur(10px); /* Chrome, Opera */
+		       -moz-filter: blur(10px);
+		        -ms-filter: blur(10px);    
+		            filter: blur(10px);
+}
+
 .pol-tabs {
     display: flex;
     background: #ff5777;
@@ -32,7 +45,12 @@
 }
 
 .pol-content-block {
-    flex: 1;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    z-index: 10;
+    position: absolute;
     overflow-y: scroll;
 }
 

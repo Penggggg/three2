@@ -1,20 +1,22 @@
 <view class="page-order-list">
 
-    <!-- 上方tab -->
-    <!-- <view class="pol-tabs">
-        <view
-            wx:for="{{ tabs }}"
-            bindtap="onTab"
-            data-index="{{ index }}"
-            wx:key="{{ index }}"
-            class="pol-tabs-item {{ active === index ? 'active' : '' }}"
-        >
-            {{ item.label }}
-        </view>
-    </view> -->
+    <!-- 顶部毛玻璃 -->
+    <view class="pol-header-block"></view>
 
     <!-- 内容信息，订单、可能附带推荐、拼团信息 -->
     <view class="pol-content-block">
+
+        <!-- 上方tab -->
+        <view class="pol-tabs">
+            <view
+                wx:for="{{ tabs }}"
+                data-index="{{ index }}"
+                wx:key="{{ index }}"
+                class="pol-tabs-item {{ active === index ? 'active' : '' }}"
+            >
+                {{ item.label }}
+            </view>
+        </view>
 
         <!-- 订单列表，需要“加载更多”的按钮 -->
         <view class="pol-order-list-block">
