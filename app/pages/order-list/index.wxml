@@ -53,11 +53,13 @@
 
                 <!-- 订单列表 -->
                 <view
-                    wx:for-item="order"
                     wx:for-index="k"
                     wx:key="{{ k }}"
-                    class="pol-trip-order-item"
+                    wx:for-item="order"
                     wx:for="{{ item.meta }}"
+                    class="pol-trip-order-item"
+                    bindtap="goGoodDetail"
+                    data-data="{{ order }}"
                 >
                     <!-- 基本信息 -->
                     <view class="pol-trip-order-info">
@@ -99,9 +101,89 @@
                         </view>
 
                     </view>
-                    <!-- 货款信息 -->
+                
+                </view>
 
-                    <!-- 其他按钮 -->
+                <!-- 货款合计信息 -->
+                <view class="pol-trip-order-sum-block">
+                    <view class="pol-trip-order-sum">
+                        共{{ item.sum }}件商品
+                    </view>
+                    <view class="pol-trip-order-totalprice">
+                        合计：<view class="pol-totalprice">¥{{ item.totalPrice }}</view>
+                    </view>
+                </view>
+
+                <!-- 最大拼团优惠信息 -->
+                <view class="pol-trip-order-sum-block">
+                    <view class="pol-trip-order-sum">
+                        共{{ item.sum }}件拼团
+                    </view>
+                    <view class="pol-trip-order-totalprice">
+                        省：<view class="pol-price">-¥{{ item.totalPrice - item.totalGroupPrice }}</view>
+                    </view>
+                </view>
+
+                <!-- 预估最终结算信息 -->
+                <view
+                    wx:if="{{ item.tripStatusCN !== '待付尾款' }}"
+                    class="pol-trip-order-sum-block"
+                >
+                    <view class="pol-trip-order-sum">
+                        预计：
+                    </view>
+                    <view class="pol-trip-order-totalprice">
+                        <view class="pol-pay-price">¥{{ item.totalPrice }}</view>
+                    </view>
+                </view>
+
+                <!-- 结算最终 -->
+                <view
+                    wx:if="{{ item.tripStatusCN.indexOf('已付款') === 0 }}"
+                    class="pol-trip-order-sum-block"
+                >
+                    <view class="pol-trip-order-sum">
+                        合计：
+                    </view>
+                    <view class="pol-trip-order-totalprice">
+                        <view class="pol-pay-price">¥{{ item.totalPrice }}</view>
+                    </view>
+                </view>
+
+                <!-- 其他按钮 -->
+                <view class="pol-trip-order-btn-block">
+                    <view class="pol-order-more">
+                        更多
+                    </view>
+                    <view class="pol-trip-order-btns">
+
+                        <view
+                            bindtap="concact"
+                            class="pol-trip-order-btn"
+                        >
+                            联系客服
+                        </view>
+                        
+                        <!-- 订金按钮 -->
+                        <view
+                            wx:if="{{ item.tripStatusCN === '未付订金' }}"
+                            class="pol-trip-order-btn purple"
+                        >
+                            付订金 ¥{{ item.lastDepositPrice || 0 }}
+                        </view>
+
+                        <!-- 尾款按钮 -->
+                        <view
+                            wx:if="{{ item.tripStatusCN === '待付尾款' }}"
+                            class="pol-trip-order-btn purple"
+                        >
+                            付尾款 ¥{{ item.lastPrice || 0 }}
+                        </view>
+
+                        <!-- 再次购买 -->
+
+
+                    </view>
                 </view>
 
             </view>

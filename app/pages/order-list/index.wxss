@@ -62,6 +62,7 @@
     background: #fff;
     border-radius: 10px;
     padding-bottom: 10rpx;
+    margin-bottom: 25rpx;
     box-shadow: 3px 3px 10px rgba(0,0,0,0.20);
 }
 
@@ -163,4 +164,77 @@
     padding: 2rpx 10rpx;
     border-radius: 2px;
     border: 1px solid #ff5777;
+}
+
+.pol-trip-order-sum-block {
+    text-align: right;
+    display: flex;
+    align-items: center;
+    padding: 5rpx 20rpx;
+    box-sizing: border-box;
+    justify-content: flex-end;
+}
+
+.pol-trip-order-sum {
+    color: #666;
+    font-size: 22rpx;
+    margin-right: 15rpx;
+}
+
+.pol-trip-order-totalprice {
+    color: #666;
+    font-size: 22rpx;
+}
+
+.pol-totalprice {
+    color: #666;
+    display: inline;
+    font-size: 22rpx;
+}
+
+.pol-price {
+    color: #ff5777;
+    display: inline;
+    font-size: 22rpx;
+}
+
+.pol-pay-price {
+    color: #ff5777;
+    display: inline;
+    font-size: 26rpx;
+}
+
+.pol-trip-order-btn-block {
+    display: flex;
+    align-items: center;
+    padding: 0 20rpx;
+    justify-content: space-between;
+}
+
+.pol-trip-order-btns {
+    display: flex;
+    padding: 15rpx 0rpx;
+    box-sizing: border-box;
+}
+
+.pol-trip-order-btn {
+    color: #999;
+    font-size: 24rpx;
+    padding: 5rpx 20rpx;
+    border-radius: 10px;
+    border: 1px solid rgba( 0, 0, 0, 0.2 );
+}
+
+.pol-trip-order-btn:not(:last-child) {
+    margin-right: 20rpx;
+}
+
+.pol-trip-order-btn.purple {
+    color: #ff5777;
+    border: 1px solid #ff5777;
+}
+
+.pol-order-more {
+    color: #666;
+    font-size: 22rpx;
 }

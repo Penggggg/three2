@@ -49,6 +49,8 @@ Page({
         skip: 0,
         // 滚动加载 是否能加载更多
         canloadMore: true,
+        // 原始订单列表
+        metaList: [ ],
         // 以行程为基调的订单列表
         tripOrders: [ ],
         // 是否新客户
@@ -91,20 +93,20 @@ Page({
                 if ( status !== 200 ) { return; }
 
                 const { page, current, totalPage, total } = data;
-                const metaList = data.data;
 
                 this.setData({
                     page,
                     skip: current,
+                    metaList: data.data,
                     canloadMore: total > current,
-                    tripOrders: this.covertOrder( metaList )
                 });
+                this.covertOrder( );
             }
         })
     },
 
     /** 转换订单列表，为行程订单列表 */
-    covertOrder( metaList ) {
+    covertOrder( ) {
 
         /**
          * type orderObj = {
@@ -112,10 +114,12 @@ Page({
          *     tid
          *     tripName
          *     tripTime
-         *     isNeedPrePay // 是否要付订金
-         *     pay_status
-         *     base_status
+         *     tripStatusCN
          *     meta: metaOrder[ ]
+         *  }
+         * 
+         *  {
+         *     整体订单状态：some P0 （待付订金）、all P1 + B2/B4（待付尾款）、all P2（已付款）、all P2 + D0 未发货、all P2 + D1 已发货
          *  }
          * 
          *  {
@@ -123,6 +127,7 @@ Page({
          *  }
          */
 
+        const { metaList } = this.data;
         const orderObj = { };
 
         metaList.map( order => {
@@ -199,6 +204,8 @@ Page({
                 const d = new Date( order.trip.start_date );
                 orderObj[ order.tid ] = {
                     tid: order.tid,
+                    tripPostage: order.trip.postage,
+                    tripPostagefree_atleast: order.trip.postagefree_atleast,
                     tripName: order.trip.title,
                     tripPayment: order.trip.payment,
                     tripTime: `${d.getMonth( )+1}月${d.getDate( )}`,
@@ -211,20 +218,19 @@ Page({
                 });
             }
 
-            // 处理订单整体状态 pay_status base_status
-
-
         }); 
 
+        // 处理订单整体状态、合计信息 tripStatusCN
         Object.keys( orderObj ).map( tid => {
             let tripStatusCN = '';
             const tripOrders = orderObj[ tid ];
             const orders = tripOrders.meta;
             
+            //  处理订单整体状态
             if ( orders.some( x => x.statusCN === '待付订金' )) {
                 tripStatusCN = '未付订金';
 
-            } else if ( orders.every( x => x.p === '1' && ( x.b === '2' || x.b === '4' ))) {
+            } else if ( orders.every( x => x.p === '1' && ( x.b === '2' ))) {
                 tripStatusCN = '待付尾款';
 
             } else if ( orders.every( x => x.p === '2') && orders.every( x => x.d === '0')) {
@@ -236,13 +242,55 @@ Page({
             } else if ( orders.every( x => x.p === '2') && orders.some( x => x.d === '0') && orders.some( x => x.d === '1')) {
                 tripStatusCN = '已付款，部分发货';
             }
-
             tripOrders['tripStatusCN'] = tripStatusCN;
+
+            // 处理订单商品数量
+            const sum = orders.reduce(( x, y ) => {
+                return x + y.count;
+            }, 0 );
+            tripOrders['sum'] = sum;
+
+            // 处理订单商品价格
+            const totalPrice = orders.reduce(( x, y ) => {
+                return x + y.price * y.count;
+            }, 0 );
+            tripOrders['totalPrice'] = totalPrice;
+
+            // 处理订单商品团购价
+            const totalGroupPrice = orders.reduce(( x, y ) => {
+                return x + y.groupPrice ? y.groupPrice * y.count : 0
+            }, 0 );
+            tripOrders['totalGroupPrice'] = totalGroupPrice;
+
+            // 剩余订金
+            const lastDepositPrice = orders.reduce(( x, y ) => {
+                let currentDepositPrice = y.p === '0' && !!y.depositPrice ? y.depositPrice : 0;
+                return x + currentDepositPrice * y.count;
+            }, 0 );
+            tripOrders['lastDepositPrice'] = lastDepositPrice;
+
+            // 剩余尾款
+            const lastPrice = orders.reduce(( x, y ) => {
+                const depositPrice = y.depositPrice || 0;
+                let currentPrice = y.p === '1' && y.b === '2' ? y.price - depositPrice : 0;
+                return x + currentPrice * y.count;
+            }, 0 );
+            tripOrders['lastPrice'] = lastPrice;
+
+            // 处理订单满减
+
+            // 处理订单立减
+
+            // 处理订单满减券
+
+            // 处理订单邮费
 
         });
         
         console.log( Object.keys( orderObj ).map( tid => orderObj[ tid ]));
-        return Object.keys( orderObj ).map( tid => orderObj[ tid ]);
+        this.setData({
+            tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
+        })
     },
 
     /** 监听全局新旧客 */
@@ -250,8 +298,24 @@ Page({
         app.watch$('isNew', val => {
             this.setData({
                 isNew: val
-            })
+            });
+            val !== this.data.isNew && this.covertOrder( );
         });
+    },
+
+    /** 去联系代购 */
+    concact( ) {
+        wx.navigateTo({
+            url: '/pages/concat/index'
+        });
+    },
+
+    /** 去商品详情 */
+    goGoodDetail({ currentTarget }) {
+        const { pid } = currentTarget.dataset.data;
+        wx.navigateTo({
+            url: `/pages/goods-detail/index?id=${pid}`
+        })
     },
 
     /**

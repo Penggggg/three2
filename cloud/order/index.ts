@@ -324,7 +324,9 @@ export const main = async ( event, context ) => {
                     .field({
                         title: true,
                         start_date: true,
-                        payment: true
+                        payment: true,
+                        postage: true,
+                        postagefree_atleast: true
                     })
                     .get( );
             }));
