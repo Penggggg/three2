@@ -131,6 +131,13 @@
                                 <text class="pcl-text-red">{{ isNew ? '本次行程免订金' : '熟客免订金' }}</text>
                             </view>
 
+                            <view
+                                class="pcl-cart-item-info grey"
+                                wx:elif="{{ !item.current.depositPrice }}"
+                            >
+                                <text class="pcl-text-red">该商品面订金</text>
+                            </view>
+
                             <!-- 优惠信息 -->
                             <view
                                 class="pcl-cart-item-info grey"
@@ -220,6 +227,7 @@
                             </view>
 
                             <view 
+                                wx:if="{{ needPrePay && !!item.current.depositPrice }}"
                                 class="pcl-cart-item-depositprice-block"
                             >
                                 <!-- 如果需要付订金，则展示订金信息 -->
@@ -227,7 +235,6 @@
                                     icon="sub"
                                     decimal="small"
                                     class="pcl-price small"
-                                    wx:if="{{ needPrePay && !!item.current.depositPrice }}"
                                 > 
                                     {{ item.current.depositPrice }}
                                 </wxc-price>
