@@ -1,7 +1,7 @@
 <view class="page-order-list">
 
     <!-- 上方tab -->
-    <view class="pol-tabs">
+    <!-- <view class="pol-tabs">
         <view
             wx:for="{{ tabs }}"
             bindtap="onTab"
@@ -11,7 +11,7 @@
         >
             {{ item.label }}
         </view>
-    </view>
+    </view> -->
 
     <!-- 内容信息，订单、可能附带推荐、拼团信息 -->
     <view class="pol-content-block">
@@ -45,7 +45,7 @@
                         </view>
                     </view>
                     <view class="pol-trip-header-status">
-                        已发货
+                        {{ item.tripStatusCN }}
                     </view>
                 </view>
 
@@ -74,6 +74,9 @@
                             </view>
                             <view class="pol-trip-order-standar">
                                 {{ order.standername }}
+                            </view>
+                            <view class="pol-trip-order-status">
+                                {{ order.statusCN }}
                             </view>
                         </view>
 

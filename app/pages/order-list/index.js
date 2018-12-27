@@ -50,6 +50,7 @@ Page({
         this.setData({
             list:[ ],
             page: 0,
+            skip: 0,
             totalPage: 1,
             active: index
         });
@@ -79,12 +80,11 @@ Page({
                 const { page, current, totalPage, total } = data;
                 const metaList = data.data;
 
-                this.covertOrder( metaList )
-
                 this.setData({
                     page,
                     skip: current,
-                    canloadMore: total > current
+                    canloadMore: total > current,
+                    tripOrders: this.covertOrder( metaList )
                 });
             }
         })
@@ -103,7 +103,10 @@ Page({
          *     pay_status
          *     base_status
          *     meta: metaOrder[ ]
-         *     
+         *  }
+         * 
+         *  {
+         *     订单item状态：P0（待付订金）、P1+B0（购买中）、P1+B1（已购买，结算中）、P1+B2（已购买，待付款）、P1+B4（买不到，退款中）、P2+D1（未发货）、P2+D2（已发货）
          *  }
          */
 
@@ -111,58 +114,122 @@ Page({
 
         metaList.map( order => {
 
-            if ( !orderObj[ order.tid ]) {
+            let isNeedPrePay = true;
+            const { isNew } = this.data;
+            const payment = order.trip.payment;
+            const { depositPrice } = order;
 
-                let isNeedPrePay = true;
-                const { isNew } = this.data;
-                const p = order.trip.payment;
-                const d = new Date( order.trip.start_date );
+            if ( isNew && payment === '0' ) {
+                isNeedPrePay = true;
 
-                if ( isNew && p === '0' ) {
-                    isNeedPrePay = true;
+            } else if ( isNew && payment === '1' ) {
+                isNeedPrePay = true;
 
-                } else if ( isNew && p === '1' ) {
-                    isNeedPrePay = true;
+            } else if ( isNew && payment === '2' ) {
+                isNeedPrePay = false;
 
-                } else if ( isNew && p === '2' ) {
-                    isNeedPrePay = false;
+            }  else if ( !isNew && payment === '0' ) {
+                isNeedPrePay = false;
 
-                }  else if ( !isNew && p === '0' ) {
-                    isNeedPrePay = false;
+            }  else if ( !isNew && payment === '1' ) {
+                isNeedPrePay = true;
 
-                }  else if ( !isNew && p === '1' ) {
-                    isNeedPrePay = true;
+            }  else if ( !isNew && payment === '2' ) {
+                isNeedPrePay = false;
 
-                }  else if ( !isNew && p === '2' ) {
-                    isNeedPrePay = false;
+            }  else {
+                isNeedPrePay = true;
+            } 
 
-                }  else {
-                    isNeedPrePay = true;
+            if ( !depositPrice ) {
+                isNeedPrePay = false;
+            }
+
+            // 处理单个订单 状态
+            const decorateOrder = ( order, isNeedPrePay ) => {
+                let statusCN = '';
+                const p = order.pay_status;
+                const b = order.base_status;
+                const d = order.deliver_status;
+
+                if ( isNeedPrePay && p === '0' ) {
+                    statusCN = '待付订金'
+
+                } else if ( p === '1' && b === '0' ) {
+                    statusCN = '跑腿购买中'
+
+                } else if ( p === '1' && b === '1' ) {
+                    statusCN = '已购买，结算中'
+
+                } else if ( p === '1' && b === '2' ) {
+                    statusCN = '已购买，待付款'
+
+                } else if ( p === '1' && b === '4' ) {
+                    statusCN = '买不到，退款中'
+
+                } else if ( p === '2' && d === '0' ) {
+                    statusCN = '未发货'
+                    
+                } else if ( p === '2' && d === '2' ) {
+                    statusCN = '已发货'
                 } 
 
+                return Object.assign({ }, order, {
+                    p,
+                    b,
+                    statusCN,
+                    isNeedPrePay
+                })
+            };
+
+            if ( !orderObj[ order.tid ]) {
+                const d = new Date( order.trip.start_date );
                 orderObj[ order.tid ] = {
                     tid: order.tid,
-                    isNeedPrePay,
                     tripName: order.trip.title,
                     tripPayment: order.trip.payment,
                     tripTime: `${d.getMonth( )+1}月${d.getDate( )}`,
-                    meta: [ order ]
+                    meta: [ decorateOrder( order, isNeedPrePay )]
                 };
 
             } else {
                 orderObj[ order.tid ] = Object.assign({ }, orderObj[ order.tid ], {
-                    meta: [ ...orderObj[ order.tid ].meta, order ]
+                    meta: [ ...orderObj[ order.tid ].meta, decorateOrder( order, isNeedPrePay )]
                 });
             }
 
-            // 处理 pay_status base_status
+            // 处理订单整体状态 pay_status base_status
 
 
-            this.setData({
-                tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
-            })
         }); 
+
+        Object.keys( orderObj ).map( tid => {
+            let tripStatusCN = '';
+            const tripOrders = orderObj[ tid ];
+            const orders = tripOrders.meta;
+            
+            if ( orders.some( x => x.statusCN === '待付订金' )) {
+                tripStatusCN = '未付订金';
+
+            } else if ( orders.every( x => x.p === '1' && ( x.b === '2' || x.b === '4' ))) {
+                tripStatusCN = '待付尾款';
+
+            } else if ( orders.every( x => x.p === '2') && orders.every( x => x.d === '0')) {
+                tripStatusCN = '已付款，未发货';
+
+            } else if ( orders.every( x => x.p === '2') && orders.every( x => x.d === '1')) {
+                tripStatusCN = '已付款，已发货';
+
+            } else if ( orders.every( x => x.p === '2') && orders.some( x => x.d === '0') && orders.some( x => x.d === '1')) {
+                tripStatusCN = '已付款，部分发货';
+            }
+
+            tripOrders['tripStatusCN'] = tripStatusCN;
+
+        });
         
+        console.log( Object.keys( orderObj ).map( tid => orderObj[ tid ]));
+        return Object.keys( orderObj ).map( tid => orderObj[ tid ]);
     },
 
     /** 监听全局新旧客 */
