@@ -501,7 +501,7 @@ Page({
                             groupPrice,
                             tid: trip._id,
                             depositPrice,
-                            type: 'pre', // 预付类型订单
+                            type: 'pre', // 预付类型订单，
                             cid: temp.cart._id,
                             name: `${title}`,
                             standername: standardName,
