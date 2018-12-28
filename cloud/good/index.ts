@@ -378,30 +378,20 @@ export const main = async ( event, context ) => {
             const { sid, pid, count } = event.data;
 
             let target: any = null;
+            const targetId = sid || pid;
+            const collectionName = !!sid ? 'standards' : 'goods';
 
-            // 找到型号
-            if ( !!sid ) {
-                const standard$ = await db.collection('standards')
-                    .where({
-                        _id: sid
-                    })
-                    .get( );
-                if ( standard$.data.length === 0 ) {
-                    throw '更新库存异常, 当前型号不存在';
-                }
-                target = standard$.data[ 0 ];
-            // 找到商品
-            } else {
-                const good$ = await db.collection('goods')
-                    .where({
-                        _id: pid
-                    })
-                    .get( );
-                if ( good$.data.length === 0 ) {
-                    throw '更新库存异常, 当前商品不存在';
-                }
-                target = good$.data[ 0 ];
+            const find$ = await db.collection( collectionName )
+                .where({
+                    _id: targetId
+                })
+                .get( );
+
+            if ( find$.data.length === 0 ) {
+                throw !!sid ? '更新库存异常, 当前型号不存在' : '更新库存异常, 当前商品不存在'
             }
+
+            target = find$.data[ 0 ];
 
             // 无限库存
             if ( target.stock === null || target.stock === undefined ) {
@@ -412,26 +402,16 @@ export const main = async ( event, context ) => {
 
             // 判断库存是否足够
             if ( target.stock - count < 0 ) {
-                throw '更新库存异常, 当前商品库存不足';
+                throw !!sid ? '更新库存异常, 当前型号库存不足' : '更新库存异常, 当前商品库存不足';
             }
 
-            target = Object.assign({ }, target, {
-                stock: target.stock - count
-            });
-            delete target['_id'];
-
-            // 更新商品型号库存
-            if ( !!sid ) {
-                await db.collection('standards').doc( sid )
-                    .set({
-                        data: target
-                    });
-            } else {
-                await db.collection('goods').doc( pid )
-                    .set({
-                        data: target
-                    });
-            }
+            // 更新
+            await db.collection( collectionName ).doc( targetId )
+                .update({
+                    data: {
+                        stock: _.inc( -count )
+                    }
+                })
 
             return ctx.body = {
                 status: 200

@@ -40,7 +40,6 @@ export const overtime = async ( ) => {
 
             if ( target.data.stock === undefined || target.data.stock === null ) { return; }
 
-            
             await db.collection( collection ).doc( targetId )
                 .update({
                     data: {
