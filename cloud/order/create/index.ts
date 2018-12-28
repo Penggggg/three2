@@ -2,6 +2,7 @@ import * as cloud from 'wx-server-sdk';
 /**
  * sid
  * pid
+ * cid
  * count
  */
 const create$ = async( openid, data, db: DB.Database, ctx ) => {
@@ -28,6 +29,13 @@ const create$ = async( openid, data, db: DB.Database, ctx ) => {
                     openid
                 })
             });
+
+        // 删除对应的购物车
+        if ( !!data.cid ) {
+            await db.collection('cart')
+                .doc( data.cid )
+                .remove( );
+        }
 
         return {
             status: 200,
