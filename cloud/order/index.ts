@@ -18,6 +18,7 @@ const _ = db.command;
  * createtime
  * tid,
  * pid,
+ * ! cid (可为空)
  * ! sid, (可为空)
  * count,
  * price,
@@ -186,7 +187,7 @@ export const main = async ( event, context ) => {
                     base_status: '0',
                     pay_status: meta.depositPrice === 0 ? '1' : pay_status , // 商品订金额度为0
                     createTime: new Date( ).getTime( ),
-                    type: !!meta.depositPrice ? meta.type : 'custom'
+                    type: !!meta.depositPrice ? meta.type : 'normal'
                 });
                 delete t['address'];
                 return t;

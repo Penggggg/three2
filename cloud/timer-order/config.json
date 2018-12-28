@@ -1,0 +1,9 @@
+{
+    "triggers": [
+        {
+            "name": "timer-order",
+            "type": "timer",
+            "config": "*/20 * * * * * *"
+        }
+    ]
+}
