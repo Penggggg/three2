@@ -1,5 +1,5 @@
 import * as cloud from 'wx-server-sdk';
-import { overtime } from './order';
+import { overtime, payedFix } from './order';
 
 cloud.init( );
 
@@ -15,6 +15,8 @@ export const main = async ( event, context ) => {
     try {
         
         await overtime( );
+        await payedFix( );
+        
         return {
             status: 200
         }

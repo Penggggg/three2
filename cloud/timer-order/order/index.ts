@@ -6,7 +6,7 @@ const db: DB.Database = cloud.database( );
 const _ = db.command;
 
 /**
- * 所有应该支付，但是支付超时（30分钟）的订单，释放原来的库存，订单重置为已过时
+ * 订单1: 所有应该支付，但是没有支付（支付超时30分钟）的订单，释放原来的库存，订单重置为已过时
  */
 export const overtime = async ( ) => {
     try {
@@ -50,7 +50,47 @@ export const overtime = async ( ) => {
         
         return { status: 200 }
     } catch ( e ) {
-        console.log('!!!!定时器错误',)
+        console.log('!!!!定时器订单overtime错误',)
         return { status: 500 }
     }
 };
+
+/**
+ * 订单2：所有成功支付的订单，检查有没有 type：pre的，有的话需要转成type:normal类型订单，删除对应的购物车（有的话）
+ */
+export const payedFix = async ( ) => {
+    try {
+
+        const orders$ = await db.collection('order')
+            .where({
+                type: 'pre',
+                pay_status: '1'
+            })
+            .get( );
+
+        // 订单更新
+        await Promise.all( orders$.data.map( order => {
+            return db.collection('order').doc( String( order._id ))
+                .update({
+                    data: {
+                        type: 'normal'
+                    }
+                })
+        }));
+
+        // 删除对应的购物车
+        await Promise.all(
+            orders$.data
+                .filter( x => !!x.cid )
+                .map( order => {
+                    return db.collection('cart').doc( order.cid )
+                        .remove( )
+                })
+        );
+
+
+    } catch ( e ) {
+        console.log('!!!!定时器订单payedFix错误',)
+        return { status: 500 }
+    }
+}
