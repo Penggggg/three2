@@ -610,10 +610,11 @@ Page({
                                     .join(',')
                                 },
                                 success: res => {
+                    
                                     if ( res.status === 200 ) {
                                         wx.showToast({
                                             title: '支付成功'
-                                        })
+                                        });
                                     } else {
                                         wx.showToast({
                                             icon: 'none',

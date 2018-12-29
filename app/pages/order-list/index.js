@@ -88,7 +88,7 @@ Page({
                 // 本来订单跟商品是 1:1 的关系
                 // 但是直接就这样子显示，会不够直观，部分操作麻烦
                 // 所以这边要以“行程”为基调，重新组织订单的显示方式
-                console.log( res );
+
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
 

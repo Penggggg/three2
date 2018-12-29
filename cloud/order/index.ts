@@ -206,7 +206,7 @@ export const main = async ( event, context ) => {
             const order_result = save$.map(( x, k ) => {
                 const { price, count, pay_status, depositPrice } = temp[ k ];
                 return {
-                    oid: x._id,
+                    oid: x.data._id,
                     price,
                     count,
                     pay_status,
