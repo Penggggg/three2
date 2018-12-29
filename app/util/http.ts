@@ -3,7 +3,9 @@ const httpParam = {
     data: { },
     success: ( res ) => { },
     loadingMsg: '加载中....',
-    errMsg: '加载错误，请重试'
+    errMsg: '加载错误，请重试',
+    complete: ( ) => { },
+    error: ( ) => { }
 };
 
 type httpParam = any;
@@ -44,8 +46,14 @@ const http = ( params$: httpParam ) => {
             params.success( res.result );
 
         },
-        fail: err => getError( '网络错误', err ),
-        complete: ( ) => wx.hideLoading({ })
+        fail: err => {
+            getError( '网络错误', err );
+            params.error && params.error( )
+        },
+        complete: ( ) => {
+            wx.hideLoading({ });
+            params.complete && params.complete( )
+        }
     })
 
 }

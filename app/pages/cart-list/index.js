@@ -34,7 +34,9 @@ Page({
         // 是否新客户
         isNew: true,
         // 订金总额
-        sum2: 0
+        sum2: 0,
+        // 是否处于结算中
+        isSettling: false
     },
 
     /** 设置computed */
@@ -470,7 +472,17 @@ Page({
 
     /** 批量进行购物车结算 */
     batchSettle( ) {
-        const { cartList, selectCartIdList, trip } = this.data;
+
+        const { cartList, selectCartIdList, trip, isSettling } = this.data;
+
+        if ( isSettling ) {
+            return;
+        }
+
+        this.setData({
+            isSettling: true
+        });
+
         if ( selectCartIdList.length === 0 ) { return; }
 
         // 判断是否没有最新行程
@@ -517,8 +529,7 @@ Page({
                 }).filter( x => !!x );
 
                 /**
-                 * 判断在购物清单，这些商品是否存在 买不全、买不到
-                 * ! 或货存不足
+                 * 判断在购物清单，这些商品是否存在 买不全、买不到、货存不足
                  */
                 http({
                     data: {
@@ -628,12 +639,24 @@ Page({
                         }, ( ) => {
                             // 失败/成功-订单列表
                             goOrders( );
+                            this.setData({
+                                isSettling: false
+                            });
                         });
 
+                    },
+                    error: ( ) => {
+                        this.setData({
+                            isSettling: false
+                        });
                     }
                 });
 
-
+            },
+            fail: err => {
+                this.setData({
+                    isSettling: false
+                });
             }
         });
 

@@ -362,7 +362,7 @@
                 bindtap="batchSettle"
                 class="pcl-settlet-btn"
             >
-                结算
+                {{ isSettling ? '结算中...' : '结算' }}
             </button>
 
         </view>
