@@ -1,6 +1,7 @@
 // app/pages/cart-list/index.js
 
 const { http } = require('../../util/http.js');
+const { wxPay } = require('../../util/pay');
 const { computed } = require('../../lib/vuefy/index.js');
 
 const app = getApp( );
@@ -585,7 +586,6 @@ Page({
                             return this.data.cartList.find( y => ( y.current.pid === x.pid && y.current.sid === x.sid )
                                 || ( y.current.pid === x.pid && !y.current.sid && !x.sid ))
                         });
-
                         if ( hasBeenBuy.length > 0 ) {
                             wx.showToast({
                                 icon: 'none',
@@ -609,7 +609,7 @@ Page({
                         }
 
                         // 支付里面
-                        this.wxPay( total_fee, ( ) => {
+                        wxPay( total_fee, ( ) => {
                             // 批量更新订单为已支付
                             const pay = ( ) => http({
                                 url: 'order_upadte-to-payed',
@@ -660,42 +660,6 @@ Page({
             }
         });
 
-    },
-
-    /** 发起微信支付 */
-    wxPay( total_fee, successCB, completeCB ) {
-        http({
-            url: 'common_wxpay',
-            data: {
-                total_fee: Math.floor( total_fee * 100 ) // 这里的单位是分，不是元
-            },
-            errMsg: '支付失败，请重试',
-            success: res => {
-                if ( res.status !== 200 ) { return; }
-                const { nonce_str, paySign, prepay_id, timeStamp } = res.data;
-                wx.requestPayment({
-                    paySign,
-                    timeStamp,
-                    signType: 'MD5',
-                    nonceStr: nonce_str,
-                    package: `prepay_id=${prepay_id}`,
-                    success: res => {
-                        const { errMsg } = res;
-                        if ( errMsg === 'requestPayment:ok' ) {
-                            // 支付成功
-                            successCB && successCB( );
-                        }
-                    },
-                    fail: err => {
-                        wx.showToast({
-                            icon: 'none',
-                            title: '支付失败，请重试'
-                        })
-                    },
-                    complete: ( ) => { completeCB && completeCB( );}
-                });
-            }
-        })
     },
 
     /** 拉取最新可用行程 */
