@@ -525,6 +525,7 @@ Page({
                         tid: trip._id,
                         list: selectedCheck
                     },
+                    loadingMsg: '结算中...',
                     url: `shopping-list_findCannotBuy`,
                     success: res => {
                         const { status, data } = res;
@@ -581,6 +582,9 @@ Page({
                             });
                         }
                         
+                        wx.showToast({
+                            title: '购买成功'
+                        });
 
                         return console.log('????', data );
 
@@ -590,9 +594,9 @@ Page({
                         }, 0 );
 
                         // 计算需要交全款的
-                        const allPrice = canBuy.reduce(( x, y ) => {
-                            return x + y.current.count$ * y.current.price;
-                        }, 0 );
+                        // const allPrice = canBuy.reduce(( x, y ) => {
+                        //     return x + y.current.count$ * y.current.price;
+                        // }, 0 );
                         
                         // 发起支付：类型为，订金支付、全款支付，然后更新所有预付订单号状态
                         // 判断支付对象：0: 新客付订金/旧客免订金;1: 所有人付定金; 2: 所有人免定金; 3: 所有人付全额
@@ -600,11 +604,6 @@ Page({
                         if ( payment !== '2' ) {
                             
                         }
-
-                        /**
-                         * ! 提示无法加入订单的商品
-                         * ! 重新刷新购物车，因为成功加入清单的购物车的商品，这个商品的购物车会被删除掉
-                         */
                     }
                 });
 
