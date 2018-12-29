@@ -359,6 +359,32 @@ export const main = async ( event, context ) => {
             
         } catch ( e ) { return ctx.body = { status: 500};}
     })
+
+    /**
+     * 批量更新，订单为已支付
+     * orderIds: "123,234,345"
+     */
+    app.router('upadte-to-payed', async( ctx, next ) => {
+        try {
+
+            const { orderIds } = event.data;
+            await Promise.all( orderIds.split(',').map( oid => {
+                return db.collection('order').doc( oid )
+                    .update({
+                        data: {
+                            pay_status: '1'
+                        }
+                    });
+            }));
+
+            return ctx.body = {
+                status: 200
+            }
+
+        } catch ( e ) { 
+            return ctx.body = { status: 500 };
+        } 
+    })
  
    return app.serve( );
 

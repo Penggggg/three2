@@ -590,11 +590,43 @@ Page({
                             return x + deposit_price;
                         }, 0 );
 
-                        // // 支付里面，转去 失败/成功-订单列表
-                        this.wxPay( total_fee, ( ) => { }, ( ) => {
+                        // 去往订单列表
+                        const goOrders = ( ) => {
                             wx.navigateTo({
                                 url: '/pages/order-list/index'
                             });
+                        }
+
+                        // 支付里面
+                        this.wxPay( total_fee, ( ) => {
+                            // 批量更新订单为已支付
+                            const pay = ( ) => http({
+                                url: 'order_upadte-to-payed',
+                                data: {
+                                    orderIds: orders.map( x => {
+                                        return x.pay_status === '0' ? x.oid : ''
+                                    })
+                                    .filter( x => !!x )
+                                    .join(',')
+                                },
+                                success: res => {
+                                    if ( res.status === 200 ) {
+                                        wx.showToast({
+                                            title: '支付成功'
+                                        })
+                                    } else {
+                                        wx.showToast({
+                                            icon: 'none',
+                                            title: '支付成功，刷新失败，重试中...'
+                                        });
+                                        pay( );
+                                    }
+                                }
+                            });
+                            pay( );
+                        }, ( ) => {
+                            // 失败/成功-订单列表
+                            goOrders( );
                         });
 
                     }
