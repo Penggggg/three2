@@ -202,14 +202,21 @@ export const main = async ( event, context ) => {
                 throw '创建订单错误！'
             }
 
-            const orderIds = save$.map( x => x.data._id );
-            // 4、更新订单状态
-            // 5、批量加入或创建购物清单
-            // 6、批量删除已加入购物清单或预付订单的购物车商品，如果有cid的话
-    
+            // 返回订单信息
+            const order_result = save$.map(( x, k ) => {
+                const { price, count, pay_status, depositPrice } = temp[ k ];
+                return {
+                    oid: x._id,
+                    price,
+                    count,
+                    pay_status,
+                    depositPrice
+                }
+            });
+
             return ctx.body = {
                 status: 200,
-                data: orderIds
+                data: order_result
             };
 
         } catch ( e ) {

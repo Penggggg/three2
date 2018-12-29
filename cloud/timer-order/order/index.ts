@@ -88,6 +88,10 @@ export const payedFix = async ( ) => {
                 })
         );
 
+        return {
+            status: 200
+        }
+
 
     } catch ( e ) {
         console.log('!!!!定时器订单payedFix错误',)

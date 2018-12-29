@@ -500,7 +500,7 @@ Page({
                             img: [ img ],
                             groupPrice,
                             tid: trip._id,
-                            depositPrice,
+                            depositPrice: depositPrice || 0,
                             type: 'pre', // 预付类型订单，
                             cid: temp.cart._id,
                             name: `${title}`,
@@ -530,7 +530,8 @@ Page({
                     success: res => {
                         const { status, data } = res;
                         if ( status !== 200 ) { return; }
-                        const { hasBeenBuy, cannotBuy, hasBeenDelete, lowStock } = data;
+                        console.log('????', data );
+                        const { hasBeenBuy, cannotBuy, hasBeenDelete, lowStock, orders } = data;
 
                         /** 提示行程无货 */
                         const cannotBuy$ = cannotBuy.map( x => {
@@ -582,28 +583,20 @@ Page({
                             });
                         }
                         
-                        wx.showToast({
-                            title: '购买成功'
-                        });
-
-                        return console.log('????', data );
-
-                        // 计算需要交的订金
-                        const allDepositPrice = canBuy.reduce(( x, y ) => {
-                            return x + y.current.count$ * ( y.detail.depositPrice || 0 );
+                        // 发起微信支付
+                        const total_fee = orders.reduce(( x, y ) => {
+                            const { pay_status, depositPrice } = y;
+                            const deposit_price = pay_status === '0' && !!depositPrice ? depositPrice : 0;
+                            return x + deposit_price;
                         }, 0 );
 
-                        // 计算需要交全款的
-                        // const allPrice = canBuy.reduce(( x, y ) => {
-                        //     return x + y.current.count$ * y.current.price;
-                        // }, 0 );
-                        
-                        // 发起支付：类型为，订金支付、全款支付，然后更新所有预付订单号状态
-                        // 判断支付对象：0: 新客付订金/旧客免订金;1: 所有人付定金; 2: 所有人免定金; 3: 所有人付全额
-                        const { payment } = this.data.trip
-                        if ( payment !== '2' ) {
-                            
-                        }
+                        // // 支付里面，转去 失败/成功-订单列表
+                        this.wxPay( total_fee, ( ) => { }, ( ) => {
+                            wx.navigateTo({
+                                url: '/pages/order-list/index'
+                            });
+                        });
+
                     }
                 });
 
@@ -614,11 +607,11 @@ Page({
     },
 
     /** 发起微信支付 */
-    wxPay( ) {
+    wxPay( total_fee, successCB, completeCB ) {
         http({
             url: 'common_wxpay',
             data: {
-                total_fee: 100
+                total_fee: Math.floor( total_fee * 100 ) // 这里的单位是分，不是元
             },
             errMsg: '支付失败，请重试',
             success: res => {
@@ -634,15 +627,16 @@ Page({
                         const { errMsg } = res;
                         if ( errMsg === 'requestPayment:ok' ) {
                             // 支付成功
+                            successCB && successCB( );
                         }
                     },
                     fail: err => {
-                        console.log( 'err', err );
                         wx.showToast({
                             icon: 'none',
                             title: '支付失败，请重试'
                         })
-                    }
+                    },
+                    complete: ( ) => { completeCB && completeCB( );}
                 });
             }
         })

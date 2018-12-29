@@ -25,6 +25,10 @@
     position: absolute;
 }
 
+.te-rank-block {
+    padding-top: 15rpx;
+}
+
 .te-header-title {
     color: #fff;
     font-size: 52rpx;
