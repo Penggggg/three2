@@ -14,8 +14,10 @@ const _ = db.command;
  * pid
  * ! sid ( 可为空 )
  * oids Array
- * status 0,1,2,3 未购买、已购买、买不全、买不到
- * img: Array
+ * goodName,
+ * standardName,
+ * buy_status 0,1,2,3 未购买、已购买、买不全、买不到
+ * base_status: 0,1 未调整，已调整
  * ! desc ( 可为空 )
  * createTime
  */
@@ -32,23 +34,23 @@ export const main = async ( event, context ) => {
      *!    openid?: string,
      *    list: { 
      *      tid
-*           cid
-*           sid
-*           pid
-*           price
-*           groupPrice
-*           count
-*           desc
-*           name
-*           img
-*           type
-*           pay_status,
-*           address: {
-*              name,
-*              phone,
-*              detail,
-*              postalcode
-*           }
+            cid
+            sid
+            pid
+            price
+            groupPrice
+            count
+            desc
+            name
+            img
+            type
+            pay_status,
+            address: {
+               name,
+               phone,
+               detail,
+               postalcode
+            }
      *     }[ ]
      * }
      * -------- 返回 ----------
@@ -80,6 +82,7 @@ export const main = async ( event, context ) => {
      *          sid
      *      }[ ],
      *      * 订单号列表
+     *      orders
      * }
      */
     app.router('findCannotBuy', async( ctx, next ) => {
@@ -154,7 +157,9 @@ export const main = async ( event, context ) => {
                         hasBeenDelete.push( i );
                     } else if ( standard.stock !== undefined &&  standard.stock < i.count ) {
                         lowStock.push( Object.assign({ }, i, {
-                            stock: standard.stock
+                            stock: standard.stock,
+                            goodName: i.name,
+                            standerName: i.standername
                         }));
                     }
                 // 主体商品
@@ -164,7 +169,8 @@ export const main = async ( event, context ) => {
                         hasBeenDelete.push( i )
                     } else if ( good.stock !== undefined &&  good.stock < i.count ) {
                         lowStock.push( Object.assign({ }, i, {
-                            stock: good.stock
+                            stock: good.stock,
+                            goodName: i.name
                         }));
                     }
 

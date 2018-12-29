@@ -1,7 +1,8 @@
 // app/pages/cart-list/index.js
 
 const { http } = require('../../util/http.js');
-const { wxPay } = require('../../util/pay');
+const { wxPay } = require('../../util/pay.js');
+const { createOrders } = require('../../util/order.js');
 const { computed } = require('../../lib/vuefy/index.js');
 
 const app = getApp( );
@@ -529,127 +530,62 @@ Page({
                     return null; 
                 }).filter( x => !!x );
 
-                /**
-                 * 判断在购物清单，这些商品是否存在 买不全、买不到、货存不足
-                 */
-                http({
-                    data: {
-                        tid: trip._id,
-                        list: selectedCheck
-                    },
-                    loadingMsg: '结算中...',
-                    url: `shopping-list_findCannotBuy`,
-                    success: res => {
-                        const { status, data } = res;
-                        if ( status !== 200 ) { return; }
-                        console.log('????', data );
-                        const { hasBeenBuy, cannotBuy, hasBeenDelete, lowStock, orders } = data;
+                createOrders( trip._id, selectedCheck, orders => {
 
-                        /** 提示行程无货 */
-                        const cannotBuy$ = cannotBuy.map( x => {
-                            return this.data.cartList.find( y => ( y.current.pid === x.pid && y.current.sid === x.sid ) 
-                                || ( y.current.pid === x.pid && !y.current.sid && !x.sid ));
+                    // 发起微信支付
+                    const total_fee = orders.reduce(( x, y ) => {
+                        const { pay_status, depositPrice } = y;
+                        const deposit_price = pay_status === '0' && !!depositPrice ? depositPrice : 0;
+                        return x + deposit_price;
+                    }, 0 );
+
+                    // 去往订单列表
+                    const goOrders = ( ) => {
+                        wx.navigateTo({
+                            url: '/pages/order-list/index'
                         });
-                        if ( cannotBuy.length > 0 ) {
-                            return wx.showModal({
-                                title: '提示',
-                                content: `火爆缺货！${cannotBuy$.map( x => `${x.current.title}${x.current.standardName}`).join('、')}暂时无货！`
-                            });
-                        }
+                    }
 
-                        /** 商品被删除 */
-                        const hasBeenDelete$ = hasBeenDelete.map( x => {
-                            return this.data.cartList.find( y => ( y.current.pid === x.pid && y.current.sid === x.sid )
-                                || ( y.current.pid === x.pid && !y.current.sid && !x.sid ));
-                        });
-                        if ( hasBeenDelete.length > 0 ) {
-                            return wx.showModal({
-                                title: '提示',
-                                content: `${hasBeenDelete$.map( x => `${x.current.title}${x.current.standardName}`).join('、')}已被删除，请重新选择！`
-                            });
-                        }
-
-                        /** 提示低库存 */
-                        const lowStock$ = lowStock.map( x => {
-                            return this.data.cartList.find( y => ( y.current.pid === x.pid && y.current.sid === x.sid )
-                                || ( y.current.pid === x.pid && !y.current.sid && !x.sid ))
-                        });
-                        if ( lowStock.length > 0 ) {
-                            return wx.showModal({
-                                title: '提示',
-                                content: `${lowStock$.map( x => `${x.current.title}${x.current.standardName}`).join('、')}货存不足，请重新选择！`
-                            });
-                        }
-
-                        /** 已经购买提示 */
-                        const hasBeenBuy$ = hasBeenBuy.map( x => {
-                            return this.data.cartList.find( y => ( y.current.pid === x.pid && y.current.sid === x.sid )
-                                || ( y.current.pid === x.pid && !y.current.sid && !x.sid ))
-                        });
-                        if ( hasBeenBuy.length > 0 ) {
-                            wx.showToast({
-                                icon: 'none',
-                                duration: 3000,
-                                title: `群主已经买了${hasBeenBuy$.map( x => `${x.current.title}${x.current.standardName}`).join('、')}，不一定会返程购买，请联系群主！`
-                            });
-                        }
-                        
-                        // 发起微信支付
-                        const total_fee = orders.reduce(( x, y ) => {
-                            const { pay_status, depositPrice } = y;
-                            const deposit_price = pay_status === '0' && !!depositPrice ? depositPrice : 0;
-                            return x + deposit_price;
-                        }, 0 );
-
-                        // 去往订单列表
-                        const goOrders = ( ) => {
-                            wx.navigateTo({
-                                url: '/pages/order-list/index'
-                            });
-                        }
-
-                        // 支付里面
-                        wxPay( total_fee, ( ) => {
-                            // 批量更新订单为已支付
-                            const pay = ( ) => http({
-                                url: 'order_upadte-to-payed',
-                                data: {
-                                    orderIds: orders.map( x => {
-                                        return x.pay_status === '0' ? x.oid : ''
-                                    })
-                                    .filter( x => !!x )
-                                    .join(',')
-                                },
-                                success: res => {
-                    
-                                    if ( res.status === 200 ) {
-                                        wx.showToast({
-                                            title: '支付成功'
-                                        });
-                                    } else {
-                                        wx.showToast({
-                                            icon: 'none',
-                                            title: '支付成功，刷新失败，重试中...'
-                                        });
-                                        pay( );
-                                    }
+                    // 支付里面
+                    wxPay( total_fee, ( ) => {
+                        // 批量更新订单为已支付
+                        const pay = ( ) => http({
+                            url: 'order_upadte-to-payed',
+                            data: {
+                                orderIds: orders.map( x => {
+                                    return x.pay_status === '0' ? x.oid : ''
+                                })
+                                .filter( x => !!x )
+                                .join(',')
+                            },
+                            success: res => {
+                
+                                if ( res.status === 200 ) {
+                                    wx.showToast({
+                                        title: '支付成功'
+                                    });
+                                } else {
+                                    wx.showToast({
+                                        icon: 'none',
+                                        title: '支付成功，刷新失败，重试中...'
+                                    });
+                                    pay( );
                                 }
-                            });
-                            pay( );
-                        }, ( ) => {
-                            // 失败/成功-订单列表
-                            goOrders( );
-                            this.setData({
-                                isSettling: false
-                            });
+                            }
                         });
-
-                    },
-                    error: ( ) => {
+                        pay( );
+                    }, ( ) => {
+                        // 失败/成功-订单列表
+                        goOrders( );
                         this.setData({
                             isSettling: false
                         });
-                    }
+                    });
+
+                }, ( ) => {
+                    this.setData({
+                        isSettling: false
+                    });
                 });
 
             },
