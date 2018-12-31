@@ -120,6 +120,7 @@
         </wxc-button>
     </view>
 
+    <!-- 结束行程 -->
     <view
         class='btn-blockk2'
         wx:if="{{ canBeEnd }}"
@@ -203,5 +204,14 @@
             bindinput='onInputCashCoupon'
         />
     </i-modal>
+
+    <!-- 订单管理页面入口 -->
+    <view
+        wx:if="{{ !!tid }}"
+        class="td-btn-entry"
+        bindtap="goOrderManger"
+    >
+        订单
+    </view>
 
 </view>

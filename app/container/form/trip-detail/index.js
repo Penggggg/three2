@@ -287,7 +287,7 @@ Component({
                             fullreduce_atleast: fullreduce_atleast || null,
                             fullreduce_values: fullreduce_values || null,
                             hasBeenPassStart: new Date( ).getTime( ) > start_date,
-                            canBeEnd: dealDate( end_date ) === dealDate( new Date( ).getTime( ))
+                            canBeEnd: dealDate( end_date ) === dealDate( new Date( ).getTime( )) || new Date( ).getTime( ) >= end_date
                         });
                         
                 }
@@ -568,6 +568,13 @@ Component({
                 }
             });
 
+        },
+
+        /** 进行行程订单管理页面 */
+        goOrderManger( ) {
+            wx.navigateTo({
+                url: `/pages/manager-trip-order/index?id=${this.data.tid}`
+            })
         }
 
     },
