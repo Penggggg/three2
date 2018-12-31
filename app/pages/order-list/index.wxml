@@ -191,6 +191,8 @@
                         
                         <!-- 订金按钮 -->
                         <view
+                            bindtap="payLastDepositPrice"
+                            data-data="{{ item }}"
                             wx:if="{{ item.tripStatusCN === '有未付订金' }}"
                             class="pol-trip-order-btn purple"
                         >

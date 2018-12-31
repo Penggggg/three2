@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { wxPay } = require('../../util/pay.js');
 const app = getApp( );
 
 Page({
@@ -91,7 +92,6 @@ Page({
 
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
-
                 const { page, current, totalPage, total } = data;
 
                 this.setData({
@@ -277,13 +277,18 @@ Page({
             }, 0 );
             tripOrders['totalGroupPrice'] = totalGroupPrice || totalPrice;
 
-            // 剩余订金
+            // 剩余订金、未付订金列表
+            const notPayDepositOrders = [ ];
             const lastDepositPrice = orders.reduce(( x, y ) => {
                 const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
                 let currentDepositPrice = y.p === '0' && !!y.depositPrice ? y.depositPrice : 0;
+                if ( !!notPayDepositOrders ) {
+                    notPayDepositOrders.push( y._id )
+                }
                 return x + currentDepositPrice * count;
             }, 0 );
             tripOrders['lastDepositPrice'] = lastDepositPrice;
+            tripOrders['notPayDepositOrders'] = notPayDepositOrders;
 
             // 剩余尾款
             const lastPrice = orders.reduce(( x, y ) => {
@@ -294,7 +299,7 @@ Page({
             }, 0 );
             tripOrders['lastPrice'] = lastPrice;
 
-            // 处理订单满减
+            // 处理行程满减
 
             // 处理订单立减
 
@@ -333,6 +338,42 @@ Page({
         wx.navigateTo({
             url: `/pages/goods-detail/index?id=${pid}`
         })
+    },
+
+    /** 付剩余订金 */
+    payLastDepositPrice({ currentTarget }) {
+        const { lastDepositPrice, notPayDepositOrders } = currentTarget.dataset.data;
+        wxPay( lastDepositPrice, ( ) => {
+            // 批量更新订单为已支付
+            const pay = ( ) => http({
+                url: 'order_upadte-to-payed',
+                data: {
+                    orderIds: notPayDepositOrders.join(',')
+                },
+                success: res => {
+                    if ( res.status === 200 ) {
+                        wx.showToast({
+                            title: '支付成功'
+                        });
+                        this.setData({
+                            page: 0,
+                            skip: 0,
+                            canloadMore: true,
+                            metaList: [ ],
+                            tripOrders: [ ],
+                        });
+                        this.fetchList( this.data.active );
+                    } else {
+                        wx.showToast({
+                            icon: 'none',
+                            title: '支付成功，刷新失败，重试中...'
+                        });
+                        pay( );
+                    }
+                }
+            });
+            pay( );
+        }, ( ) => { });
     },
 
     /**
