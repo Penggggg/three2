@@ -1,2 +1,28 @@
-<!--app/pages/manager-trip-order/index.wxml-->
-<text>app/pages/manager-trip-order/index.wxml</text>
+<view class="con-trip-order">
+
+    <!-- 上方tab -->
+    <view class="to-tabs">
+        <view
+            wx:for="{{ tabs }}"
+            data-index="{{ index }}"
+            wx:key="{{ index }}"
+            data-index="{{ index }}"
+            bindtap="onTabChange"
+            class="to-tabs-item {{ active === index ? 'active' : '' }}"
+        >
+            {{ item.label }}
+        </view>
+    </view>
+
+    <!-- 下方内容层 -->
+    <view class="to-container">
+        <view wx:if="{{ active === 0 }}">
+            <my-trip-order-shoppinglist
+                tid="{{ id }}"
+            />
+        </view>
+        <view wx:elif="{{ active === 1 }}">2</view>
+        <view wx:else>3</view>
+    </view>
+
+</view>

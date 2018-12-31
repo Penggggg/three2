@@ -6,7 +6,28 @@ Page({
      */
     data: {
         // 行程id
-        id: ''
+        id: '',
+        // 上方活动tab
+        active: 0,
+        // 上方tabs
+        tabs: [{
+            key: 0,
+            label: '购物清单'
+        }, {
+            key: 1,
+            label: '清账收款'
+        }, {
+            key: 2,
+            label: '快递信息'
+        }],
+    },
+
+    /** 切换tab */
+    onTabChange({ currentTarget }) {
+        const { index } = currentTarget.dataset;
+        this.setData({
+            active: index
+        });
     },
 
     /**
@@ -14,15 +35,18 @@ Page({
      */
     onLoad: function (options) {
         if ( !options.id ) { return; }
-            this.setData({
-                id: options.id
-            });
+        this.setData({
+            id: 'XCmvvt7E7L4wCBEQ'
+        });
+        // this.setData({
+        //     id: options.id
+        // });
     },
 
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
-    onReady: function () {
+    onReady: function ( ) {
 
     },
 

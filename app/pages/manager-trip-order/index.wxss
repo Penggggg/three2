@@ -1,1 +1,37 @@
-/* app/pages/manager-trip-order/index.wxss */
+.con-trip-order {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background: #fafafa;
+}
+
+.to-tabs {
+    display: flex;
+    background: #ff5777;
+    align-items: center;
+}
+
+.to-tabs-item {
+    flex: 1;
+    color: #fff;
+    font-size: 24rpx;
+    text-align: center;
+    position: relative;
+    padding: 20rpx 0 30rpx;
+}
+
+.to-tabs-item.active:after {
+    left: 10%;
+    width: 80%;
+    height: 2px;
+    bottom: 15rpx;
+    content: '';
+    border-radius: 5px;
+    background: #fff;
+    position: absolute;
+}
+
+.to-container {
+    flex: 1;
+    overflow: scroll;
+}
