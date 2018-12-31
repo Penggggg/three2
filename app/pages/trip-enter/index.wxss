@@ -43,9 +43,10 @@
 }
 
 .te-header-members {
-    top: 10%;
+    top: 100rpx;
     left: 50rpx;
-    position: absolute;
+    position: fixed;
+    z-index: 100;
 }
 
 .te-container {

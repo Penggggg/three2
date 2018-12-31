@@ -13,6 +13,14 @@
     width: 130rpx;
 }
 
+.avatar-swiper.cstm-one {
+    width: 50rpx;
+}
+
+.avatar-swiper.cstm-two {
+    width: 100rpx;
+}
+
 .swiper-image {
     width: 40rpx;
     height: 40rpx;

@@ -1,17 +1,18 @@
 <!--container/social-trip-member/index.wxml-->
 <view
     bindtap="go"
+    wx:if="{{ imgList.length > 0 }}"
     class="con-social-trip-member"
 >
 
     <!-- 头像列表 -->
     <swiper
-        class="avatar-swiper"
+        class="avatar-swiper {{ imgList.length === 1 ?'cstm-one' : '' }} {{ imgList.length === 2 ?'cstm-two' : '' }}"
         autoplay="{{ true }}"
         duration="{{ 1000 }}"
         circular="{{ true }}"
         interval="{{ 2000 }}"
-        display-multiple-items="{{ 3 }}"
+        display-multiple-items="{{ imgList.length > 3 ? 3 : 1 }}"
     >
         <block
             wx:key="{{ index }}"
@@ -29,7 +30,7 @@
 
     <!-- 文字信息 -->
     <view class="info">
-        她们抢先参加啦~
+        看看大家买了啥～
     </view>
 
 </view>

@@ -308,6 +308,48 @@ export const main = async ( event, context ) => {
             }
 
         } catch ( e ) { return ctx.body = { status: 500 };}
+    });
+
+    /** 行程下，参加了购买的客户（订单）
+     * { 
+     *    tid
+     * }
+     */
+    app.router('customer-in-trip', async( ctx, next ) => {
+        try {
+            const limit = 100;
+            const allOrderUsers$ = await db.collection('order')
+                .where({
+                    tid: event.data.tid
+                })
+                .orderBy('createTime', 'desc')
+                .limit( limit )
+                .field({
+                    openid: true
+                })
+                .get( );
+
+            const openids = Array.from( new Set( allOrderUsers$.data.map( x => x.openid )));
+
+            const avatats$ = await Promise.all( openids.map( oid => {
+                return db.collection('user')
+                    .where({
+                        openid: oid
+                    })
+                    .field({
+                        avatarUrl: true
+                    })
+                    .get( );
+            }))
+            
+            return ctx.body = {
+                status: 200,
+                data: avatats$.map( x => x.data[ 0 ].avatarUrl )
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
     })
 
     return app.serve( );

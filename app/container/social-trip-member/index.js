@@ -1,4 +1,5 @@
-// container/social-trip-member/index.js
+const { http } = require('../../util/http.js');
+
 Component({
     /**
      * 组件的属性列表
@@ -22,12 +23,13 @@ Component({
      */
     data: {
         /** 头像列表 */
-        imgList: [
-            'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-1.png',
-            'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-2.png',
-            'cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-5.png',
-            'cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-7.png'
-        ]
+        // imgList: [
+        //     'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-1.png',
+        //     'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-2.png',
+        //     'cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-5.png',
+        //     'cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-7.png'
+        // ],
+        imgList: [ ]
     },
 
     /**
@@ -45,9 +47,25 @@ Component({
             }
         },
 
-        /** 拉取行程 */
+        /** 拉取行程订单购买用户数 */
         fetchDetail( tid ) {
-            //..
+            http({
+                data: {
+                    tid
+                },
+                url: 'common_customer-in-trip',
+                success: res => {
+                    if ( res.status === 200 ) {
+                        this.setData({
+                            imgList: res.data
+                        })
+                    }
+                }
+            })
         }
+    },
+
+    attached: function( ) {
+        this.fetchDetail( this.data.tid );
     }
 })

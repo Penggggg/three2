@@ -212,7 +212,7 @@ Component({
                         const total_fee = orders.reduce(( x, y ) => {
                             const { pay_status, depositPrice } = y;
                             const deposit_price = pay_status === '0' && !!depositPrice ? depositPrice : 0;
-                            return x + deposit_price;
+                            return x + deposit_price * y.count;
                         }, 0 );
                       
                         // 支付里面
