@@ -116,7 +116,7 @@ Component({
         },
         /** 确认 */
         confirmSelect( ) {
-            const { selectdSkuCount, selectedSku } = this.data;
+            const { selectdSkuCount, selectedSku, skuItems } = this.data;
             this.triggerEvent('confirm', Object.assign({ }, { ...selectedSku }, {
                 count: selectdSkuCount
             }), null );

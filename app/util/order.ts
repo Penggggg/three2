@@ -3,6 +3,7 @@ import { http } from './http';
 /**
  * 
  * @param tid 行程id
+ * @param from 订单来源
  * @param targetBuys 预付订单列表
  * {
         sid,
@@ -25,9 +26,10 @@ import { http } from './http';
         }
  * }[ ]
  */
-export const createOrders = ( tid, targetBuys, successCB, errorCB ) => {
+export const createOrders = ( tid, targetBuys, from, successCB, errorCB ) => {
     http({
         data: {
+            from,
             tid: tid,
             list: targetBuys
         },
@@ -38,7 +40,7 @@ export const createOrders = ( tid, targetBuys, successCB, errorCB ) => {
             if ( status !== 200 ) { return; }
 
             const { hasBeenBuy, cannotBuy, hasBeenDelete, lowStock, orders } = data;
-
+      
             /** 提示行程无货 */
             if ( cannotBuy.length > 0 ) {
                 return wx.showModal({

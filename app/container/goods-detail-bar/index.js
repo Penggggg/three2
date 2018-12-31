@@ -1,5 +1,6 @@
-// container/goods-detail-bar/index.js
 const { http } = require('../../util/http.js');
+const { wxPay } = require('../../util/pay.js');
+const { createOrders } = require('../../util/order.js');
 
 Component({
 
@@ -48,6 +49,8 @@ Component({
         skuItems: [ ],
         // 选择sku的类型：cart、buy，（购物车、立即购买）
         skuSelectType: null,
+        // 可用想起
+        trip: null
     },
 
     computed: {
@@ -83,12 +86,11 @@ Component({
             const { skuSelectType } = this.data;
 
             // 寻找当前sku的cart记录，插入_id
-            const skuItem = {
+            const skuItem = Object.assign({ }, selectedSku, {
                 pid: this.data.detail._id,
-                count: selectedSku.count,
                 standard_id: selectedSku.sid,
                 current_price: selectedSku.price
-            };
+            });
 
             if ( skuSelectType === 'cart' ) {
                 this.putCart( skuItem );
@@ -104,7 +106,7 @@ Component({
             let result = false;
             let skuItems = [ ];
             const that = this;
-            const { _id, stock, standards, price, title, img, limit } = data;
+            const { _id, stock, standards, price, title, img, limit, groupPrice } = data;
                     
             if ( standards.length === 0 ) {
                 // 只有单品本身
@@ -118,6 +120,7 @@ Component({
                     img: img[ 0 ],
                     sid: null,
                     limit,
+                    groupPrice,
                     canSelect: stock !== undefined && stock > 0
                 }];
             } else {
@@ -132,6 +135,7 @@ Component({
                     stock: x.stock,
                     price: x.price,
                     limit: x.limit,
+                    groupPrice: x.groupPrice,
                     canSelect: x.stock !== undefined && x.stock > 0
                 }))
             } 
@@ -144,10 +148,12 @@ Component({
         /** 加入购物车 */
         putCart( item ) {
             
-            const that = this;
+            const { count, current_price, pid, standard_id } = item;
 
             http({
-                data: item,
+                data: {
+                    count, current_price, pid, standard_id
+                },
                 errMsg: '添加失败，请重试',
                 loadingMsg: '添加中...',
                 url: `cart_edit`,
@@ -164,6 +170,109 @@ Component({
         /** 立即购买 */
         buy( item ) {
 
+            const { trip } = this.data;
+            const { sid, pid, price, count, img, title, groupPrice } = item;
+
+            // 判断是否没有最新行程
+            if ( !trip ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '暂无行程计划，暂时不能购买～'
+                });
+            }
+
+            // 地址选择
+            wx.chooseAddress({
+                success: res => {
+            
+                    const { userName, provinceName, cityName, countyName, detailInfo, postalCode, telNumber } = res;
+                    const orderObj = {
+                        type: 'pre', // 预付类型订单，
+                        sid,
+                        pid,
+                        tid: trip._id,
+                        price,
+                        count,
+                        img: [ img ],
+                        depositPrice: this.data.detail.depositPrice || 0,
+                        name: this.data.detail.title,
+                        standername: title,
+                        groupPrice,
+                        address: {
+                            username: userName,
+                            postalcode: postalCode,
+                            phone: telNumber,
+                            address: `${provinceName}${cityName}${countyName}${detailInfo}`
+                        }
+                    };
+
+                    createOrders( trip._id, [ orderObj ], 'buy', orders => {
+                      
+                        // 发起微信支付
+                        const total_fee = orders.reduce(( x, y ) => {
+                            const { pay_status, depositPrice } = y;
+                            const deposit_price = pay_status === '0' && !!depositPrice ? depositPrice : 0;
+                            return x + deposit_price;
+                        }, 0 );
+                      
+                        // 支付里面
+                        wxPay( total_fee, ( ) => {
+                            // 批量更新订单为已支付
+                            const pay = ( ) => http({
+                                url: 'order_upadte-to-payed',
+                                data: {
+                                    orderIds: orders.map( x => {
+                                        return x.pay_status === '0' ? x.oid : ''
+                                    })
+                                    .filter( x => !!x )
+                                    .join(',')
+                                },
+                                success: res => {
+                    
+                                    if ( res.status === 200 ) {
+                                        wx.showToast({
+                                            title: '支付成功'
+                                        });
+                                    } else {
+                                        wx.showToast({
+                                            icon: 'none',
+                                            title: '支付成功，刷新失败，重试中...'
+                                        });
+                                        pay( );
+                                    }
+                                }
+                            });
+                            pay( );
+                        }, ( ) => {
+                            // 失败/成功-订单列表
+                            wx.navigateTo({
+                                url: '/pages/order-list/index'
+                            });
+                        });
+
+                    }, ( ) => {
+                        // this.setData({
+                        //     isSettling: false
+                        // });
+                    });
+
+                }
+            });
+            
+        },
+        /** 拉取最新可用行程 */
+        fetchTrip( ) {
+            http({
+                data: { },
+                url: `trip_enter`,
+                success: res => {
+                    if ( res.status === 200 ) {
+                        this.setData({
+                            trip: res.data[ 0 ]
+                        });
+                    }
+                }
+            });  
         },
         /** 地址跳转 */
         navigate( e ) {
@@ -174,7 +283,7 @@ Component({
     },
 
     attached: function( ) {
-        
+        this.fetchTrip( );
     }
 
 })

@@ -183,7 +183,7 @@ export const main = async ( event, context ) => {
             let res = await rp({ url: "https://api.mch.weixin.qq.com/pay/unifiedorder", method: 'POST',body: formData });
     
             let xml = res.toString("utf-8");
-    
+          
             if ( xml.indexOf('prepay_id') < 0 ) {
                 return ctx.body = {
                     status: 500

@@ -30,21 +30,22 @@ export const main = async ( event, context ) => {
      * 判断请求的sid + tid + pid + count数组，返回不能购买的商品列表（清单里面买不到、买不全）、货全不足的商品（返回最新货存）
      * -------- 请求 ----------
      * {
+     *!    from?: 'cart' | 'buy' | 'custom' | 'agents' | 'system'
      *     tid: string
      *!    openid?: string,
      *    list: { 
      *      tid
-            cid
+     *!     cid?: string
             sid
             pid
             price
             groupPrice
             count
-            desc
-            name
+     *!     desc?: string
+            name,
+            standername
             img
             type
-            pay_status,
             address: {
                name,
                phone,
@@ -183,10 +184,11 @@ export const main = async ( event, context ) => {
              * ! 批量创建预付订单
              */
             if ( lowStock.length === 0 && cannotBuy.length === 0 && hasBeenDelete.length === 0 ) {
+
                 const reqData = {
                     tid,
                     openId,
-                    from: 'system',
+                    from: event.data.from || 'system',
                     orders: event.data.list
                 }
 

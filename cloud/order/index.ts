@@ -106,7 +106,7 @@ export const main = async ( event, context ) => {
             };
 
             // 订单来源：购物车、系统加单
-            if ( event.data.from === 'cart' || event.data.from === 'system' ) {
+            if ( event.data.from === 'cart' || event.data.from === 'system' || event.data.from === 'buy' ) {
                 addressid$ = await cloud.callFunction({
                     data: { 
                         data: {
@@ -185,7 +185,7 @@ export const main = async ( event, context ) => {
                     openid: openid,
                     deliver_status: '0', 
                     base_status: '0',
-                    pay_status: meta.depositPrice === 0 ? '1' : pay_status , // 商品订金额度为0
+                    pay_status: !meta.depositPrice ? '1' : pay_status , // 商品订金额度为0
                     createTime: new Date( ).getTime( ),
                     type: !!meta.depositPrice ? meta.type : 'normal'
                 });

@@ -559,6 +559,11 @@ Component({
                         wx.showToast({
                             title: tid ? '更新成功' : '创建成功！'
                         });
+                        if ( !tid ) {
+                            wx.navigateTo({
+                                url: '/pages/manager-trip-list/index'
+                            });
+                        }
                     }
                 }
             });

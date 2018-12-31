@@ -485,13 +485,21 @@ Page({
             isSettling: true
         });
 
-        if ( selectCartIdList.length === 0 ) { return; }
+        if ( selectCartIdList.length === 0 ) {
+            return this.setData({
+                isSettling: false
+            });
+        }
 
         // 判断是否没有最新行程
         if ( !trip ) {
-            return wx.showToast({
+            wx.showToast({
                 icon: 'none',
                 title: '暂无行程计划，暂时不能购买～'
+            });
+
+            return this.setData({
+                isSettling: false
             });
         }
 
@@ -530,7 +538,7 @@ Page({
                     return null; 
                 }).filter( x => !!x );
 
-                createOrders( trip._id, selectedCheck, orders => {
+                createOrders( trip._id, selectedCheck, 'cart', orders => {
 
                     // 发起微信支付
                     const total_fee = orders.reduce(( x, y ) => {
