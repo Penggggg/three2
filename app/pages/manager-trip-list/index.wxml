@@ -65,11 +65,7 @@
                 </wxc-price>
             </view>
             <view class="text pmgl-list-item-meta">
-                <wxc-price
-                    decimal="none"
-                > 
-                    {{ item.orders }}
-                </wxc-price>
+                {{ item.orders }}
             </view>
             <view
                 class="text pmgl-list-item-meta {{ item.state === '未发布' ? 'red' : '' }}"

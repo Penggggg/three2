@@ -104,12 +104,12 @@ Page({
          * ! 注意，时间对比。开始时间是 指定日期的早上8点；结束日期是 指定日期的晚上24:00
          */
         return list.map( x => {
-            const { _id, title, sales_volume, start_date, published, end_date } = x;
+            const { _id, title, sales_volume, start_date, published, end_date, orders } = x;
             return {
                 _id,
                 title,
                 sales_volume,
-                orders: 0,
+                orders,
                 startDate: new Date( start_date ).toLocaleDateString( ),
                 state: !published ?
                             '未发布' :

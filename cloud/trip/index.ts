@@ -105,6 +105,40 @@ export const main = async ( event, context ) => {
                 .skip(( event.data.page - 1 ) * limit )
                 .orderBy('updateTime', 'desc')
                 .get( );
+
+            // 获取每躺行程的订单数
+            const orders$ = await Promise.all( data$.data.map( x => {
+                return db.collection('order')
+                    .where({
+                        tid: x._id
+                    })
+                    .count( );
+            }));
+
+            const injectOrderCount = data$.data.map(( x, k ) => {
+                return Object.assign({ }, x, {
+                    orders: orders$[ k ].total
+                })
+            });
+
+            // 获取每躺行程的销售额
+            const salesVolume$ = await Promise.all( injectOrderCount.map( x => {
+                return db.collection('order')
+                    .where({
+                        tid: x._id
+                    })
+                    .get( );
+            }))
+
+            const injectSalesVolume = salesVolume$.map(( x, k ) => {
+                const salesVolume = x.data.reduce(( n, m ) => {
+                    const price = m.final_price || m.price;
+                    return n + m.count * price;
+                }, 0 );
+                return Object.assign({ }, injectOrderCount[ k ], {
+                    sales_volume: salesVolume
+                });
+            });
             
             return ctx.body = {
                 status: 200,
@@ -112,7 +146,7 @@ export const main = async ( event, context ) => {
                     search: event.data.title.replace(/\s+/g),
                     pageSize: limit,
                     page: event.data.page,
-                    data: data$.data,
+                    data: injectSalesVolume,
                     total: total$.total,
                     totalPage: Math.ceil( total$.total / limit )
                 }

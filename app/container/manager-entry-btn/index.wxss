@@ -6,6 +6,7 @@
   bottom: 200rpx;
   position: fixed;
   border-radius: 50%;
+  z-index: 1000;
   box-shadow: 3px 3px 10px rgba(0,0,0,0.20);
 }
 
@@ -14,6 +15,7 @@
   width: 75vw;
   overflow-y: scroll;
   background: #fff;
+  z-index: 1000;
 }
 
 .con-manager-entry-drawer-list-item {
