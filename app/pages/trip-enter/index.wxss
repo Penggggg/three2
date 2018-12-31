@@ -49,6 +49,14 @@
     z-index: 100;
 }
 
+.te-notice {
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 50;
+    position: fixed;
+}
+
 .te-container {
     display: flex;
     width: 100vw;
@@ -59,7 +67,9 @@
 
 .te-content {
     flex: 1;
+    padding-top: 70rpx;
     overflow-y: scroll;
+    box-sizing: border-box;
 }
 
 .te-btn-container {

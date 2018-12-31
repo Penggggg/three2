@@ -27,12 +27,14 @@
             <view class="te-content">
 
                 <!-- 顶部公告 -->
+
+                <!-- 顶部公告 -->
                 <wxc-notice
                     wx:if="{{ notice }}"
                     scroll="{{ true }}"
-                    close="{{ true }}"
                     show-icon="{{ true }}"
                     notice="{{ notice }}"
+                    class="te-notice"
                 />
 
                 <!-- 头部信息，标题、时间 -->
