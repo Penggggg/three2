@@ -42,14 +42,13 @@ export const main = async ( event, context ) => {
                     },
                     name: 'good'
                 }).then( res => {
-                    console.log('11111111', res )
                     return {
                         cart,
                         detail: res.result.data
                     }
                 })
             }));
-            console.log('2222222')
+            
             return ctx.body = {
                 status: 200,
                 data: goodsDetails$

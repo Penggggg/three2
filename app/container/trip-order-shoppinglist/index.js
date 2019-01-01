@@ -30,6 +30,6 @@ Component({
     },
 
     attached: function( ) {
-        console.log('??')
+
     }
 })

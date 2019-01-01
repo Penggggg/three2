@@ -416,6 +416,119 @@ export const main = async ( event, context ) => {
             return ctx.body = { status: 500 };
         } 
     })
+
+    app.router('test', async( ctx, next ) => {
+        try {
+
+            /**
+             * 未被安排的订单
+             */
+            const lostOrders: {
+                tid,
+                pid,
+                sid,
+                oid
+            }[ ] = [ ];
+    
+            // 获取当前进行中的行程
+            const trips$ = await cloud.callFunction({
+                name: 'trip',
+                data: {
+                    $url: 'enter'
+                }
+            });
+    
+            const currentTrip = trips$.result.data[ 0 ];
+            
+            if ( !currentTrip ) { 
+                return ctx.body = {
+                    status: 200
+                }
+            }
+    
+            const tid = currentTrip._id;
+
+            // 拿到所有该行程下的已付订金订单
+            const find1$ = await db.collection('order')
+                .where({
+                    tid,
+                    pay_status: '1'
+                })
+                .get( );
+
+            if ( find1$.data.length === 0 ) { 
+                return ctx.body = {
+                    status: 200
+                }
+            }
+    
+            // 拿到该行程下的购物清单
+            const find2$ = await db.collection('shopping-list')
+                .where({
+                    tid
+                })
+                .get( );
+
+            const tripShoppingList = find2$.data; 
+            
+            /**
+             * 跟清单进行匹配
+             * 1. 该订单的商品/型号还没有任何清单
+             * 2. 该订单没有在已有同款商品/型号的清单里面
+             */
+
+            find1$.data.map( order => {
+
+                const { sid, pid, _id } = order;
+                const currentGoodShoppingList = tripShoppingList.find( x => x.sid === sid && x.pid === pid );
+
+                if ( !currentGoodShoppingList ) {
+                    lostOrders.push({
+                        tid,
+                        sid,
+                        pid,
+                        oid: _id
+                    })
+                } else {
+                    const { oids } = currentGoodShoppingList;
+                    if ( !oids.find( x => x === _id )) {
+                        lostOrders.push({
+                            tid,
+                            sid,
+                            pid,
+                            oid: _id
+                        })
+                    }
+                }
+
+            });
+
+            if ( lostOrders.length === 0 ) {
+                return ctx.body = {
+                    status: 200
+                }
+            }
+
+            await cloud.callFunction({
+                name: 'shopping-list',
+                data: {
+                    $url: 'create',
+                    data: {
+                        list: lostOrders
+                    }
+                }
+            });
+    
+            return ctx.body = {
+                status: 200,
+                data: lostOrders
+            }
+    
+        } catch ( e ) {
+            console.log('!!!!定时器订单catchLostOrders错误',)
+            return ctx.body = { status: 500 };
+        }
+    })
  
    return app.serve( );
 

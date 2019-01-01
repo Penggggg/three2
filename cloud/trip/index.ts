@@ -33,8 +33,15 @@ export const main = async ( event, context ) => {
 
     const app = new TcbRouter({ event });
 
+    /**
+     * ------ 请求 --------
+     * {
+     *    shouldGetGoods: 默认true，可以不填，获取行程推荐商品
+     * }
+     */
     app.router('enter', async( ctx, next ) => {
         try {
+            const shouldGetGoods = event.data ? event.data.shouldGetGoods : undefined;
 
             // 按开始日期正序，获取最多2条已发布，未结束的行程
             const data$ = await db.collection('trip')
@@ -50,7 +57,7 @@ export const main = async ( event, context ) => {
             let trips = data$.data;
 
             // 拉取最新行程的推荐商品
-            if ( !!trips[ 0 ]) {
+            if (( !!trips[ 0 ] && shouldGetGoods === undefined ) || shouldGetGoods === true ) {
                 const tripOneProducts$ = await Promise.all( trips[ 0 ].selectedProductIds.map( pid => {
                     return cloud.callFunction({
                         data: {
@@ -65,7 +72,6 @@ export const main = async ( event, context ) => {
                 trips[ 0 ] = Object.assign({ }, trips[ 0 ], {
                     products: tripOneProducts$
                 });
-
             }
 
             return ctx.body = {
