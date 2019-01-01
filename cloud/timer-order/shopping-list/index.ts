@@ -110,8 +110,6 @@ export const catchLostOrders = async ( ) => {
             }
         });
         
-        console.log('...', lostOrders )
-
         return {
             status: 200,
             data: lostOrders
