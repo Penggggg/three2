@@ -397,7 +397,7 @@ export const main = async ( event, context ) => {
                 }
             });
 
-            // 这里不需要同步等待购物清单的创建
+            // 这里本来不需要同步等待购物清单的创建，但是不加await貌似没有被执行到
             await cloud.callFunction({
                 name: 'shopping-list',
                 data: {

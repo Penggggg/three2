@@ -217,31 +217,35 @@ Component({
                       
                         // 支付里面
                         wxPay( total_fee, ( ) => {
+            
                             // 批量更新订单为已支付
-                            const pay = ( ) => http({
-                                url: 'order_upadte-to-payed',
-                                data: {
-                                    orderIds: orders.map( x => {
-                                        return x.pay_status === '0' ? x.oid : ''
-                                    })
-                                    .filter( x => !!x )
-                                    .join(',')
-                                },
-                                success: res => {
-                    
-                                    if ( res.status === 200 ) {
-                                        wx.showToast({
-                                            title: '支付成功'
-                                        });
-                                    } else {
-                                        wx.showToast({
-                                            icon: 'none',
-                                            title: '支付成功，刷新失败，重试中...'
-                                        });
-                                        pay( );
+                            const pay = ( ) => {
+                        
+                                http({
+                                    url: 'order_upadte-to-payed',
+                                    data: {
+                                        orderIds: orders.map( x => {
+                                            return x.pay_status === '0' || x.pay_status === '1' ? x.oid : ''
+                                        })
+                                        .filter( x => !!x )
+                                        .join(',')
+                                    },
+                                    success: res => {
+                        
+                                        if ( res.status === 200 ) {
+                                            total_fee && wx.showToast({
+                                                title: '支付成功'
+                                            });
+                                        } else {
+                                            wx.showToast({
+                                                icon: 'none',
+                                                title: '支付成功，刷新失败，重试中...'
+                                            });
+                                            pay( );
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                             pay( );
                         }, ( ) => {
                             // 失败/成功-订单列表

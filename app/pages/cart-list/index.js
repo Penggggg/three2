@@ -561,7 +561,7 @@ Page({
                             url: 'order_upadte-to-payed',
                             data: {
                                 orderIds: orders.map( x => {
-                                    return x.pay_status === '0' ? x.oid : ''
+                                    return x.pay_status === '0' || x.pay_status === '1' ? x.oid : ''
                                 })
                                 .filter( x => !!x )
                                 .join(',')
@@ -569,7 +569,7 @@ Page({
                             success: res => {
                 
                                 if ( res.status === 200 ) {
-                                    wx.showToast({
+                                    total_fee && wx.showToast({
                                         title: '支付成功'
                                     });
                                 } else {
