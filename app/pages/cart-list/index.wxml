@@ -135,7 +135,7 @@
                                 class="pcl-cart-item-info grey"
                                 wx:elif="{{ !item.current.depositPrice }}"
                             >
-                                <text class="pcl-text-red">该商品面订金</text>
+                                <text class="pcl-text-red">该商品免订金</text>
                             </view>
 
                             <!-- 优惠信息 -->

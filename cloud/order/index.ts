@@ -362,13 +362,15 @@ export const main = async ( event, context ) => {
     })
 
     /**
-     * 批量更新，订单为已支付
+     * 批量更新，订单为已支付，并且增加到购物清单
      * orderIds: "123,234,345"
      */
     app.router('upadte-to-payed', async( ctx, next ) => {
         try {
 
             const { orderIds } = event.data;
+
+            // 更新订单字段
             await Promise.all( orderIds.split(',').map( oid => {
                 return db.collection('order').doc( oid )
                     .update({
@@ -377,6 +379,34 @@ export const main = async ( event, context ) => {
                         }
                     });
             }));
+
+            // 创建/插入到购物清单
+            const find$: any = await Promise.all( orderIds.split(',').map( oid => {
+                return db.collection('order')
+                    .where({
+                        _id: oid
+                    })
+                    .get( );
+            }));
+
+            const list = find$.map( x => {
+                const { _id, tid, pid, sid } = x.data[ 0 ];
+                return {
+                    oid: _id,
+                    tid, pid, sid
+                }
+            });
+
+            // 这里不需要同步等待购物清单的创建
+            await cloud.callFunction({
+                name: 'shopping-list',
+                data: {
+                    $url: 'create',
+                    data: {
+                        list
+                    }
+                }
+            })
 
             return ctx.body = {
                 status: 200

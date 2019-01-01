@@ -2,6 +2,14 @@ import { http } from './http';
 
 /** 发起微信支付 */
 export const wxPay = ( total_fee, successCB, completeCB ) => {
+
+    if ( !total_fee ) {
+        // 支付成功
+        successCB && successCB( );
+        completeCB && completeCB( );
+        return;
+    }
+
     http({
         url: 'common_wxpay',
         data: {

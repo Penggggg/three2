@@ -1,4 +1,5 @@
-// container/trip-order-shoppinglist/index.js
+const { http } = require('../../util/http.js');
+
 Component({
     /**
      * 组件的属性列表
@@ -24,7 +25,7 @@ Component({
      */
     methods: {
         fetchDetail( tid ) {
-            
+
         }
     },
 

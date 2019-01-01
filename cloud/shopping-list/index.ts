@@ -14,12 +14,11 @@ const _ = db.command;
  * pid
  * ! sid ( 可为空 )
  * oids Array
- * goodName,
- * standardName,
- * buy_status 0,1,2,3 未购买、已购买、买不全、买不到
+ *! purchase 采购数量
+ * buy_status 0,1,2 未购买、已购买、买不全
  * base_status: 0,1 未调整，已调整
- * ! desc ( 可为空 )
  * createTime
+ * updateTime
  */
 export const main = async ( event, context ) => {
 
@@ -92,13 +91,13 @@ export const main = async ( event, context ) => {
             const { tid, list } = event.data;
             const openId = event.data.openId || event.userInfo.openId;
 
-            // 不能购买的商品列表（清单里面买不到、买不全）
+            // 不能购买的商品列表（清单里面买不全）
             const findings$: any = await Promise.all( event.data.list.map( i => {
                 return find$({
                     tid: i.tid,
                     pid: i.pid,
                     sid: i.sid,
-                    status: _.or( _.eq('2'), _.eq('3'))
+                    status: '2'
                 }, db, ctx )
             }))
 
@@ -227,7 +226,87 @@ export const main = async ( event, context ) => {
                 message: e
             };
         }
-    })
+    });
+
+    /**
+     * @description
+     * 由订单创建购物清单
+     * list: {
+     *    tid,
+     *    pid,
+     *    sid,
+     *    oid
+     * }[ ]
+     */
+    app.router('create', async( ctx, next ) => {
+        try {
+
+            const { list } = event.data;
+
+            await Promise.all( list.map( async orderMeta => {
+                const { tid, pid, sid, oid } = orderMeta;
+                let query = {
+                    tid,
+                    pid
+                };
+                
+                if ( !!sid ) {
+                    query['sid'] = sid;
+                }
+
+                const find$ = await db.collection('shopping-list')
+                    .where( query )
+                    .get( );
+
+                if ( find$.data.length === 0 ) {
+
+                    const meta = Object.assign({ }, query, {
+                        oids: [ oid ],
+                        purchase: 0,
+                        buy_status: '0',
+                        base_status: '0',
+                        createTime: new Date( ).getTime( )
+                    });
+     
+                    const creaet$ = await db.collection('shopping-list')
+                        .add({
+                            data: meta
+                        });
+
+                    return;
+
+                // 更新插入
+                } else {
+                    let metaShoppingList = find$.data[ 0 ];
+                    if ( !metaShoppingList.oids.find( x => x === oid )) {
+                        const lastOids = metaShoppingList.oids;
+                        lastOids.push( oid );
+
+                        metaShoppingList = Object.assign({ }, metaShoppingList, {
+                            oids: lastOids,
+                            updateTime: new Date( ).getTime( )
+                        });
+
+                        const update$ = await db.collection('shopping-list').doc( String( find$.data[ 0 ]._id ))
+                            .update({
+                                data: {
+                                    oids: lastOids,
+                                    updateTime: new Date( ).getTime( )
+                                }
+                            })
+                    }
+                    return;
+                }
+
+            }));
+
+
+            return ctx.body = {
+                status: 200
+            }
+
+        } catch ( e ) { return ctx.body = { status: 500 }}
+    });
 
     return app.serve( );
 
