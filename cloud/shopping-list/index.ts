@@ -280,7 +280,9 @@ export const main = async ( event, context ) => {
                     let metaShoppingList = find$.data[ 0 ];
                     if ( !metaShoppingList.oids.find( x => x === oid )) {
                         const lastOids = metaShoppingList.oids;
-                        lastOids.push( oid );
+
+                        // 插入到头部，最新的已支付订单就在上面
+                        lastOids.unshift( oid );
 
                         metaShoppingList = Object.assign({ }, metaShoppingList, {
                             oids: lastOids,
@@ -306,6 +308,71 @@ export const main = async ( event, context ) => {
 
         } catch ( e ) { return ctx.body = { status: 500 }}
     });
+
+    /**
+     * @description 
+     * 行程的购物清单，用于调整商品价格、购买数量
+     */
+    app.router('list', async( ctx, next ) => {
+        try {
+            const { tid } = event.data;
+
+            // 拿到行程下所有的购物清单
+            const lists$ = await db.collection('shopping-list')
+                .where({
+                    tid
+                })
+                .get( );
+
+            // 查询每条清单底下的每个order详情
+            const orders$: any = await Promise.all( lists$.data.map( list => {
+                return Promise.all( list.oids.map( async oid => {
+
+                    const order$ = await db.collection('order').doc( oid )
+                        .get( );
+
+                    const user$ = await db.collection('user')
+                        .where({
+                            openid: order$.data.openid
+                        })
+                        .get( );
+
+                    return Object.assign({ }, order$.data, {
+                        user: user$.data[ 0 ]
+                    });
+                }));
+            }));
+
+            // 查询每条清单底下每个商品的详情
+            const goods$: any = await Promise.all( lists$.data.map( list => {
+                const { pid, sid } = list;
+                const docId = sid || pid;
+                const collectionName = !!sid ? 'standards' : 'goods';
+                return db.collection( collectionName )
+                    .doc( docId )
+                    .get( );
+            }));
+
+
+            const list = lists$.data.map(( l, k ) => {
+                const { price, groupPrice } = goods$[ k ].data;
+                return Object.assign({ }, l, {
+                    price,
+                    groupPrice,
+                    order: orders$[ k ],
+                    total: orders$[ k ].reduce(( x, y ) => {
+                        return x + y.count;
+                    }, 0 )
+                });
+            });
+
+            return ctx.body = {
+                status: 200,
+                data: list,
+            }
+
+        } catch ( e ) { return ctx.body = { status: 500 };}
+    })
 
     return app.serve( );
 

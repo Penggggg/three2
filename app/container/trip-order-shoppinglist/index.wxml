@@ -1,2 +1,25 @@
-<!--container/trip-order-shoppinglist/index.wxml-->
-<text>container/trip-order-shoppinglist/index.wxml</text>
+<view class="con-trip-order-shoppinglist">
+    
+    <!-- 收益信息 -->
+    <view class="tos-money-block">
+        
+        <view class="tos-money-title">
+            预计总收益(元)
+        </view>
+
+        <view class="tos-money">
+            <wxc-price
+                icon="sub"
+                class="tos-money-i"
+            >
+                {{ sum }}
+            </wxc-price>
+        </view>
+
+        <view class="tos-order-count">
+            总订单{{ count }}条
+        </view>
+
+    </view>
+
+</view>

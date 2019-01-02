@@ -277,6 +277,36 @@ export const main = async ( event, context ) => {
         }
     });
 
+    /** 
+     * @description
+     * 获取行程底下的订单数量、预测销售额
+     */
+    app.router('order-info', async( ctx, next ) => {
+        try {
+            const { tid } = event.data;
+
+            // 获取行程底下所有的订单
+            const orders$ = await db.collection('order')
+                .where({
+                    tid
+                })
+                .get( );
+
+            const sum = orders$.data.reduce(( x, y ) => {
+                return x + y.price * y.count
+            }, 0 );
+
+            return ctx.body = {
+                status: 200,
+                data: {
+                    sum,
+                    count: orders$.data.length
+                }
+            };
+
+        } catch ( e ) { return ctx.body = { status: 500 };}
+    })
+
     return app.serve( );
 
 }
