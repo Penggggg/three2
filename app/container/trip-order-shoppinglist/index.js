@@ -29,6 +29,8 @@ Component({
      * 组件的方法列表
      */
     methods: {
+
+        // 获取购物清单
         fetchDetail( tid ) {
             http({
                 url: 'shopping-list_list',
@@ -41,14 +43,29 @@ Component({
                 errorMsg: '加载失败，请刷新',
                 success: res => {
                     if ( res.status === 200 ) {
-                        console.log( res );
+
+                        const meta = res.data;
+                        const meta1 = meta.map( x => {
+
+                            const depositPricesArr = [ ];
+                            x.order.map( y => depositPricesArr.push( y.depositPrice ));
+                            depositPricesArr.sort(( x, y ) => x - y );
+
+                            return Object.assign({ }, x, {
+                                depositPricesArr
+                            });
+
+                        });
+                        console.log('...', meta1 )
                         this.setData({
-                            list: res.data
-                        })
+                            list: meta1
+                        });
                     }
                 }
             })
         },
+
+        // 获取行程订单数、收入
         fetchShoppingList( tid ) {
             http({
                 url: 'trip_order-info',
@@ -69,6 +86,15 @@ Component({
                     }
                 }
             })
+        },
+
+        // 跳到商品详情
+        goGoodDetail({ currentTarget }) {
+            const { pid } = currentTarget.dataset.data;
+            wx.navigateTo({
+                url: `/pages/goods-detail/index?id=${pid}`
+            });
+
         }
     },
 

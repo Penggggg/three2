@@ -183,7 +183,7 @@
 .tos-trip-order-btn-block {
     display: flex;
     align-items: center;
-    padding: 0 20rpx 0 30rpx;
+    padding: 20rpx 20rpx 0 30rpx;
     justify-content: space-between;
 }
 
@@ -211,6 +211,8 @@
 }
 
 .tos-trip-order-btn.purple {
-    color: #ff5777;
+    color: #fff;
+    background: #ff5777;
     border: 1px solid #ff5777;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
 }

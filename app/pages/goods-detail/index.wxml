@@ -225,4 +225,13 @@
 
     </view> 
 
+    <!-- 商品管理页面入口 -->
+    <view
+        wx:if="{{ showBtn }}"
+        class="gd-btn-entry"
+        bindtap="goManager"
+    >
+        修改
+    </view>
+
 </view>

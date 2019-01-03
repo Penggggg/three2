@@ -272,7 +272,7 @@ Component({
                 success: res => {
                     if ( res.status === 200 ) {
                         this.setData({
-                            trip: res.data[ 0 ]
+                            trip: res.data[ 0 ] || null
                         });
                     }
                 }

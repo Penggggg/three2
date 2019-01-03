@@ -1,7 +1,8 @@
 
-// app/pages/manager-goods-list/index.js
 import { http } from '../../util/http.js';
 import { computed } from '../../lib/vuefy/index.js';
+
+const app = getApp( );
 
 Page({
 
@@ -29,7 +30,25 @@ Page({
             '正品保证', '价格优势', '真人跑腿'
         ],
         // 动画
-        animationMiddleHeaderItem: null
+        animationMiddleHeaderItem: null,
+        // 展示管理入口
+        showBtn: false
+    },
+
+    // 进入商品管理
+    goManager( ) {
+        wx.navigateTo({
+            url: `/pages/manager-goods-detail/index?id=${this.data.id}`
+        })
+    },
+
+    /** 监听全局管理员权限 */
+    watchRole( ) {
+        (app as any).watch$('role', ( val ) => {
+            this.setData!({
+                showBtn: ( val === 1 )
+            })
+        });
     },
     
     /** 拉取商品详情 */
@@ -200,6 +219,7 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+        this.watchRole( );
         this.runComputed( );
         if ( !options!.id ) { return; }
         this.setData!({

@@ -35,9 +35,11 @@
 
                 <!-- 图片 -->
                 <image
-                    src="{{ item.img }}"
                     mode="scaleToFill"
+                    src="{{ item.img }}"
+                    data-data="{{ item }}"
                     class="tos-trip-order-img"
+                    bindtap="goGoodDetail"
                 />
 
                 <view class="tos-other-info">
@@ -46,7 +48,11 @@
                     <view class="tos-title-block">
 
                         <!-- 标题 -->
-                        <view class="tos-trip-order-title-block">
+                        <view
+                            data-data="{{ item }}"
+                            bindtap="goGoodDetail"
+                            class="tos-trip-order-title-block"
+                        >
                             <view class="tos-trip-order-name">
                                 {{ item.goodName }}
                             </view>
@@ -57,7 +63,7 @@
 
                         <!-- 状态 -->
                         <view class="tos-shoppinglist-status">
-                            {{ item.base_status === '0' ? '未确认' : '已调整' }}
+                            {{ item.base_status === '0' ? '未确认' : '' }}
                         </view>
 
                     </view>
@@ -176,29 +182,34 @@
             </view>
 
             <!-- 提示、按钮 -->
-            <view class="tos-tips">
+            <!-- <view class="tos-tips">
                 <image
                     class="tos-trip-item-image"
                     src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/header.png"
                 />
                 以上更改只针对该行程，不改变商品在商城原价。
-            </view>
+            </view> -->
 
             <view class="tos-trip-order-btn-block">
-                    <view class="tos-order-more">
-                        更多
+                    <view
+                        class="tos-order-more"
+                    >
+                        {{ item.depositPricesArr[ 0 ] ?
+                            item.depositPricesArr.length === 1 ?
+                                '订金：¥' + item.depositPricesArr[ 0 ] :
+                                '订金：¥' + item.depositPricesArr[ 0 ] + '~' + item.depositPricesArr[ item.depositPricesArr.length - 1 ] :
+                            ''
+                        }}
                     </view>
                     <view class="tos-trip-order-btns">
 
                         <view
-                            bindtap="concact"
                             class="tos-trip-order-btn"
                         >
                             清单详情
                         </view>
 
                         <view
-                            bindtap="concact"
                             class="tos-trip-order-btn purple"
                         >
                             调整
