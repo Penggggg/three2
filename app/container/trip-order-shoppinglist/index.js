@@ -20,7 +20,9 @@ Component({
         // 行程订单数
         count: 0,
         // 行程交易额
-        sum: 0
+        sum: 0,
+        // 清单列表
+        list: [ ]
     },
 
     /**
@@ -39,7 +41,10 @@ Component({
                 errorMsg: '加载失败，请刷新',
                 success: res => {
                     if ( res.status === 200 ) {
-                        console.log( res )
+                        console.log( res );
+                        this.setData({
+                            list: res.data
+                        })
                     }
                 }
             })

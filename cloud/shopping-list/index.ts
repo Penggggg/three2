@@ -344,21 +344,42 @@ export const main = async ( event, context ) => {
             }));
 
             // 查询每条清单底下每个商品的详情
-            const goods$: any = await Promise.all( lists$.data.map( list => {
+            const goods$: any = await Promise.all( lists$.data.map( async list => {
+
                 const { pid, sid } = list;
-                const docId = sid || pid;
                 const collectionName = !!sid ? 'standards' : 'goods';
-                return db.collection( collectionName )
-                    .doc( docId )
+
+                // 型号
+                let standar$: any = null;
+
+                // 商品
+                const good$ = await db.collection('goods')
+                    .doc( pid )
                     .get( );
+
+                if ( !!sid ) {
+                    standar$ = await db.collection('standards')
+                        .doc( sid )
+                        .get( );
+                }
+
+                return {
+                    title: good$.data.title,
+                    name: standar$ ? standar$.data.name : '',
+                    price: standar$ ? standar$.data.price : good$.data.price,
+                    img: standar$ ? standar$.data.img : good$.data.img[ 0 ],
+                    groupPrice: standar$ ? standar$.data.groupPrice : good$.data.groupPrice,
+                }
             }));
 
-
             const list = lists$.data.map(( l, k ) => {
-                const { price, groupPrice } = goods$[ k ].data;
+                const { img, price, groupPrice, title, name } = goods$[ k ];
                 return Object.assign({ }, l, {
+                    img,
                     price,
                     groupPrice,
+                    goodName: title,
+                    standarName: name,
                     order: orders$[ k ],
                     total: orders$[ k ].reduce(( x, y ) => {
                         return x + y.count;

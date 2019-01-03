@@ -22,9 +22,195 @@
     font-size: 78rpx;
     font-weight: bold;
     margin: 25rpx 0;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
 }
 
 .tos-order-count {
     color: #fff;
     font-size: 22rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.tos-shoppinglist-block {
+    margin-top: -90rpx;
+    padding: 10rpx 30rpx;
+    box-sizing: border-box;
+}
+
+.tos-shoppinglist-item {
+    padding: 25rpx 20rpx;
+    box-sizing: border-box;
+    margin-bottom: 40rpx;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.08);
+}
+
+.tos-good-info-block {
+    display: flex;
+    position: relative;
+}
+
+.tos-shoppinglist-status {
+    flex: 1;
+    color: #ff5777;
+    font-size: 22rpx;
+}
+
+.tos-trip-order-img {
+    width: 120rpx;
+    height: 120rpx;
+    padding: 5rpx;
+    background: #fff;
+    border-radius: 5px;
+    /* margin-right: 20rpx; */
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tos-other-info {
+    flex: 1;
+}
+
+.tos-title-block {
+    display: flex;
+}
+
+.tos-trip-order-title-block {
+    flex: 5;
+    margin-right: 30rpx;
+    margin-left: 20rpx;
+}
+
+.tos-trip-order-name {
+    color: #666;
+    font-size: 24rpx;
+    /* text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 ); */
+}
+
+.tos-trip-order-standar {
+    color: #999;
+    font-size: 24rpx;
+    /* text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 ); */
+}
+
+.tos-compare {
+    display: flex;
+    padding: 15rpx 20rpx 15rpx 0rpx;
+    box-sizing: border-box;
+    /* margin-bottom: 10rpx; */
+}
+
+.tos-compare.small {
+    padding: 5rpx 20rpx 5rpx 0rpx;
+}
+
+.tos-compare-item {
+    flex: 1;
+}
+
+.tos-compare-total {
+    display: flex;
+    position: relative;
+    align-items:flex-end;
+    justify-content: center;
+}
+
+.tos-compare-total.right {
+    justify-content: flex-end;
+    padding-right: 30rpx;
+}
+
+.tos-compare-total.line:after {
+    top: 10%;
+    right: 15rpx;
+    height: 80%;
+    width: 1px;
+    content: '';
+    background: #ff5777;
+    position: absolute;
+    transform: rotate( 22deg );
+}
+
+.tos-compare-total.nocenter {
+    justify-content: flex-start;
+}
+
+.tos-compare-total-label {
+    color: #ff5777;
+    font-size: 20rpx;
+}
+
+.tos-compare-total-label.right {
+    margin-right: 30rpx;
+}
+
+.tos-compare-total-label.small {
+    margin-right: 10rpx;
+}
+
+.tos-compare-total-number {
+    font-size: 40rpx;
+    color: #ff5777;
+    margin-bottom: -5rpx;
+}
+
+.tos-compare-total-number.right {
+    margin-right: 30rpx;
+}
+
+.tos-compare-total-number.small {
+    font-size: 24rpx;
+    margin-right: 10rpx;
+    margin-bottom: 0rpx;
+}
+
+.tos-tips {
+    display: flex;
+    color: #666;
+    font-size: 22rpx;
+    margin-top: 40rpx;
+    align-items: center;
+    position: relative;
+    margin-bottom: 20rpx;
+}
+
+.tos-trip-item-image {
+    width: 25rpx;
+    height: 20rpx;
+    margin-right: 8rpx;
+}
+
+.tos-trip-order-btn-block {
+    display: flex;
+    align-items: center;
+    padding: 0 20rpx 0 30rpx;
+    justify-content: space-between;
+}
+
+.tos-trip-order-btns {
+    display: flex;
+    padding: 15rpx 0rpx;
+    box-sizing: border-box;
+}
+
+.tos-trip-order-btn {
+    color: #999;
+    font-size: 24rpx;
+    padding: 10rpx 20rpx;
+    border-radius: 15px;
+    border: 1px solid rgba( 0, 0, 0, 0.2 );
+}
+
+.tos-trip-order-btn:not(:last-child) {
+    margin-right: 20rpx;
+}
+
+.tos-order-more {
+    color: #666;
+    font-size: 22rpx;
+}
+
+.tos-trip-order-btn.purple {
+    color: #ff5777;
+    border: 1px solid #ff5777;
 }
