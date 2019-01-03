@@ -19,6 +19,8 @@ const _ = db.command;
  * base_status: 0,1 未调整，已调整
  * createTime
  * updateTime
+ * adjustPrice 清单售价
+ * adjustGroupPrice 清单团购价
  */
 export const main = async ( event, context ) => {
 
@@ -244,7 +246,7 @@ export const main = async ( event, context ) => {
             const { list } = event.data;
 
             await Promise.all( list.map( async orderMeta => {
-                const { tid, pid, sid, oid } = orderMeta;
+                const { tid, pid, sid, oid, price, groupPrice } = orderMeta;
                 let query = {
                     tid,
                     pid
@@ -265,6 +267,8 @@ export const main = async ( event, context ) => {
                         purchase: 0,
                         buy_status: '0',
                         base_status: '0',
+                        adjustPrice: price,
+                        adjustGroupPrice: groupPrice,
                         createTime: new Date( ).getTime( )
                     });
      

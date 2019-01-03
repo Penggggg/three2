@@ -126,7 +126,7 @@
                                     decimal="small"
                                     class="tos-compare-total-number right small"
                                 > 
-                                    {{ item.price }}
+                                    {{ item.adjustPrice }}
                                 </wxc-price>
                                 <view class="tos-compare-total-label">
                                     本次售价
@@ -165,10 +165,17 @@
                                 <wxc-price
                                     icon="sub"
                                     decimal="small"
+                                    wx:if="{{ item.adjustGroupPrice }}"
                                     class="tos-compare-total-number right small"
                                 > 
-                                    {{ item.groupPrice }}
+                                    {{ item.adjustGroupPrice }}
                                 </wxc-price>
+                                <view
+                                    wx:else
+                                    class="tos-compare-total-number right small"
+                                >
+                                    未设置
+                                </view>
                                 <view class="tos-compare-total-label">
                                     本次团购价
                                 </view>

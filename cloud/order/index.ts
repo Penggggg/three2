@@ -22,6 +22,7 @@ const _ = db.command;
  * ! sid, (可为空)
  * count,
  * price,
+ * groupPrice,
  * deposit_price: 商品订金 (可为空)
  *! isOccupied, 是否占库存
  * ! group_price (可为空)
@@ -390,10 +391,11 @@ export const main = async ( event, context ) => {
             }));
 
             const list = find$.map( x => {
-                const { _id, tid, pid, sid } = x.data[ 0 ];
+                const { _id, tid, pid, sid, price, groupPrice  } = x.data[ 0 ];
                 return {
                     oid: _id,
-                    tid, pid, sid
+                    tid, pid, sid, price,
+                    groupPrice: groupPrice
                 }
             });
 

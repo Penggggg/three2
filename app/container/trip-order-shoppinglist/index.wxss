@@ -183,7 +183,7 @@
 .tos-trip-order-btn-block {
     display: flex;
     align-items: center;
-    padding: 20rpx 20rpx 0 30rpx;
+    padding: 20rpx 10rpx 0 10rpx;
     justify-content: space-between;
 }
 
