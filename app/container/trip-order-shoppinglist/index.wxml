@@ -62,8 +62,15 @@
                         </view>
 
                         <!-- 状态 -->
-                        <view class="tos-shoppinglist-status">
-                            {{ item.base_status === '0' ? '未确认' : '' }}
+                        <view
+                            class="tos-shoppinglist-status"
+                        >
+                            {{ item.base_status === '0' ?
+                                '未确认' : 
+                                item.buy_status === '2' ?
+                                    '买不全' : 
+                                    ''
+                            }}
                         </view>
 
                     </view>

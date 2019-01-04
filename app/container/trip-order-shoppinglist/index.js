@@ -130,8 +130,9 @@ Component({
 
         // 提交修改
         submit( ) {
-            const { slTemp } = this.data;
-            const { adjustPrice, purchase } = slTemp;
+            const { slTemp, currentSL } = this.data;
+            const { adjustPrice, purchase, adjustGroupPrice } = slTemp;
+            const biggestDeposit = currentSL.depositPricesArr[ currentSL.depositPricesArr.length - 1 ];
 
             if ( purchase === null ) {
                 return wx.showToast({
@@ -140,14 +141,52 @@ Component({
                 })
             }
 
-            if ( adjustPrice === null ) {
+            if ( !adjustPrice ) {
                 return wx.showToast({
                     icon: 'none',
-                    title: '实际售价不能为空'
+                    title: '实际售价不能为空或为0'
                 })
             }
 
-            // 
+            if ( adjustGroupPrice === 0 ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '团购价不能为0'
+                })
+            }
+
+            if ( !!adjustPrice && adjustPrice < biggestDeposit ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '售价不能少于订金'
+                })
+            }
+
+            if ( !!adjustGroupPrice && adjustGroupPrice < biggestDeposit ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '团购价不能少于订金'
+                })
+            }
+            
+            // 更新
+            http({
+                url: 'shopping-list_adjust',
+                data: {
+                    purchase,
+                    adjustPrice,
+                    adjustGroupPrice,
+                    shoppingId: currentSL._id
+                },
+                success: res => {
+                    if ( res.status !== 200 ) { return; }
+                    this.setData({
+                        show: false,
+                        currentSL: null
+                    });
+                    this.fetchDetail( this.data.tid );
+                }
+            })
 
         },
 

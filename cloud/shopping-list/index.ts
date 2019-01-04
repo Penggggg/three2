@@ -399,6 +399,60 @@ export const main = async ( event, context ) => {
         } catch ( e ) { return ctx.body = { status: 500 };}
     })
 
+    /**
+     * 购物清单调整
+     * -------- 请求
+     * {
+     *    shoppingId, adjustPrice, purchase, adjustGroupPrice
+     * }
+     */
+    app.router('adjust', async( ctx, next ) => {
+        try {
+            const { shoppingId, adjustPrice, purchase, adjustGroupPrice } = event.data;
+            console.log('...', event.data )
+            /**
+             * 清单，先拿到订单采购总数
+             * 随后更新：采购量、清单售价、清单团购价、base_status、buy_status
+             */
+
+            const shopping$ = await db.collection('shopping-list')
+                .doc( shoppingId )
+                .get( );
+   
+            const orders$ = await Promise.all( shopping$.data.oids.map( oid => {
+                return db.collection('order')
+                    .doc( oid )
+                    .get( );
+            }));
+            
+            const needBuyTotal = orders$.reduce(( x, y ) => {
+                return x + (y as any).data.count;
+            }, 0 );
+
+            const temp = Object.assign({ }, shopping$.data, {
+                purchase,
+                adjustPrice,
+                adjustGroupPrice,
+                base_status: '1',
+                buy_status: purchase < needBuyTotal ? '2' : '1',
+                updateTime: new Date( ).getTime( )
+            });
+
+            delete temp['_id'];
+
+            await db.collection('shopping-list')
+                .doc( shoppingId )
+                .update({
+                    data: temp
+                });
+            
+            return ctx.body = {
+                status: 200
+            }
+
+        } catch ( e ) { return ctx.body = { status: 500 };}
+    })
+
     return app.serve( );
 
 }
