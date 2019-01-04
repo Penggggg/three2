@@ -442,9 +442,11 @@ export const main = async ( event, context ) => {
 
             await db.collection('shopping-list')
                 .doc( shoppingId )
-                .update({
+                .set({
                     data: temp
                 });
+
+            // 
             
             return ctx.body = {
                 status: 200

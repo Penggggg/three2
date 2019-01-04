@@ -259,7 +259,7 @@
             title="本趟售价"
             nocenter="{{ true }}"
             data-key="adjustPrice"
-            placeholder="请输入"
+            placeholder="{{ '商城售价'  + currentSL.price }}"
             type="digit"
             bindinput='modalInput'
             value='{{ currentSL.adjustPrice }}'
