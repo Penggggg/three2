@@ -22,7 +22,17 @@ Component({
         // 行程交易额
         sum: 0,
         // 清单列表
-        list: [ ]
+        list: [ ],
+        // 展示弹框
+        show: false,
+        // 正在调整的清单对象
+        currentSL: null,
+        // 调整价格存储
+        slTemp: {
+            purchase: 0,
+            adjustPrice: 0,
+            adjustGroupPrice: 0
+        }
     },
 
     /**
@@ -95,6 +105,74 @@ Component({
                 url: `/pages/goods-detail/index?id=${pid}`
             });
 
+        },
+
+        // 展开修改框
+        showModal({ currentTarget }) {
+            const data = currentTarget.dataset.data;
+            const { adjustGroupPrice, adjustPrice, purchase } = data;
+            wx.showModal({
+                title: '提示',
+                content: '修改实际购买数量后，订单会自动分配到客户（先下单先得）',
+                success: res => {
+                    this.setData({
+                        show: true,
+                        currentSL: data,
+                        slTemp: {
+                            purchase,
+                            adjustPrice,
+                            adjustGroupPrice
+                        }
+                    })
+                }
+            });
+        },
+
+        // 提交修改
+        submit( ) {
+            const { slTemp } = this.data;
+            const { adjustPrice, purchase } = slTemp;
+
+            if ( purchase === null ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '实际购买量不能为空'
+                })
+            }
+
+            if ( adjustPrice === null ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '实际售价不能为空'
+                })
+            }
+
+            // 
+
+        },
+
+        // 取消
+        cancel( ) {
+            this.setData({
+                show: false,
+                currentSL: null
+            })
+        },
+
+        // 修改框输入
+        modalInput( e ) {
+            const { slTemp } = this.data;
+            const { detail, currentTarget } = e;
+            const { value } = detail;
+            const { key } = currentTarget.dataset;
+
+            const temp = Object.assign({ }, slTemp, {
+                [ key ]: value !== '' ? Number( value ) : null
+            });
+
+            this.setData({
+                slTemp: temp
+            });
         }
     },
 

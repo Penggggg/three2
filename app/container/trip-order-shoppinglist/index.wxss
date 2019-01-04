@@ -166,12 +166,16 @@
 
 .tos-tips {
     display: flex;
-    color: #666;
-    font-size: 22rpx;
-    margin-top: 40rpx;
     align-items: center;
     position: relative;
-    margin-bottom: 20rpx;
+    padding: 0 0 20rpx 40rpx
+}
+
+.tos-tips-text {
+    color: #666;
+    font-size: 22rpx;
+    text-align: left;
+    margin-left: 20rpx;
 }
 
 .tos-trip-item-image {
@@ -216,3 +220,4 @@
     border: 1px solid #ff5777;
     text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
 }
+

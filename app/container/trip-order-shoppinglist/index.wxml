@@ -189,14 +189,6 @@
             </view>
 
             <!-- 提示、按钮 -->
-            <!-- <view class="tos-tips">
-                <image
-                    class="tos-trip-item-image"
-                    src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/header.png"
-                />
-                以上更改只针对该行程，不改变商品在商城原价。
-            </view> -->
-
             <view class="tos-trip-order-btn-block">
                     <view
                         class="tos-order-more"
@@ -217,6 +209,8 @@
                         </view>
 
                         <view
+                            data-data="{{ item }}"
+                            bindtap="showModal"
                             class="tos-trip-order-btn purple"
                         >
                             调整
@@ -227,5 +221,51 @@
         </view>
 
     </view>
+
+    <!-- 弹框 -->
+    <i-modal
+        title="调整确认"
+        visible="{{ show }}"
+        bind:ok="submit"
+        bind:cancel="cancel"
+    >
+        <view class="tos-tips">
+            <image
+                class="tos-trip-item-image"
+                src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/header.png"
+            />
+            <view class="tos-tips-text">
+                <view>以下更改只针对本趟行程</view>
+                <view>不改变商品在商城原价</view>
+            </view>
+        </view>
+        <wxc-input
+            title="实际购买"
+            nocenter="{{ true }}"
+            data-key="purchase"
+            placeholder="请输入"
+            type="number"
+            bindinput='modalInput'
+            value='{{ currentSL.purchase }}'
+        />
+        <wxc-input
+            title="本趟售价"
+            nocenter="{{ true }}"
+            data-key="adjustPrice"
+            placeholder="请输入"
+            type="digit"
+            bindinput='modalInput'
+            value='{{ currentSL.adjustPrice }}'
+        />
+        <wxc-input
+            title="本趟团购"
+            nocenter="{{ true }}"
+            data-key="adjustGroupPrice"
+            placeholder="无团购价，则不用输入"
+            type="digit"
+            bindinput='modalInput'
+            value='{{ currentSL.adjustGroupPrice }}'
+        />
+    </i-modal>
 
 </view>
