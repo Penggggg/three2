@@ -57,9 +57,13 @@ Component({
                         const meta = res.data;
                         const meta1 = meta.map( x => {
 
-                            const depositPricesArr = [ ];
+                            let depositPricesArr = [ ];
                             x.order.map( y => depositPricesArr.push( y.depositPrice ));
                             depositPricesArr.sort(( x, y ) => x - y );
+
+                            if ( depositPricesArr[ 0 ] === depositPricesArr[ depositPricesArr.length - 1 ]) {
+                                depositPricesArr = [ depositPricesArr[ 0 ]];
+                            }
 
                             return Object.assign({ }, x, {
                                 depositPricesArr
@@ -180,6 +184,7 @@ Component({
                 },
                 success: res => {
                     if ( res.status !== 200 ) { return; }
+
                     this.setData({
                         show: false,
                         currentSL: null

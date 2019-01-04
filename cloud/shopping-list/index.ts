@@ -19,6 +19,7 @@ const _ = db.command;
  * base_status: 0,1 未调整，已调整
  * createTime
  * updateTime
+ * lastAllocated 剩余分配量
  * adjustPrice 清单售价
  * adjustGroupPrice 清单团购价
  */
@@ -328,7 +329,7 @@ export const main = async ( event, context ) => {
                 })
                 .get( );
 
-            // 查询每条清单底下的每个order详情
+            // 查询每条清单底下的每个order详情，这里的每个order都是已付订金的
             const orders$: any = await Promise.all( lists$.data.map( list => {
                 return Promise.all( list.oids.map( async oid => {
 
@@ -408,8 +409,13 @@ export const main = async ( event, context ) => {
      */
     app.router('adjust', async( ctx, next ) => {
         try {
-            const { shoppingId, adjustPrice, purchase, adjustGroupPrice } = event.data;
-            console.log('...', event.data )
+            
+            // 最后分配量
+            let lastAllocated = 0;
+
+            let purchase = event.data.purchase;
+            const { shoppingId, adjustPrice, adjustGroupPrice } = event.data;
+
             /**
              * 清单，先拿到订单采购总数
              * 随后更新：采购量、清单售价、清单团购价、base_status、buy_status
@@ -425,7 +431,7 @@ export const main = async ( event, context ) => {
                     .get( );
             }));
             
-            const needBuyTotal = orders$.reduce(( x, y ) => {
+            let needBuyTotal = orders$.reduce(( x, y ) => {
                 return x + (y as any).data.count;
             }, 0 );
 
@@ -446,8 +452,52 @@ export const main = async ( event, context ) => {
                     data: temp
                 });
 
-            // 
-            
+            /**
+             * !以下订单都是已付订金的
+             * 订单：批量对订单的价格、团购价、购买状态进行调整(已购买/进行中)
+             * 其实应该也要自动注入订单数量（策略先到先得，）
+             */
+            const sorredOrders = orders$
+                .map(( x: any ) => x.data )
+                .filter(( x: any ) => x.base_status !== '3' && x.base_status !== '5' )
+                .sort(( x: any, y: any ) => x.createTime - y.createTime );
+
+            await Promise.all( sorredOrders.map( async order => {
+
+                const baseTemp = {
+                    allocatedPrice: adjustPrice,
+                    allocatedGroupPrice: adjustGroupPrice,
+                    base_status: purchase - order.count >= 0 ? '1' : '0',
+                    allocatedCount: purchase - order.count >= 0 ? order.count : 0
+                };
+
+                purchase = purchase - order.count;
+                
+                if ( purchase > 0 ) {
+                    lastAllocated = purchase;
+                }
+
+                const temp = Object.assign({ }, order, baseTemp );
+
+                delete temp['_id'];
+                
+                await db.collection('order')
+                    .doc( order._id )
+                    .set({
+                        data: temp
+                    });
+                
+                return;
+
+            }));
+
+            // 更新清单的剩余分配数
+            await db.collection('shopping-list')
+                .doc( shoppingId )
+                .update({
+                    data: { lastAllocated }
+                });
+        
             return ctx.body = {
                 status: 200
             }

@@ -30,6 +30,9 @@ const _ = db.command;
  * img: Array[ string ]
  * ! desc（可为空）,
  * aid
+ * allocatedPrice 分配的价格
+ * allocatedGroupPrice 分配团购价
+ * allocatedCount 分配的数量
  *! final_price 最后成交价
  * ! base_status: 0,1,2,3,4,5 进行中（客户还可以调整自己的订单），代购已购买，已调整，已结算，已取消（买不到），已过期（支付过期）
  * ! pay_status: 0,1,2 未付款，已付订金，已付全款

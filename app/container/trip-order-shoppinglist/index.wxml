@@ -200,12 +200,27 @@
                     <view
                         class="tos-order-more"
                     >
-                        {{ item.depositPricesArr[ 0 ] ?
-                            item.depositPricesArr.length === 1 ?
-                                '订金：¥' + item.depositPricesArr[ 0 ] :
-                                '订金：¥' + item.depositPricesArr[ 0 ] + '~' + item.depositPricesArr[ item.depositPricesArr.length - 1 ] :
-                            ''
-                        }}
+                        <view>
+                            {{ item.depositPricesArr[ 0 ] ?
+                                item.depositPricesArr.length === 1 ?
+                                    '订金：¥' + item.depositPricesArr[ 0 ] :
+                                    '订金：¥' + item.depositPricesArr[ 0 ] + '~' + item.depositPricesArr[ item.depositPricesArr.length - 1 ] :
+                                ''
+                            }}
+                        </view>
+                        <view>
+                            <image
+                                wx:if="{{ item.base_status === '1' }}"
+                                class="tos-trip-item-image"
+                                src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/header.png"
+                            />{{ 
+                                item.lastAllocated && item.base_status === '1' ?
+                                    item.lastAllocated + ' 件待分配' :
+                                    item.lastAllocated && item.base_status === '0' ?
+                                        '订单已经自动分配' :
+                                        ''
+                            }}
+                        </view>
                     </view>
                     <view class="tos-trip-order-btns">
 
