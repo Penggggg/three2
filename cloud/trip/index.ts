@@ -138,8 +138,9 @@ export const main = async ( event, context ) => {
 
             const injectSalesVolume = salesVolume$.map(( x, k ) => {
                 const salesVolume = x.data.reduce(( n, m ) => {
-                    const price = m.final_price || m.price;
-                    return n + m.count * price;
+                    const price = m.allocatedPrice || m.price;
+                    const count = m.allocatedCount === undefined || m.allocatedCount === null ? m.count : m.allocatedCount ;
+                    return n + count * price;
                 }, 0 );
                 return Object.assign({ }, injectOrderCount[ k ], {
                     sales_volume: salesVolume
@@ -294,7 +295,7 @@ export const main = async ( event, context ) => {
 
             const sum = orders$.data.reduce(( x, y ) => {
                 const price = y.allocatedPrice || y.price;
-                const count = y.allocatedCount || y.count;
+                const count = y.allocatedCount === undefined || y.allocatedCount === null ? y.count : y.allocatedCount ;
                 return x + price * count
             }, 0 );
 
