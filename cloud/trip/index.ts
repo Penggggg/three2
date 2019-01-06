@@ -284,7 +284,7 @@ export const main = async ( event, context ) => {
     app.router('order-info', async( ctx, next ) => {
         try {
             const { tid } = event.data;
-
+        
             // 获取行程底下所有的订单
             const orders$ = await db.collection('order')
                 .where({
@@ -293,7 +293,9 @@ export const main = async ( event, context ) => {
                 .get( );
 
             const sum = orders$.data.reduce(( x, y ) => {
-                return x + y.price * y.count
+                const price = y.allocatedPrice || y.price;
+                const count = y.allocatedCount || y.count;
+                return x + price * count
             }, 0 );
 
             return ctx.body = {

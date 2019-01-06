@@ -9,7 +9,7 @@ Component({
         tid: {
             value: '',
             type: String,
-            observer: 'fetchDetail'
+            observer: 'init'
         }
     },
 
@@ -40,14 +40,17 @@ Component({
      */
     methods: {
 
+        init( val ) {
+            this.fetchDetail( val );
+            this.fetchShoppingList( val );
+        },
+
         // 获取购物清单
         fetchDetail( tid ) {
             http({
                 url: 'shopping-list_list',
                 data: {
-                    data: {
-                        tid
-                    }
+                    tid
                 },
                 loadMsg: '加载中...',
                 errorMsg: '加载失败，请刷新',
@@ -84,9 +87,7 @@ Component({
             http({
                 url: 'trip_order-info',
                 data: {
-                    data: {
-                        tid
-                    }
+                    tid
                 },
                 loadMsg: '加载中...',
                 errorMsg: '加载失败，请刷新',
@@ -225,6 +226,7 @@ Component({
 
     attached: function( ) {
         // this.fetchDetail( this.data.tid );
-        this.fetchShoppingList( this.data.tid );
+        // console.log('......', this.data )
+        // this.fetchShoppingList( this.data.tid );
     }
 })

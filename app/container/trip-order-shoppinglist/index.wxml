@@ -1,5 +1,5 @@
 <view class="con-trip-order-shoppinglist">
-    
+
     <!-- 收益信息 -->
     <view class="tos-money-block">
         
@@ -210,7 +210,7 @@
                         </view>
                         <view>
                             <image
-                                wx:if="{{ item.base_status === '1' }}"
+                                wx:if="{{ item.base_status === '1' && item.lastAllocated }}"
                                 class="tos-trip-item-image"
                                 src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/header.png"
                             />{{ 

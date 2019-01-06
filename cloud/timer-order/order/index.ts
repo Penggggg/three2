@@ -98,3 +98,73 @@ export const payedFix = async ( ) => {
         return { status: 500 }
     }
 }
+
+/**
+ * 订单3：已经进行购物清单价格调整后，新来的商品订单价格如果跟清单价格不一致，应该用定时器进行调整
+ * !这类订单，暂时还没有能自动注入分配数量 allocatedCount
+ */
+export const priceFix = async ( ) => {
+    try {
+
+        // 获取当前进行中的行程
+        const trips$ = await cloud.callFunction({
+            name: 'trip',
+            data: {
+                $url: 'enter'
+            }
+        });
+
+        const currentTrip = trips$.result.data[ 0 ];
+
+        if ( !currentTrip ) { 
+            return {
+                status: 200
+            }
+        }
+
+        const tid = currentTrip._id;
+
+        // 找到所有已经调整好的清单列表
+        const shoppinglists$ = await db.collection('shopping-list')
+            .where({
+                tid,
+                base_status: '1'
+            })
+            .get( );
+        
+        await Promise.all( shoppinglists$.data.map( async shoppingList => {
+
+            const { pid, sid, adjustPrice, adjustGroupPrice } = shoppingList;
+
+            // 找到base_status: 0 的同商品订单
+            const orders$ = await db.collection('order')
+                .where({
+                    tid,
+                    pid,
+                    sid,
+                    base_status: '0'
+                })
+                .get( );
+            
+            // 订单更新
+            await Promise.all( orders$.data.map( order => {
+                return db.collection('order')
+                    .doc( String( order._id ))
+                    .update({
+                        data: {
+                            allocatedPrice: adjustPrice,
+                            allocatedGroupPrice: adjustGroupPrice,
+                            base_status: '1'
+                        }
+                    })
+            }));
+
+        }));
+
+        return { status: 200 }
+
+    } catch ( e ) {
+        console.log('!!!!定时器订单priceFix错误',)
+        return { status: 500 }
+    }
+}

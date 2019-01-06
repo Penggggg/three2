@@ -36,7 +36,7 @@ Page({
     onLoad: function (options) {
         // if ( !options.id ) { return; }
         this.setData({
-            id: 'XC2cWXffS3SWc69m'
+            id: 'XDFhZ3ffS3SWhJKI'
         });
         // this.setData({
         //     id: options.id

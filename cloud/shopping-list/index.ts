@@ -20,8 +20,9 @@ const _ = db.command;
  * createTime
  * updateTime
  * lastAllocated 剩余分配量
- * adjustPrice 清单售价
- * adjustGroupPrice 清单团购价
+ * adjustPrice 分配的数清单售价
+ * adjustGroupPrice 分配的数清单团购价
+ * allocatedCount 分配的数量
  */
 export const main = async ( event, context ) => {
 
@@ -321,14 +322,14 @@ export const main = async ( event, context ) => {
     app.router('list', async( ctx, next ) => {
         try {
             const { tid } = event.data;
-
+            
             // 拿到行程下所有的购物清单
             const lists$ = await db.collection('shopping-list')
                 .where({
                     tid
                 })
                 .get( );
-
+           
             // 查询每条清单底下的每个order详情，这里的每个order都是已付订金的
             const orders$: any = await Promise.all( lists$.data.map( list => {
                 return Promise.all( list.oids.map( async oid => {

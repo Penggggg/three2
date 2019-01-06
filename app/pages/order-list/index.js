@@ -262,7 +262,7 @@ Page({
                 return order.b === '0' ?
                     order.count :
                     order.b === '1' || ordre.b === '2' ?
-                        order.allocatedCount :
+                        order.allocatedCount || order.count :
                         0;
             }
 
