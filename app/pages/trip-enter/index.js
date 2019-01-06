@@ -62,6 +62,7 @@ Page({
                     this.setData({
                         notice: text
                     });
+                    this.fetchCoupon( current._id )
                 } else if ( !next ) {
                     this.setData({
                         notice: `暂无下一趟行程 T.T`
@@ -91,6 +92,20 @@ Page({
                 });
             }
         });
+    },
+
+    /** 拉取优惠券信息 */
+    fetchCoupon( tid ) {
+        http({
+            url: 'coupon_isget',
+            data: {
+                tid,
+                check: 't_lijain,t_manjian,t_daijin'
+            },
+            success: res => {
+                console.log( res )
+            }
+        })
     },
 
     /** 处理详情 */
