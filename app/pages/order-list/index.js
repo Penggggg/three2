@@ -129,13 +129,13 @@ Page({
 
         const { metaList } = this.data;
         const orderObj = { };
-
+        console.log('1111', metaList )
         metaList.map( order => {
 
             let isNeedPrePay = true;
             const { isNew } = this.data;
             const payment = order.trip.payment;
-            const { depositPrice } = order;
+            const { count, depositPrice, allocatedCount, allocatedGroupPrice, allocatedPrice } = order;
 
             if ( isNew && payment === '0' ) {
                 isNeedPrePay = true;
@@ -165,35 +165,39 @@ Page({
 
             // 处理单个订单 状态
             const decorateOrder = ( order, isNeedPrePay ) => {
-                let statusCN = '';
+                let statusCN = [ ];
                 const p = order.pay_status;
                 const b = order.base_status;
                 const d = order.deliver_status;
 
                 if ( isNeedPrePay && p === '0' && b === '5' ) {
-                    statusCN = '支付过期，请重新购买'
+                    statusCN = [ '支付过期，请重新购买' ];
 
                 } else if ( isNeedPrePay && p === '0' && b !== '5' && b !== '4' ) {
-                    statusCN = '待付订金'
+                    statusCN = [ '待付订金' ]
 
                 } else if ( p === '1' && b === '0' ) {
-                    statusCN = '跑腿购买中'
+                    statusCN = [ '跑腿购买中' ]
 
                 } else if ( p === '1' && b === '1' ) {
-                    statusCN = '已购买，结算中'
+                    statusCN = [ '已购买，结算中' ] 
 
                 } else if ( p === '1' && b === '2' ) {
-                    statusCN = '已购买，待付款'
+                    statusCN = [ '已购买，待付款' ]
 
                 } else if ( p === '1' && b === '4' ) {
-                    statusCN = '买不到，退款中'
+                    statusCN = [ '买不到，退款中' ]
 
                 } else if ( p === '2' && d === '0' ) {
-                    statusCN = '未发货'
+                    statusCN = [ '未发货' ]
                     
                 } else if ( p === '2' && d === '2' ) {
-                    statusCN = '已发货'
+                    statusCN = [ '已发货' ]
                 } 
+
+                if ( b === '1' && count - allocatedCount > 0 ) {
+                    statusCN.push( '货源不足' )
+                }
 
                 return Object.assign({ }, order, {
                     p,
@@ -230,7 +234,7 @@ Page({
             const orders = tripOrders.meta;
             
             //  处理订单整体状态
-            if ( orders.filter( x => x.b !== '4' && x.b !== '5').some( x => x.statusCN === '待付订金' )) {
+            if ( orders.filter( x => x.b !== '4' && x.b !== '5').some( x => x.statusCN[ 0 ] === '待付订金' )) {
                 tripStatusCN = '有未付订金';
 
             } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '1' && ( x.b === '0' || x.b === '1' ))) {
@@ -253,17 +257,25 @@ Page({
             }
             tripOrders['tripStatusCN'] = tripStatusCN;
 
+            // 计算当前可结算的商品数量
+            const count$ = order => {
+                return order.b === '0' ?
+                    order.count :
+                    order.b === '1' || ordre.b === '2' ?
+                        order.allocatedCount :
+                        0;
+            }
+
             // 处理订单商品数量
             const sum = orders.reduce(( x, y ) => {
-                const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
-                return x + count;
+                return x + count$( y );
             }, 0 );
             tripOrders['sum'] = sum;
 
-            // 处理订单商品价格
+            // 处理订单商品总价价格
             const totalPrice = orders.reduce(( x, y ) => {
-                const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
-                return x + y.price * count;
+                const price = y.allocatedPrice || y.price;
+                return x + price * count$( y );;
             }, 0 );
             tripOrders['totalPrice'] = totalPrice;
 
@@ -272,30 +284,38 @@ Page({
              * ! 团购总价为0，则团购价为原总价
              */
             const totalGroupPrice = orders.reduce(( x, y ) => {
-                const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
-                return x + y.groupPrice ? y.groupPrice * count : 0
+                const groupPrice = y.allocatedGroupPrice || y.groupPrice;
+                return x + groupPrice ? groupPrice * count$( y ) : 0
             }, 0 );
             tripOrders['totalGroupPrice'] = totalGroupPrice || totalPrice;
 
             // 剩余订金、未付订金列表
             const notPayDepositOrders = [ ];
             const lastDepositPrice = orders.reduce(( x, y ) => {
-                const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
-                let currentDepositPrice = y.p === '0' && !!y.depositPrice ? y.depositPrice : 0;
-                if ( !!notPayDepositOrders ) {
+                let currentDepositPrice = ( y.p === '0' && !!y.depositPrice ) ? y.depositPrice : 0;
+                if ( !!currentDepositPrice ) {
                     notPayDepositOrders.push( y._id )
                 }
-                return x + currentDepositPrice * count;
+                return x + currentDepositPrice * count$( y );;
             }, 0 );
             tripOrders['lastDepositPrice'] = lastDepositPrice;
             tripOrders['notPayDepositOrders'] = notPayDepositOrders;
 
+            // 已付订金
+            const hasPayDepositPrice = orders.reduce(( x, y ) => {
+                const depositPrice = y.depositPrice || 0;
+                return x + depositPrice * y.count;
+            }, 0 )
+            tripOrders['hasPayDepositPrice'] = hasPayDepositPrice;
+
             // 剩余尾款
+            // 注意，这里应该计算好因为货存不足，带来多付订金的情况。
             const lastPrice = orders.reduce(( x, y ) => {
                 const depositPrice = y.depositPrice || 0;
                 const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
-                let currentPrice = y.p === '1' && y.b === '2' ? y.price - depositPrice : 0;
-                return x + currentPrice * count;
+                const { allocatedCount, allocatedPrice } = y;
+                let currentPrice = allocatedPrice * allocatedCount - count * depositPrice;
+                return x + currentPrice;
             }, 0 );
             tripOrders['lastPrice'] = lastPrice;
 
@@ -309,7 +329,7 @@ Page({
 
         });
         
-        console.log( Object.keys( orderObj ).map( tid => orderObj[ tid ]));
+        console.log( '222', Object.keys( orderObj ).map( tid => orderObj[ tid ]));
         this.setData({
             tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
         })

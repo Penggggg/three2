@@ -101,24 +101,38 @@
                             <view class="pol-trip-order-standar">
                                 {{ order.standername }}
                             </view>
-                            <view class="pol-trip-order-status">
-                                {{ order.statusCN }}
+                            <view
+                                wx:for="{{ order.statusCN }}"
+                                wx:for-index="k"
+                                wx:for-item="i"
+                                wx:key="{{ k }}"
+                                class="pol-trip-order-status"
+                            >
+                                {{ i }}
                             </view>
                         </view>
 
                         <!-- 价格、数量 -->
                         <view class="pol-trip-order-price-block">
                             <view class="pol-trip-order-price {{ order.b === '4' || order.b === '5' ? 'disabled' : '' }}">
-                                ¥ {{ order.price }}
+                                ¥ {{ order.allocatedPrice || order.price }}
+                            </view>
+                            <!-- <view
+                                class="pol-trip-order-price"
+                                wx:if="{{ order.allocatedGroupPrice || order.groupPrice }}"
+                            >
+                                团购价¥ {{ order.allocatedGroupPrice || order.groupPrice }}
+                            </view> -->
+                            <view
+                                class="pol-trip-order-count"
+                            >
+                                x {{ order.count }}
                             </view>
                             <view
-                                class="pol-trip-order-price"
-                                wx:if="{{ groupPrice }}"
+                                class="pol-trip-order-count purple"
+                                wx:if="{{ order.b === '1' && order.count - order.allocatedCount > 0 }}"
                             >
-                                团购价¥ {{ order.groupPrice }}
-                            </view>
-                            <view class="pol-trip-order-count">
-                                x {{ order.count }}
+                                x {{ order.count - order.allocatedCount }}
                             </view>
                         </view>
 
@@ -130,6 +144,9 @@
                 <view class="pol-trip-order-sum-block">
                     <view class="pol-trip-order-sum">
                         共{{ item.sum }}件商品
+                    </view>
+                    <view class="pol-trip-order-totalprice mr">
+                        已付订金：<view class="pol-totalprice">¥{{ item.hasPayDepositPrice }}</view>
                     </view>
                     <view class="pol-trip-order-totalprice">
                         合计：<view class="pol-totalprice">¥{{ item.totalPrice }}</view>

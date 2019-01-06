@@ -186,12 +186,17 @@
     font-size: 22rpx;
 }
 
+.pol-trip-order-count.purple {
+    color: #ff5777;
+}
+
 .pol-trip-order-status {
     display: inline;
     font-size: 22rpx;
     color: #ff5777;
     padding: 2rpx 10rpx;
     border-radius: 2px;
+    margin-right: 10rpx;
     border: 1px solid #ff5777;
 }
 
@@ -213,6 +218,10 @@
 .pol-trip-order-totalprice {
     color: #666;
     font-size: 22rpx;
+}
+
+.pol-trip-order-totalprice.mr {
+    margin-right: 10rpx;
 }
 
 .pol-totalprice {

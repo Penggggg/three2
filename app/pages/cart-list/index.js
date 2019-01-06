@@ -100,7 +100,7 @@ Page({
                 const { status, data } = res;
                 
                 if ( status !== 200 ) { return; }
-        
+         
                 // 处理：计算当前选择的sku，并设置为current
                 const dealed = data.map( x => {
 
@@ -196,7 +196,7 @@ Page({
                     cartList: dealed,
                     hasInitCart: true
                 });
-
+    
                 this.calculateSum( );
             }
         });
