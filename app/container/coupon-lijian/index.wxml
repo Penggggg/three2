@@ -43,7 +43,10 @@
                 </view>
 
                 <!-- 分享按钮 -->
-                <view class="con-lj-share">
+                <view
+                    class="con-lj-share"
+                    animation="{{ animationMiddleHeaderItem }}"
+                >
                     分享
                 </view>
 

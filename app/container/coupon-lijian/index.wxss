@@ -34,9 +34,9 @@
 
 .con-lj-hongbao-1 {
     height: 70%;
-    background: #ca6148;
     position: relative;
-    border-radius: 0 0 150px 150px;
+    background: #ca6148;
+    border-radius: 8px 8px 150px 150px;
     border-bottom: 2px solid #b9553d;
 }
 
