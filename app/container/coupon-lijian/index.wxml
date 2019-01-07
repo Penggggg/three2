@@ -39,7 +39,7 @@
                 </view>
 
                 <view class="con-lj-title">
-                    分享即可获另外<view class="con-lj-inline-big">{{ notGet }}</view>元红包
+                    分享立即获另外<view class="con-lj-inline-big">{{ notGet }}</view>元红包
                 </view>
 
                 <!-- 分享按钮 -->
