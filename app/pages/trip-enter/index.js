@@ -193,7 +193,7 @@ Page({
      */
     onShareAppMessage: function () {
         return {
-            title: '??',
+            title: '[微信红包]一起分享超值行程红包',
             path: '/pages/trip-enter/index'
         }
     }
