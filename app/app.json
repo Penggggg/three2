@@ -24,6 +24,7 @@
     "my-good-item-1": "./container/good-item-1/index",
     "my-good-item-2": "./container/good-item-2/index",
     "my-good-item-3": "./container/good-item-3/index",
+    "my-coupon-lijian": "./container/coupon-lijian/index",
     "my-manager-entry-btn": "./container/manager-entry-btn/index",
     "my-social-trip-member": "./container/social-trip-member/index",
     "my-trip-order-shoppinglist": "./container/trip-order-shoppinglist/index",

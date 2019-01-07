@@ -9,6 +9,7 @@
         <view class="text">正在加载...</view> 
     </view>
 
+    <!-- 行程入口主体 -->
     <view
         wx:else
     >
@@ -151,6 +152,18 @@
         
     </view>
 
+    <!-- 管理入口 -->
     <my-manager-entry-btn />
+
+    <!-- 立减优惠券 -->
+    <my-coupon-lijian
+        wx:if="{{ loaded }}"
+        show="{{ showLijian }}"
+        hasBeenGet="{{ 2 }}"
+        notGet="{{ 3 }}"
+        title="哈哈哈"
+        img="222222"
+        bindclose="closeLijian"
+    />
 
 </view>

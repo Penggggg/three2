@@ -1,0 +1,62 @@
+<view
+    wx:if="{{ show }}"
+    class="con-coupon-lijian"
+>
+    <!-- 背景 -->
+    <view
+        class="con-lj-bg"
+    >
+
+        <!-- 红包主体 -->
+        <view class="con-lj-hongbao-block">
+
+            <!-- 关闭按钮 -->
+            <view
+                bindtap="closeCover"
+                class="con-lj-close"
+            >
+                <wxc-icon
+                    size="30"
+                    type="close"
+                    color="#91402c"
+                />
+            </view>
+
+            <!-- 红包主体1 -->
+            <view class="con-lj-hongbao-1">
+
+                <!-- 圆边 -->
+                <!-- <view class="con-lj-hongbao-round"></view> -->
+
+                <!-- 标题1 -->
+                <view class="con-lj-title-big">
+                    恭喜你
+                </view>
+
+                <!-- 标题2 -->
+                <view class="con-lj-title">
+                    被一个<view class="con-lj-inline-big">{{ hasBeenGet }}</view>元红包砸中
+                </view>
+
+                <view class="con-lj-title">
+                    分享即可获得<view class="con-lj-inline-big">{{ notGet }}</view>元红包
+                </view>
+
+                <!-- 分享按钮 -->
+                <view class="con-lj-share">
+                    分享
+                </view>
+
+            </view>
+
+            <!-- 红包主体2 -->
+            <view class="con-lj-hongbao-2">
+                <view class="con-lj-tips">
+                    <view class="con-lj-title small">无门槛立减</view>
+                    <!-- <view class="con-lj-title">无门槛立减</view> -->
+                </view>
+            </view>
+
+        </view>
+    </view>
+</view>

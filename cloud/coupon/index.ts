@@ -10,6 +10,7 @@ const db: DB.Database = cloud.database( );
  * @description 卡券模块
  * -------- 字段 ----------
  * tid 领取该优惠券的所属行程
+ * title 券名称
  * type: 't_lijain' | 't_manjian' | 't_daijin' 券类型：行程立减、行程满减、行程代金券
  * isUsed: 是否已用
  * openid

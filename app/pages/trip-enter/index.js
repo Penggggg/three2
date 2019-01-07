@@ -21,7 +21,9 @@ Page({
         /** 排行榜商品 */
         rankGoods: [ ],
         /** 3~20名商品 */
-        otherGoods: [ ]
+        otherGoods: [ ],
+        /** 展开立减框 */
+        showLijian: false
     },
 
     /** 拉取两个最新行程 */
@@ -103,7 +105,13 @@ Page({
                 check: 't_lijain,t_manjian,t_daijin'
             },
             success: res => {
-                console.log( res )
+                console.log( res );
+                if ( res.status !== 200 ) { return; }
+                const { t_daijin, t_lijain, t_manjian } = res.data;
+                // 先处理：立减、满减
+                this.setData({
+                    showLijian: t_lijain === false
+                });
             }
         })
     },
@@ -120,6 +128,13 @@ Page({
         return Object.assign({ }, tripDetail, {
             end_date$: MMdd( end_date ),
             start_date$: MMdd( start_date )
+        });
+    },
+
+    /** 关闭立减弹层 */
+    closeLijian( ) {
+        this.setData({
+            showLijian: false
         });
     },
 
