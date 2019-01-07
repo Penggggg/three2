@@ -26,7 +26,7 @@
 }
 
 .con-lj-close {
-    top: 10rpx;
+    top: 5rpx;
     right: 15rpx;
     z-index: 1000;
     position: absolute;
@@ -65,8 +65,14 @@
 }
 
 .con-lj-title.small {
-    font-size: 24rpx;
+    font-size: 22rpx;
     margin-bottom: 5rpx;
+}
+
+.con-lj-title.flex {
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
 }
 
 .con-lj-inline-big {
@@ -75,13 +81,13 @@
 }
 
 .con-lj-share {
-    display: flex;
     left: 50%;
     bottom: -70rpx;
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 100rpx;
-    height: 100rpx;
+    width: 200rpx;
+    height: 200rpx;
     padding: 60rpx;
     font-size: 60rpx;
     color: #333;
@@ -116,4 +122,8 @@
     width: 100%;
     bottom: 45rpx;
     position: absolute;
+}
+
+.con-lj-count {
+    display: inline-block;
 }

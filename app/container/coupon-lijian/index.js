@@ -7,7 +7,8 @@ Component({
     properties: {
         // 展开
         show: {
-            type: Boolean
+            type: Boolean,
+            observer: 'init'
         },
         // 已领
         hasBeenGet: {
@@ -24,6 +25,10 @@ Component({
         // 分析图片
         img: {
             type: String
+        },
+        // 行程截止
+        endTime: {
+            type: Number
         }
     },
 
@@ -39,6 +44,13 @@ Component({
      * 组件的方法列表
      */
     methods: {
+
+        /** 初始化 */
+        init( val ) {
+            if ( val ) {
+                this.vibrateShort( );
+            }
+        },
 
         /** 关闭弹层 */
         closeCover( ) {
@@ -66,7 +78,17 @@ Component({
                     circleCount = 0;
                 }
             }.bind( this ), 200);
-        }
+        },
+
+        /** 短振动 */
+        vibrateShort( ) {
+            wx.vibrateShort({
+                success: res => { }
+            });
+        },
+
+        /** 转发分享 */
+        
 
     },
 

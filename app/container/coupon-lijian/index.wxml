@@ -39,23 +39,32 @@
                 </view>
 
                 <view class="con-lj-title">
-                    分享即可获得<view class="con-lj-inline-big">{{ notGet }}</view>元红包
+                    分享即可获另外<view class="con-lj-inline-big">{{ notGet }}</view>元红包
                 </view>
 
                 <!-- 分享按钮 -->
-                <view
+                <button
+                    open-type="share"
                     class="con-lj-share"
                     animation="{{ animationMiddleHeaderItem }}"
                 >
                     分享
-                </view>
+                </button>
 
             </view>
 
             <!-- 红包主体2 -->
             <view class="con-lj-hongbao-2">
                 <view class="con-lj-tips">
-                    <view class="con-lj-title small">无门槛立减</view>
+                    <view class="con-lj-title small flex">
+                        <i-count-down
+                            class="con-lj-count"
+                            i-class="con-lj-count"
+                            target="{{ endTime }}"
+                        />
+                        后自动获得
+                    </view>
+                    <view class="con-lj-title small">无门槛立减{{ hasBeenGet + notGet }}元券</view>
                     <!-- <view class="con-lj-title">无门槛立减</view> -->
                 </view>
             </view>

@@ -105,7 +105,7 @@ Page({
                 check: 't_lijain,t_manjian,t_daijin'
             },
             success: res => {
-                console.log( res );
+                // console.log( res );
                 if ( res.status !== 200 ) { return; }
                 const { t_daijin, t_lijain, t_manjian } = res.data;
                 // 先处理：立减、满减
@@ -191,7 +191,10 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    // onShareAppMessage: function () {
-
-    // }
+    onShareAppMessage: function () {
+        return {
+            title: '??',
+            path: '/pages/trip-enter/index'
+        }
+    }
 })

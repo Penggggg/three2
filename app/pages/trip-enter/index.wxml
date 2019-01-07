@@ -158,12 +158,11 @@
     <!-- 立减优惠券 -->
     <my-coupon-lijian
         wx:if="{{ loaded }}"
-        show="{{ showLijian }}"
-        hasBeenGet="{{ 2 }}"
         notGet="{{ 3 }}"
-        title="哈哈哈"
-        img="222222"
+        hasBeenGet="{{ 2 }}"
+        show="{{ showLijian }}"
         bindclose="closeLijian"
+        endTime="{{ current.end_date }}"
     />
 
 </view>
