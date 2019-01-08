@@ -23,7 +23,9 @@ Page({
         /** 3~20名商品 */
         otherGoods: [ ],
         /** 展开立减框 */
-        showLijian: false
+        showLijian: false,
+        /** 展开满减 */
+        showManjian: false
     },
 
     /** 拉取两个最新行程 */
@@ -54,7 +56,7 @@ Page({
                 if ( current ) {
                     let text = '';
                     if ( current.fullreduce_values ) {
-                        text += `【超值优惠】消费满${current.fullreduce_atleast}减${current.fullreduce_values}元!`;
+                        text += `【超值优惠】满${current.fullreduce_atleast}减${current.fullreduce_values}券等你拿！`;
                     }
                     if ( current.reduce_price ) {
                         text += `【立减】无门槛${current.reduce_price}优惠券等你拿！`
@@ -113,7 +115,8 @@ Page({
                 const { t_daijin, t_lijain, t_manjian } = res.data;
                 // 先处理：立减、满减
                 this.setData({
-                    showLijian: t_lijain === false
+                    showLijian: t_lijain === false,
+                    showManjian: t_manjian === false
                 });
             }
         })

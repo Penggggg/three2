@@ -1,0 +1,37 @@
+.con-manjian {
+    padding: 0 20rpx;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.mj-img-block {
+    position: relative;
+}
+
+.cmj-img {
+    width: 100%;
+    border-radius: 6px;
+    max-height: 180rpx;
+    box-shadow: 3px 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.mj-text-block {
+    top: 18%;
+    left: 15%;
+    position: absolute;
+}
+
+.mj-text-atleast {
+    color: #666;
+    font-size: 20rpx;
+}
+
+.mj-animate {
+    display: inline;
+    font-size: 40rpx;
+}
+
+.mj-text-money {
+    color: #dc7788;
+    font-size: 24rpx;
+}

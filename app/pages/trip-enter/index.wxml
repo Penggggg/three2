@@ -44,7 +44,7 @@
                     <image
                         mode="aspectFill"
                         class="te-header-img"
-                        src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/trip-banner.png"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner.png"
                     />
 
                     <!-- 基本信息 -->
@@ -76,12 +76,24 @@
 
                 <!-- 仙女购物单 + 显示可拼 + 显示人 -->
 
+                <!-- 满减 -->
+                <my-coupon-manjian
+                    tid="{{ current._id }}"
+                    bindclose="closeLijian"
+                    money="{{ current.fullreduce_values }}"
+                    atleast="{{ current.fullreduce_atleast }}"
+                    wx:if="{{ loaded && showManjian }}"
+                />
+
                 <!-- logo -->
-                <view class="te-logo-bar">
+                <view
+                    class="te-logo-bar"
+                    wx:if="{{ !showManjian }}"
+                >
                     <image
                         mode="widthFix"
                         class="te-bar-img"
-                        src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/bar-recommend.png"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/bar-recommend.png"
                     />
                 </view>
 
