@@ -61,6 +61,7 @@
                             class="con-lj-count"
                             i-class="con-lj-count"
                             target="{{ endTime }}"
+                            show-day="{{true}}"
                         />
                         后自动获得
                     </view>

@@ -56,12 +56,15 @@
     font-size: 60rpx;
     text-align: center;
     padding: 60rpx 0 65rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    
 }
 
 .con-lj-title {
     color: #e7ce9f;
     font-size: 36rpx;
     text-align: center;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
 }
 
 .con-lj-title.small {
@@ -78,6 +81,7 @@
 .con-lj-inline-big {
     display: inline;
     font-size: 55rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
 }
 
 .con-lj-share {

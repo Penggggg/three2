@@ -157,6 +157,7 @@
 
     <!-- 立减优惠券 -->
     <my-coupon-lijian
+        tid="{{ current._id }}"
         wx:if="{{ loaded }}"
         notGet="{{ 3 }}"
         hasBeenGet="{{ 2 }}"
@@ -164,5 +165,8 @@
         bindclose="closeLijian"
         endTime="{{ current.end_date }}"
     />
+
+    <!-- 满减券 -->
+    
 
 </view>

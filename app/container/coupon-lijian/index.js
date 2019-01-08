@@ -5,6 +5,10 @@ Component({
      * 组件的属性列表
      */
     properties: {
+        // 行程id
+        tid: {
+            type: String
+        },
         // 展开
         show: {
             type: Boolean,
@@ -85,6 +89,11 @@ Component({
             wx.vibrateShort({
                 success: res => { }
             });
+            setTimeout(( ) => {
+                wx.vibrateShort({
+                    success: res => { }
+                });
+            }, 30 );
         },
 
         /** 转发分享 */

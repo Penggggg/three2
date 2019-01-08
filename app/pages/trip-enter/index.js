@@ -54,7 +54,10 @@ Page({
                 if ( current ) {
                     let text = '';
                     if ( current.fullreduce_values ) {
-                        text += `【超值优惠】消费满${current.fullreduce_atleast}元，立减${current.fullreduce_values}元!`;
+                        text += `【超值优惠】消费满${current.fullreduce_atleast}减${current.fullreduce_values}元!`;
+                    }
+                    if ( current.reduce_price ) {
+                        text += `【立减】无门槛${current.reduce_price}优惠券等你拿！`
                     }
                     if ( current.postage === '0' ) {
                         text += `【免邮】消费满${current.postagefree_atleast}元立即免邮!`
@@ -131,7 +134,7 @@ Page({
         });
     },
 
-    /** 关闭立减弹层 */
+    /** 关闭立减弹层，来源于分享完成、主动关闭 */
     closeLijian( ) {
         this.setData({
             showLijian: false
