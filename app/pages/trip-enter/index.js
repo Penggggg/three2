@@ -155,7 +155,7 @@ Page({
             type: 't_lijain',
             canUseInNext: false,
             value: money,
-            atleast: current.fullreduce_atleast
+            atleast: 0
         };
         http({
             data: temp,

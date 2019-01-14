@@ -16,7 +16,7 @@ Page({
         ],
         baseInfo: {
             orders: 0,
-            cards: 0
+            coupons: 0
         }
     },
 
@@ -39,6 +39,7 @@ Page({
             url: 'common_mypage-info',
             success: res => {
                 if ( res.status !== 200 ) { return; }
+
                 const temp = { };
                 Object.keys( res.data ).map( key => {
                     temp[ key ] = res.data[ key ];

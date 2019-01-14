@@ -299,10 +299,18 @@ export const main = async ( event, context ) => {
                     openid: event.userInfo.openId
                 })
                 .count( );
+
+            // 卡券数
+            const coupons$ = await db.collection('coupon')
+                .where({
+                    openid: event.userInfo.openId
+                })
+                .count( );
             
             return ctx.body = {
                 status: 200,
                 data: {
+                    coupons: coupons$.total,
                     orders: orders$.total
                 }
             }
