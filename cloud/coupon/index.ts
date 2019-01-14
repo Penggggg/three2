@@ -209,6 +209,46 @@ export const main = async ( event, context ) => {
         } catch ( e ) { return ctx.body = { status :500 };}
     })
     
+    /** 
+     * @description 卡券列表
+     */
+    app.router('list', async( ctx, next ) => {
+        try {
+            
+            const openid = event.data.openId || event.userInfo.openId;
+            const list$ = await db.collection('coupon')
+                .where({
+                    openid
+                })
+                .get( );
+
+            // 行程信息
+            const tripsIds = Array.from( new Set( list$.data.map( x => x.tid )));
+            const trips$ = await Promise.all( tripsIds.map( tid => {
+                return db.collection('trip')
+                    .doc( tid )
+                    .get( );
+            }));
+
+            const trips = trips$.map( x => x.data );
+
+            // 卡券插入行程
+            const list = list$.data.map( coupon => {
+                const tripMeta = trips.find( x => x._id === coupon.tid );
+                return Object.assign({ }, coupon, {
+                    trip: tripMeta || null
+                })
+            });
+            
+            return ctx.body = {
+                status: 200,
+                data: list
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
 
     return app.serve( );
 };

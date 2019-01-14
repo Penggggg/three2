@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/coupon-list/index",
     "pages/my/index",
     "pages/trip-enter/index",
     "pages/manager-trip-detail/index",

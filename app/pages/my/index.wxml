@@ -22,7 +22,10 @@
                 <view class="pm-bar-item-content">{{ baseInfo.orders }}</view>
                 <view class="pm-bar-item-title">订单</view>
             </view>
-            <view class="pm-header-bar-item line">
+            <view
+                class="pm-header-bar-item line"
+                bindtap="goCouponList"
+            >
                 <view class="pm-bar-item-content">{{ baseInfo.coupons }}</view>
                 <view class="pm-bar-item-title">卡券</view>
             </view>

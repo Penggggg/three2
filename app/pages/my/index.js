@@ -58,6 +58,13 @@ Page({
         })
     },
 
+    /** 跳到优惠券列表 */
+    goCouponList( ) {
+        wx.navigateTo({
+            url: "/pages/coupon-list/index"
+        })
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
