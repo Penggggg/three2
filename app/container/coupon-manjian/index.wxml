@@ -1,4 +1,7 @@
-<view class="con-manjian">
+<view
+    class="con-manjian"
+    bindtap="getReduce"
+>
 
     <!-- 图片 -->
     <view class="mj-img-block">

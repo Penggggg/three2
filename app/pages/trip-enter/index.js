@@ -25,7 +25,12 @@ Page({
         /** 展开立减框 */
         showLijian: false,
         /** 展开满减 */
-        showManjian: false
+        showManjian: false,
+        /** 立减信息 */
+        lijian: {
+            notGet: 0,
+            hasBeenGet: 0
+        }
     },
 
     /** 拉取两个最新行程 */
@@ -112,14 +117,80 @@ Page({
             success: res => {
                 // console.log( res );
                 if ( res.status !== 200 ) { return; }
+
+                const { reduce_price } = this.data.current;
                 const { t_daijin, t_lijain, t_manjian } = res.data;
-                // 先处理：立减、满减
+                
+                /** 
+                 * 先处理：立减
+                 * 如果未领取立减到上半部分，则系统创建
+                 **/
+                const halfOfLijian = Number( reduce_price * 0.4 ).toFixed( 1 );
                 this.setData({
-                    showLijian: t_lijain === false,
+                    lijian: {
+                        hasBeenGet: halfOfLijian,
+                        notGet: Number( reduce_price * 0.6 ).toFixed( 1 ),
+                    }
+                })
+
+                // 未领取过立减，则自动拿“半张”优惠券
+                if ( t_lijain === false ) {
+                    this.autoGetLijian( halfOfLijian );
+                }
+
+                this.setData({
+                    showLijian: t_lijain === 'half',
                     showManjian: t_manjian === false
                 });
             }
         })
+    },
+
+    /** 系统自动领取立减到券 */
+    autoGetLijian( money ) {
+        const { current } = this.data;
+        const temp = {
+            tid: current._id,
+            title: '行程立减优惠券',
+            type: 't_lijain',
+            canUseInNext: false,
+            value: money,
+            atleast: current.fullreduce_atleast
+        };
+        http({
+            data: temp,
+            url: 'coupon_create',
+            success: res => {
+                this.setData({
+                    showLijian: true
+                });
+            }
+        })
+    },
+
+    /** 领取另一张优惠券 */
+    getAnotherLijian( ) {
+        const { current } = this.data;
+        http({
+            data: {
+                tid: current._id
+            },
+            url: 'coupon_repair-lijian',
+            success: res => {
+                if ( res.status === 200 ) {
+                    this.setData({
+                        showLijian: false
+                    });
+                    setTimeout(( ) => {
+                        wx.showToast({
+                            duration: 2000,
+                            title: '领取成功！'
+                        });
+                    }, 2500 );
+                }
+            }
+        })
+        
     },
 
     /** 处理详情 */
@@ -144,6 +215,13 @@ Page({
         });
     },
 
+    /** 关闭满减弹窗 */
+    closeManjian( ) {
+        this.setData({
+            showManjian: false
+        })
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
@@ -155,7 +233,7 @@ Page({
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady: function () {
-
+        this.fetchRank( );
     },
 
     /**
@@ -163,7 +241,6 @@ Page({
      */
     onShow: function ( ) {
         this.fetchLast( );
-        this.fetchRank( );
     },
 
     /**
@@ -197,7 +274,10 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    onShareAppMessage: function ( ) {
+    onShareAppMessage: function ({ from }) {
+        if ( from === 'button' ) {
+            this.getAnotherLijian( );
+        }
         return {
             title: '[有人@你]跟我一起来拔草～',
             path: '/pages/trip-enter/index',

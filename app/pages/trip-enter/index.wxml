@@ -79,7 +79,7 @@
                 <!-- 满减 -->
                 <my-coupon-manjian
                     tid="{{ current._id }}"
-                    bindclose="closeLijian"
+                    bindclose="closeManjian"
                     money="{{ current.fullreduce_values }}"
                     atleast="{{ current.fullreduce_atleast }}"
                     wx:if="{{ loaded && showManjian }}"
@@ -171,11 +171,11 @@
     <my-coupon-lijian
         tid="{{ current._id }}"
         wx:if="{{ loaded }}"
-        notGet="{{ 3 }}"
-        hasBeenGet="{{ 2 }}"
+        notGet="{{ lijian.notGet }}"
         show="{{ showLijian }}"
         bindclose="closeLijian"
         endTime="{{ current.end_date }}"
+        hasBeenGet="{{ lijian.hasBeenGet }}"
     />
 
     <!-- 满减券 -->

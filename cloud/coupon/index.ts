@@ -30,13 +30,14 @@ export const main = async ( event, context ) => {
      * -------- 请求 ---------
      * {
      *   tid
+     *   title
      *   openid  
      *   type
      *   canUseInNext
-     *   fullreduce_atleast
-     *   fullreduce_values
-     *   valiterm
-     *   reduce_type
+     *   atleast
+     *   value
+     *!   valiterm
+     *!   reduce_type
      * }
      */
     app.router('create', async( ctx, next ) => {
@@ -46,6 +47,7 @@ export const main = async ( event, context ) => {
             const temp = Object.assign({ }, event.data, {
                 openid,
                 isUsed: false,
+                reduce_type: event.data.reduce_type || 'yuan',
                 createTime: new Date( ).getTime( )
             });
 
@@ -59,6 +61,58 @@ export const main = async ( event, context ) => {
                 data: add$._id
             }
         } catch ( e ) { return ctx.body = { status: 500 };}
+    });
+
+    /**
+     * @description 补齐立减券
+     * -------- 请求 --------
+     * {
+     *    tid
+     * }
+     */
+    app.router('repair-lijian', async( ctx, next ) => {
+        try {
+
+            const { tid } = event.data;
+            const openid = event.data.openId || event.userInfo.openId;
+
+            const trip$ = await db.collection('trip')
+                .doc( tid )
+                .get( );
+
+            const trip = trip$.data;
+            const { reduce_price } = trip;
+
+            const find$ = await db.collection('coupon')
+                .where({
+                    tid,
+                    openid,
+                    type: 't_lijain'
+                })
+                .get( );
+            const target = find$.data[ 0 ];
+
+            if ( !target ) {
+                return ctx.body = {
+                    status: 200
+                };
+            }
+
+            await db.collection('coupon')
+                .doc( String( target._id ))
+                .update({
+                    data: {
+                        value: reduce_price
+                    }
+                });
+
+            return ctx.body = {
+                status: 200
+            };
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
     });
 
     /**

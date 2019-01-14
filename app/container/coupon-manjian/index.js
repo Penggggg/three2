@@ -1,3 +1,4 @@
+const { http } = require('../../util/http.js');
 
 Component({
     /**
@@ -30,6 +31,7 @@ Component({
      * 组件的方法列表
      */
     methods: {
+
         /** 动画处理 */
         dealAnimate( ) {
             let circleCount = 0;
@@ -52,6 +54,33 @@ Component({
                 }
             }.bind( this ), 200);
         },
+
+        /** 领取满减券 */
+        getReduce( ) {
+            const { tid, money, atleast  } = this.data;
+            const temp = {
+                tid,
+                atleast,
+                title: '行程满减优惠券',
+                type: 't_manjian',
+                canUseInNext: false,
+                value: money,
+            };
+
+            http({
+                data: temp,
+                url: 'coupon_create',
+                success: res => {
+                    if ( res.status === 200 ) {
+                        wx.showToast({
+                            title: '领取成功!'
+                        })
+                        this.triggerEvent('close', true );
+                    }
+                }
+            });
+        }
+
     },
 
     attached: function( ) {
