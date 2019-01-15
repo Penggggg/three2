@@ -1,6 +1,11 @@
-<view class="con-coupon-item-1">
+<view
+    bindtap="goTrip"
+    class="con-coupon-item-1"
+>
 
-    <view class="ci1-container">
+    <view
+        class="ci1-container {{ isUsed ? 'disabled' : '' }}"
+    >
 
         <view class="ci1-content-block">
 
@@ -16,7 +21,7 @@
             <view class="ci1-tips-block">
                 <view
                     class="ci1-tips"
-                    wx:if="{{ type === 't_manjian' }}"
+                    wx:if="{{ type === 't_manjian' || type === 't_daijin' }}"
                 >
                     满{{ atleast }}可用
                 </view>
@@ -26,36 +31,68 @@
                 >
                     无门槛全场通用
                 </view>
-                <view
+                <!-- <view
                     class="ci1-tips small"
                 >
                     {{ title }}
-                </view>
+                </view> -->
             </view>
 
             <view
                 class="ci1-trip-tips"
-                wx:if="{{ !canUseInNext }}"
+                wx:if="{{ !canUseInNext && !isUsed }}"
             >
                 {{ trip.title }}：{{ trip_start }} ~ {{ trip_end }}
             </view>
             <view
                 class="ci1-trip-tips"
-                wx:else
+                wx:if="{{ canUseInNext && !isUsed }}"
             >
-                使用日期不限，快快拔草奖励自己～
+                代金券日期不限，快快拔草奖励自己～
             </view>
-
+            <view
+                class="ci1-trip-tips"
+                wx:if="{{ isUsed }}"
+            >
+                优惠券已使用
+            </view>
         </view>
 
         <view class="ci1-btn-block">
             <view class="ci1-btn-text-block">
-                <view class="ci1-btn-text md">立即</view>
-                <view class="ci1-btn-text">使用</view>
+                <view
+                    class="ci1-btn-text md"
+                    wx:if="{{ !isUsed }}"
+                >
+                    立即
+                </view>
+                <view
+                    class="ci1-btn-text"
+                    wx:if="{{ !isUsed }}"
+                >
+                    使用
+                </view>
+                <view
+                    class="ci1-btn-text small"
+                    wx:if="{{ isUsed }}"
+                >
+                    已使用
+                </view>
                 <view class="ci1-btn-icon">
                     <wxc-icon color="#c62d51" size="30" type="arrow-right" /> 
                 </view>
             </view>
+        </view>
+
+        <view
+            class="ci1-image-block"
+            wx:if="{{ type === 't_daijin' }}"
+        >
+            <image
+                mode="widthFix"
+                class="ci1-image"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/butterfly.png"
+            />
         </view>
 
     </view>

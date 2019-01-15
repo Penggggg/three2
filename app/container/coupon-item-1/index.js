@@ -55,6 +55,13 @@ Component({
                 trip_end: `${m2}月${d2}日`,
                 trip_start: `${m1}月${d1}日`
             });
+        },
+
+        /** 跳到行程入口 */
+        goTrip( ) {
+            wx.navigateTo({
+                url: `/pages/trip-enter/index`
+            })
         }
 
     }

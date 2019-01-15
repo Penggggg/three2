@@ -30,6 +30,21 @@
     align-items: center;
 }
 
+.ci1-container.disabled {
+    background: #eee;
+}
+
+.ci1-image-block {
+    top: 0;
+    right: 200rpx;
+    z-index: 10;
+    position: absolute;
+}
+
+.ci1-image {
+    width: 180rpx;
+}
+
 .ci1-content-block {
     flex: 1;
     z-index: 10;
@@ -97,6 +112,11 @@
     font-weight: bold;
     white-space: nowrap;
     line-height: 38rpx;
+}
+
+.ci1-btn-text.small {
+    font-size: 24rpx;
+    line-height: 24rpx;
 }
 
 .ci1-btn-text.md {
