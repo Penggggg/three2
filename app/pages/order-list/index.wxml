@@ -123,16 +123,19 @@
                             >
                                 团购价¥ {{ order.allocatedGroupPrice || order.groupPrice }}
                             </view> -->
+
+                            <!-- 期待的采购量 -->
                             <view
                                 class="pol-trip-order-count"
                             >
                                 x {{ order.count }}
                             </view>
+                            <!-- 被分配的采购量 -->
                             <view
                                 class="pol-trip-order-count purple"
                                 wx:if="{{ order.b === '1' && order.count - order.allocatedCount > 0 }}"
                             >
-                                x {{ order.count - order.allocatedCount }}
+                                x {{ order.allocatedCount }}
                             </view>
                         </view>
 
@@ -148,9 +151,9 @@
                     <view class="pol-trip-order-totalprice mr">
                         已付订金：<view class="pol-totalprice">¥{{ item.hasPayDepositPrice }}</view>
                     </view>
-                    <view class="pol-trip-order-totalprice">
+                    <!-- <view class="pol-trip-order-totalprice">
                         合计：<view class="pol-totalprice">¥{{ item.totalPrice }}</view>
-                    </view>
+                    </view> -->
                 </view>
 
                 <!-- 最大拼团优惠信息 -->
@@ -159,11 +162,11 @@
                     class="pol-trip-order-sum-block"
                 >
                     <view class="pol-trip-order-sum">
-                        共{{ item.sum }}件拼团
+                        共{{ item.sum }}件可拼团
                     </view>
-                    <view class="pol-trip-order-totalprice">
+                    <!-- <view class="pol-trip-order-totalprice">
                         省：<view class="pol-price">-¥{{ item.totalPrice - item.totalGroupPrice }}</view>
-                    </view>
+                    </view> -->
                 </view>
 
                 <!-- 预估最终结算信息 -->
@@ -175,7 +178,7 @@
                         预计：
                     </view>
                     <view class="pol-trip-order-totalprice">
-                        <view class="pol-pay-price">¥{{ item.totalGroupPrice }}</view>
+                        <view class="pol-pay-price">¥{{ item.totalGroupPrice }} ～ ¥{{ item.totalPrice }}</view>
                     </view>
                 </view>
 

@@ -457,6 +457,7 @@ export const main = async ( event, context ) => {
              * !以下订单都是已付订金的
              * 订单：批量对订单的价格、团购价、购买状态进行调整(已购买/进行中)
              * 其实应该也要自动注入订单数量（策略先到先得，）
+             * !如果已经分配过了，则不再分配采购量
              */
             const sorredOrders = orders$
                 .map(( x: any ) => x.data )
@@ -474,7 +475,7 @@ export const main = async ( event, context ) => {
 
                 purchase = purchase - order.count;
                 
-                if ( purchase > 0 ) {
+                if ( purchase >= 0 ) {
                     lastAllocated = purchase;
                 }
 

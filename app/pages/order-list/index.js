@@ -129,7 +129,7 @@ Page({
 
         const { metaList } = this.data;
         const orderObj = { };
-        console.log('1111', metaList )
+ 
         metaList.map( order => {
 
             let isNeedPrePay = true;
@@ -196,7 +196,8 @@ Page({
                 } 
 
                 if ( b === '1' && count - allocatedCount > 0 ) {
-                    statusCN.push( '货源不足' )
+                    const index = statusCN.findIndex( x => x === '已购买，结算中');
+                    statusCN.splice( index, 1, '货源不足');
                 }
 
                 return Object.assign({ }, order, {
@@ -215,7 +216,7 @@ Page({
                     tripPostagefree_atleast: order.trip.postagefree_atleast,
                     tripName: order.trip.title,
                     tripPayment: order.trip.payment,
-                    tripTime: `${d.getMonth( )+1}月${d.getDate( )}`,
+                    tripTime: `${d.getMonth( )+1}月${d.getDate( )}出发`,
                     meta: [ decorateOrder( order, isNeedPrePay )]
                 };
 
@@ -319,17 +320,17 @@ Page({
             }, 0 );
             tripOrders['lastPrice'] = lastPrice;
 
-            // 处理行程满减
+            // 处理满减
 
-            // 处理订单立减
+            // 处理立减
 
-            // 处理订单满减券
+            // 处理代金券
 
             // 处理订单邮费
 
         });
         
-        console.log( '222', Object.keys( orderObj ).map( tid => orderObj[ tid ]));
+        console.log(Object.keys( orderObj ).map( tid => orderObj[ tid ]))
         this.setData({
             tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
         })
