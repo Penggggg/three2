@@ -1,3 +1,25 @@
 <view class="p-coupon-list">
-    <my-coupon-item-1 />
+    
+    <wxc-notice
+        color="#ff5777"
+        bgColor="#ffe8ee"
+        scroll="{{ true }}"
+        close="{{ true }}"
+        show-icon="{{ true }}"
+        notice="满减券、无门槛券只能于所在的行程里使用哦～ 不要浪费 尽快使用～ "
+    />
+
+    <view class="pcl-coupon-list">
+        <my-coupon-item-1
+            wx:for="{{ coupons }}"
+            wx:key="{{ index }}"
+            type="{{ item.type }}"
+            value="{{ item.value }}"
+            atleast="{{ item.atleast }}" 
+            trip="{{ item.trip }}" 
+            isUsed="{{ item.isUsed }}"
+            title="{{ item.title }}"
+            canUseInNext="{{ item.canUseInNext }}"
+        />
+    </view>
 </view>

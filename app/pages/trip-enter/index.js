@@ -112,14 +112,14 @@ Page({
             url: 'coupon_isget',
             data: {
                 tid,
-                check: 't_lijain,t_manjian,t_daijin'
+                check: 't_lijian,t_manjian,t_daijin'
             },
             success: res => {
                 // console.log( res );
                 if ( res.status !== 200 ) { return; }
 
                 const { reduce_price } = this.data.current;
-                const { t_daijin, t_lijain, t_manjian } = res.data;
+                const { t_daijin, t_lijian, t_manjian } = res.data;
                 
                 /** 
                  * 先处理：立减
@@ -134,12 +134,12 @@ Page({
                 })
 
                 // 未领取过立减，则自动拿“半张”优惠券
-                if ( t_lijain === false ) {
+                if ( t_lijian === false ) {
                     this.autoGetLijian( halfOfLijian );
                 }
 
                 this.setData({
-                    showLijian: t_lijain === 'half',
+                    showLijian: t_lijian === 'half',
                     showManjian: t_manjian === false
                 });
             }
@@ -152,7 +152,7 @@ Page({
         const temp = {
             tid: current._id,
             title: '行程立减优惠券',
-            type: 't_lijain',
+            type: 't_lijian',
             canUseInNext: false,
             value: money,
             atleast: 0

@@ -6,7 +6,8 @@ Page({
      * 页面的初始数据
      */
     data: {
-
+        // 卡券列表
+        coupons: [ ]
     },
 
     /** 拉取卡券列表 */
@@ -15,7 +16,12 @@ Page({
             data: { },
             url: 'coupon_list',
             success: res => {
-                console.log( res )
+                console.log( res );
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setData({
+                    coupons: data
+                });
             }
         })
     },

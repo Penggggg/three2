@@ -9,18 +9,41 @@
                     ¥
                 </view>
                 <view class="ci1-money">
-                    8.88
+                    {{ value }}
                 </view>
             </view>
 
             <view class="ci1-tips-block">
-                <view class="ci1-tips">
-                    满200可用
+                <view
+                    class="ci1-tips"
+                    wx:if="{{ type === 't_manjian' }}"
+                >
+                    满{{ atleast }}可用
+                </view>
+                <view
+                    class="ci1-tips"
+                    wx:if="{{ type === 't_lijian' }}"
+                >
+                    无门槛全场通用
+                </view>
+                <view
+                    class="ci1-tips small"
+                >
+                    {{ title }}
                 </view>
             </view>
 
-            <view class="ci1-trip-tips">
-                香港之旅：2018/1/12 ~ 2018/1/15
+            <view
+                class="ci1-trip-tips"
+                wx:if="{{ !canUseInNext }}"
+            >
+                {{ trip.title }}：{{ trip_start }} ~ {{ trip_end }}
+            </view>
+            <view
+                class="ci1-trip-tips"
+                wx:else
+            >
+                使用日期不限，快快拔草奖励自己～
             </view>
 
         </view>

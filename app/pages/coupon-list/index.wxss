@@ -2,5 +2,8 @@
     min-height: 100vh;
     background: #fafafa;
     box-sizing: border-box;
+}
+
+.pcl-coupon-list {
     padding: 0 25rpx;
 }

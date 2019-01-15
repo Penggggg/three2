@@ -11,7 +11,7 @@ const db: DB.Database = cloud.database( );
  * -------- 字段 ----------
  * tid 领取该优惠券的所属行程
  * title 券名称
- * type: 't_lijain' | 't_manjian' | 't_daijin' 券类型：行程立减、行程满减、行程代金券
+ * type: 't_lijian' | 't_manjian' | 't_daijin' 券类型：行程立减、行程满减、行程代金券
  * isUsed: 是否已用
  * openid
  * canUseInNext: 是否下趟可用
@@ -87,7 +87,7 @@ export const main = async ( event, context ) => {
                 .where({
                     tid,
                     openid,
-                    type: 't_lijain'
+                    type: 't_lijian'
                 })
                 .get( );
             const target = find$.data[ 0 ];
@@ -121,13 +121,13 @@ export const main = async ( event, context ) => {
      * {
      *   tid: 
      *   openid: 
-     *   check: 't_lijain,t_manjian,t_daijin'
+     *   check: 't_lijian,t_manjian,t_daijin'
      * }
      * ----- 返回 -----
      * {
      *   status,
      *   data: {
-     *     t_lijain: null/true/false/half
+     *     t_lijian: null/true/false/half
      *     t_manjian: null/true/false
      *     t_daijin: null/true/false
      *   } 
@@ -149,11 +149,11 @@ export const main = async ( event, context ) => {
             const { reduce_price, fullreduce_values, cashcoupon_values } = trip;
             
             // 行程立减代金券
-            const lijain$ = await db.collection('coupon')
+            const lijian$ = await db.collection('coupon')
                 .where({
                     tid,
                     openid,
-                    type: 't_lijain'
+                    type: 't_lijian'
                 })
                 .get( );
 
@@ -190,11 +190,11 @@ export const main = async ( event, context ) => {
                             false :
                             true :
                         null
-                } else if ( checkType === 't_lijain' ) {
+                } else if ( checkType === 't_lijian' ) {
                     temp[ checkType ] = !!reduce_price ?
-                        lijain$.data.length === 0 ? 
+                        lijian$.data.length === 0 ? 
                             false :
-                            lijain$.data[ 0 ].value < reduce_price ?
+                            lijian$.data[ 0 ].value < reduce_price ?
                                 'half' :
                                 true :
                         null
