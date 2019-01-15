@@ -1,1 +1,6 @@
-/* app/pages/coupon-list/index.wxss */
+.p-coupon-list {
+    min-height: 100vh;
+    background: #fafafa;
+    box-sizing: border-box;
+    padding: 0 25rpx;
+}

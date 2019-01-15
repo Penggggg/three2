@@ -1,2 +1,3 @@
-<!--app/pages/coupon-list/index.wxml-->
-<text>app/pages/coupon-list/index.wxml</text>
+<view class="p-coupon-list">
+    <my-coupon-item-1 />
+</view>
