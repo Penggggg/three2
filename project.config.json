@@ -16,7 +16,7 @@
 		"beforeUpload": "npm run compile"
 	},
 	"appid": "wx60bf7f745ce31ef0",
-	"projectname": "three",
+	"projectname": "three2",
 	"libVersion": "2.4.3",
 	"compileType": "miniprogram",
 	"condition": {}
