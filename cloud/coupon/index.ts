@@ -216,10 +216,19 @@ export const main = async ( event, context ) => {
         try {
             
             const openid = event.data.openId || event.userInfo.openId;
+            const { isUsed } = event.data;
+            let query$ = {
+                openid
+            };
+
+            if ( isUsed !== undefined ) {
+                query$ = Object.assign({ }, query$, {
+                    isUsed
+                });
+            }
+
             const list$ = await db.collection('coupon')
-                .where({
-                    openid
-                })
+                .where( query$ )
                 .get( );
 
             // 行程信息

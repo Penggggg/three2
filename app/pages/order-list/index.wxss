@@ -209,6 +209,11 @@
     justify-content: flex-end;
 }
 
+.pol-tips-img {
+    width: 30rpx;
+    margin-right: 15rpx;
+}
+
 .pol-trip-order-sum {
     color: #666;
     font-size: 22rpx;
@@ -240,6 +245,10 @@
     color: #ff5777;
     display: inline;
     font-size: 26rpx;
+}
+
+.pol-pay-price.small {
+    font-size: 22rpx;
 }
 
 .pol-trip-order-btn-block {

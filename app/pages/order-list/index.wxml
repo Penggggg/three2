@@ -157,16 +157,69 @@
                 </view>
 
                 <!-- 最大拼团优惠信息 -->
-                <view
+                <!-- <view
                     wx:if="{{ item.totalPrice - item.totalGroupPrice > 0 }}"
                     class="pol-trip-order-sum-block"
                 >
                     <view class="pol-trip-order-sum">
                         共{{ item.sum }}件可拼团
                     </view>
-                    <!-- <view class="pol-trip-order-totalprice">
+                    <view class="pol-trip-order-totalprice">
                         省：<view class="pol-price">-¥{{ item.totalPrice - item.totalGroupPrice }}</view>
-                    </view> -->
+                    </view>
+                </view> -->
+
+                <!-- 优惠券：立减 -->
+                <view
+                    class="pol-trip-order-sum-block"
+                    wx:if="{{ item.t_lijian.value > 0 }}"
+                >
+                    <image
+                        mode="widthFix"
+                        class="pol-tips-img"
+                        src="{{ !item.t_lijian.canUsed ? 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-close.png' : 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-right.png' }}"
+                    />
+                    <view class="pol-trip-order-sum">
+                        无门槛立减：
+                    </view>
+                    <view class="pol-trip-order-totalprice">
+                        <view class="pol-pay-price small">减¥{{ item.t_lijian.value }}</view>
+                    </view>
+                </view>
+
+                <!-- 优惠券：满减 -->
+                <view
+                    class="pol-trip-order-sum-block"
+                >
+                    <image
+                        mode="widthFix"
+                        class="pol-tips-img"
+                        src="{{ !item.t_manjian.canUsed ? 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-close.png' : 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-right.png' }}"
+                    />
+                    <view class="pol-trip-order-sum">
+                        满减券：满¥{{ item.t_manjian.atleast }}
+                    </view>
+                    <view class="pol-trip-order-totalprice">
+                        <view class="pol-pay-price small">减¥{{ item.t_manjian.value }}</view>
+                    </view>
+                </view>
+
+                <!-- 优惠券：代金券 -->
+                <view
+                    class="pol-trip-order-sum-block"
+                    wx:if="{{ item.t_daijin.value > 0 }}"
+                >
+                    <image
+                        mode="widthFix"
+                        class="pol-tips-img"
+                        src="{{ !item.t_daijin.canUsed ? 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-close.png' : 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-right.png' }}"
+                    />
+                    <view class="pol-trip-order-sum">
+                        代金券：满¥{{ item.t_daijin.atleast }}
+                    </view>
+                    <view class="pol-trip-order-totalprice">
+                        <view class="pol-pay-price small">减¥{{ item.t_daijin.value }}</view>
+                    </view>
                 </view>
 
                 <!-- 预估最终结算信息 -->

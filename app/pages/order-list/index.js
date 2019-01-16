@@ -55,7 +55,9 @@ Page({
         // 以行程为基调的订单列表
         tripOrders: [ ],
         // 是否新客户
-        isNew: true
+        isNew: true,
+        // 优惠券列表
+        coupons: [ ]
     },
 
     /** 点击上方各类订单 */
@@ -93,12 +95,29 @@ Page({
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
                 const { page, current, totalPage, total } = data;
-
                 this.setData({
                     page,
                     skip: current,
                     metaList: data.data,
                     canloadMore: total > current,
+                });
+                this.covertOrder( );
+            }
+        })
+    },
+
+    /** 拉取优惠券列表 */
+    fetchCoupons( ) {
+        http({
+            url: `coupon_list`,
+            data: {
+                isUsed: false
+            },
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setData({
+                    coupons: data
                 });
                 this.covertOrder( );
             }
@@ -129,7 +148,7 @@ Page({
 
         const { metaList } = this.data;
         const orderObj = { };
- 
+
         metaList.map( order => {
 
             let isNeedPrePay = true;
@@ -282,11 +301,14 @@ Page({
 
             /**
              * 处理订单商品团购价
-             * ! 团购总价为0，则团购价为原总价
+             * ! 团购价可以为0
+             * ! 无分配团购价时，取分配售价
              */
             const totalGroupPrice = orders.reduce(( x, y ) => {
-                const groupPrice = y.allocatedGroupPrice || y.groupPrice;
-                return x + groupPrice ? groupPrice * count$( y ) : 0
+                const groupPrice = y.allocatedGroupPrice !== null || y.allocatedGroupPrice !== undefined ?
+                    y.allocatedGroupPrice :
+                    y.allocatedPrice ;
+                return x + groupPrice * count$( y );
             }, 0 );
             tripOrders['totalGroupPrice'] = totalGroupPrice || totalPrice;
 
@@ -320,11 +342,47 @@ Page({
             }, 0 );
             tripOrders['lastPrice'] = lastPrice;
 
+            const { coupons } = this.data;
+            const coupons_manjian = coupons.find( x => x.type === 't_manjian');
+            const coupons_lijian = coupons.find( x => x.type === 't_lijian');
+            const coupons_daijin = coupons.find( x => x.type === 't_daijin');
+   
             // 处理满减
-
+            const t_manjian = !coupons_manjian ? { value: 0 } : {
+                value: coupons_manjian.value,
+                atleast: coupons_manjian.atleast,
+                canUsed: coupons_manjian.atleast <= totalPrice || !coupons_manjian.atleast
+            };
+            tripOrders['t_manjian'] = t_manjian;
+           
             // 处理立减
+            const t_lijian = !coupons_lijian ? { value: 0 } : {
+                value: coupons_lijian.value,
+                atleast: coupons_lijian.atleast,
+                canUsed: coupons_lijian.atleast <= totalPrice || !coupons_lijian.atleast
+            };
+            tripOrders['t_lijian'] = t_lijian;
 
             // 处理代金券
+            const t_daijin = !coupons_daijin ? { value: 0 } : {
+                value: coupons_daijin.value,
+                atleast: coupons_daijin.atleast,
+                canUsed: coupons_daijin.atleast <= totalPrice || !coupons_daijin.atleast
+            };
+            tripOrders['t_daijin'] = t_daijin;
+
+            // 总可减免
+            let cutoff = 0;
+            if ( t_manjian.canUsed ) {
+                cutoff += t_manjian.value;
+            }
+            if ( t_lijian.canUsed ) {
+                cutoff += t_lijian.value;
+            }
+            if ( t_daijin.canUsed ) {
+                cutoff += t_daijin.value;
+            }
+            tripOrders['cutoff'] = cutoff;
 
             // 处理订单邮费
 
@@ -402,7 +460,6 @@ Page({
      */
     onLoad: function (options) {
         this.watchRole( );
-        this.fetchList( this.data.active );
     },
 
     /**
@@ -415,8 +472,15 @@ Page({
     /**
      * 生命周期函数--监听页面显示
      */
-    onShow: function () {
-
+    onShow: function ( ) {
+        this.setData({
+            skip: 0,
+            page: 0
+        })
+        setTimeout(( ) => {
+            this.fetchCoupons( );
+            this.fetchList( this.data.active );
+        }, 0 );
     },
 
     /**
