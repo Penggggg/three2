@@ -293,17 +293,44 @@ export const main = async ( event, context ) => {
                 })
                 .get( );
 
-            const sum = orders$.data.reduce(( x, y ) => {
-                const price = y.allocatedPrice || y.price;
-                const count = y.allocatedCount === undefined || y.allocatedCount === null ? y.count : y.allocatedCount ;
-                return x + price * count
-            }, 0 );
+            /**
+             * 总收益
+             * !至少已付订金
+             */
+            const sum = orders$.data
+                .filter( x => x.pay_status !== '0' )
+                .reduce(( x, y ) => {
+                    const price = y.allocatedPrice || y.price;
+                    const count = y.allocatedCount === undefined || y.allocatedCount === null ? y.count : y.allocatedCount ;
+                    return x + price * count
+                }, 0 );
+
+            /**
+             * 总客户数量
+             * !至少已付订金
+             */
+            const clients = Array.from(
+                new Set( orders$.data
+                    .filter( x => x.pay_status !== '0' )
+                    .map( x => x.openid )
+            )).length;
+
+            /**
+             * 总未交尾款客户数量
+             */
+            const notPayAllClients = Array.from(
+                new Set( orders$.data
+                    .filter( x => x.pay_status === '1' )
+                    .map( x => x.openid )
+            )).length;
 
             return ctx.body = {
                 status: 200,
                 data: {
                     sum,
-                    count: orders$.data.length
+                    clients,
+                    notPayAllClients,
+                    count: orders$.data.length // 总订单数
                 }
             };
 

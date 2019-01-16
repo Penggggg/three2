@@ -177,8 +177,8 @@
                     <image
                         mode="widthFix"
                         class="pol-tips-img"
-                        src="{{ !item.t_lijian.canUsed ? 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-close.png' : 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-right.png' }}"
-                    />
+                        wx:if="{{ item.t_lijian.canUsed }}"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-right.png"                    />
                     <view class="pol-trip-order-sum">
                         无门槛立减：
                     </view>
@@ -194,7 +194,8 @@
                     <image
                         mode="widthFix"
                         class="pol-tips-img"
-                        src="{{ !item.t_manjian.canUsed ? 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-close.png' : 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-right.png' }}"
+                        wx:if="{{ item.t_manjian.canUsed }}"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-right.png"
                     />
                     <view class="pol-trip-order-sum">
                         满减券：满¥{{ item.t_manjian.atleast }}
@@ -212,8 +213,8 @@
                     <image
                         mode="widthFix"
                         class="pol-tips-img"
-                        src="{{ !item.t_daijin.canUsed ? 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-close.png' : 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-right.png' }}"
-                    />
+                        wx:if="{{ item.t_daijin.canUsed }}"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-right.png"                    />
                     <view class="pol-trip-order-sum">
                         代金券：满¥{{ item.t_daijin.atleast }}
                     </view>
@@ -231,7 +232,14 @@
                         预计：
                     </view>
                     <view class="pol-trip-order-totalprice">
-                        <view class="pol-pay-price">¥{{ item.totalGroupPrice }} ～ ¥{{ item.totalPrice }}</view>
+                        <view class="pol-pay-price">
+                           
+                            {{ 
+                                item.totalGroupPrice ===  item.totalPrice ?
+                                    '¥' + item.totalGroupPrice : 
+                                    '¥' + item.totalGroupPrice + '~' + item.totalPrice
+                            }}
+                        </view>
                     </view>
                 </view>
 

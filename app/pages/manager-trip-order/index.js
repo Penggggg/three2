@@ -8,7 +8,7 @@ Page({
         // 行程id
         id: '',
         // 上方活动tab
-        active: 0,
+        active: 1,
         // 上方tabs
         tabs: [{
             key: 0,
@@ -36,7 +36,7 @@ Page({
     onLoad: function (options) {
         // if ( !options.id ) { return; }
         this.setData({
-            id: 'XDFhZ3ffS3SWhJKI'
+            id: 'XDGzG97E7L4wLIdu'
         });
         // this.setData({
         //     id: options.id

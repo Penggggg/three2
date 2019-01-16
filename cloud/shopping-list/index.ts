@@ -507,6 +507,30 @@ export const main = async ( event, context ) => {
         } catch ( e ) { return ctx.body = { status: 500 };}
     })
 
+    /**
+     * @description
+     * 获取行程里是否还有未调整的清单
+    */
+   app.router('adjust-status', async( ctx, next ) => {
+       try {
+        const { tid } = event.data;
+        const count = await db.collection('shopping-list')
+            .where({
+                tid,
+                base_status: '0'
+            })
+            .count( );
+
+        return ctx.body = {
+            status: 200,
+            data: count.total
+        }
+
+       } catch ( e ) {
+           return ctx.body = { status: 500 };
+       }
+   })
+
     return app.serve( );
 
 }

@@ -1,0 +1,34 @@
+<view class="con-trip-order-getmoney">
+
+    <!-- 收益信息 -->
+    <view class="tog-money-block">
+        
+        <view class="tog-money-title">
+            未交尾款客户(个)
+        </view>
+
+        <view class="tog-money">
+            <view class="tog-money-i">
+                {{ notPayAllClients }}
+            </view>
+        </view>
+
+        <view class="tog-order-count">
+            总买家{{ clients }}个
+        </view>
+
+    </view>
+
+    <!-- 客户列表 -->
+    <view class="tog-shoppinglist-block">
+
+        <view
+            class="tog-shoppinglist-item"
+        >
+            <view class="tog-good-info-block">
+                ??
+            </view>
+        </view>
+    </view>
+
+</view>

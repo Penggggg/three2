@@ -1,0 +1,46 @@
+.tog-money-block {
+    display: flex;
+    align-items: center;
+    background: #ff5777;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10rpx 0 100rpx;
+}
+
+.tog-money-title {
+    font-size: 20rpx;
+    color: rgba( 255, 255, 255, 0.6 );
+}
+
+.tog-money-i {
+    color: #fff;
+    font-size: 78rpx;
+    font-weight: bold;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.tog-order-count {
+    color: #fff;
+    font-size: 22rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.tog-shoppinglist-block {
+    margin-top: -90rpx;
+    padding: 10rpx 30rpx;
+    box-sizing: border-box;
+}
+
+.tog-shoppinglist-item {
+    padding: 25rpx 20rpx;
+    box-sizing: border-box;
+    margin-bottom: 40rpx;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.08);
+}
+
+.tog-good-info-block {
+    display: flex;
+    position: relative;
+}

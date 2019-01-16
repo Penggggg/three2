@@ -21,7 +21,11 @@
                 tid="{{ id }}"
             />
         </view>
-        <view wx:elif="{{ active === 1 }}">2</view>
+        <view wx:elif="{{ active === 1 }}">
+            <my-trip-order-getmoney
+                tid="{{ id }}"
+            />
+        </view>
         <view wx:else>3</view>
     </view>
 
