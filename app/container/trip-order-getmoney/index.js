@@ -1,6 +1,9 @@
 const { http } = require('../../util/http.js');
 
 Component({
+
+    behaviors: [require('../../behaviores/computed/index.js')],
+
     /**
      * 组件的属性列表
      */
@@ -20,7 +23,59 @@ Component({
         clients: 0, // 总客户数
         notPayAllClients: 0, // 未交尾款客户数
         canAction: false, // 是否调整完成，并进行催款
-        lastAdjust: 0 // 剩余未调整订单
+        lastAdjust: 0, // 剩余未调整订单
+        clientOders: [ ], // 客户订单,
+        showMore: [ ] // 展示更多 uid[ ]
+    },
+
+    /** 计算属性 */
+    computed: {
+        clientOders$( ) {
+            
+            const { clientOders, showMore } = this.data;
+            const meta = clientOders.map( x => {
+
+                const readyOrders = [ ];
+                const notReadyOrders = [ ];
+                const canShowMore = showMore.find( y => y === x.user.openid );
+                
+                // 处理已分配、未分配订单
+                x.orders.map( order => {
+                    if ( order.allocatedPrice === undefined || order.allocatedCount === undefined ) {
+                        notReadyOrders.push( order );
+                    } else {
+                        readyOrders.push( order );
+                    }
+                });
+
+                // 根据地址整理订单
+                const addressOrders = x.address.map( address => {
+                    return {
+                        address,
+                        orders: x.orders.filter( order => order.aid === address._id )
+                    }
+                });
+
+                return Object.assign({ }, x , {
+                    // 根据地址展示订单
+                    addressOrders,
+                    // 是否正在展示更多
+                    canShowMore,
+                    // 订单列表展示类型
+                    key: canShowMore ? 'allOrders' : 'notReadyOrders',
+                    // 已经准备好的订单
+                    // readyOrders,
+                    // 未准备好的订单
+                    notReadyOrders,
+                    // 按是否准备排序的订单
+                    allOrders: [ ...notReadyOrders, ...readyOrders ],
+                    // 是否未这个人的所有订单确定
+                    notConfirmed: x.orders.some( o => o.base_status === '0' || o.base_status === '1' )
+                });
+            })
+            console.log( meta );
+            return meta;
+        }
     },
 
     /**
@@ -31,6 +86,7 @@ Component({
         /** 初始化 */
         init( tid ) {
             this.fetchInfo( tid );
+            this.fetchOrder( tid );
             this.fetchAdjustStatus( tid );
         },
 
@@ -73,9 +129,49 @@ Component({
                     }
                 }
             })
-        }
+        },
 
         /** 拉取客户订单列表 */
+        fetchOrder( tid ) {
+            http({
+                url: 'order_daigou-list',
+                data: {
+                    tid
+                },
+                loadMsg: '加载中...',
+                errorMsg: '加载失败，请刷新',
+                success: res => {
+                    const { status, data } = res;
+                    if ( status === 200 ) {
+                        this.setData({
+                            clientOders: data
+                        })
+                    }
+                }
+            })
+        },
+
+        /** 跳到价格调整 */
+        goFixPrice( ) {
+            this.triggerEvent('tabchange', 0 );
+        },
+
+        /** 展示更多 */
+        onShowMore({ currentTarget }) {
+            const { showMore } = this.data;
+            const userOrders = currentTarget.dataset.data;
+            const existedIndex = showMore.findIndex( x => x === userOrders.user.openid );
+
+            if ( existedIndex === -1 ) {
+                showMore.push( userOrders.user.openid );
+            } else {
+                showMore.splice( existedIndex, 1 );
+            }
+
+            this.setData({
+                showMore
+            });
+        }
 
     }
 })

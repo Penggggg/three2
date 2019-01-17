@@ -534,6 +534,66 @@ export const main = async ( event, context ) => {
             return ctx.body = { status: 500 };
         }
     })
+
+    /** 
+     * @description
+     * 代购清帐催款的订单列表
+     */
+    app.router('daigou-list', async( ctx, next ) => {
+        try {
+            const { tid } = event.data;
+            const orders$ = await db.collection('order')
+                .where({
+                    tid
+                })
+                .get( );
+            
+            // 用户信息
+            const users$ = await Promise.all(
+                Array.from( 
+                    new Set( orders$.data
+                        .map( x => x.openid )
+                ))
+                .map( uid => db.collection('user')
+                            .where({
+                                openid: uid
+                            })
+                            .get( ))
+            );
+
+            // 地址信息
+            const address$ = await Promise.all(
+                Array.from(
+                    new Set( orders$.data
+                        .map( x => x.aid )
+                ))
+                .map( aid => db.collection('address')
+                            .doc( aid )
+                            .get( ))
+            );
+
+            const userOders = users$.map( user$ => {
+                const user = user$.data[ 0 ];
+                const orders = orders$.data.filter( x => x.openid === user.openid );
+                const address = address$
+                                    .map( x => x.data )
+                                    .filter( x => x.openid === user.openid );
+                return {
+                    user,
+                    orders,
+                    address
+                };
+            });
+
+            return ctx.body = {
+                status: 200,
+                data: userOders
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
  
    return app.serve( );
 

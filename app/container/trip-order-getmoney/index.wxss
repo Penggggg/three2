@@ -1,3 +1,17 @@
+.tog-text {
+    color: #666;
+    font-size: 22rpx;
+}
+
+.tog-text.shadow {
+    color: #999;
+}
+
+.tog-text.big {
+    font-size: 24rpx;
+    line-height: 24rpx;
+}
+
 .tog-money-block {
     display: flex;
     align-items: center;
@@ -22,7 +36,7 @@
 .tog-order-count {
     color: #fff;
     font-size: 22rpx;
-    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    /* text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 ); */
 }
 
 .tog-shoppinglist-block {
@@ -37,10 +51,166 @@
     margin-bottom: 40rpx;
     background: #fff;
     border-radius: 10px;
+    position: relative;
     box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.08);
 }
 
 .tog-good-info-block {
     display: flex;
+    align-items: center;
     position: relative;
+}
+
+.tog-statuscn {
+    top: 0;
+    right: 0;
+    color: #ff5777;
+    font-size: 24rpx;
+    position: absolute;
+}
+
+.tog-tips-bubble {
+    top: 80rpx;
+    left: 25rpx;
+    color: #fff;
+    position: fixed;
+    font-size: 22rpx;
+    border-radius: 20px;
+    padding: 0rpx 0rpx;
+    width: 220rpx;
+    background: rgba( 0, 0, 0, 0.25 );
+}
+
+.tog-user-avatar {
+    overflow:hidden;
+    display:block;
+    width:120rpx;
+    height:120rpx;
+    border-radius:50%;
+    border:2px solid #fff;
+    box-shadow:3px 3px 13px rgba(0, 0, 0, 0.2);
+}
+
+.tog-oder-user-info {
+    line-height: 24rpx;
+}
+
+.tog-user-name {
+    color:#666;
+    font-size:24rpx;
+    display: inline;
+    margin-left: 30rpx;
+    /* text-shadow:0px 0px 5px rgba( 0, 0, 0, 0.25 ); */
+}
+
+.tog-user-phone {
+    color: #666;
+    font-size:24rpx;
+    display: inline;
+    margin-left: 10rpx;
+}
+
+.tog-order-list {
+    position: relative;
+    padding: 10rpx 0 30rpx;
+}
+
+.tog-order-item {
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    padding: 30rpx 0 30rpx;
+}
+
+.tog-order-item:after {
+    left: 5%;
+    bottom: 0;
+    width: 90%;
+    height: 1px;
+    content: '';
+    background: #eee;
+    position: absolute;
+    transform: scaleY( 0.5 );
+}
+
+.tog-order-img {
+    overflow:hidden;
+    display:block;
+    width:100rpx;
+    height:100rpx;
+    border-radius: 10px;
+    border:2px solid #fff;
+    margin-right: 20rpx;
+    box-shadow:3px 3px 13px rgba(0, 0, 0, 0.2);
+}
+
+.tog-order-info-block {
+    flex: 1;
+    margin-right: 20rpx;
+}
+
+.tog-stander {
+    font-size: 22rpx;
+    border-radius: 5px;
+    background: #eee;
+    padding: 2rpx 15rpx;
+    display: inline-block;
+    margin-right: 10rpx;
+    color: rgb(163, 162, 162);
+}
+
+.tog-small-tips {
+    font-size: 20rpx;
+    color: #ff5777;
+    padding: 2rpx 10rpx;
+    border-radius: 3px;
+    display: inline-block;
+    margin-right: 10rpx;
+    border: 1px solid #ff5777;
+}
+
+.tog-summary-count {
+    color: #fff;
+    font-size: 22rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.tog-order-count,
+.tog-order-price  {
+    color: #ff5777;
+    font-size: 24rpx;
+}
+
+.tog-order-count-block {
+    text-align: right;
+}
+
+.tog-deliver-block {
+    position: relative;
+}
+
+.tog-deliver-btn {
+    color: #666;
+    display: flex;
+    font-size: 22rpx;
+    align-items: center;
+    justify-content: center;
+}
+
+.tog-deliver-btn-icon {
+    margin-right: 15rpx;
+}
+
+.tog-adjust-btn {
+    top: 40%;
+    right: 0rpx;
+    color:#fff;
+    font-size:24rpx;
+    padding:10rpx 20rpx;    
+    background:#ff5777;
+    position: absolute;
+    border-radius: 15px;
+    border:1px solid #ff5777;
+    transform: translate( 0, -50% );
+    text-shadow:0px 0px 5px rgba( 0, 0, 0, 0.25 );
 }

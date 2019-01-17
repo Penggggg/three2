@@ -30,6 +30,13 @@ Page({
         });
     },
 
+    /** 子组件修改tab */
+    onChildChangeTab( event ) {
+        this.setData({
+            active: event.detail
+        });
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
