@@ -2,7 +2,7 @@
     display: flex;
     height: 100vh;
     flex-direction: column;
-    background: #fafafa;
+    background: #fff;
     box-sizing: border-box;
     padding-top: 70rpx;
 }
@@ -13,7 +13,7 @@
     width: 100%;
     display: flex;
     position: absolute;
-    background: #ff5777;
+    background: #f80759;
     align-items: center;
 }
 
