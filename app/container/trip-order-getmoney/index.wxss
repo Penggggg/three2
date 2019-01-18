@@ -284,3 +284,94 @@
     transform: translate( 0, -50% );
     text-shadow:0px 0px 5px rgba( 0, 0, 0, 0.25 );
 }
+
+.tog-address-orders-list {
+    /* background: #f4f6f9; */
+    padding: 0 25rpx 0;
+}
+
+.tog-address-order-item {
+    position: relative;
+    background: #fff;
+    border-radius: 5px;
+    margin-bottom: 30rpx;
+}
+
+.tog-address-order-item:after {
+    left: 5%;
+    bottom: -15rpx;
+    width: 90%;
+    height: 1px;
+    content: '';
+    background: #eee;
+    position: absolute;
+    transform: scaleY( 0.5 );
+}
+
+.tog-address-user-info-block {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+}
+
+.tog-address-user {
+    color: #fff;
+    padding: 2rpx 20rpx;
+    border-radius: 5px;
+    background: #bc4e9c;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #f80759, #bc4e9c);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #f80759, #bc4e9c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    font-size: 26rpx;
+    margin-right: 15rpx;
+}
+
+.tog-address-info {
+    color: #bfbfbf;
+    font-size: 22rpx;
+    margin-right: 15rpx;
+}
+
+.tog-address {
+    font-size: 24rpx;
+    color: #999;
+    box-sizing: border-box;
+    padding: 15rpx 0 15rpx 25rpx;
+}
+
+.tog-address-item {
+    display: flex;
+    color: #bfbfbf;
+    font-size: 22rpx;
+    box-sizing: border-box;
+    padding-left: 45rpx;
+    margin-bottom: 20rpx;
+}
+
+.tog-address-good {
+    flex: 1;
+    overflow: hidden;
+}
+
+.tog-address-goodname {
+    white-space: nowrap;  
+    text-overflow:ellipsis; 
+    overflow:hidden;
+}
+
+.tog-address-stander {
+    font-size: 22rpx;
+    border-radius: 3px;
+    background: #f5f5f5;
+    padding: 2rpx 10rpx;
+    display: inline-block;
+    margin-top: 5rpx;
+    color: #bfbfbf
+}
+
+.tog-address-allocated {
+    width: 100rpx;
+    color: #ff5777;
+    text-align: right;
+    margin-left: 20rpx;
+}

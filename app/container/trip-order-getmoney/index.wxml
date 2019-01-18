@@ -147,8 +147,56 @@
             </view>
 
             <!-- 货品地址 -->
-            <view class="tog-address-orders-list">
-                <view class="tog-address-order-item">
+            <view
+                wx:if="{{ item.canShowMore }}"
+                class="tog-address-orders-list"
+            >
+                <view
+                    wx:for="{{ item.addressOrders }}"
+                    wx:key="{{ adk }}"
+                    wx:for-index="adk"
+                    wx:for-item="addressOrder"
+                    class="tog-address-order-item"
+                >
+                    <!-- 地址信息 -->
+                    <view class="tog-address-user-info-block">
+                        <view class="tog-address-user">
+                            {{ addressOrder.address.username }}
+                        </view>
+                        <view class="tog-address-info">
+                            {{ addressOrder.address.phone }}
+                        </view>
+                        <view class="tog-address-info">
+                            {{ addressOrder.address.postalcode }}
+                        </view>
+                    </view>
+                    <view class="tog-address">
+                        {{ addressOrder.address.address }}
+                    </view>
+
+                    <!-- 该地址下的订单 -->
+                    <view class="tog-address-orders">
+                        <view
+                            wx:key="{{ ad }}"
+                            wx:for-index="ad"
+                            wx:for-item="orderitem"
+                            class="tog-address-item"
+                            wx:for="{{ addressOrder.orders }}"
+                            wx:if="{{ orderitem.allocatedCount }}"
+                        >
+                            <view class="tog-address-good">
+                                <view class="tog-address-goodname">
+                                    {{ orderitem.name }}
+                                </view>
+                                <view class="tog-address-stander">
+                                    {{ orderitem.standername }}
+                                </view>
+                            </view>
+                            <view class="tog-address-allocated">
+                                x {{ orderitem.allocatedCount }}
+                            </view>
+                        </view>
+                    </view>
 
                 </view>
             </view>
