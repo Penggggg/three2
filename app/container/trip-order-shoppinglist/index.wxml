@@ -1,250 +1,255 @@
 <view class="con-trip-order-shoppinglist">
 
-    <!-- 收益信息 -->
-    <view class="tos-money-block">
-        
-        <view class="tos-money-title">
-            预计总收益(元)
+    <!-- 背景 -->
+    <view class="tog-bg"></view>
+
+    <view class="tos-container">
+        <!-- 收益信息 -->
+        <view class="tos-money-block">
+            
+            <view class="tos-money-title">
+                预计总收益(元)
+            </view>
+
+            <view class="tos-money">
+                <wxc-price
+                    icon="sub"
+                    class="tos-money-i"
+                >
+                    {{ sum }}
+                </wxc-price>
+            </view>
+
+            <view class="tos-order-count">
+                总订单{{ count }}条
+            </view>
+
         </view>
 
-        <view class="tos-money">
-            <wxc-price
-                icon="sub"
-                class="tos-money-i"
+        <!-- 清单列表 -->
+        <view class="tos-shoppinglist-block">
+
+            <view
+                wx:for="{{ list }}"
+                wx:key="{{ index }}"
+                class="tos-shoppinglist-item"
             >
-                {{ sum }}
-            </wxc-price>
-        </view>
 
-        <view class="tos-order-count">
-            总订单{{ count }}条
-        </view>
+                <view class="tos-good-info-block">
 
-    </view>
+                    <!-- 图片 -->
+                    <image
+                        mode="scaleToFill"
+                        src="{{ item.img }}"
+                        data-data="{{ item }}"
+                        class="tos-trip-order-img"
+                        bindtap="goGoodDetail"
+                    />
 
-    <!-- 清单列表 -->
-    <view class="tos-shoppinglist-block">
+                    <view class="tos-other-info">
+                        
+                        <!-- 标题、型号、状态 -->
+                        <view class="tos-title-block">
 
-        <view
-            wx:for="{{ list }}"
-            wx:key="{{ index }}"
-            class="tos-shoppinglist-item"
-        >
-
-            <view class="tos-good-info-block">
-
-                <!-- 图片 -->
-                <image
-                    mode="scaleToFill"
-                    src="{{ item.img }}"
-                    data-data="{{ item }}"
-                    class="tos-trip-order-img"
-                    bindtap="goGoodDetail"
-                />
-
-                <view class="tos-other-info">
-                    
-                    <!-- 标题、型号、状态 -->
-                    <view class="tos-title-block">
-
-                        <!-- 标题 -->
-                        <view
-                            data-data="{{ item }}"
-                            bindtap="goGoodDetail"
-                            class="tos-trip-order-title-block"
-                        >
-                            <view class="tos-trip-order-name">
-                                {{ item.goodName }}
-                            </view>
+                            <!-- 标题 -->
                             <view
-                                class="tos-trip-order-standar"
-                                wx:if="{{ item.standarName }}"
+                                data-data="{{ item }}"
+                                bindtap="goGoodDetail"
+                                class="tos-trip-order-title-block"
                             >
-                                {{ item.standarName }}
-                            </view>
-                        </view>
-
-                        <!-- 状态 -->
-                        <view
-                            class="tos-shoppinglist-status"
-                        >
-                            {{ item.base_status === '0' ?
-                                '未确认' : 
-                                item.buy_status === '2' ?
-                                    '买不全' : 
-                                    ''
-                            }}
-                        </view>
-
-                    </view>
-
-                    <!-- 对比 1、采购 -->
-                    <view class="tos-compare">
-                        <view class="tos-compare-item">
-                            
-                            <!-- 需要采购数 -->
-                            <view class="tos-compare-total line right">
-                                <view class="tos-compare-total-label right">
-                                    需要购买
+                                <view class="tos-trip-order-name">
+                                    {{ item.goodName }}
                                 </view>
-                                <view class="tos-compare-total-number">
-                                    {{ item.total }}
-                                </view>
-                            </view>
-
-                        </view>
-                        <view class="tos-compare-item">
-                            
-                            <!-- 实际 -->
-                            <view class="tos-compare-total nocenter">
-                                <view class="tos-compare-total-number acturely right">
-                                    {{ item.purchase }}
-                                </view>
-                                <view class="tos-compare-total-label">
-                                    实际购买
-                                </view>
-                            </view>
-
-                        </view>
-                    </view>
-
-                    <!-- 对比 2、价格 -->
-                    <view class="tos-compare small">
-                        <view class="tos-compare-item">
-                            
-                            <!-- 需要采购数 -->
-                            <view class="tos-compare-total right">
-                                <view class="tos-compare-total-label small right">
-                                    商城价格
-                                </view>
-                                <wxc-price
-                                    icon="sub"
-                                    decimal="small"
-                                    class="tos-compare-total-number small"
-                                > 
-                                    {{ item.price }}
-                                </wxc-price>
-                            </view>
-
-                        </view>
-                        <view class="tos-compare-item">
-                            
-                            <!-- 实际 -->
-                            <view class="tos-compare-total nocenter">
-                                <wxc-price
-                                    icon="sub"
-                                    decimal="small"
-                                    class="tos-compare-total-number acturely right small"
-                                > 
-                                    {{ item.adjustPrice }}
-                                </wxc-price>
-                                <view class="tos-compare-total-label">
-                                    本次售价
-                                </view>
-                            </view>
-
-                        </view>
-                    </view>
-
-                    <!-- 对比 2、团购价 -->
-                    <view
-                        class="tos-compare"
-                        wx:if="{{ item.groupPrice }}"
-                    >
-                        <view class="tos-compare-item">
-                            
-                            <!-- 需要采购数 -->
-                            <view class="tos-compare-total right">
-                                <view class="tos-compare-total-label small right">
-                                    商城团购价
-                                </view>
-                                <wxc-price
-                                    icon="sub"
-                                    decimal="small"
-                                    class="tos-compare-total-number small"
-                                > 
-                                    {{ item.groupPrice }}
-                                </wxc-price>
-                            </view>
-
-                        </view>
-                        <view class="tos-compare-item">
-                            
-                            <!-- 实际 -->
-                            <view class="tos-compare-total nocenter">
-                                <wxc-price
-                                    icon="sub"
-                                    decimal="small"
-                                    wx:if="{{ item.adjustGroupPrice }}"
-                                    class="tos-compare-total-number acturely right small"
-                                > 
-                                    {{ item.adjustGroupPrice }}
-                                </wxc-price>
                                 <view
-                                    wx:else
-                                    class="tos-compare-total-number right small"
+                                    class="tos-trip-order-standar"
+                                    wx:if="{{ item.standarName }}"
                                 >
-                                    未设置
-                                </view>
-                                <view class="tos-compare-total-label">
-                                    本次团购价
+                                    {{ item.standarName }}
                                 </view>
                             </view>
 
+                            <!-- 状态 -->
+                            <view
+                                class="tos-shoppinglist-status"
+                            >
+                                {{ item.base_status === '0' ?
+                                    '未确认' : 
+                                    item.buy_status === '2' ?
+                                        '买不全' : 
+                                        ''
+                                }}
+                            </view>
+
                         </view>
+
+                        <!-- 对比 1、采购 -->
+                        <view class="tos-compare">
+                            <view class="tos-compare-item">
+                                
+                                <!-- 需要采购数 -->
+                                <view class="tos-compare-total line right">
+                                    <view class="tos-compare-total-label right">
+                                        需要购买
+                                    </view>
+                                    <view class="tos-compare-total-number">
+                                        {{ item.total }}
+                                    </view>
+                                </view>
+
+                            </view>
+                            <view class="tos-compare-item">
+                                
+                                <!-- 实际 -->
+                                <view class="tos-compare-total nocenter">
+                                    <view class="tos-compare-total-number acturely right">
+                                        {{ item.purchase }}
+                                    </view>
+                                    <view class="tos-compare-total-label">
+                                        实际购买
+                                    </view>
+                                </view>
+
+                            </view>
+                        </view>
+
+                        <!-- 对比 2、价格 -->
+                        <view class="tos-compare small">
+                            <view class="tos-compare-item">
+                                
+                                <!-- 需要采购数 -->
+                                <view class="tos-compare-total right">
+                                    <view class="tos-compare-total-label small right">
+                                        商城价格
+                                    </view>
+                                    <wxc-price
+                                        icon="sub"
+                                        decimal="small"
+                                        class="tos-compare-total-number small"
+                                    > 
+                                        {{ item.price }}
+                                    </wxc-price>
+                                </view>
+
+                            </view>
+                            <view class="tos-compare-item">
+                                
+                                <!-- 实际 -->
+                                <view class="tos-compare-total nocenter">
+                                    <wxc-price
+                                        icon="sub"
+                                        decimal="small"
+                                        class="tos-compare-total-number acturely right small"
+                                    > 
+                                        {{ item.adjustPrice }}
+                                    </wxc-price>
+                                    <view class="tos-compare-total-label">
+                                        本次售价
+                                    </view>
+                                </view>
+
+                            </view>
+                        </view>
+
+                        <!-- 对比 2、团购价 -->
+                        <view
+                            class="tos-compare"
+                            wx:if="{{ item.groupPrice }}"
+                        >
+                            <view class="tos-compare-item">
+                                
+                                <!-- 需要采购数 -->
+                                <view class="tos-compare-total right">
+                                    <view class="tos-compare-total-label small right">
+                                        商城团购价
+                                    </view>
+                                    <wxc-price
+                                        icon="sub"
+                                        decimal="small"
+                                        class="tos-compare-total-number small"
+                                    > 
+                                        {{ item.groupPrice }}
+                                    </wxc-price>
+                                </view>
+
+                            </view>
+                            <view class="tos-compare-item">
+                                
+                                <!-- 实际 -->
+                                <view class="tos-compare-total nocenter">
+                                    <wxc-price
+                                        icon="sub"
+                                        decimal="small"
+                                        wx:if="{{ item.adjustGroupPrice }}"
+                                        class="tos-compare-total-number acturely right small"
+                                    > 
+                                        {{ item.adjustGroupPrice }}
+                                    </wxc-price>
+                                    <view
+                                        wx:else
+                                        class="tos-compare-total-number right small"
+                                    >
+                                        未设置
+                                    </view>
+                                    <view class="tos-compare-total-label">
+                                        本次团购价
+                                    </view>
+                                </view>
+
+                            </view>
+                        </view>
+
                     </view>
 
                 </view>
 
-            </view>
-
-            <!-- 提示、按钮 -->
-            <view class="tos-trip-order-btn-block">
-                    <view
-                        class="tos-order-more"
-                    >
-                        <view>
-                            {{ item.depositPricesArr[ 0 ] ?
-                                item.depositPricesArr.length === 1 ?
-                                    '订金：¥' + item.depositPricesArr[ 0 ] :
-                                    '订金：¥' + item.depositPricesArr[ 0 ] + '~' + item.depositPricesArr[ item.depositPricesArr.length - 1 ] :
-                                ''
-                            }}
-                        </view>
-                        <view>
-                            <image
-                                wx:if="{{ item.base_status === '1' && item.lastAllocated }}"
-                                class="tos-trip-item-image"
-                                src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/header.png"
-                            />{{ 
-                                item.lastAllocated && item.base_status === '1' ?
-                                    item.lastAllocated + ' 件待分配' :
-                                    item.lastAllocated && item.base_status === '0' ?
-                                        '订单已经自动分配' :
-                                        ''
-                            }}
-                        </view>
-                    </view>
-                    <view class="tos-trip-order-btns">
-
+                <!-- 提示、按钮 -->
+                <view class="tos-trip-order-btn-block">
                         <view
-                            class="tos-trip-order-btn"
+                            class="tos-order-more"
                         >
-                            清单详情
+                            <view>
+                                {{ item.depositPricesArr[ 0 ] ?
+                                    item.depositPricesArr.length === 1 ?
+                                        '订金：¥' + item.depositPricesArr[ 0 ] :
+                                        '订金：¥' + item.depositPricesArr[ 0 ] + '~' + item.depositPricesArr[ item.depositPricesArr.length - 1 ] :
+                                    ''
+                                }}
+                            </view>
+                            <view>
+                                <image
+                                    wx:if="{{ item.base_status === '1' && item.lastAllocated }}"
+                                    class="tos-trip-item-image"
+                                    src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/header.png"
+                                />{{ 
+                                    item.lastAllocated && item.base_status === '1' ?
+                                        item.lastAllocated + ' 件待分配' :
+                                        item.lastAllocated && item.base_status === '0' ?
+                                            '订单已经自动分配' :
+                                            ''
+                                }}
+                            </view>
                         </view>
+                        <view class="tos-trip-order-btns">
 
-                        <view
-                            data-data="{{ item }}"
-                            bindtap="showModal"
-                            class="tos-trip-order-btn purple"
-                        >
-                            调整
+                            <view
+                                class="tos-trip-order-btn"
+                            >
+                                清单详情
+                            </view>
+
+                            <view
+                                data-data="{{ item }}"
+                                bindtap="showModal"
+                                class="tos-trip-order-btn purple"
+                            >
+                                调整
+                            </view>
                         </view>
-                    </view>
+                </view>
+
             </view>
 
         </view>
-
     </view>
 
     <!-- 弹框 -->

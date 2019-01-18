@@ -1,3 +1,8 @@
+.con-trip-order-getmoney {
+    min-height: 100vh;
+    background: #fafafa;
+}
+
 .tog-text {
     color: #bfbfbf;
     font-size: 22rpx;
@@ -12,13 +17,33 @@
     line-height: 24rpx;
 }
 
+.tog-bg {
+    top: 75rpx;
+    left: 0;
+    height: 275rpx;
+    position: fixed;
+    width: 100vw;
+    z-index: 0;
+    background: #bc4e9c;  
+    background: -webkit-linear-gradient(to bottom, #f80759, #bc4e9c);  
+    background: linear-gradient(to bottom, #f80759, #bc4e9c); 
+}
+
+.tos-container {
+    height: 100%;
+    display: flex;
+    z-index: 100;
+    flex-direction: column;
+}
+
 .tog-money-block {
+    z-index: 100;
     display: flex;
     align-items: center;
     /* background: #f9dcd7; */
-    background: #bc4e9c;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to bottom, #f80759, #bc4e9c);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to bottom, #f80759, #bc4e9c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
+    /* background: #bc4e9c;  
+    background: -webkit-linear-gradient(to bottom, #f80759, #bc4e9c); 
+    background: linear-gradient(to bottom, #f80759, #bc4e9c);  */
     flex-direction: column;
     justify-content: center;
     padding: 10rpx 0 100rpx;
@@ -94,6 +119,7 @@
     border-radius: 20px;
     padding: 0rpx 0rpx;
     width: 220rpx;
+    z-index: 10;
     background: rgba( 0, 0, 0, 0.15 );
 }
 

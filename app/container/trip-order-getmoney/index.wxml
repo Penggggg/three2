@@ -1,5 +1,8 @@
 <view class="con-trip-order-getmoney">
 
+    <!-- 背景 -->
+    <view class="tog-bg"></view>
+
     <!-- 调整提示 -->
     <view
         class="tog-tips-bubble"
@@ -16,218 +19,223 @@
         />
     </view>
 
-    <!-- 收益信息 -->
-    <view class="tog-money-block">
-        
-        <view class="tog-money-title">
-            未交尾款客户(个)
-        </view>
-
-        <view class="tog-money">
-            <view class="tog-money-i">
-                {{ notPayAllClients }}
-            </view>
-        </view>
-
-        <view class="tog-summary-count">
-            总买家{{ clients }}个
-        </view>
-
-    </view>
-
-    <!-- 客户列表 -->
-    <view class="tog-shoppinglist-block">
-
-        <view
-            wx:key="{{ key }}"
-            wx:for="{{ clientOders$ }}"
-            class="tog-shoppinglist-item"
-        >
-            <!-- 头像 -->
-            <view class="tog-good-info-block">
-                <view class="tog-user-avatar-block">
-                    <image
-                        class="tog-user-avatar"
-                        src="{{ item.user.avatarUrl }}"
-                    />
-                    <view
-                        class="tog-avatar-icon"
-                        wx:if="{{ item.notReadyOrders.length }}"
-                    >
-                        {{ item.notReadyOrders.length }}
-                    </view>
-                </view>
-                <view class="tog-name-info">
-                    <view class="tog-user-name">
-                        {{ item.user.nickName }}
-                    </view>
-                    <view
-                        class="tog-oder-user-info"
-                        wx:if="{{ item.address.length === 1 }}"
-                    >
-                        <view class="tog-user-name ml">({{ item.address[ 0 ].username }})</view>
-                        <!-- <view class="tog-user-phone">{{ item.address[ 0 ].phone }}</view> -->
-                    </view>
-                </view>
-                <view
-                    class="tog-statuscn"
-                >
-                    分配
-                </view>
-
+    <view class="tos-container">
+    
+        <!-- 收益信息 -->
+        <view class="tog-money-block">
+            
+            <view class="tog-money-title">
+                未交尾款客户(个)
             </view>
 
-            <!-- 订单信息 -->
-            <view class="tog-order-list">
-                <view
-                    class="tog-order-item"
-                    wx:for="{{ item[ item.key ]}}"
-                    wx:key="{{ orderKey }}"
-                    wx:for-item="order"
-                    wx:for-index="orderKey"
-                >
-                    <view
-                        bindtap="goFixPrice"
-                        class="tog-order-img-block"
-                    >
+            <view class="tog-money">
+                <view class="tog-money-i">
+                    {{ notPayAllClients }}
+                </view>
+            </view>
+
+            <view class="tog-summary-count">
+                总买家{{ clients }}个
+            </view>
+
+        </view>
+
+        <!-- 客户列表 -->
+        <view class="tog-shoppinglist-block">
+
+            <view
+                wx:key="{{ key }}"
+                wx:for="{{ clientOders$ }}"
+                class="tog-shoppinglist-item"
+            >
+                <!-- 头像 -->
+                <view class="tog-good-info-block">
+                    <view class="tog-user-avatar-block">
                         <image
-                            class="tog-order-img"
-                            src="{{ order.img[ 0 ]}}"
+                            class="tog-user-avatar"
+                            src="{{ item.user.avatarUrl }}"
                         />
                         <view
-                            class="tog-order-dotted"
-                            wx:if="{{ order.allocatedPrice === undefined }}"
+                            class="tog-avatar-icon"
+                            wx:if="{{ item.notReadyOrders.length }}"
                         >
+                            {{ item.notReadyOrders.length }}
                         </view>
                     </view>
-                    <view class="tog-order-info-block">
-                        <view class="tog-text big">{{ order.name }}</view>
-                        <view class="tog-stander">{{ order.standername }}</view>
-                        <view>
-                            <!-- <view
-                                class="tog-small-tips"
-                                bindtap="goFixPrice"
+                    <view class="tog-name-info">
+                        <view class="tog-user-name">
+                            {{ item.user.nickName }}
+                        </view>
+                        <view
+                            class="tog-oder-user-info"
+                            wx:if="{{ item.address.length === 1 }}"
+                        >
+                            <view class="tog-user-name ml">({{ item.address[ 0 ].username }})</view>
+                            <!-- <view class="tog-user-phone">{{ item.address[ 0 ].phone }}</view> -->
+                        </view>
+                    </view>
+                    <view
+                        class="tog-statuscn"
+                    >
+                        分配
+                    </view>
+
+                </view>
+
+                <!-- 订单信息 -->
+                <view class="tog-order-list">
+                    <view
+                        class="tog-order-item"
+                        wx:for="{{ item[ item.key ]}}"
+                        wx:key="{{ orderKey }}"
+                        wx:for-item="order"
+                        wx:for-index="orderKey"
+                    >
+                        <view
+                            bindtap="goFixPrice"
+                            class="tog-order-img-block"
+                        >
+                            <image
+                                class="tog-order-img"
+                                src="{{ order.img[ 0 ]}}"
+                            />
+                            <view
+                                class="tog-order-dotted"
                                 wx:if="{{ order.allocatedPrice === undefined }}"
                             >
-                                待确定价格
-                            </view> -->
-                            <!-- <view
+                            </view>
+                        </view>
+                        <view class="tog-order-info-block">
+                            <view class="tog-text big">{{ order.name }}</view>
+                            <view class="tog-stander">{{ order.standername }}</view>
+                            <view>
+                                <!-- <view
+                                    class="tog-small-tips"
+                                    bindtap="goFixPrice"
+                                    wx:if="{{ order.allocatedPrice === undefined }}"
+                                >
+                                    待确定价格
+                                </view> -->
+                                <!-- <view
+                                    class="tog-small-tips"
+                                    bindtap="goFixPrice"
+                                    wx:if="{{ order.allocatedCount === undefined }}"
+                                >
+                                    等待分配
+                                </view> -->
+                            </view>
+                        </view>
+                        <view class="tog-order-count-block">
+                            <view
+                                class="tog-order-price"
+                                wx:if="{{  order.allocatedPrice !== undefined && order.allocatedPrice !== null }}"
+                            >
+                                ¥
+                                {{ order.allocatedPrice }}
+                            </view>
+                            <view class="tog-text shadow">x {{ order.count }}</view>
+                            <view
+                                class="tog-order-count"
+                                wx:if="{{  order.allocatedCount !== undefined && order.allocatedCount !== null }}"
+                            >
+                                x {{ order.allocatedCount }}
+                            </view>
+                            <view
                                 class="tog-small-tips"
                                 bindtap="goFixPrice"
                                 wx:if="{{ order.allocatedCount === undefined }}"
                             >
-                                等待分配
-                            </view> -->
-                        </view>
-                    </view>
-                    <view class="tog-order-count-block">
-                        <view
-                            class="tog-order-price"
-                            wx:if="{{  order.allocatedPrice !== undefined && order.allocatedPrice !== null }}"
-                        >
-                            ¥
-                            {{ order.allocatedPrice }}
-                        </view>
-                        <view class="tog-text shadow">x {{ order.count }}</view>
-                        <view
-                            class="tog-order-count"
-                            wx:if="{{  order.allocatedCount !== undefined && order.allocatedCount !== null }}"
-                        >
-                            x {{ order.allocatedCount }}
-                        </view>
-                        <view
-                            class="tog-small-tips"
-                            bindtap="goFixPrice"
-                            wx:if="{{ order.allocatedCount === undefined }}"
-                        >
-                            未分配
-                        </view>
-                    </view>
-                </view>
-            </view>
-
-            <!-- 货品地址 -->
-            <view
-                wx:if="{{ item.canShowMore }}"
-                class="tog-address-orders-list"
-            >
-                <view
-                    wx:for="{{ item.addressOrders }}"
-                    wx:key="{{ adk }}"
-                    wx:for-index="adk"
-                    wx:for-item="addressOrder"
-                    class="tog-address-order-item"
-                >
-                    <!-- 地址信息 -->
-                    <view class="tog-address-user-info-block">
-                        <view class="tog-address-user">
-                            {{ addressOrder.address.username }}
-                        </view>
-                        <view class="tog-address-info">
-                            {{ addressOrder.address.phone }}
-                        </view>
-                        <view class="tog-address-info">
-                            {{ addressOrder.address.postalcode }}
-                        </view>
-                    </view>
-                    <view class="tog-address">
-                        {{ addressOrder.address.address }}
-                    </view>
-
-                    <!-- 该地址下的订单 -->
-                    <view class="tog-address-orders">
-                        <view
-                            wx:key="{{ ad }}"
-                            wx:for-index="ad"
-                            wx:for-item="orderitem"
-                            class="tog-address-item"
-                            wx:for="{{ addressOrder.orders }}"
-                            wx:if="{{ orderitem.allocatedCount }}"
-                        >
-                            <view class="tog-address-good">
-                                <view class="tog-address-goodname">
-                                    {{ orderitem.name }}
-                                </view>
-                                <view class="tog-address-stander">
-                                    {{ orderitem.standername }}
-                                </view>
-                            </view>
-                            <view class="tog-address-allocated">
-                                x {{ orderitem.allocatedCount }}
+                                未分配
                             </view>
                         </view>
                     </view>
-
                 </view>
-            </view>
 
-            <!-- 更多按钮 -->
-            <view
-                
-                class="tog-deliver-block"
-            >
+                <!-- 货品地址 -->
                 <view
-                    data-data="{{ item }}"
-                    bindtap="onShowMore"
-                    class="tog-deliver-btn"
+                    wx:if="{{ item.canShowMore }}"
+                    class="tog-address-orders-list"
                 >
-                    <wxc-icon
-                        size="20"
-                        color="#999"
-                        type="{{ item.canShowMore ? 'arrow-up' : 'arrow-down' }}"
-                        class="tog-deliver-btn-icon"
-                    /> 
-                    {{ item.canShowMore ? '收起' : '更多' }}
-
-                    <!-- <view
-                        class="tog-adjust-btn"
+                    <view
+                        wx:for="{{ item.addressOrders }}"
+                        wx:key="{{ adk }}"
+                        wx:for-index="adk"
+                        wx:for-item="addressOrder"
+                        class="tog-address-order-item"
                     >
-                        调整
-                    </view> -->
-                </view>
-            </view>
+                        <!-- 地址信息 -->
+                        <view class="tog-address-user-info-block">
+                            <view class="tog-address-user">
+                                {{ addressOrder.address.username }}
+                            </view>
+                            <view class="tog-address-info">
+                                {{ addressOrder.address.phone }}
+                            </view>
+                            <view class="tog-address-info">
+                                {{ addressOrder.address.postalcode }}
+                            </view>
+                        </view>
+                        <view class="tog-address">
+                            {{ addressOrder.address.address }}
+                        </view>
 
+                        <!-- 该地址下的订单 -->
+                        <view class="tog-address-orders">
+                            <view
+                                wx:key="{{ ad }}"
+                                wx:for-index="ad"
+                                wx:for-item="orderitem"
+                                class="tog-address-item"
+                                wx:for="{{ addressOrder.orders }}"
+                                wx:if="{{ orderitem.allocatedCount }}"
+                            >
+                                <view class="tog-address-good">
+                                    <view class="tog-address-goodname">
+                                        {{ orderitem.name }}
+                                    </view>
+                                    <view class="tog-address-stander">
+                                        {{ orderitem.standername }}
+                                    </view>
+                                </view>
+                                <view class="tog-address-allocated">
+                                    x {{ orderitem.allocatedCount }}
+                                </view>
+                            </view>
+                        </view>
+
+                    </view>
+                </view>
+
+                <!-- 更多按钮 -->
+                <view
+                    
+                    class="tog-deliver-block"
+                >
+                    <view
+                        data-data="{{ item }}"
+                        bindtap="onShowMore"
+                        class="tog-deliver-btn"
+                    >
+                        <wxc-icon
+                            size="20"
+                            color="#999"
+                            type="{{ item.canShowMore ? 'arrow-up' : 'arrow-down' }}"
+                            class="tog-deliver-btn-icon"
+                        /> 
+                        {{ item.canShowMore ? '收起' : '更多' }}
+
+                        <!-- <view
+                            class="tog-adjust-btn"
+                        >
+                            调整
+                        </view> -->
+                    </view>
+                </view>
+
+            </view>
         </view>
     </view>
+
+    
 
 </view>
