@@ -56,7 +56,10 @@
                             <view class="tos-trip-order-name">
                                 {{ item.goodName }}
                             </view>
-                            <view class="tos-trip-order-standar">
+                            <view
+                                class="tos-trip-order-standar"
+                                wx:if="{{ item.standarName }}"
+                            >
                                 {{ item.standarName }}
                             </view>
                         </view>
@@ -94,7 +97,7 @@
                             
                             <!-- 实际 -->
                             <view class="tos-compare-total nocenter">
-                                <view class="tos-compare-total-number right">
+                                <view class="tos-compare-total-number acturely right">
                                     {{ item.purchase }}
                                 </view>
                                 <view class="tos-compare-total-label">
@@ -131,7 +134,7 @@
                                 <wxc-price
                                     icon="sub"
                                     decimal="small"
-                                    class="tos-compare-total-number right small"
+                                    class="tos-compare-total-number acturely right small"
                                 > 
                                     {{ item.adjustPrice }}
                                 </wxc-price>
@@ -173,7 +176,7 @@
                                     icon="sub"
                                     decimal="small"
                                     wx:if="{{ item.adjustGroupPrice }}"
-                                    class="tos-compare-total-number right small"
+                                    class="tos-compare-total-number acturely right small"
                                 > 
                                     {{ item.adjustGroupPrice }}
                                 </wxc-price>

@@ -6,10 +6,13 @@
 .tos-money-block {
     display: flex;
     align-items: center;
-    background: #ff5777;
+    /* background: #ff5777; */
     flex-direction: column;
     justify-content: center;
     padding: 10rpx 0 100rpx;
+    background: #bc4e9c;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, #f80759, #bc4e9c);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to bottom, #f80759, #bc4e9c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
 }
 
 .tos-money-title {
@@ -22,7 +25,8 @@
     font-size: 78rpx;
     font-weight: bold;
     margin: 25rpx 0;
-    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    /* text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 ); */
+    text-shadow: 0px 0px 5px #fbe9de;
 }
 
 .tos-order-count {
@@ -82,14 +86,21 @@
 }
 
 .tos-trip-order-name {
-    color: #666;
+    /* color: #666; */
+    color: #bfbfbf;
     font-size: 24rpx;
     /* text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 ); */
 }
 
 .tos-trip-order-standar {
-    color: #999;
-    font-size: 24rpx;
+    /* color: #999; */
+    font-size:22rpx;
+    border-radius:5px;
+    background:#f5f5f5;
+    padding:2rpx 15rpx;
+    display:inline-block;
+    margin-right:10rpx;
+    color:#bfbfbf;    
     /* text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 ); */
 }
 
@@ -120,7 +131,7 @@
     padding-right: 30rpx;
 }
 
-.tos-compare-total.line:after {
+/* .tos-compare-total.line:after {
     top: 10%;
     right: 15rpx;
     height: 80%;
@@ -129,14 +140,15 @@
     background: #ff5777;
     position: absolute;
     transform: rotate( 22deg );
-}
+} */
 
 .tos-compare-total.nocenter {
     justify-content: flex-start;
 }
 
 .tos-compare-total-label {
-    color: #ff5777;
+    /* color: #ff5777; */
+    color: #bfbfbf;
     font-size: 20rpx;
 }
 
@@ -150,8 +162,13 @@
 
 .tos-compare-total-number {
     font-size: 40rpx;
-    color: #ff5777;
+    /* color: #ff5777; */
+    color: #bfbfbf;
     margin-bottom: -5rpx;
+}
+
+.tos-compare-total-number.acturely {
+    color: #ff5777;
 }
 
 .tos-compare-total-number.right {
@@ -210,15 +227,20 @@
 }
 
 .tos-order-more {
-    color: #666;
+    /* color: #666; */
+    color: #bfbfbf;
     font-size: 22rpx;
 }
 
 .tos-trip-order-btn.purple {
     color: #fff;
-    background: #ff5777;
-    border: 1px solid #ff5777;
+    /* background: #ff5777; */
+    border: none;
     text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    background: #bc4e9c;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #f80759, #bc4e9c);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #f80759, #bc4e9c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
+
 }
 
 .tos-tips2-block {
