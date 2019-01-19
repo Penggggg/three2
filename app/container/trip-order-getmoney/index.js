@@ -41,7 +41,10 @@ Component({
                 
                 // 处理已分配、未分配订单
                 x.orders.map( order => {
-                    if ( order.allocatedPrice === undefined || order.allocatedCount === undefined ) {
+                    if ( order.allocatedPrice === undefined ||
+                            order.allocatedCount === undefined ||
+                            order.allocatedCount < order.count
+                    ) {
                         notReadyOrders.push( order );
                     } else {
                         readyOrders.push( order );

@@ -116,21 +116,27 @@ Component({
         showModal({ currentTarget }) {
             const data = currentTarget.dataset.data;
             const { adjustGroupPrice, adjustPrice, purchase } = data;
-            wx.showModal({
-                title: '提示',
-                content: '修改实际购买数量后，订单会自动分配到客户（先下单先得）',
-                success: res => {
-                    this.setData({
-                        show: true,
-                        currentSL: data,
-                        slTemp: {
-                            purchase,
-                            adjustPrice,
-                            adjustGroupPrice
-                        }
-                    })
+            wx.showToast({
+                icon: 'none',
+                duration: 2000,
+                title: '订单自动分配客户(先下单先得）',
+            });
+            this.setData({
+                show: true,
+                currentSL: data,
+                slTemp: {
+                    purchase,
+                    adjustPrice,
+                    adjustGroupPrice
                 }
             });
+            // wx.showModal({
+            //     title: '提示',
+            //     content: '订单自动分配客户(先下单先得）',
+            //     success: res => {
+                    
+            //     }
+            // });
         },
 
         // 提交修改

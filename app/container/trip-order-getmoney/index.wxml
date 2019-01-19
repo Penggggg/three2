@@ -83,7 +83,7 @@
                 </view>
 
                 <!-- 订单信息 -->
-                <view class="tog-order-list">
+                <view class="tog-order-list {{ item.canShowMore ? 'mb' : '' }}">
                     <view
                         class="tog-order-item"
                         wx:for="{{ item[ item.key ]}}"
@@ -101,7 +101,7 @@
                             />
                             <view
                                 class="tog-order-dotted"
-                                wx:if="{{ order.allocatedPrice === undefined }}"
+                                wx:if="{{ order.allocatedPrice === undefined || order.allocatedCount < order.count }}"
                             >
                             </view>
                         </view>
