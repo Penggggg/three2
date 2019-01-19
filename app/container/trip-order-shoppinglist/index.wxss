@@ -271,3 +271,22 @@
     font-size: 22rpx;
     padding-left: 10rpx;
 }
+
+.tos-img-block {
+    position: relative;
+}
+
+.tos-img-dotted {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: -5rpx;
+    left: -5rpx;
+    width: 20rpx;
+    height: 20rpx;
+    border-radius: 50%;
+    position: absolute;
+    background: #f80759;  
+    /* background: -webkit-linear-gradient(to right, #f80759, #bc4e9c); 
+    background: linear-gradient(to right, #f80759, #bc4e9c); */
+}

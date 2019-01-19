@@ -1,5 +1,5 @@
 <view class="con-trip-order">
-
+    {{ active }}
     <!-- 上方tab -->
     <view class="to-tabs">
         <view
@@ -8,9 +8,11 @@
             wx:key="{{ index }}"
             data-index="{{ index }}"
             bindtap="onTabChange"
-            class="to-tabs-item {{ active === index ? 'active' : '' }}"
+            class="to-tabs-item {{ active === index ? 'active' : '' }} {{ active === index ? 'current' : '' }} {{ index === 2 || index === 1 ? 'line' : '' }}"
         >
-            {{ item.label }}
+            <view class="to-tab-icon {{ active === index ? 'active' : '' }}">
+                {{ index + 1 }}
+            </view>{{ item.label }}
         </view>
     </view>
 

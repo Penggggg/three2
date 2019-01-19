@@ -38,13 +38,21 @@
                 <view class="tos-good-info-block">
 
                     <!-- 图片 -->
-                    <image
-                        mode="scaleToFill"
-                        src="{{ item.img }}"
-                        data-data="{{ item }}"
-                        class="tos-trip-order-img"
-                        bindtap="goGoodDetail"
-                    />
+                    <view class="tos-img-block">
+                        <image
+                            mode="scaleToFill"
+                            src="{{ item.img }}"
+                            data-data="{{ item }}"
+                            class="tos-trip-order-img"
+                            bindtap="goGoodDetail"
+                        />
+                        <view
+                            class="tos-img-dotted"
+                            wx:if="{{ item.base_status === '0' || item.buy_status === '2' }}"
+                        >
+                            
+                        </view>
+                    </view>
 
                     <view class="tos-other-info">
                         
@@ -69,7 +77,7 @@
                             </view>
 
                             <!-- 状态 -->
-                            <view
+                            <!-- <view
                                 class="tos-shoppinglist-status"
                             >
                                 {{ item.base_status === '0' ?
@@ -78,7 +86,7 @@
                                         '买不全' : 
                                         ''
                                 }}
-                            </view>
+                            </view> -->
 
                         </view>
 
