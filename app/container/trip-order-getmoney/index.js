@@ -72,8 +72,8 @@ Component({
                     notReadyOrders,
                     // 按是否准备排序的订单
                     allOrders: [ ...notReadyOrders, ...readyOrders ],
-                    // 是否未这个人的所有订单确定
-                    notConfirmed: x.orders.some( o => o.base_status === '0' || o.base_status === '1' )
+                    // 是否所有订单都被分配了，包括 0
+                    isAllAdjusted: x.orders.every( o => o.allocatedCount !== undefined )
                 });
             })
             console.log( meta );
@@ -174,6 +174,17 @@ Component({
             this.setData({
                 showMore
             });
+        },
+
+        /** 催款按钮 */
+        getBackMoney({ currentTarget }) {
+            const userOrders = currentTarget.dataset.data;
+            if ( !userOrders.isAllAdjusted ) {
+                wx.showToast({
+                    icon: 'none',
+                    title: '请先完成所有分配'
+                });
+            }
         }
 
     }

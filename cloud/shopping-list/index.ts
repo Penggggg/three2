@@ -414,6 +414,14 @@ export const main = async ( event, context ) => {
             // 最后分配量
             let lastAllocated = 0;
 
+            /**
+             * ! 传入分配量不能少于。已完成分配订单的数额之和
+             */
+
+            /**
+             * 剩余分配量
+             * !此处有bug，分配量 = 传入数额 - 已完成分配订单的数额之和
+             */
             let purchase = event.data.purchase;
             const { shoppingId, adjustPrice, adjustGroupPrice } = event.data;
 
@@ -455,13 +463,13 @@ export const main = async ( event, context ) => {
 
             /**
              * !以下订单都是已付订金的
-             * 订单：批量对订单的价格、团购价、购买状态进行调整(已购买/进行中)
+             * 订单：批量对订单的价格、团购价、购买状态进行调整(已购买/进行中，其他已经确定调整的订单，不做处理)
              * 其实应该也要自动注入订单数量（策略：先到先得，后下单会有得不到单的风险）
              * !如果已经分配过了，则不再分配采购量
              */
             const sorredOrders = orders$
                 .map(( x: any ) => x.data )
-                .filter(( x: any ) => x.base_status !== '3' && x.base_status !== '5' )
+                .filter(( x: any ) => x.base_status !== '2' && x.base_status !== '3' && x.base_status !== '5' )
                 .sort(( x: any, y: any ) => x.createTime - y.createTime );
 
             await Promise.all( sorredOrders.map( async order => {
