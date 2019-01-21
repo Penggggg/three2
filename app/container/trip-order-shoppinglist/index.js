@@ -78,9 +78,25 @@ Component({
                             });
 
                         });
-                        console.log('...', [ ...meta1.filter( x => x.base_status === '0'), ...meta1.filter( x => x.base_status === '1')])
+                        console.log('...', [
+                            ...meta1.filter( x => x.base_status === '0'),
+                            ...meta1
+                                .filter( x => x.base_status === '1')
+                                .filter( x => !!x.lastAllocated ),
+                            ...meta1
+                                .filter( x => x.base_status === '1')
+                                .filter( x => !x.lastAllocated )
+                        ]);
                         this.setData({
-                            list:  [ ...meta1.filter( x => x.base_status === '0'), ...meta1.filter( x => x.base_status === '1')]
+                            list:  [
+                                ...meta1.filter( x => x.base_status === '0'),
+                                ...meta1
+                                    .filter( x => x.base_status === '1')
+                                    .filter( x => !!x.lastAllocated ),
+                                ...meta1
+                                    .filter( x => x.base_status === '1')
+                                    .filter( x => !x.lastAllocated )
+                            ]
                         });
                     }
                 }

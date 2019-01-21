@@ -25,7 +25,12 @@ Component({
         canAction: false, // 是否调整完成，并进行催款
         lastAdjust: 0, // 剩余未调整订单
         clientOders: [ ], // 客户订单,
-        showMore: [ ] // 展示更多 uid[ ]
+        showMore: [ ], // 展示更多 uid[ ]
+        showModal: false, // 展示弹框
+        currentOrder: null, // 当前选中的订单
+        form: { // 弹框表单
+            count: null
+        }
     },
 
     /** 计算属性 */
@@ -197,6 +202,89 @@ Component({
                     title: '还有未分配订单'
                 });
             }
+        },
+
+        /** 展示调整弹框 */
+        onShowModal({ currentTarget }) {
+            const currentOrder = currentTarget.dataset.data;
+
+            if ( currentOrder.base_status === '2' ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '催款后不能再更改订单数量'
+                })
+            } else if ( currentOrder.base_status === '0' ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '请先调整商品价格'
+                })
+            }
+
+            this.setData({
+                currentOrder,
+                showModal: true,
+                form: {
+                    count: currentOrder.allocatedCount
+                }
+            });
+        },
+
+        /** 取消弹框 */
+        onCancelModal( ) {
+            this.setData({
+                currentOrder: null,
+                showModal: false,
+                form: {
+                    count: null
+                }
+            })
+        },
+
+        /** 提交订单修改 */
+        submitOrder( ) {
+            const { currentOrder, form } = this.data;
+
+            if ( form.count === null||
+                form.count === undefined ||
+                ( typeof form.count === 'string' && !form.count.trim( ))
+            ) {
+                return this.onCancelModal( );
+            }
+
+            const { _id, tid, sid, pid } = currentOrder;
+            const temp = {
+                oid: _id,
+                tid, sid, pid,
+                count: Number( form.count )
+            };
+
+            http({
+                data: temp,
+                url: 'order_adjust-count',
+                success: res => {
+                    if ( res.status === 200 ) {
+                        this.onCancelModal( );
+                        this.fetchOrder( this.data.tid );
+                        setTimeout(( ) => {
+                            wx.showToast({
+                                title: '分配成功'
+                            });
+                        }, 0 );
+                    }
+                }
+            });
+        },
+
+        /** 弹框输入 */
+        modalInput( e ) {
+            const { detail, currentTarget } = e;
+            const { key } = currentTarget.dataset;
+            const { form } = this.data;
+            this.setData({
+                form: Object.assign({ }, form, {
+                    [ key ]: detail.value
+                })
+            })
         }
 
     }

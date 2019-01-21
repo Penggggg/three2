@@ -14,15 +14,14 @@ const _ = db.command;
  * pid
  * ! sid ( 可为空 )
  * oids Array
- *! purchase 采购数量
  * buy_status 0,1,2 未购买、已购买、买不全
  * base_status: 0,1 未调整，已调整
  * createTime
  * updateTime
  * lastAllocated 剩余分配量
+ * purchase 采购数量
  * adjustPrice 分配的数清单售价
  * adjustGroupPrice 分配的数清单团购价
- * allocatedCount 分配的数量
  */
 export const main = async ( event, context ) => {
 
@@ -411,25 +410,12 @@ export const main = async ( event, context ) => {
     app.router('adjust', async( ctx, next ) => {
         try {
             
-            // 最后分配量
-            let lastAllocated = 0;
-
-            /**
-             * ! 传入分配量不能少于。已完成分配订单的数额之和
-             */
-
-            /**
-             * 剩余分配量
-             * !此处有bug，分配量 = 传入数额 - 已完成分配订单的数额之和
-             */
-            let purchase = event.data.purchase;
             const { shoppingId, adjustPrice, adjustGroupPrice } = event.data;
 
             /**
              * 清单，先拿到订单采购总数
              * 随后更新：采购量、清单售价、清单团购价、base_status、buy_status
              */
-
             const shopping$ = await db.collection('shopping-list')
                 .doc( shoppingId )
                 .get( );
@@ -439,6 +425,33 @@ export const main = async ( event, context ) => {
                     .doc( oid )
                     .get( );
             }));
+
+            // 最后分配量
+            let lastAllocated = 0;
+
+            /**
+             * 剩余分配量
+             */
+            let purchase = event.data.purchase;
+
+            /**
+             * ! 传入分配量不能少于。已完成分配订单的数额之和
+             */
+            const finishAdjustOrders = orders$
+                .map(( x: any ) => x.data )
+                .filter( o => o.base_status === '2' );
+
+            // 已分配量
+            const hasBeenAdjust = finishAdjustOrders.reduce(( x, y ) => {
+                return x + y.allocatedCount;
+            }, 0 );
+
+            if ( purchase < hasBeenAdjust ) {
+                return ctx.body = {
+                    status: 500,
+                    message: `已有${hasBeenAdjust}件已确认，数量不能少于${hasBeenAdjust}`
+                }
+            }
             
             let needBuyTotal = orders$.reduce(( x, y ) => {
                 return x + (y as any).data.count;
@@ -455,6 +468,7 @@ export const main = async ( event, context ) => {
 
             delete temp['_id'];
 
+            // 更新清单
             await db.collection('shopping-list')
                 .doc( shoppingId )
                 .set({
@@ -469,8 +483,11 @@ export const main = async ( event, context ) => {
              */
             const sorredOrders = orders$
                 .map(( x: any ) => x.data )
-                .filter(( x: any ) => x.base_status !== '2' && x.base_status !== '3' && x.base_status !== '5' )
+                .filter(( x: any ) => x.base_status === '0' || x.base_status === '1' )
                 .sort(( x: any, y: any ) => x.createTime - y.createTime );
+
+            // 剩余分配量
+            purchase -= hasBeenAdjust;
 
             await Promise.all( sorredOrders.map( async order => {
 

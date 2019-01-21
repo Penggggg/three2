@@ -15,10 +15,11 @@
             show-icon="{{ false }}"
             color="#fff"
             bgColor="transparent"
-            notice="{{ '剩余' + lastAdjust + '件商品未调整!' }}"
+            notice="{{ '剩余' + lastAdjust + '件商品等待调整!' }}"
         />
     </view>
 
+    <!-- 订单列表 -->
     <view class="tos-container">
     
         <!-- 收益信息 -->
@@ -55,12 +56,12 @@
                             class="tog-user-avatar"
                             src="{{ item.user.avatarUrl }}"
                         />
-                        <view
+                        <!-- <view
                             class="tog-avatar-icon"
                             wx:if="{{ !item.isAllAdjusted }}"
                         >
                             {{ item.hasNotAdjustedLength }}
-                        </view>
+                        </view> -->
                     </view>
                     <view class="tog-name-info">
                         <view class="tog-user-name">
@@ -79,7 +80,7 @@
                         data-data="{{ item }}"
                         bindtap="getBackMoney"
                     >
-                        收款
+                        催款
                     </view>
 
                 </view>
@@ -108,11 +109,19 @@
                                 待调整
                             </view>
                         </view>
-                        <view class="tog-order-info-block">
+                        <view
+                            data-data="{{ order }}"
+                            bindtap="onShowModal"
+                            class="tog-order-info-block"
+                        >
                             <view class="tog-text big">{{ order.name }}</view>
                             <view class="tog-stander">{{ order.standername }}</view>
                         </view>
-                        <view class="tog-order-count-block">
+                        <view
+                            data-data="{{ order }}"
+                            bindtap="onShowModal"
+                            class="tog-order-count-block"
+                        >
                             <view
                                 class="tog-order-price"
                                 wx:if="{{  order.allocatedPrice !== undefined && order.allocatedPrice !== null }}"
@@ -129,6 +138,7 @@
                             </view>
                             <view
                                 class="tog-small-tips"
+
                                 wx:if="{{ order.allocatedCount === undefined }}"
                             >
                                 未分配
@@ -222,6 +232,22 @@
         </view>
     </view>
 
-    
+    <!-- 弹框 -->
+    <i-modal
+        title="数量调整"
+        visible="{{ showModal }}"
+        bind:ok="submitOrder"
+        bind:cancel="onCancelModal"
+    >
+        <wxc-input
+            title="数量分配"
+            type="number"
+            data-key="count"
+            nocenter="{{ true }}"
+            placeholder="请输入分配数量"
+            bindinput='modalInput'
+            value='{{ currentOrder.allocatedCount }}'
+        />
+    </i-modal>
 
 </view>

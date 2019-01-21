@@ -593,6 +593,98 @@ export const main = async ( event, context ) => {
         } catch ( e ) {
             return ctx.body = { status: 500 };
         }
+    });
+
+    /**
+     * @description
+     * 从清帐催款，调整订单分配量
+     */
+    app.router('adjust-count', async( ctx, next ) => {
+        try {
+            const openid = event.data.openId || event.userInfo.openId; 
+            const { oid, tid, sid, pid, count } = event.data;
+
+            const getWrong = message => ctx.body = {
+                message,
+                status: 400
+            }
+
+            /**
+             * 是否能继续调整
+             */
+            const order$ = await db.collection('order')
+                .doc( oid )
+                .get( );
+
+            if ( order$.data.base_status === '2' ) {
+                return getWrong('催款后不能修改数量');
+
+            } else if ( order$.data.base_status === '0' ) {
+                return getWrong('请先调整该商品价格');
+            }
+
+            /**
+             * 不能多于清单分配的总购入量
+             */
+            const shopping$ = await db.collection('shopping-list')
+                .where({
+                    tid, sid, pid
+                })
+                .get( );
+            const shopping = shopping$.data[ 0 ];
+            const lastOrders$ = await db.collection('order')
+                .where({
+                    tid, sid, pid,
+                    base_status: _.or( _.eq('1'), _.eq('2'), _.eq('3'))
+                })
+                .get( );
+
+            const lastOrders = lastOrders$.data;
+            const otherCount: any = lastOrders
+                .filter( o => o._id !== oid )
+                .reduce(( x, y ) => {
+                    return x + y.allocatedCount
+                }, 0 );
+
+            if ( count + otherCount > shopping.purchase ) {
+                return getWrong(`该商品总数量不能大于采购数${shopping.purchase}件！`);
+            }
+
+            /** 更新订单 */
+            await db.collection('order')
+                .doc( oid )
+                .update({
+                    data: {
+                        allocatedCount: count
+                    }
+                });
+
+            /**
+             * 更新清单
+             * 少于总购入量时，重新调整清单的剩余分配量
+             */
+
+            if ( count + otherCount < shopping.purchase ) {
+
+                const newshopping = Object.assign({ }, shopping, {
+                    lastAllocated: shopping.purchase - count + otherCount
+                });
+                delete newshopping['_id'];
+
+                await db.collection('shopping-list')
+                    .doc( String( shopping._id ))
+                    .set({
+                        data: newshopping
+                    });
+            }
+
+            return ctx.body = {
+                status: 200
+            }
+            
+        } catch ( e ) {
+            return ctx.body = { status: 500 }
+        }
     })
  
    return app.serve( );
