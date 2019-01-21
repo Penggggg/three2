@@ -10,6 +10,11 @@ Component({
             value: '',
             type: String,
             observer: 'init'
+        },
+        // 未调整的，展示边框
+        outline: {
+            value: false,
+            type: Boolean
         }
     },
 
@@ -73,9 +78,9 @@ Component({
                             });
 
                         });
-                        console.log('...', meta1 )
+                        console.log('...', [ ...meta1.filter( x => x.base_status === '0'), ...meta1.filter( x => x.base_status === '1')])
                         this.setData({
-                            list: meta1
+                            list:  [ ...meta1.filter( x => x.base_status === '0'), ...meta1.filter( x => x.base_status === '1')]
                         });
                     }
                 }
@@ -116,11 +121,6 @@ Component({
         showModal({ currentTarget }) {
             const data = currentTarget.dataset.data;
             const { adjustGroupPrice, adjustPrice, purchase } = data;
-            wx.showToast({
-                icon: 'none',
-                duration: 2000,
-                title: '订单自动分配客户(先下单先得）',
-            });
             this.setData({
                 show: true,
                 currentSL: data,
@@ -130,13 +130,6 @@ Component({
                     adjustGroupPrice
                 }
             });
-            // wx.showModal({
-            //     title: '提示',
-            //     content: '订单自动分配客户(先下单先得）',
-            //     success: res => {
-                    
-            //     }
-            // });
         },
 
         // 提交修改

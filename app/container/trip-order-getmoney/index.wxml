@@ -57,9 +57,9 @@
                         />
                         <view
                             class="tog-avatar-icon"
-                            wx:if="{{ item.notReadyOrders.length }}"
+                            wx:if="{{ !item.isAllAdjusted }}"
                         >
-                            {{ item.notReadyOrders.length }}
+                            {{ item.hasNotAdjustedLength }}
                         </view>
                     </view>
                     <view class="tog-name-info">
@@ -79,7 +79,7 @@
                         data-data="{{ item }}"
                         bindtap="getBackMoney"
                     >
-                        催款
+                        收款
                     </view>
 
                 </view>
@@ -103,29 +103,14 @@
                             />
                             <view
                                 class="tog-order-dotted"
-                                wx:if="{{ order.allocatedPrice === undefined || order.allocatedCount < order.count }}"
+                                wx:if="{{ order.allocatedPrice === undefined }}"
                             >
+                                待调整
                             </view>
                         </view>
                         <view class="tog-order-info-block">
                             <view class="tog-text big">{{ order.name }}</view>
                             <view class="tog-stander">{{ order.standername }}</view>
-                            <view>
-                                <!-- <view
-                                    class="tog-small-tips"
-                                    bindtap="goFixPrice"
-                                    wx:if="{{ order.allocatedPrice === undefined }}"
-                                >
-                                    待确定价格
-                                </view> -->
-                                <!-- <view
-                                    class="tog-small-tips"
-                                    bindtap="goFixPrice"
-                                    wx:if="{{ order.allocatedCount === undefined }}"
-                                >
-                                    等待分配
-                                </view> -->
-                            </view>
                         </view>
                         <view class="tog-order-count-block">
                             <view
@@ -144,7 +129,6 @@
                             </view>
                             <view
                                 class="tog-small-tips"
-                                bindtap="goFixPrice"
                                 wx:if="{{ order.allocatedCount === undefined }}"
                             >
                                 未分配
@@ -155,7 +139,7 @@
 
                 <!-- 货品地址 -->
                 <view
-                    wx:if="{{ item.canShowMore }}"
+                    wx:if="{{ item.canShowMore || item.notReadyOrders.length === 0 }}"
                     class="tog-address-orders-list"
                 >
                     <view

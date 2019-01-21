@@ -70,7 +70,12 @@
     margin-bottom: 40rpx;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.05);
+}
+
+.tos-shoppinglist-item.notadjust {
+    /* border: 1px solid #f7b0c7; */
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.22);
 }
 
 .tos-good-info-block {
@@ -109,10 +114,14 @@
 }
 
 .tos-trip-order-name {
-    /* color: #666; */
     color: #bfbfbf;
     font-size: 24rpx;
-    /* text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 ); */
+    overflow:hidden; 
+    display:-webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;
 }
 
 .tos-trip-order-standar {
@@ -129,7 +138,7 @@
 
 .tos-compare {
     display: flex;
-    padding: 15rpx 20rpx 15rpx 0rpx;
+    padding: 0rpx 20rpx 15rpx 0rpx;
     box-sizing: border-box;
     /* margin-bottom: 10rpx; */
 }
@@ -151,7 +160,7 @@
 
 .tos-compare-total.right {
     justify-content: flex-end;
-    padding-right: 30rpx;
+    padding-right: 40rpx;
 }
 
 /* .tos-compare-total.line:after {
@@ -212,7 +221,8 @@
 }
 
 .tos-tips-text {
-    color: #666;
+    /* color: #666; */
+    color: #bfbfbf;
     font-size: 22rpx;
     text-align: left;
     margin-left: 20rpx;
@@ -260,9 +270,9 @@
     /* background: #ff5777; */
     border: none;
     text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
-    background: #bc4e9c;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #f80759, #bc4e9c);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #f80759, #bc4e9c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
+    background: #bc4e9c; 
+    background: -webkit-linear-gradient(to right, #f80759, #bc4e9c);  
+    background: linear-gradient(to right, #f80759, #bc4e9c);
 
 }
 

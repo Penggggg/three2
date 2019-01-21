@@ -8,7 +8,7 @@ Page({
         // 行程id
         id: '',
         // 上方活动tab
-        active: 1,
+        active: 0,
         // 上方tabs
         tabs: [{
             key: 0,
@@ -20,6 +20,8 @@ Page({
             key: 2,
             label: '快递信息'
         }],
+        // 购物清单是否显示边框
+        shopping_list_outline: true
     },
 
     /** 切换tab */
@@ -34,6 +36,12 @@ Page({
     onChildChangeTab( event ) {
         this.setData({
             active: event.detail
+        });
+    },
+
+    onOutline( event ) {
+        this.setData({
+            shopping_list_outline: event.detail
         });
     },
 

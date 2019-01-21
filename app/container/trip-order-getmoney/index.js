@@ -35,21 +35,30 @@ Component({
             const { clientOders, showMore } = this.data;
             const meta = clientOders.map( x => {
 
+                // 已经分配好的订单
                 const readyOrders = [ ];
-                const notReadyOrders = [ ];
+                // 未分配好的订单，包含分配不足的订单
+                let notReadyOrders = [ ];
+                // 分配不足的订单
+                const notEnough = [ ];
                 const canShowMore = showMore.find( y => y === x.user.openid );
                 
                 // 处理已分配、未分配订单
                 x.orders.map( order => {
                     if ( order.allocatedPrice === undefined ||
-                            order.allocatedCount === undefined ||
-                            order.allocatedCount < order.count
+                            order.allocatedCount === undefined
                     ) {
                         notReadyOrders.push( order );
-                    } else {
+
+                    } else if ( order.allocatedCount < order.count) {
+                        notEnough.push( order );
+
+                    }else if ( order.allocatedCount >= order.count ) {
                         readyOrders.push( order );
                     }
                 });
+
+                notReadyOrders = [ ...notReadyOrders, ...notEnough ];
 
                 // 根据地址整理订单
                 const addressOrders = x.address.map( address => {
@@ -73,7 +82,9 @@ Component({
                     // 按是否准备排序的订单
                     allOrders: [ ...notReadyOrders, ...readyOrders ],
                     // 是否所有订单都被分配了，包括 0
-                    isAllAdjusted: x.orders.every( o => o.allocatedCount !== undefined )
+                    isAllAdjusted: x.orders.every( o => o.allocatedCount !== undefined ),
+                    // 未被分配的订单量
+                    hasNotAdjustedLength: x.orders.filter( o => o.allocatedCount === undefined ).length
                 });
             })
             console.log( meta );
@@ -157,6 +168,7 @@ Component({
         /** 跳到价格调整 */
         goFixPrice( ) {
             this.triggerEvent('tabchange', 0 );
+            this.triggerEvent('outline', true );
         },
 
         /** 展示更多 */
@@ -182,7 +194,7 @@ Component({
             if ( !userOrders.isAllAdjusted ) {
                 wx.showToast({
                     icon: 'none',
-                    title: '请先完成所有分配'
+                    title: '还有未分配订单'
                 });
             }
         }

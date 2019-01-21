@@ -295,14 +295,14 @@ export const main = async ( event, context ) => {
 
             /**
              * 总收益
-             * !至少已付订金
+             * !至少已付订金，至少已经调节售价、数量
              */
             const sum = orders$.data
-                .filter( x => x.pay_status !== '0' )
+                .filter( x => x.pay_status !== '0' &&
+                    ( x.base_status === '1' ) || ( x.base_status === '2' ) || ( x.base_status === '3' )
+                )
                 .reduce(( x, y ) => {
-                    const price = y.allocatedPrice || y.price;
-                    const count = y.allocatedCount === undefined || y.allocatedCount === null ? y.count : y.allocatedCount ;
-                    return x + price * count
+                    return x +  y.allocatedPrice * y.allocatedCount
                 }, 0 );
 
             /**
@@ -327,9 +327,9 @@ export const main = async ( event, context ) => {
             return ctx.body = {
                 status: 200,
                 data: {
-                    sum,
-                    clients,
-                    notPayAllClients,
+                    sum, // 销售总额
+                    clients, // 客户总数
+                    notPayAllClients, // 未付尾款客户数量
                     count: orders$.data.length // 总订单数
                 }
             };

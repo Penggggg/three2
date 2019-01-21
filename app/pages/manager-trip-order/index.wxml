@@ -21,12 +21,14 @@
         <view wx:if="{{ active === 0 }}">
             <my-trip-order-shoppinglist
                 tid="{{ id }}"
+                outline="{{ shopping_list_outline }}"
             />
         </view>
         <view wx:elif="{{ active === 1 }}">
             <my-trip-order-getmoney
                 tid="{{ id }}"
                 bindtabchange="onChildChangeTab"
+                bindoutline="onOutline"
             />
         </view>
         <view wx:else>3</view>

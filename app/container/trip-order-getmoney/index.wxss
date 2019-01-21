@@ -129,8 +129,8 @@
 }
 
 .tog-avatar-icon {
-    top: 0;
-    left: 0;
+    top: 5rpx;
+    left: 5rpx;
     color: #fff;
     /* background: #f5222d; */
     font-size: 18rpx;
@@ -142,9 +142,9 @@
     border-radius:50%;    
     border-radius: 15px;
     position: absolute;
-    background: #f80759; 
-    /* background: -webkit-linear-gradient(to right, #f80759, #bc4e9c); 
-    background: linear-gradient(to right, #f80759, #bc4e9c); */
+    background: #bc4e9c;  
+    background: -webkit-linear-gradient(to left, #f80759, #bc4e9c);  
+    background: linear-gradient(to left, #f80759, #bc4e9c); 
 }
 
 .tog-user-avatar {
@@ -233,16 +233,17 @@
 }
 
 .tog-order-dotted {
-    top: -5rpx;
-    left: -5rpx;
-    width: 18rpx;
-    height: 18rpx;
-    /* background: #f5222d; */
-    border-radius: 50%;
+    top: -8rpx;
+    left: -8rpx;
     position: absolute;
-    background: #f80759; 
-    /* background: -webkit-linear-gradient(to right, #f80759, #bc4e9c);
-    background: linear-gradient(to right, #f80759, #bc4e9c); */
+    font-size: 16rpx;
+    color: #fff;
+    padding:2rpx 10rpx;
+    border-radius:3px;
+    display:inline-block;
+    background: #bc4e9c;  
+    background: -webkit-linear-gradient(to left, #f80759, #bc4e9c);  
+    background: linear-gradient(to left, #f80759, #bc4e9c);    
 }
 
 .tog-order-info-block {
