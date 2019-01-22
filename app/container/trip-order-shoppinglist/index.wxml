@@ -209,14 +209,14 @@
                         <view
                             class="tos-order-more"
                         >
-                            <view>
+                            <!-- <view>
                                 {{ item.depositPricesArr[ 0 ] ?
                                     item.depositPricesArr.length === 1 ?
                                         '订金：¥' + item.depositPricesArr[ 0 ] :
                                         '订金：¥' + item.depositPricesArr[ 0 ] + '~' + item.depositPricesArr[ item.depositPricesArr.length - 1 ] :
                                     ''
                                 }}
-                            </view>
+                            </view> -->
                             <view>
                                 <!-- <image
                                     wx:if="{{ item.base_status === '1' && item.lastAllocated }}"

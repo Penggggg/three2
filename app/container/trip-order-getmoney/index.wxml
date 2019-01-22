@@ -76,13 +76,19 @@
                         </view>
                     </view>
                     <view
+                        wx:if="{{ !item.hasBeenCall }}"
                         class="tog-statuscn"
                         data-data="{{ item }}"
                         bindtap="getBackMoney"
                     >
                         催款
                     </view>
-
+                    <view
+                        wx:else
+                        class="tog-statuscn text"
+                    >
+                        {{ !item.hasBeenGivenMoney ? '未到帐' : '已到帐' }}
+                    </view>
                 </view>
 
                 <!-- 订单信息 -->
@@ -138,7 +144,6 @@
                             </view>
                             <view
                                 class="tog-small-tips"
-
                                 wx:if="{{ order.allocatedCount === undefined }}"
                             >
                                 未分配
@@ -149,7 +154,7 @@
 
                 <!-- 货品地址 -->
                 <view
-                    wx:if="{{ item.canShowMore || item.notReadyOrders.length === 0 }}"
+                    wx:if="{{ item.canShowMore || item.notReadyOrders.length === 0 || item.hasBeenCall }}"
                     class="tog-address-orders-list"
                 >
                     <view
@@ -161,7 +166,7 @@
                     >
                         <!-- 地址信息 -->
                         <view class="tog-address-user-info-block">
-                            <view class="tog-address-user">
+                            <view class="tog-address-user {{ item.hasBeenCall ? 'disabled' : '' }}" >
                                 {{ addressOrder.address.username }}
                             </view>
                             <view class="tog-address-info">
@@ -230,6 +235,15 @@
 
             </view>
         </view>
+    </view>
+    
+    <!-- 调整按钮 -->
+    <view
+        wx:if="{{ showBtn }}"
+        class="tog-trip-btn"
+        bindtap="goTrip"
+    >
+        行程
     </view>
 
     <!-- 弹框 -->

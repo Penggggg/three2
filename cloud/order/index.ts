@@ -598,6 +598,9 @@ export const main = async ( event, context ) => {
     /**
      * @description
      * 从清帐催款，调整订单分配量
+     * {
+     *      oid, tid, sid, pid, count
+     * }
      */
     app.router('adjust-count', async( ctx, next ) => {
         try {
@@ -685,6 +688,51 @@ export const main = async ( event, context ) => {
         } catch ( e ) {
             return ctx.body = { status: 500 }
         }
+    })
+
+    /**
+     * @description
+     * 催帐，调整下列订单为“已调整”，并发送消息模板
+     * {
+     *    tid, openid, oids
+     * }
+     */
+    app.router('adjust-status', async( ctx, next ) => {
+        try {
+            const openid = event.data.openId || event.userInfo.openId; 
+            const { tid, oids } = event.data;
+
+            const getWrong = message => ctx.body = {
+                message,
+                status: 400
+            };
+
+            const trip$ = await db.collection('trip')
+                .doc( tid )
+                .get( );
+            const trip = trip$.data;
+
+            // 未结束，且未手动关闭
+            if ( new Date( ).getTime( ) < trip.end_date && !trip.isClosed ) {
+                return getWrong('行程未结束，请手动关闭当前行程');
+            }
+
+            // 更新订单
+            const update$ = await Promise.all( oids.map( oid => {
+                return db.collection('order')
+                    .doc( oid )
+                    .update({
+                        data: {
+                            base_status: '2'
+                        }
+                    });
+            }));
+
+            return ctx.body = {
+                status: 200
+            }
+
+        } catch ( e ) { return ctx.body = { status: 500 }}
     })
  
    return app.serve( );

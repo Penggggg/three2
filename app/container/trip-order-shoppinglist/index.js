@@ -206,6 +206,7 @@ Component({
                         currentSL: null
                     });
                     this.fetchDetail( this.data.tid );
+                    this.fetchShoppingList( this.data.tid );
                     wx.showToast({
                         title: '调整成功'
                     });

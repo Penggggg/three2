@@ -18,10 +18,11 @@ const http = ( params$: httpParam ) => {
     });
 
     const getError = ( msg = params.errMsg, err?: any ) => {
-        err && console.log( err );
+        err && console.log(`Error: `, err || msg );
         wx.showToast({
             icon: 'none',
-            title: msg
+            title: msg,
+            duration: 2000
         });
     }
 
@@ -41,17 +42,18 @@ const http = ( params$: httpParam ) => {
             const { status, data, message } = result;
             if ( status !== 200 ) {
                 getError( message && message !== { } ? message : params.errMsg );
+
+            } else {
+                wx.hideLoading({ });
             }
-
             params.success( res.result );
-
         },
         fail: err => {
             getError( '网络错误', err );
             params.error && params.error( )
         },
         complete: ( ) => {
-            wx.hideLoading({ });
+            // wx.hideLoading({ });
             params.complete && params.complete( )
         }
     })

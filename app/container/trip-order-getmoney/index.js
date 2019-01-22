@@ -30,7 +30,8 @@ Component({
         currentOrder: null, // 当前选中的订单
         form: { // 弹框表单
             count: null
-        }
+        },
+        showBtn: false // 展示行程列表按钮
     },
 
     /** 计算属性 */
@@ -74,14 +75,25 @@ Component({
                 });
 
                 return Object.assign({ }, x , {
+                    emptyOrders: [ ],
                     // 根据地址展示订单
                     addressOrders,
                     // 是否正在展示更多
                     canShowMore,
                     // 订单列表展示类型
-                    key: canShowMore ? 'allOrders' : 'notReadyOrders',
+                    key: x.orders.every( o => o.base_status === '2' ) && !canShowMore? 
+                            'emptyOrders' :
+                            x.orders.every( o => o.base_status === '2' ) && canShowMore ?
+                                'allOrders' :
+                                'notReadyOrders',
                     // 已经准备好的订单
                     // readyOrders,
+                    // 是否已经结算
+                    hasBeenGivenMoney: x.orders
+                                        .filter( o => o.base_status !== '4' && o.base_status !== '5' )
+                                        .every( o => o.base_status === '3' ),
+                    // 是否发起过催款
+                    hasBeenCall: x.orders.every( o => o.base_status === '2' ),
                     // 未准备好的订单
                     notReadyOrders,
                     // 按是否准备排序的订单
@@ -196,12 +208,62 @@ Component({
         /** 催款按钮 */
         getBackMoney({ currentTarget }) {
             const userOrders = currentTarget.dataset.data;
+            const { orders } = userOrders;
             if ( !userOrders.isAllAdjusted ) {
-                wx.showToast({
+                return wx.showToast({
                     icon: 'none',
                     title: '还有未分配订单'
                 });
             }
+            const temp = {
+                tid: orders[ 0 ].tid,
+                openid: orders[ 0 ].openid,
+                oids: orders.map( o => o._id )
+            };
+
+            // 调整订单状态，并发送消息模板
+            const goAdjust = ( ) => {
+                http({
+                    data: temp,
+                    url: 'order_adjust-status',
+                    success: res => {
+                        const { status, data, message } = res;
+        
+                        // 异常情况
+                        if ( status!== 200 && message.indexOf('行程未结束') === 0 ) {
+                            return setTimeout(( ) => {
+                                this.setData({
+                                    showBtn: true
+                                });
+                            }, 2000 );
+                        }
+
+                        // 刷新列表
+                        if ( status === 200 ) {
+                            this.fetchOrder( this.data.tid );
+                        }
+
+                    }
+                })
+            };
+
+            // alert一下
+            wx.showModal({
+                title: '提示',
+                content: '催款后，客户价格/数量不能再调整',
+                success: res => {
+                    if ( res.confirm ) {
+                        goAdjust( );
+
+                    } else if ( res.cancel ) {
+                        wx.showToast({
+                            icon: 'none',
+                            title: '已取消'
+                        })
+                    }
+                }
+            });
+
         },
 
         /** 展示调整弹框 */
@@ -284,6 +346,13 @@ Component({
                 form: Object.assign({ }, form, {
                     [ key ]: detail.value
                 })
+            })
+        },
+
+        /** 跳往行程列表 */
+        goTrip( ) {
+            wx.navigateTo({
+                url: `/pages/manager-trip-list/index`
             })
         }
 
