@@ -422,11 +422,12 @@ Page({
     /** 付剩余订金 */
     payLastDepositPrice({ currentTarget }) {
         const { lastDepositPrice, notPayDepositOrders } = currentTarget.dataset.data;
-        wxPay( lastDepositPrice, ( ) => {
+        wxPay( lastDepositPrice, ({ prepay_id }) => {
             // 批量更新订单为已支付
             const pay = ( ) => http({
                 url: 'order_upadte-to-payed',
                 data: {
+                    prepay_id,
                     orderIds: notPayDepositOrders.join(',')
                 },
                 success: res => {
