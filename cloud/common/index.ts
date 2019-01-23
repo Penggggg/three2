@@ -1,7 +1,9 @@
 import * as cloud from 'wx-server-sdk';
 import * as TcbRouter from 'tcb-router';
+import * as axios from 'axios';
 import * as crypto from 'crypto';
 import * as rp from 'request-promise';
+import * as CONFIG from './config';
 
 cloud.init( );
 
@@ -359,6 +361,58 @@ export const main = async ( event, context ) => {
             return ctx.body = { status: 500 };
         }
     })
+
+    /**
+     * 消息推送
+     */
+    app.router('notification-getmoney', async( ctx, next ) => {
+        try {
+            
+            // 获取token
+            const result = await (axios as any)({
+                method: 'get',
+                url: `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${CONFIG.app.id}&secret=${CONFIG.app.secrect}`
+            });
+            
+            const { access_token, errcode } = result.data;
+
+            if ( errcode ) {
+                throw '生成access_token错误'
+            }
+
+            // 发送推送
+            const send = await (axios as any)({
+                data: {
+                    access_token,
+                    touser: 'oo-j94-6UPk0HfpG32RX1SlV7WOE',
+                    template_id: 'fWj6ya_Jn8LNb7W2Du35ZYlF-29-GR6edkQZHMQKlr8',
+                    page: 'order-list',
+                    form_id: '1548221154485',
+                    data: {
+                        "keyword1": {
+                            "value": "339208499"
+                        },
+                        "keyword2": {
+                            "value": "2015年01月05日 12:30"
+                        },
+                        "keyword3": {
+                            "value": "腾讯微信总部"
+                        }
+                    }
+                },
+                method: 'post',
+                url: `https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=${access_token}`
+            })
+
+            return ctx.body = {
+                data: send.data,
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = { message: e, status: 500 }
+        }
+    });
 
     return app.serve( );
 
