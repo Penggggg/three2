@@ -75,19 +75,27 @@
                             <!-- <view class="tog-user-phone">{{ item.address[ 0 ].phone }}</view> -->
                         </view>
                     </view>
-                    <view
-                        wx:if="{{ !item.hasBeenCall }}"
-                        class="tog-statuscn"
+                    <!-- <form
+                        report-submit="{{ true }}"
                         data-data="{{ item }}"
-                        bindtap="getBackMoney"
+                        bindsubmit="getBackMoney"
+                        wx:if="{{ !item.hasBeenCall || true }}"
                     >
-                        催款
-                    </view>
+                        <button
+                            form-type="submit"
+                            class="tog-statuscn"
+                        >
+                            催款
+                        </button>
+                    </form> -->
                     <view
-                        wx:else
                         class="tog-statuscn text"
                     >
-                        {{ !item.hasBeenGivenMoney ? '未到帐' : '已到帐' }}
+                        {{ 
+                            !item.isAllAdjusted ?
+                                '未调整' :
+                                !item.hasBeenGivenMoney ? '未到帐' : '已到帐'
+                            }}
                     </view>
                 </view>
 

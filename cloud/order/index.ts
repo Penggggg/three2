@@ -18,22 +18,24 @@ const _ = db.command;
  * createtime
  * tid,
  * pid,
- * ! cid (可为空)
- * ! sid, (可为空)
+ * cid (可为空)
+ * sid, (可为空)
  * count,
  * price,
  * groupPrice,
  * deposit_price: 商品订金 (可为空)
- *! isOccupied, 是否占库存
- * ! group_price (可为空)
+ * ! isOccupied, 是否占库存
+ * group_price (可为空)
  * type: 'custom' | 'normal' | 'pre' 自定义加单、普通加单、预订单
  * img: Array[ string ]
- * ! desc（可为空）,
+ * desc（可为空）,
  * aid
  * allocatedPrice 分配的价格
  * allocatedGroupPrice 分配团购价
  * allocatedCount 分配的数量
- *! final_price 最后成交价
+ * form_id
+ * prepay_id,
+ * ! final_price 最后成交价
  * ! base_status: 0,1,2,3,4,5 进行中（客户还可以调整自己的订单），代购已购买，已调整，已结算，已取消（买不到），已过期（支付过期）
  * ! pay_status: 0,1,2 未付款，已付订金，已付全款
  * ! deliver_status: 0,1 未发布，已发布、
@@ -372,13 +374,14 @@ export const main = async ( event, context ) => {
     app.router('upadte-to-payed', async( ctx, next ) => {
         try {
 
-            const { orderIds } = event.data;
+            const { orderIds, prepay_id } = event.data;
 
             // 更新订单字段
             await Promise.all( orderIds.split(',').map( oid => {
                 return db.collection('order').doc( oid )
                     .update({
                         data: {
+                            prepay_id,
                             pay_status: '1'
                         }
                     });
@@ -700,7 +703,7 @@ export const main = async ( event, context ) => {
     app.router('adjust-status', async( ctx, next ) => {
         try {
             const openid = event.data.openId || event.userInfo.openId; 
-            const { tid, oids } = event.data;
+            const { tid, oids, form_id } = event.data;
 
             const getWrong = message => ctx.body = {
                 message,
@@ -727,6 +730,50 @@ export const main = async ( event, context ) => {
                         }
                     });
             }));
+
+            // 获取订单的交易总价
+            // const orders$: any = await Promise.all( oids.map( oid => {
+            //     return db.collection('order')
+            //         .doc( oid )
+            //         .get( );
+            // }));
+
+            // const total_price = orders$.reduce(( x, o ) => {
+            //     const { allocatedCount,  } = o.data;
+            //     return x + 1;
+            // }, 0 );
+
+            /**
+                 * @description
+                 * 发送催款通知
+                * {
+                *     touser ( openid )
+                *     form_id
+                *     page?: string
+                *     data: { 
+                *         time
+                *         price
+                *         title
+                *     }
+                * }
+             */
+            // const mapTs = ts => {
+            //     const time = new Date( ts );
+            //     const y = time.getFullYear( );
+            //     const m = time.getMonth( ) + 1;
+            //     const d = time.getDate( );
+            //     const h = time.getHours( );
+            //     return `${y}年${m}月${d}日 ${h}时`
+            // };
+            // const notification = {
+            //     form_id,
+            //     touser: openid,
+            //     page: 'order-list',
+            //     data: {
+            //         title: trip.title,
+            //         time: mapTs( new Date( ).getTime( ))
+            //     }
+            // };
 
             return ctx.body = {
                 status: 200

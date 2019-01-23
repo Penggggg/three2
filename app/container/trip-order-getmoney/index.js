@@ -206,9 +206,11 @@ Component({
         },
 
         /** 催款按钮 */
-        getBackMoney({ currentTarget }) {
+        getBackMoney( e ) {
+            const { currentTarget, detail } = e;
             const userOrders = currentTarget.dataset.data;
             const { orders } = userOrders;
+            return console.log( e );
             if ( !userOrders.isAllAdjusted ) {
                 return wx.showToast({
                     icon: 'none',
@@ -216,6 +218,7 @@ Component({
                 });
             }
             const temp = {
+                form_id: detail.formId,
                 tid: orders[ 0 ].tid,
                 openid: orders[ 0 ].openid,
                 oids: orders.map( o => o._id )
@@ -354,7 +357,30 @@ Component({
             wx.navigateTo({
                 url: `/pages/manager-trip-list/index`
             })
+        },
+
+        test( ) {
+            // http({
+            //     data: {
+            //         touser: 'oo-j94-6UPk0HfpG32RX1SlV7WOE',
+            //         form_id: `${new Date( ).getTime( )}`,
+            //         page: 'order-list',
+            //         data: {
+            //             time: '现在',
+            //             price: '100',
+            //             title: '哈哈哈'
+            //         }
+            //     },
+            //     url: 'common_notification-getmoney',
+            //     success: res => {
+            //         console.log( res );
+            //     }
+            // })
         }
 
+    },
+
+    attached: function( ) {
+        this.test( );
     }
 })

@@ -16,9 +16,16 @@ export const wxPay = ( total_fee, successCB, completeCB ) => {
             total_fee: Math.floor( total_fee * 100 ) // 这里的单位是分，不是元
         },
         errMsg: '支付失败，请重试',
-        success: res => {
-            if ( res.status !== 200 ) { return; }
-            const { nonce_str, paySign, prepay_id, timeStamp } = res.data;
+        success: res1 => {
+            if ( res1.status !== 200 ) {
+                wx.showToast({
+                    icon: 'none',
+                    title: '支付失败，请重试'
+                });
+                completeCB && completeCB( );
+                return;
+            }
+            const { nonce_str, paySign, prepay_id, timeStamp } = res1.data;
             wx.requestPayment({
                 paySign,
                 timeStamp,
@@ -29,14 +36,14 @@ export const wxPay = ( total_fee, successCB, completeCB ) => {
                     const { errMsg } = res;
                     if ( errMsg === 'requestPayment:ok' ) {
                         // 支付成功
-                        successCB && successCB( );
+                        successCB && successCB( res1.data );
                     }
                 },
                 fail: err => {
                     wx.showToast({
                         icon: 'none',
                         title: '支付失败，请重试'
-                    })
+                    });
                 },
                 complete: ( ) => { completeCB && completeCB( );}
             });

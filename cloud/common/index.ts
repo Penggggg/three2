@@ -131,19 +131,27 @@ export const main = async ( event, context ) => {
      */
     app.router('wxpay', async( ctx, next ) => {
         try {
-            const body = '香猪测试';
-            const mch_id = '1521522781';
-            const attach = 'anything';
-            const appid = event.userInfo.appId;
-            const notify_url = 'https://whatever.com/notify';
-            const key = 'a92006250b4ca9247c02edce69f6a21a';
+            const { key, body, mch_id, attach, notify_url, spbill_create_ip } = CONFIG.wxPay;
+            const appid = CONFIG.app.id;
             const total_fee = event.data.total_fee;
-            const spbill_create_ip = '118.89.40.200';
             const openid = event.userInfo.openId;
             const nonce_str = Math.random().toString(36).substr(2, 15);
             const timeStamp = parseInt(String( Date.now() / 1000 )) + '';
             const out_trade_no = "otn" + nonce_str + timeStamp;
-    
+
+            // const body = '香猪测试';
+            // const mch_id = '1521522781';
+            // const attach = 'anything';
+            // const appid = event.userInfo.appId;
+            // const notify_url = 'https://whatever.com/notify';
+            // const key = 'a92006250b4ca9247c02edce69f6a21a';
+            // const total_fee = event.data.total_fee;
+            // const spbill_create_ip = '118.89.40.200';
+            // const openid = event.userInfo.openId;
+            // const nonce_str = Math.random().toString(36).substr(2, 15);
+            // const timeStamp = parseInt(String( Date.now() / 1000 )) + '';
+            // const out_trade_no = "otn" + nonce_str + timeStamp;
+
             const paysign = ({ ...args }) => {
                 const sa: any = [ ]
                 for ( let k in args ) {
@@ -191,11 +199,11 @@ export const main = async ( event, context ) => {
                     status: 500
                 }
             }
-    
+            console.log('eeeee', xml );
             let prepay_id = xml.split("<prepay_id>")[1].split("</prepay_id>")[0].split('[')[2].split(']')[0]
     
             let paySign = paysign({ appId: appid, nonceStr: nonce_str, package: ('prepay_id=' + prepay_id), signType: 'MD5', timeStamp: timeStamp })
-    
+            
             return ctx.body = {
                 status: 200,
                 data: { appid, nonce_str, timeStamp, prepay_id, paySign } 
@@ -363,11 +371,24 @@ export const main = async ( event, context ) => {
     })
 
     /**
-     * 消息推送
+     * 消息推送 - 催款
+     * {
+     *     touser ( openid )
+     *     form_id
+     *     page?: string
+     *     data: { 
+     *         time
+     *         price
+     *         title
+     *     }
+     * }
      */
     app.router('notification-getmoney', async( ctx, next ) => {
         try {
             
+            const page = event.data.page || 'order-list';
+            const { touser, form_id, data } = event.data;
+
             // 获取token
             const result = await (axios as any)({
                 method: 'get',
@@ -383,20 +404,23 @@ export const main = async ( event, context ) => {
             // 发送推送
             const send = await (axios as any)({
                 data: {
+                    page,
+                    touser,
+                    form_id,
                     access_token,
-                    touser: 'oo-j94-6UPk0HfpG32RX1SlV7WOE',
-                    template_id: 'fWj6ya_Jn8LNb7W2Du35ZYlF-29-GR6edkQZHMQKlr8',
-                    page: 'order-list',
-                    form_id: '1548221154485',
+                    template_id: CONFIG.notification_template.getMoney,
                     data: {
+                        // 购买时间
                         "keyword1": {
-                            "value": "339208499"
+                            "value": data.time
                         },
+                        // 订单总价
                         "keyword2": {
-                            "value": "2015年01月05日 12:30"
+                            "value": data.price
                         },
+                        // 活动名称
                         "keyword3": {
-                            "value": "腾讯微信总部"
+                            "value": data.title
                         }
                     }
                 },

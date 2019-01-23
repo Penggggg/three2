@@ -96,14 +96,19 @@
 }
 
 .tog-statuscn {
-    z-index: 100;
+    min-width:90rpx;
+    line-height:34rpx;
     top: 50%;
+    z-index: 100;
     right: 20rpx;
     color: #fff;
     font-size: 24rpx;
     position: absolute;
     padding: 8rpx 18rpx;
     border-radius: 15px;
+    display: block;
+    box-sizing: border-box;
+    min-width: 80rpx;
     transform: translate( 0, -50% );
     background: #bc4e9c;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to left, #f80759, #bc4e9c);  /* Chrome 10-25, Safari 5.1-6 */

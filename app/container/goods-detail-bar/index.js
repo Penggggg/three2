@@ -216,7 +216,7 @@ Component({
                         }, 0 );
                       
                         // 支付里面
-                        wxPay( total_fee, ( ) => {
+                        wxPay( total_fee, ({ prepay_id }) => {
             
                             // 批量更新订单为已支付
                             const pay = ( ) => {
@@ -228,7 +228,8 @@ Component({
                                             return x.pay_status === '0' || x.pay_status === '1' ? x.oid : ''
                                         })
                                         .filter( x => !!x )
-                                        .join(',')
+                                        .join(','),
+                                        prepay_id
                                     },
                                     success: res => {
                         
