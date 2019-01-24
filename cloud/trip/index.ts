@@ -28,6 +28,7 @@ const _ = db.command;
         createTime 创建时间
         updateTime 更新时间
         isClosed: 是否已经手动关闭
+        callMoneyTimes: 发起催款次数
  */
 export const main = async ( event, context ) => {
 
@@ -235,7 +236,9 @@ export const main = async ( event, context ) => {
             if ( !_id ) {
     
                 const create$ = await db.collection('trip').add({
-                    data: event.data
+                    data: Object.assign({ }, event.data, {
+                        callMoneyTimes: 0
+                    })
                 });
                 _id = create$._id;
     
@@ -280,11 +283,16 @@ export const main = async ( event, context ) => {
 
     /** 
      * @description
-     * 获取行程底下的订单数量、预测销售额
+     * 获取行程底下的订单数量、预测销售额、催款次数
      */
     app.router('order-info', async( ctx, next ) => {
         try {
             const { tid } = event.data;
+
+            /** 行程详情 */
+            const trip$ = await db.collection('trip')
+                .doc( tid )
+                .get( );
         
             // 获取行程底下所有的订单
             const orders$ = await db.collection('order')
@@ -299,10 +307,10 @@ export const main = async ( event, context ) => {
              */
             const sum = orders$.data
                 .filter( x => x.pay_status !== '0' &&
-                    ( x.base_status === '1' ) || ( x.base_status === '2' ) || ( x.base_status === '3' )
+                    (( x.base_status === '1' ) || ( x.base_status === '2' ) || ( x.base_status === '3' ))
                 )
                 .reduce(( x, y ) => {
-                    return x +  y.allocatedPrice * y.allocatedCount
+                    return x + ( y.allocatedPrice * ( y.allocatedCount || 0 ));
                 }, 0 );
 
             /**
@@ -330,7 +338,8 @@ export const main = async ( event, context ) => {
                     sum, // 销售总额
                     clients, // 客户总数
                     notPayAllClients, // 未付尾款客户数量
-                    count: orders$.data.length // 总订单数
+                    count: orders$.data.length, // 总订单数,
+                    callMoneyTimes: trip$.data.callMoneyTimes
                 }
             };
 

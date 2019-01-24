@@ -89,12 +89,17 @@
                         </button>
                     </form> -->
                     <view
+                        wx:if="{{ callMoneyTimes > 0 || !item.isAllAdjusted  }}"
                         class="tog-statuscn text"
                     >
                         {{ 
                             !item.isAllAdjusted ?
                                 '未调整' :
-                                !item.hasBeenGivenMoney ? '未到帐' : '已到帐'
+                                callMoneyTimes > 0 ?
+                                    !item.hasBeenGivenMoney ?
+                                        '未到帐' :
+                                        '已到帐' :
+                                    ''
                             }}
                     </view>
                 </view>
@@ -174,7 +179,7 @@
                     >
                         <!-- 地址信息 -->
                         <view class="tog-address-user-info-block">
-                            <view class="tog-address-user {{ item.hasBeenCall ? 'disabled' : '' }}" >
+                            <view class="tog-address-user" >
                                 {{ addressOrder.address.username }}
                             </view>
                             <view class="tog-address-info">
@@ -252,6 +257,11 @@
         bindtap="goTrip"
     >
         行程
+    </view>
+
+    <!-- 按钮 -->
+    <view class="tog-money-btn">
+        收款
     </view>
 
     <!-- 弹框 -->

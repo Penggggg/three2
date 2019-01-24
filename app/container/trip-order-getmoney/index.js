@@ -31,7 +31,8 @@ Component({
         form: { // 弹框表单
             count: null
         },
-        showBtn: false // 展示行程列表按钮
+        showBtn: false, // 展示行程列表按钮,
+        callMoneyTimes: 1 // 行程催款次数
     },
 
     /** 计算属性 */
@@ -47,7 +48,7 @@ Component({
                 let notReadyOrders = [ ];
                 // 分配不足的订单
                 const notEnough = [ ];
-                const canShowMore = showMore.find( y => y === x.user.openid );
+                const canShowMore = !!showMore.find( y => y === x.user.openid );
                 
                 // 处理已分配、未分配订单
                 x.orders.map( order => {
@@ -85,6 +86,8 @@ Component({
                             'emptyOrders' :
                             x.orders.every( o => o.base_status === '2' ) && canShowMore ?
                                 'allOrders' :
+                                !x.orders.every( o => o.base_status === '2' ) && canShowMore ?
+                                'allOrders' :
                                 'notReadyOrders',
                     // 已经准备好的订单
                     // readyOrders,
@@ -92,8 +95,6 @@ Component({
                     hasBeenGivenMoney: x.orders
                                         .filter( o => o.base_status !== '4' && o.base_status !== '5' )
                                         .every( o => o.base_status === '3' ),
-                    // 是否发起过催款
-                    hasBeenCall: x.orders.every( o => o.base_status === '2' ),
                     // 未准备好的订单
                     notReadyOrders,
                     // 按是否准备排序的订单
@@ -132,9 +133,10 @@ Component({
                 errorMsg: '加载失败，请刷新',
                 success: res => {
                     if ( res.status === 200 ) {
-                        const { clients, notPayAllClients } = res.data;
+                        const { clients, notPayAllClients, callMoneyTimes } = res.data;
                         this.setData({
                             clients,
+                            callMoneyTimes,
                             notPayAllClients
                         })
                     }
@@ -376,7 +378,10 @@ Component({
             //         console.log( res );
             //     }
             // })
-        }
+        },
+
+        /** 批量催款 */
+        
 
     },
 

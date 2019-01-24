@@ -5,7 +5,9 @@ export const wxPay = ( total_fee, successCB, completeCB ) => {
 
     if ( !total_fee ) {
         // 支付成功
-        successCB && successCB( );
+        successCB && successCB({
+            prepay_id: 0
+        });
         completeCB && completeCB( );
         return;
     }

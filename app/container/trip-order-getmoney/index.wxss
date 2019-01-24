@@ -69,7 +69,7 @@
 
 .tog-shoppinglist-block {
     margin-top: -90rpx;
-    padding: 10rpx 30rpx;
+    padding: 10rpx 30rpx 100rpx;
     box-sizing: border-box;
 }
 
@@ -447,4 +447,19 @@
     background:linear-gradient(to top right, #f80759, #bc4e9c);
     box-shadow:3px 3px 10px rgba(0,0,0,0.20);
     text-shadow:0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.tog-money-btn {
+    left: 3%;
+    width: 94%;
+    color: #fff;
+    bottom: 15rpx;
+    font-size: 24rpx;
+    position: fixed;
+    text-align: center;
+    background: #bc4e9c;
+    border-radius: 5rpx;
+    padding: 20rpx 0;
+    background:-webkit-linear-gradient(to right, #f80759, #bc4e9c);
+    background:linear-gradient(to right, #f80759, #bc4e9c);
 }
