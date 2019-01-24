@@ -408,7 +408,7 @@ export const main = async ( event, context ) => {
                     touser,
                     form_id,
                     access_token,
-                    template_id: CONFIG.notification_template.getMoney,
+                    template_id: CONFIG.notification_template.getMoney2,
                     data: {
                         // 购买时间
                         "keyword1": {

@@ -167,15 +167,15 @@
 
                 <!-- 货品地址 -->
                 <view
-                    wx:if="{{ item.canShowMore || item.notReadyOrders.length === 0 || item.hasBeenCall }}"
+                    wx:if="{{ item.canShowMore || item.notReadyOrders.length === 0 || item.hasBeenCall || item.isAllAdjusted }}"
                     class="tog-address-orders-list"
                 >
                     <view
-                        wx:for="{{ item.addressOrders }}"
                         wx:key="{{ adk }}"
                         wx:for-index="adk"
                         wx:for-item="addressOrder"
                         class="tog-address-order-item"
+                        wx:for="{{ item.addressOrders }}"
                     >
                         <!-- 地址信息 -->
                         <view class="tog-address-user-info-block">
@@ -214,6 +214,12 @@
                                 <view class="tog-address-allocated">
                                     x {{ orderitem.allocatedCount }}
                                 </view>
+                            </view>
+                            <view
+                                wx:if="{{ !addressOrder.isAllOk }}"
+                                class="tog-address-info pl"
+                            >
+                                暂无
                             </view>
                         </view>
 
@@ -260,7 +266,10 @@
     </view>
 
     <!-- 按钮 -->
-    <view class="tog-money-btn">
+    <view
+        bindtap="allGetMoney"
+        class="tog-money-btn"
+    >
         收款
     </view>
 

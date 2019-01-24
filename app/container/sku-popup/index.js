@@ -1,3 +1,4 @@
+const app = getApp( );
 // container/sku-popup/index.js
 Component({
     /**
@@ -34,6 +35,8 @@ Component({
         selectedSku: null,
         // 所选sku的购买数量
         selectdSkuCount: 1,
+        /** 是否进行了用户授权 */
+        isUserAuth: false,
     },
 
     /**
@@ -125,8 +128,26 @@ Component({
         /** 关闭弹窗 */
         close( ) {
             this.triggerEvent('close', false, null );
+        },
+        /** 监听用户授权情况 */
+        checkAuth( ) {
+            app.watch$('isUserAuth', val => {
+                if ( val === undefined ) { return; }
+                this.setData({
+                    isUserAuth: val
+                });
+            });
+        },
+        getUserAuth( ) {
+            app.getWxUserInfo(( ) => {
+                // 进行确认
+                this.confirmSelect( );
+            });
         }
     },
 
+    attached: function( ) {
+        this.checkAuth( );
+    }
 
 })

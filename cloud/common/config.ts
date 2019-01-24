@@ -4,7 +4,8 @@ export const app = {
 }
 
 export const notification_template = {
-    getMoney: 'fWj6ya_Jn8LNb7W2Du35ZYlF-29-GR6edkQZHMQKlr8'
+    getMoney: 'fWj6ya_Jn8LNb7W2Du35ZYlF-29-GR6edkQZHMQKlr8', // 自定义了一个
+    getMoney2: 'fCvCrY8_5l60svPglMvQdLlA8eHcVeDBh0N-QPv1DFk' // 业务受理
 }
 
 export const wxPay = {

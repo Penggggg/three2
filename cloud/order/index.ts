@@ -547,7 +547,8 @@ export const main = async ( event, context ) => {
             const { tid } = event.data;
             const orders$ = await db.collection('order')
                 .where({
-                    tid
+                    tid,
+                    pay_status: 1
                 })
                 .get( );
             
@@ -698,14 +699,13 @@ export const main = async ( event, context ) => {
      * !已弃用，使用批量催款、调整功能，而不是每次针对单个order进行操作
      * 催帐，调整下列订单为“已调整”，并发送消息模板
      * {
-     *    tid, openid, oids
+     *    tid, oids
      * }
      */
     app.router('adjust-status', async( ctx, next ) => {
         try {
-            const openid = event.data.openId || event.userInfo.openId; 
-            const { tid, oids, form_id } = event.data;
 
+            const { tid, oids, form_id } = event.data;
             const getWrong = message => ctx.body = {
                 message,
                 status: 400
@@ -732,50 +732,7 @@ export const main = async ( event, context ) => {
                     });
             }));
 
-            // 获取订单的交易总价
-            // const orders$: any = await Promise.all( oids.map( oid => {
-            //     return db.collection('order')
-            //         .doc( oid )
-            //         .get( );
-            // }));
-
-            // const total_price = orders$.reduce(( x, o ) => {
-            //     const { allocatedCount,  } = o.data;
-            //     return x + 1;
-            // }, 0 );
-
-            /**
-                 * @description
-                 * 发送催款通知
-                * {
-                *     touser ( openid )
-                *     form_id
-                *     page?: string
-                *     data: { 
-                *         time
-                *         price
-                *         title
-                *     }
-                * }
-             */
-            // const mapTs = ts => {
-            //     const time = new Date( ts );
-            //     const y = time.getFullYear( );
-            //     const m = time.getMonth( ) + 1;
-            //     const d = time.getDate( );
-            //     const h = time.getHours( );
-            //     return `${y}年${m}月${d}日 ${h}时`
-            // };
-            // const notification = {
-            //     form_id,
-            //     touser: openid,
-            //     page: 'order-list',
-            //     data: {
-            //         title: trip.title,
-            //         time: mapTs( new Date( ).getTime( ))
-            //     }
-            // };
-
+            
             return ctx.body = {
                 status: 200
             }

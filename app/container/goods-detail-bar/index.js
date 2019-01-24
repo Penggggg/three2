@@ -1,3 +1,4 @@
+const app = getApp( );
 const { http } = require('../../util/http.js');
 const { wxPay } = require('../../util/pay.js');
 const { createOrders } = require('../../util/order.js');
@@ -50,7 +51,9 @@ Component({
         // 选择sku的类型：cart、buy，（购物车、立即购买）
         skuSelectType: null,
         // 可用想起
-        trip: null
+        trip: null,
+        /** 是否进行了用户授权 */
+        isUserAuth: false,
     },
 
     computed: {
@@ -70,7 +73,7 @@ Component({
             if ( !openSku && e ) {
                 this.setData({
                     skuSelectType: e.currentTarget.dataset.type
-                })
+                });
             }
         },
         /** 关闭sku */
@@ -284,11 +287,28 @@ Component({
             wx.navigateTo({
                 url: e.currentTarget.dataset.url
             });
-        }
+        },
+        /** 监听用户授权情况 */
+        checkAuth( ) {
+            app.watch$('isUserAuth', val => {
+                if ( val === undefined ) { return; }
+                this.setData({
+                    isUserAuth: val
+                });
+            });
+        },
+        /** 获取用户信息授权 */
+        getUserAuth( ) {
+            app.getWxUserInfo(( ) => {
+                // 进行结算
+                this.batchSettle( );
+            });
+        },
     },
 
     attached: function( ) {
         this.fetchTrip( );
+        this.checkAuth( );
     }
 
 })

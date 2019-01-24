@@ -71,6 +71,9 @@ Component({
                 const addressOrders = x.address.map( address => {
                     return {
                         address,
+                        isAllOk: x.orders
+                            .filter( order => order.aid === address._id )
+                            .every( order => !!order.allocatedCount ),
                         orders: x.orders.filter( order => order.aid === address._id )
                     }
                 });
@@ -208,7 +211,10 @@ Component({
             });
         },
 
-        /** 催款按钮 */
+        /** 
+         * 催款按钮
+         * !已弃用
+         */
         getBackMoney( e ) {
             const { currentTarget, detail } = e;
             const userOrders = currentTarget.dataset.data;
@@ -382,7 +388,24 @@ Component({
         },
 
         /** 批量催款 */
-        
+        allGetMoney( ) {
+            const ok = this.data.clientOders$.every( o => !!o.isAllAdjusted );
+            if ( !ok ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '还有未分配订单不能收款'
+                })
+            } 
+
+            wx.showModal({
+                title: '提示',
+                content: '发送收款推送后，不能更改订单数量/价格',
+                success(res) {
+                    if ( res.confirm ) { return; }
+                    
+                }
+            })
+        }
 
     },
 

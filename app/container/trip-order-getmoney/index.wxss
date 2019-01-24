@@ -388,6 +388,10 @@
     margin-right: 15rpx;
 }
 
+.tog-address-info.pl {
+    padding-left: 45rpx;
+}
+
 .tog-address {
     font-size: 24rpx;
     color: #999;

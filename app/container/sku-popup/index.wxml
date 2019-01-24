@@ -111,7 +111,17 @@
 
             <!-- 确认按钮 -->
             <view class="sku-btn-block">
+                <!-- 用户授权按钮 -->
+                <button
+                    wx:if="{{ !isUserAuth }}"
+                    class="sku-btn lh"
+                    open-type="getUserInfo"
+                    bindgetuserinfo="getUserAuth"
+                >
+                    确定
+                </button>
                 <view
+                    wx:else
                     class="sku-btn"
                     bindtap="confirmSelect"
                 >   

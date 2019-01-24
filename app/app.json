@@ -1,9 +1,9 @@
 {
   "pages": [
     "pages/manager-trip-order/index",
+    "pages/order-list/index",
     "pages/trip-enter/index",
     "pages/coupon-list/index",
-    "pages/order-list/index",
     "pages/my/index",
     "pages/manager-trip-list/index",
     "pages/cart-list/index",

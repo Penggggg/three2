@@ -163,3 +163,7 @@
     background: #ffe8ee;
     border-radius: 5px;
 }
+
+.sku-btn.lh {
+    line-height: 45rpx;
+}
