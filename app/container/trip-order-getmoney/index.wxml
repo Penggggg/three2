@@ -270,7 +270,7 @@
         bindtap="allGetMoney"
         class="tog-money-btn"
     >
-        收款
+        一键收款
     </view>
 
     <!-- 弹框 -->
