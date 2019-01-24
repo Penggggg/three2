@@ -18,7 +18,7 @@
 }
 
 .avatar-swiper.cstm-two {
-    width: 100rpx;
+    width: 50rpx;
 }
 
 .swiper-image {
