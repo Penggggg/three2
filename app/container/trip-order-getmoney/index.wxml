@@ -26,12 +26,12 @@
         <view class="tog-money-block">
             
             <view class="tog-money-title">
-                未交尾款客户(个)
+                已交尾款客户(个)
             </view>
 
             <view class="tog-money">
                 <view class="tog-money-i">
-                    {{ notPayAllClients }}
+                    {{ clients - notPayAllClients }}
                 </view>
             </view>
 
@@ -94,7 +94,7 @@
                     >
                         {{ 
                             !item.isAllAdjusted ?
-                                '未调整' :
+                                '待分配' :
                                 callMoneyTimes > 0 ?
                                     !item.hasBeenGivenMoney ?
                                         '未到帐' :

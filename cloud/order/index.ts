@@ -673,7 +673,7 @@ export const main = async ( event, context ) => {
             if ( count + otherCount < shopping.purchase ) {
 
                 const newshopping = Object.assign({ }, shopping, {
-                    lastAllocated: shopping.purchase - count + otherCount
+                    lastAllocated: shopping.purchase - ( count + otherCount )
                 });
                 delete newshopping['_id'];
 
@@ -695,6 +695,7 @@ export const main = async ( event, context ) => {
 
     /**
      * @description
+     * !已弃用，使用批量催款、调整功能，而不是每次针对单个order进行操作
      * 催帐，调整下列订单为“已调整”，并发送消息模板
      * {
      *    tid, openid, oids

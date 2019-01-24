@@ -114,7 +114,6 @@ Component({
                 errorMsg: '加载失败，请刷新',
                 success: res => {
                     if ( res.status === 200 ) {
-                        console.log('...', res.data )
                         const { count, sum } = res.data;
                         this.setData({
                             sum,
