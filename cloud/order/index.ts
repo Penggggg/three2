@@ -642,6 +642,7 @@ export const main = async ( event, context ) => {
             const lastOrders$ = await db.collection('order')
                 .where({
                     tid, sid, pid,
+                    pay_status: _.neq('0'),
                     base_status: _.or( _.eq('1'), _.eq('2'), _.eq('3'))
                 })
                 .get( );
@@ -650,7 +651,7 @@ export const main = async ( event, context ) => {
             const otherCount: any = lastOrders
                 .filter( o => o._id !== oid )
                 .reduce(( x, y ) => {
-                    return x + y.allocatedCount
+                    return x + y.allocatedCount || 0
                 }, 0 );
 
             if ( count + otherCount > shopping.purchase ) {
@@ -670,7 +671,6 @@ export const main = async ( event, context ) => {
              * 更新清单
              * 少于总购入量时，重新调整清单的剩余分配量
              */
-
             if ( count + otherCount < shopping.purchase ) {
 
                 const newshopping = Object.assign({ }, shopping, {

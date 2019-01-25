@@ -85,6 +85,7 @@ Component({
         /** 选择sku */
         onConfirmSku( e ) {
 
+            console.log( e );
             const selectedSku = e.detail;
             const { skuSelectType } = this.data;
 
