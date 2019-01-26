@@ -356,14 +356,19 @@
                 结算
             </button>
 
-            <!-- 结算按钮 -->
-            <button
+            <!-- 结算按钮 拿到 form_id -->
+            <form
                 wx:else
-                bindtap="batchSettle"
-                class="pcl-settlet-btn"
+                report-submit="{{ true }}"
+                bindsubmit="batchSettle"
             >
+                <button
+                    form-type="submit"
+                    class="pcl-settlet-btn"
+                >
                 {{ isSettling ? '结算中...' : '结算' }}
-            </button>
+                </button>
+            </form>
 
         </view>
 

@@ -370,17 +370,20 @@ export const main = async ( event, context ) => {
     /**
      * 批量更新，订单为已支付，并且增加到购物清单
      * orderIds: "123,234,345"
+     * form_id,
+     * prepay_id
      */
     app.router('upadte-to-payed', async( ctx, next ) => {
         try {
 
-            const { orderIds, prepay_id } = event.data;
+            const { orderIds, prepay_id, form_id } = event.data;
 
             // 更新订单字段
             await Promise.all( orderIds.split(',').map( oid => {
                 return db.collection('order').doc( oid )
                     .update({
                         data: {
+                            form_id,
                             prepay_id,
                             pay_status: '1'
                         }

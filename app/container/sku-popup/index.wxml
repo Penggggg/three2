@@ -113,15 +113,22 @@
             <view class="sku-btn-block">
         
                 <!-- 用户授权按钮 -->
-                <button
+                <form
                     wx:if="{{ !isUserAuth }}"
-                    class="sku-btn lh"
-                    open-type="getUserInfo"
-                    bindgetuserinfo="getUserAuth"
+                    report-submit="{{ true }}"
                 >
-                    确定
-                </button>
-                 <form
+                    <button
+                        class="sku-btn lh"
+                        open-type="getUserInfo"
+                        report-submit="{{ true }}"
+                        bindgetuserinfo="getUserAuth"
+                    >
+                        确定
+                    </button>
+                </form>
+                
+                <!-- 拿到 form_id -->
+                <form
                     wx:else
                     report-submit="{{ true }}"
                     bindsubmit="confirmSelect"
@@ -133,13 +140,6 @@
                         确定
                     </button>
                 </form>
-                <!-- <view
-                    wx:else
-                    class="sku-btn"
-                    bindtap="confirmSelect"
-                >   
-                    确定
-                </view>   -->
             </view>
 
         </view>

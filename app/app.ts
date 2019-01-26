@@ -34,6 +34,7 @@ App<MyApp>({
     /** 初始化 */
     init( ) {
 
+        const that = this;
         // 云
         wx.cloud.init({
             traceUser: true
@@ -41,6 +42,25 @@ App<MyApp>({
         
         // 全局数据
         this.globalData$ = Object.assign({ }, this.globalData );
+
+        // watch
+        Object.keys( this.globalData ).map( key => {
+            Object.defineProperty( this.globalData, key, {
+                configurable: true,
+                enumerable: true,
+                set: function( val ) {
+                    console.log(`${key}被set`, val );
+                    const old = that.globalData$[ key ];
+                    that.globalData$[ key ] = val;
+                    if ( Array.isArray( that.watchCallBack[ key ])) {
+                        that.watchCallBack[ key ].map(func => func( val, old ));
+                    }
+                },
+                get: function( ) {
+                    return that.globalData$[ key ];
+                }
+            });
+        });
 
         // 用户信息
         wx.getSetting({
@@ -112,26 +132,29 @@ App<MyApp>({
         this.watchCallBack[ key ].push( cb );
         console.log( 'watch$....', key );
         // 立马执行一下cb
-        const old = this.globalData[ key ];
-        cb( old, old );
+        setTimeout(( ) => {
+            const val = this.globalData$[ key ];
+            const old = this.globalData[ key ];
+            cb( val, old );
+        }, 0 );
 
         // 执行set的时候，再执行一下cb
         if ( !this.watchingKeys.find( x => x === key )) {
             const that = this;
             this.watchingKeys.push( key );
-            Object.defineProperty( this.globalData, key, {
-                configurable: true,
-                enumerable: true,
-                set: function( val ) {
-                    console.log(`${key}被set`, val );
-                    const old = that.globalData$[ key ];
-                    that.globalData$[ key ] = val;
-                    that.watchCallBack[ key ].map(func => func( val, old ));
-                },
-                get: function( ) {
-                    return that.globalData$[ key ];
-                }
-            });
+            // Object.defineProperty( this.globalData, key, {
+            //     configurable: true,
+            //     enumerable: true,
+            //     set: function( val ) {
+            //         console.log(`${key}被set`, val );
+            //         const old = that.globalData$[ key ];
+            //         that.globalData$[ key ] = val;
+            //         that.watchCallBack[ key ].map(func => func( val, old ));
+            //     },
+            //     get: function( ) {
+            //         return that.globalData$[ key ];
+            //     }
+            // });
         }
     },
   

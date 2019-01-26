@@ -119,11 +119,13 @@ Component({
         },
         /** 确认 */
         confirmSelect( e ) {
-            return console.log( '????', e );
             const { selectdSkuCount, selectedSku, skuItems } = this.data;
-            this.triggerEvent('confirm', Object.assign({ }, { ...selectedSku }, {
-                count: selectdSkuCount
-            }), null );
+            this.triggerEvent('confirm', {
+                sku: Object.assign({ }, { ...selectedSku }, {
+                    count: selectdSkuCount
+                }),
+                form_id: e ? e.detail.formId : 0
+            }, null );
             this.triggerEvent('close', false, null );
         },
         /** 关闭弹窗 */

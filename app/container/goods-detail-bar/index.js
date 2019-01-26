@@ -84,9 +84,8 @@ Component({
         },
         /** 选择sku */
         onConfirmSku( e ) {
-
-            console.log( e );
-            const selectedSku = e.detail;
+            const selectedSku = e.detail.sku;
+            const { form_id } = e.detail;
             const { skuSelectType } = this.data;
 
             // 寻找当前sku的cart记录，插入_id
@@ -99,7 +98,7 @@ Component({
             if ( skuSelectType === 'cart' ) {
                 this.putCart( skuItem );
             } else if ( skuSelectType === 'buy' ) {
-                this.buy( skuItem );
+                this.buy( skuItem, form_id );
             }
         },
         /** 处理商品详情 */
@@ -172,7 +171,7 @@ Component({
 
         },
         /** 立即购买 */
-        buy( item ) {
+        buy( item, form_id ) {
 
             const { trip } = this.data;
             const { sid, pid, price, count, img, title, groupPrice } = item;
@@ -233,7 +232,8 @@ Component({
                                         })
                                         .filter( x => !!x )
                                         .join(','),
-                                        prepay_id
+                                        prepay_id,
+                                        form_id
                                     },
                                     success: res => {
                         
@@ -309,7 +309,7 @@ Component({
 
     attached: function( ) {
         this.fetchTrip( );
-        this.checkAuth( );
+        // this.checkAuth( );
     }
 
 })

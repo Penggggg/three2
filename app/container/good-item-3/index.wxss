@@ -1,6 +1,6 @@
 /* container/good-item-3/index.wxss */
 .good-item-3 {
-    width: 320rpx;
+    width: 318rpx;
     margin: 18rpx 15rpx;
     position: relative;
     border-radius: 5px;

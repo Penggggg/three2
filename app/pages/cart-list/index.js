@@ -456,6 +456,7 @@ Page({
 
     /** 监听用户授权情况 */
     checkAuth( ) {
+        console.log('---------')
         app.watch$('isUserAuth', val => {
             if ( val === undefined ) { return; }
             this.setData({
@@ -473,8 +474,7 @@ Page({
     },
 
     /** 批量进行购物车结算 */
-    batchSettle( ) {
-
+    batchSettle( e ) {
         const { cartList, selectCartIdList, trip, isSettling } = this.data;
 
         if ( isSettling ) {
@@ -565,7 +565,8 @@ Page({
                                 })
                                 .filter( x => !!x )
                                 .join(','),
-                                prepay_id
+                                prepay_id,
+                                form_id: e ? e.detail.formId : 0
                             },
                             success: res => {
                 
