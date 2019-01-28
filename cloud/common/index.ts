@@ -135,7 +135,7 @@ export const main = async ( event, context ) => {
             const appid = CONFIG.app.id;
             const total_fee = event.data.total_fee;
             const openid = event.userInfo.openId;
-            const nonce_str = Math.random().toString(36).substr(2, 15);
+            const nonce_str = Math.random( ).toString( 36 ).substr( 2, 15 );
             const timeStamp = parseInt(String( Date.now() / 1000 )) + '';
             const out_trade_no = "otn" + nonce_str + timeStamp;
 
@@ -199,7 +199,7 @@ export const main = async ( event, context ) => {
                     status: 500
                 }
             }
-            console.log('eeeee', xml );
+            console.log('eeeee', formData, xml );
             let prepay_id = xml.split("<prepay_id>")[1].split("</prepay_id>")[0].split('[')[2].split(']')[0]
     
             let paySign = paysign({ appId: appid, nonceStr: nonce_str, package: ('prepay_id=' + prepay_id), signType: 'MD5', timeStamp: timeStamp })
@@ -377,17 +377,15 @@ export const main = async ( event, context ) => {
      *     form_id
      *     page?: string
      *     data: { 
-     *         time
-     *         price
-     *         title
+     *         
      *     }
      * }
      */
     app.router('notification-getmoney', async( ctx, next ) => {
         try {
             
-            const page = event.data.page || 'order-list';
-            const { touser, form_id, data } = event.data;
+            const page = event.data.page || 'pages/order-list/index';
+            const { touser, form_id, data, prepay_id } = event.data;
 
             // 获取token
             const result = await (axios as any)({
@@ -401,33 +399,38 @@ export const main = async ( event, context ) => {
                 throw '生成access_token错误'
             }
 
+            const reqData = { };
+            const reqData$ = {
+                page,
+                touser,
+                prepay_id,
+                form_id,
+                template_id: CONFIG.notification_template.getMoney3,
+                data: {
+                    // 购买时间
+                    "keyword1": {
+                        "value": data.title
+                    },
+                    // 订单总价
+                    "keyword2": {
+                        "value": data.time
+                    }
+                }
+            };
+
+            Object.keys( reqData$ ).map( key => {
+                if ( !!reqData$[ key ]) {
+                    reqData[ key ] = reqData$[ key ];
+                }
+            });
+
             // 发送推送
             const send = await (axios as any)({
-                data: {
-                    page,
-                    touser,
-                    form_id,
-                    access_token,
-                    template_id: CONFIG.notification_template.getMoney2,
-                    data: {
-                        // 购买时间
-                        "keyword1": {
-                            "value": data.time
-                        },
-                        // 订单总价
-                        "keyword2": {
-                            "value": data.price
-                        },
-                        // 活动名称
-                        "keyword3": {
-                            "value": data.title
-                        }
-                    }
-                },
+                data: reqData,
                 method: 'post',
                 url: `https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=${access_token}`
             })
-
+  
             return ctx.body = {
                 data: send.data,
                 status: 200

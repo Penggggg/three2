@@ -281,7 +281,7 @@ Page({
             const count$ = order => {
                 return order.b === '0' ?
                     order.count :
-                    order.b === '1' || ordre.b === '2' ?
+                    order.b === '1' || order.b === '2' ?
                         order.allocatedCount === undefined || order.allocatedCount === null ? order.count : order.allocatedCount :
                         0;
             }

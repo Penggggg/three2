@@ -339,7 +339,8 @@ export const main = async ( event, context ) => {
                     clients, // 客户总数
                     notPayAllClients, // 未付尾款客户数量
                     count: orders$.data.length, // 总订单数,
-                    callMoneyTimes: trip$.data.callMoneyTimes
+                    title: trip$.data.title, // 行程名称
+                    callMoneyTimes: trip$.data.callMoneyTimes // 已发送催款次数
                 }
             };
 

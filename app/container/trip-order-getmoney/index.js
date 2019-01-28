@@ -20,6 +20,7 @@ Component({
      * 组件的初始数据
      */
     data: {
+        title: '', // 行程名称
         clients: 0, // 总客户数
         notPayAllClients: 0, // 未交尾款客户数
         canAction: false, // 是否调整完成，并进行催款
@@ -32,7 +33,7 @@ Component({
             count: null
         },
         showBtn: false, // 展示行程列表按钮,
-        callMoneyTimes: 1 // 行程催款次数
+        callMoneyTimes: 3 // 行程催款次数
     },
 
     /** 计算属性 */
@@ -110,6 +111,10 @@ Component({
             })
             console.log( meta );
             return meta;
+        },
+        lastCallMoneyTimes$( ) {
+            const { callMoneyTimes } = this.data;
+            return 3 - callMoneyTimes;
         }
     },
 
@@ -136,8 +141,9 @@ Component({
                 errorMsg: '加载失败，请刷新',
                 success: res => {
                     if ( res.status === 200 ) {
-                        const { clients, notPayAllClients, callMoneyTimes } = res.data;
+                        const { clients, notPayAllClients, callMoneyTimes, title } = res.data;
                         this.setData({
+                            title,
                             clients,
                             callMoneyTimes,
                             notPayAllClients
@@ -178,7 +184,6 @@ Component({
                 errorMsg: '加载失败，请刷新',
                 success: res => {
                     const { status, data } = res;
-                    console.log( '...', res );
                     if ( status === 200 ) {
                         this.setData({
                             clientOders: data
@@ -389,20 +394,70 @@ Component({
 
         /** 批量催款 */
         allGetMoney( ) {
+            const that = this;
+            const { callMoneyTimes } = this.data;
             const ok = this.data.clientOders$.every( o => !!o.isAllAdjusted );
             if ( !ok ) {
                 return wx.showToast({
                     icon: 'none',
-                    title: '还有未分配订单不能收款'
+                    title: '收款前请完成未分配订单'
                 })
             } 
+
+            if ( !!callMoneyTimes && callMoneyTimes >= 3 ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '已超过发送次数'
+                });
+            }
 
             wx.showModal({
                 title: '提示',
                 content: '发送收款推送后，不能更改订单数量/价格',
                 success(res) {
-                    if ( res.confirm ) { return; }
-                    
+                    if ( !res.confirm ) { return; }
+
+                    const orders$ = [ ];
+                    that.data.clientOders$.map( userOrder => {
+                        const { user, orders } = userOrder;
+                        orders.map( order => {
+                            const { _id, prepay_id, form_id, pid, sid, openid } = order;
+                            const temp = {
+                                oid: _id,
+                                prepay_id, form_id, pid, sid, openid
+                            };
+                            orders$.push( temp );
+                        });
+                    });
+
+                    const data = {
+                        tid: that.data.tid,
+                        orders: orders$,
+                        notification: {
+                            title: '您购买的商品已到货',
+                            time: `[行程]${that.data.title}`
+                        }
+                    };
+
+                    // return console.log( data );
+                    http({
+                        data,
+                        url: 'order_batch-adjust',
+                        success: res => {
+                            if ( res.status === 200 ) {
+                                setTimeout(( ) => {
+                                    wx.showToast({
+                                        duration: 200,
+                                        title: `发送成功！剩余${res.data}次发送次数`
+                                    });
+                                    that.setData({
+                                        callMoneyTimes: 3 - res.data
+                                    });
+                                }, 0 );
+                            }
+                        }
+                    });
+
                 }
             })
         }

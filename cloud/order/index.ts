@@ -35,6 +35,7 @@ const _ = db.command;
  * allocatedCount 分配的数量
  * form_id
  * prepay_id,
+ * ! canGroup 是否可以拼团
  * ! final_price 最后成交价
  * ! base_status: 0,1,2,3,4,5 进行中（客户还可以调整自己的订单），代购已购买，已调整，已结算，已取消（买不到），已过期（支付过期）
  * ! pay_status: 0,1,2 未付款，已付订金，已付全款
@@ -745,11 +746,103 @@ export const main = async ( event, context ) => {
 
     /**
      * @description
-     * ???
+     * 批量地：确认客户订单、是否团购、消息推送操作
      * {
-     *  
+     *    tid,
+     *    orders: {
+     *        oid
+     *        pid
+     *        sid
+     *        openid
+     *        form_id / prepay_id
+     *    }[ ]
+     *    notification: { 
+     *       title,
+     *       desc,
+     *       time
+     *    }[  ]
      * }
      */
+    app.router('batch-adjust', async( ctx, next ) => {
+        try {
+            const { tid, orders, notification } = event.data;
+            const getWrong = message => ctx.body = {
+                message,
+                status: 400
+            };
+
+            const trip$ = await db.collection('trip')
+                .doc( tid )
+                .get( );
+            const trip = trip$.data;
+
+            // 未结束，且未手动关闭
+            if ( new Date( ).getTime( ) < trip.end_date && !trip.isClosed ) {
+                return getWrong('行程未结束，请手动关闭当前行程');
+
+            } else if ( trip.callMoneyTimes &&  trip.callMoneyTimes >= 3 ) {
+                return getWrong(`已经发起过${trip.callMoneyTimes}次催款`);
+
+            }
+
+            // 更新订单
+            await Promise.all( orders.map( order => {
+                return db.collection('order')
+                    .doc( order.oid )
+                    .update({
+                        data: {
+                            base_status: '2',
+                            canGroup: !!orders.find( o => {
+                                return o.oid !== order.oid && o.openid !== order.openid && 
+                                    o.pid === order.pid && o.sid === order.sid
+                            })
+                        }
+                    })
+            }));
+
+            /**
+             * 消息推送
+             * !未付全款才发送
+             */
+            const users = Array.from(
+                new Set( orders.map( order => order.openid ))
+            );
+
+            const rs = await Promise.all( users.map( openid => {
+                const target = orders.find( order => order.openid === openid &&
+                    (!!order.prepay_id || !!order.form_id ));
+                return cloud.callFunction({
+                    data: {
+                        data: {
+                            touser: openid,
+                            data: notification,
+                            form_id: target.prepay_id || target.form_id
+                        },
+                        $url: 'notification-getmoney'
+                    },
+                    name: 'common'
+                })
+            }));
+ 
+            // 更新行程
+            await db.collection('trip')
+                .doc( tid )
+                .update({
+                    data: {
+                        callMoneyTimes: _.inc( 1 )
+                    }
+                });
+
+            return ctx.body = {
+                status: 200,
+                // 剩余次数
+                data: 3 - ( 1 + trip.callMoneyTimes )
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
  
    return app.serve( );
 
