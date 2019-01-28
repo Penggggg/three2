@@ -805,7 +805,15 @@ export const main = async ( event, context ) => {
              * !未付全款才发送
              */
             const users = Array.from(
-                new Set( orders.map( order => order.openid ))
+                new Set(
+                    orders
+                        .map( order => order.openid )
+                        .filter( openid => {
+                            return !!orders.find( order => {
+                                order.openid === openid && order.pay_status === '1'
+                            });
+                        })
+                )
             );
 
             const rs = await Promise.all( users.map( openid => {

@@ -421,9 +421,10 @@ Component({
                     that.data.clientOders$.map( userOrder => {
                         const { user, orders } = userOrder;
                         orders.map( order => {
-                            const { _id, prepay_id, form_id, pid, sid, openid } = order;
+                            const { _id, prepay_id, form_id, pid, sid, openid, pay_status } = order;
                             const temp = {
                                 oid: _id,
+                                pay_status,
                                 prepay_id, form_id, pid, sid, openid
                             };
                             orders$.push( temp );
@@ -439,7 +440,6 @@ Component({
                         }
                     };
 
-                    // return console.log( data );
                     http({
                         data,
                         url: 'order_batch-adjust',
@@ -447,7 +447,7 @@ Component({
                             if ( res.status === 200 ) {
                                 setTimeout(( ) => {
                                     wx.showToast({
-                                        duration: 200,
+                                        duration: 2000,
                                         title: `发送成功！剩余${res.data}次发送次数`
                                     });
                                     that.setData({
