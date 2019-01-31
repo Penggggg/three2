@@ -1,0 +1,26 @@
+<view class="con-trip-order-deliver">
+
+    <!-- 背景 -->
+    <view class="tod-bg"></view>
+
+    <!-- 内容 -->
+    <view class="tod-container">
+
+        <view class="tod-img-upload">
+            <my-img-upload
+                data-key="img"
+                max="{{ 10 }}"
+                bindchange="onImgChange"
+                hasBeenUploaded="{{ hasBeenUploaded }}"
+            />
+        </view>
+    </view>
+
+    <!-- 按钮 -->
+    <view
+        class="tod-btn"
+    >
+        分享
+    </view>
+
+</view>

@@ -7,6 +7,18 @@ const db: DB.Database = cloud.database( );
 const _ = db.command;
 
 /**
+ * @description { }
+ * @argument { db: deliver }
+ * 快递模块字段 
+ */
+　/**
+ * -------- 字段 ----------
+ * tid,
+ * imgs,
+ * type: 'deliver-img'
+ */
+
+/**
  *
  * @description 行程模块
  * -------- 字段 ----------
@@ -283,7 +295,7 @@ export const main = async ( event, context ) => {
 
     /** 
      * @description
-     * 获取行程底下的订单数量、预测销售额、催款次数
+     * 获取行程底下的基本业务数据 销售总额、客户总数、未付尾款客户数量、总订单数、行程名称、已发送催款次数
      */
     app.router('order-info', async( ctx, next ) => {
         try {
@@ -346,6 +358,70 @@ export const main = async ( event, context ) => {
 
         } catch ( e ) { return ctx.body = { status: 500 };}
     })
+
+    /**
+     * @@description
+     * 更新行程底下的快递图册
+     */
+    app.router('update-deliver', async( ctx, next ) => {
+        try {
+            const { tid, imgs } = event.data;
+            const target = await db.collection('deliver')
+                .where({
+                    tid,
+                    type: 'deliver-img'
+                })
+                .get( );
+
+            // 创建
+            if ( !target.data[ 0 ]) {
+                await db.collection('deliver')
+                    .add({
+                        data: {
+                            tid,
+                            imgs,
+                            type: 'deliver-img'
+                        }
+                    });
+            // 更新
+            } else {
+                await db.collection('deliver')
+                    .doc( String( target.data[ 0 ]._id))
+                    .update({
+                        data: {
+                            imgs
+                        }
+                    })
+            }
+
+            return ctx.body = { status: 200 };
+            
+        } catch ( e ) { return ctx.body = { status: 500 }}
+    })
+
+    /**
+     * @@description
+     * 获取行程底下的快递图册
+     */
+    app.router('deliver', async( ctx, next ) => {
+        try {
+            const { tid } = event.data;
+            const target = await db.collection('deliver')
+                .where({
+                    tid,
+                    type: 'deliver-img'
+                })
+                .get( );
+
+            return ctx.body = { 
+                status: 200,
+                data: target.data[ 0 ] ? target.data[ 0 ].imgs : [ ]
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    });
 
     return app.serve( );
 

@@ -31,7 +31,11 @@
                 bindoutline="onOutline"
             />
         </view>
-        <view wx:else>3</view>
+        <view wx:else>
+            <my-trip-order-deliver
+                tid="{{ id }}"
+            />
+        </view>
     </view>
 
 </view>
