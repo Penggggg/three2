@@ -275,6 +275,7 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ({ from }) {
+        // 获取另一个立减
         if ( from === 'button' ) {
             this.getAnotherLijian( );
         }

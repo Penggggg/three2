@@ -400,7 +400,7 @@ Component({
             if ( !ok ) {
                 return wx.showToast({
                     icon: 'none',
-                    title: '收款前请完成未分配订单'
+                    title: '请处理待分配订单'
                 })
             } 
 

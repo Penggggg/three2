@@ -22,7 +22,9 @@ Component({
         // 是否初始化
         inited: false,
         // 已上传列表
-        hasBeenUploaded: [ ]
+        hasBeenUploaded: [ ],
+        // 是否可以转发（快递页面）
+        canShare: false
     },
 
     /**
@@ -32,6 +34,35 @@ Component({
 
         init( ) {
             this.fetchImgs( );
+            this.fetchDetail( )
+        },
+
+        /** 拉取行程信息 */
+        fetchDetail( ) {
+            if ( !this.data.tid ) { return; }
+            http({
+                url: 'trip_detail',
+                data: {
+                    _id: this.data.tid
+                },
+                success: res => {
+                    const { status, data } = res;
+                    if ( status === 200 ) {
+                        const { callMoneyTimes } = data;
+                        this.setData({
+                            canShare: !!callMoneyTimes && callMoneyTimes > 0
+                        })
+                    }
+                }
+            })
+        },
+
+        /** 还不能转发 */
+        toastShare( ) {
+            wx.showToast({
+                icon: 'none',
+                title: '请先发送收款通知'
+            })
         },
 
         /** 图片更改 */
@@ -57,6 +88,7 @@ Component({
 
         /** 拉取图片 */
         fetchImgs( ) {
+            if ( !this.data.tid ) { return; }
             http({
                 url: 'trip_deliver',
                 data: {

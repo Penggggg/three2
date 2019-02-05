@@ -1,3 +1,4 @@
+const { http } = require('../../util/http.js');
 
 Page({
 
@@ -8,7 +9,7 @@ Page({
         // 行程id
         id: '',
         // 上方活动tab
-        active: 2,
+        active: 0,
         // 上方tabs
         tabs: [{
             key: 0,
@@ -21,7 +22,7 @@ Page({
             label: '快递信息'
         }],
         // 购物清单是否显示边框
-        shopping_list_outline: true
+        shopping_list_outline: true,
     },
 
     /** 切换tab */
@@ -49,13 +50,18 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        // if ( !options.id ) { return; }
+        wx.hideShareMenu( );
+        // if ( options.id ) { 
+        //     this.setData({
+        //         id: options.id
+        //     });
+        // }
+        /**
+         * !请记得去掉这段代码
+         */
         this.setData({
             id: 'XDGzG97E7L4wLIdu'
         });
-        // this.setData({
-        //     id: options.id
-        // });
     },
 
     /**
@@ -103,7 +109,11 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    onShareAppMessage: function () {
-
+    onShareAppMessage: function ( ) {
+        return {
+            title: '[有人@你]商品已到货',
+            path: `/pages/trip-deliver/index?id=${this.data.id}`,
+            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+        }
     }
 })

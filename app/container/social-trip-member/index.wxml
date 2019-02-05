@@ -7,7 +7,7 @@
 
     <!-- 头像列表 -->
     <swiper
-        class="avatar-swiper {{ imgList.length === 1 ?'cstm-one' : '' }} {{ imgList.length === 2 ?'cstm-two' : '' }}"
+        class="avatar-swiper {{ imgList.length <= 3 ?'cstm-one' : '' }}"
         autoplay="{{ true }}"
         duration="{{ 1000 }}"
         circular="{{ true }}"
