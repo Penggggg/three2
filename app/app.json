@@ -34,6 +34,7 @@
     "my-trip-order-getmoney": "./container/trip-order-getmoney/index",
     "my-trip-order-deliver": "./container/trip-order-deliver/index",
     "my-trip-order-shoppinglist": "./container/trip-order-shoppinglist/index",
+    "my-trip-rank-fairy": "./container/trip-rank-fairy/index",
     "i-drawer": "./dist/iview/drawer/index",
     "i-modal": "./dist/iview/modal/index",
     "i-icon": "./dist/iview/icon/index",

@@ -345,6 +345,10 @@
     margin-bottom: 30rpx;
 }
 
+.tog-address-order-item:not(:last-child) {
+    margin-bottom: 40rpx;
+}
+
 .tog-address-order-item:after {
     left: 5%;
     bottom: -15rpx;
@@ -396,7 +400,7 @@
     font-size: 24rpx;
     color: #999;
     box-sizing: border-box;
-    padding: 15rpx 0 15rpx 25rpx;
+    padding: 15rpx 0 25rpx 25rpx;
 }
 
 .tog-address-item {

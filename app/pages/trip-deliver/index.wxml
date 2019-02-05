@@ -2,178 +2,31 @@
 
 <view class="page-trip-deliver">
 
+    <!-- tab -->
+    <view class="ptd-tab-block">
+        <view
+            data-active="0"
+            bindtap="setTab"
+            class="ptd-tab one {{ active === 0 ? 'active' : '' }}"
+        >
+            Fairy
+        </view>
+        <view
+            data-active="1"
+            bindtap="setTab"
+            class="ptd-tab two {{ active === 1 ? 'active' : '' }}"
+        >
+            Goods
+        </view>
+    </view>
+
     <!-- 内容 -->
     <view class="ptd-content">
 
-        <!-- 前3 -->
-        <view class="ptd-top-block">
-
-            <view class="ptd-top ptd-top-three">
-                <view
-                    class="ptd-top-container"
-                    wx:if="{{ top3$[ 2 ]}}"
-                >
-                    <image
-                        class="ptd-top-img three"
-                        src="{{ top3$[ 2 ].avatar }}"
-                    />
-                    <view class="ptd-top-name">
-                        {{ top3$[ 2 ].name }}
-                    </view>
-                    <!-- <view
-                        class="ptd-top-pin"
-                        wx:if="top3$[ 2 ].pin"
-                    >
-                        {{ top3$[ 2 ].pin }}连拼团
-                    </view> -->
-                    <image
-                        mode="widthFix"
-                        class="ptd-top-icon-img three"
-                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tongguan.png"
-                    />
-                </view>
-            </view>
-
-            <view class="ptd-top ptd-top-one">
-                <view
-                    class="ptd-top-container"
-                    wx:if="{{ top3$[ 0 ]}}"
-                >
-                    <image
-                        class="ptd-top-img one"
-                        src="{{ top3$[ 0 ].avatar }}"
-                    />
-                    <view class="ptd-top-name">
-                        {{ top3$[ 0 ].name }}
-                    </view>
-                    <view
-                        class="ptd-top-pin"
-                        wx:if="top3$[ 0 ].pin"
-                    >
-                        <!-- {{ top3$[ 0 ].pin }}连拼团 -->
-                        拼团王
-                    </view>
-                    <image
-                        mode="widthFix"
-                        class="ptd-top-icon-img one"
-                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-huangguan.png"
-                    />
-                </view>
-            </view>
-
-            <view class="ptd-top ptd-top-two">
-                <view
-                    class="ptd-top-container"
-                    wx:if="{{ top3$[ 1 ]}}"
-                >
-                    <image
-                        class="ptd-top-img two"
-                        src="{{ top3$[ 1 ].avatar }}"
-                    />
-                    <view class="ptd-top-name">
-                        {{ top3$[ 1 ].name }}
-                    </view>
-                    <!-- <view
-                        class="ptd-top-pin"
-                        wx:if="top3$[ 1 ].pin"
-                    >
-                        {{ top3$[ 1 ].pin }}连拼团
-                    </view> -->
-                    <image
-                        mode="widthFix"
-                        class="ptd-top-icon-img two"
-                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-yinguan.png"
-                    />
-                </view>
-            </view>
-
-        </view>
-
-        <!-- 列表 -->
-        <view
-            class="ptd-rank-block"
-            wx:if="{{ list$.length > 0 }}"
-        >
-
-            <!-- 排行榜列表 -->
-            <view class="ptd-rank-list">
-                <view
-                    wx:for="{{ list$ }}"
-                    wx:key="{{ index }}"
-                    class="ptd-rank-item"
-                >
-
-                    <!-- 头像 -->
-                    <image
-                        mode="widthFix"
-                        src="{{ item.avatar }}"
-                        class="ptd-rank-item-img"
-                    />
-
-                    <!-- 中间内容 -->
-                    <view class="ptd-rank-info">
-                        <view class="ptd-rank-name-block">
-
-                            <!-- 姓名 -->
-                            <view class="ptd-rank-name">
-                                {{ item.name }}
-                            </view>
-
-                            <!-- title -->
-                            <view
-                                wx:if="{{ index === 0 }}"
-                                class="ptd-rank-title"
-                            >
-                                最佳省钱王
-                            </view>
-
-                            <!-- title -->
-                            <view
-                                wx:if="{{ index === 3 }}"
-                                class="ptd-rank-title"
-                            >
-                                拔草冠军💰
-                            </view>
-                        </view>
-
-                        <!-- 拼团 -->
-                        <!-- <view class="ptd-rank-pin">
-                            {{ item.pin }}连拼团
-                        </view> -->
-
-                        <!-- 商品列表 -->
-                        <view class="ptd-rank-order-block">
-                            <view
-                                class="ptd-rank-order"
-                                wx:key="{{ k }}"
-                                wx:for-index="k"
-                                wx:for-item="order"
-                                wx:for="{{ item.orders }}"
-                            >
-                                <image
-                                    mode="widthFix"
-                                    class="ptd-rank-order-img"
-                                    src="{{ order.imgs[ 0 ]}}"
-                                />
-                                <view
-                                    wx:if="{{ order.canGroup }}"
-                                    class="pdt-rank-order-pin"
-                                >
-                                    拼
-                                </view>
-                            </view>
-                        </view>
-
-                    </view>
-
-                    <!-- 排名 -->
-                    <view class="ptd-rank-rank">
-                        {{ index < 3 ? 'No.' : '' }}{{ index + 1 }}
-                    </view>
-                </view>
-            </view>
-
-        </view>
+        <my-trip-rank-fairy
+            tid="{{ id }}"
+            wx:if="{{ active === 0 }}"
+        />
 
     </view>
 

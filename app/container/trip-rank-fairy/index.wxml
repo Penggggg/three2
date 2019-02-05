@@ -1,0 +1,174 @@
+<view >
+
+    <!-- 前3 -->
+    <view class="con-ptd-top-block">
+
+        <view class="con-ptd-top con-ptd-top-three">
+            <view
+                class="con-ptd-top-container"
+                wx:if="{{ top3$[ 2 ]}}"
+            >
+                <image
+                    class="con-ptd-top-img three"
+                    src="{{ top3$[ 2 ].avatar }}"
+                />
+                <view class="con-ptd-top-name">
+                    {{ top3$[ 2 ].name }}
+                </view>
+                <!-- <view
+                    class="con-ptd-top-pin"
+                    wx:if="top3$[ 2 ].pin"
+                >
+                    {{ top3$[ 2 ].pin }}连拼团
+                </view> -->
+                <image
+                    mode="widthFix"
+                    class="con-ptd-top-icon-img three"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tongguan.png"
+                />
+            </view>
+        </view>
+
+        <view class="con-ptd-top con-ptd-top-one">
+            <view
+                class="con-ptd-top-container"
+                wx:if="{{ top3$[ 0 ]}}"
+            >
+                <image
+                    class="con-ptd-top-img one"
+                    src="{{ top3$[ 0 ].avatar }}"
+                />
+                <view class="con-ptd-top-name">
+                    {{ top3$[ 0 ].name }}
+                </view>
+                <!-- <view
+                    class="con-ptd-top-pin"
+                    wx:if="top3$[ 0 ].pin"
+                >
+                    拼团王
+                </view> -->
+                <image
+                    mode="widthFix"
+                    class="con-ptd-top-icon-img one"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-huangguan.png"
+                />
+            </view>
+        </view>
+
+        <view class="con-ptd-top con-ptd-top-two">
+            <view
+                class="con-ptd-top-container"
+                wx:if="{{ top3$[ 1 ]}}"
+            >
+                <image
+                    class="con-ptd-top-img two"
+                    src="{{ top3$[ 1 ].avatar }}"
+                />
+                <view class="con-ptd-top-name">
+                    {{ top3$[ 1 ].name }}
+                </view>
+                <!-- <view
+                    class="con-ptd-top-pin"
+                    wx:if="top3$[ 1 ].pin"
+                >
+                    {{ top3$[ 1 ].pin }}连拼团
+                </view> -->
+                <image
+                    mode="widthFix"
+                    class="con-ptd-top-icon-img two"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-yinguan.png"
+                />
+            </view>
+        </view>
+
+    </view>
+
+    <!-- 列表 -->
+    <view
+        class="con-ptd-rank-block"
+        wx:if="{{ list$.length > 0 }}"
+    >
+
+        <!-- 排行榜列表 -->
+        <view class="con-ptd-rank-list">
+            <view
+                wx:for="{{ list$ }}"
+                wx:key="{{ index }}"
+                class="con-ptd-rank-item"
+            >
+
+                <!-- 头像 -->
+                <image
+                    mode="widthFix"
+                    src="{{ item.avatar }}"
+                    class="con-ptd-rank-item-img"
+                />
+
+                <!-- 中间内容 -->
+                <view class="con-ptd-rank-info">
+                    <view class="con-ptd-rank-name-block">
+
+                        <!-- 姓名 -->
+                        <view class="con-ptd-rank-name">
+                            {{ item.name }}
+                        </view>
+
+                        <!-- title -->
+                        <view
+                            wx:if="{{ item.pinest && !item.moneyesy }}"
+                            class="con-ptd-rank-title"
+                        >
+                            拼团达人
+                        </view>
+
+                        <!-- title -->
+                        <view
+                            wx:if="{{ item.moneyesy }}"
+                            class="con-ptd-rank-title"
+                        >
+                            有钱任性💰
+                        </view>
+                    </view>
+
+                    <!-- 拼团 -->
+                    <!-- <view class="con-ptd-rank-pin">
+                        {{ item.pin }}连拼团
+                    </view> -->
+
+                    <!-- 商品列表 -->
+                    <view class="con-ptd-rank-order-block">
+                        <view
+                            wx:key="{{ k }}"
+                            wx:for-index="k"
+                            wx:for-item="order"
+                            wx:for="{{ item.orders }}"
+                            class="con-ptd-rank-order"
+                            data-pid="{{ order.pid }}"
+                            bindtap="goGoodDetail"
+                        >
+                            <image
+                                mode="widthFix"
+                                class="con-ptd-rank-order-img"
+                                src="{{ order.imgs[ 0 ]}}"
+                            />
+                            <view
+                                wx:if="{{ order.canGroup }}"
+                                class="pdt-rank-order-pin"
+                            >
+                                拼
+                            </view>
+                        </view>
+                    </view>
+
+                </view>
+
+                <!-- 排名 -->
+                <view class="con-ptd-rank-rank">
+                    {{ index < 3 ? 'No.' : '' }}{{ index + 1 }}
+                </view>
+            </view>
+        </view>
+
+    </view>
+    
+</view>

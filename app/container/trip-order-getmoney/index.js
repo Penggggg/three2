@@ -373,25 +373,6 @@ Component({
             })
         },
 
-        test( ) {
-            // http({
-            //     data: {
-            //         touser: 'oo-j94-6UPk0HfpG32RX1SlV7WOE',
-            //         form_id: `${new Date( ).getTime( )}`,
-            //         page: 'order-list',
-            //         data: {
-            //             time: '现在',
-            //             price: '100',
-            //             title: '哈哈哈'
-            //         }
-            //     },
-            //     url: 'common_notification-getmoney',
-            //     success: res => {
-            //         console.log( res );
-            //     }
-            // })
-        },
-
         /** 批量催款 */
         allGetMoney( ) {
             const that = this;
@@ -465,6 +446,6 @@ Component({
     },
 
     attached: function( ) {
-        this.test( );
+
     }
 })

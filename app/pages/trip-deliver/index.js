@@ -8,6 +8,8 @@ Page({
      */
     data: {
 
+        active: 0,
+
         /** 行程列表 */
         id: '',
 
@@ -26,30 +28,15 @@ Page({
         list: [ ]
     },
 
-    runComputed( ) {
-        computed( this, {
-
-            /** 前3 */
-            top3$: function( ) {
-                const temp = [ ...this.data.list ];
-                return temp.slice( 0, 3 );
-            },
-
-            /** 前3以外 */
-            outtop3$: function( ) {
-                const temp = [ ...this.data.list ];
-                return temp.slice( 3 );
-            },
-
-            /** 全部 */
-            list$: function( ) {
-                return [ ...this.data.list ];
-            }
-
-        })
+    /** 设置tab */
+    setTab({ currentTarget }) {
+        const { active } = currentTarget.dataset;
+        this.setData({
+            active: Number( active )
+        });
     },
 
-    /** 拉取图片 */
+    /** 拉取快递图片 */
     fetchImgs( ) {
         http({
             url: 'trip_deliver',
@@ -60,41 +47,6 @@ Page({
                 if ( res.status === 200 ) {
                     this.setData({
                         delivers: res.data
-                    })
-                }
-            }
-        })
-    },
-
-    /** 拉取客户订单列表 */
-    fetchOrder( tid ) {
-        http({
-            url: 'order_daigou-list',
-            data: {
-                tid
-            },
-            loadMsg: '加载中...',
-            errorMsg: '加载失败，请刷新',
-            success: res => {
-                const { status, data } = res;
-                if ( status === 200 ) {
-                    console.log('===', data )
-                    const metaList = data.map( meta => {
-                        const { user, orders, address } = meta;
-                        return {
-                            name: user.nickName,
-                            avatar: user.avatarUrl,
-                            orders: orders.map( o => ({
-                                pid: o.pid,
-                                imgs: o.img,
-                                canGroup: !!o.canGroup
-                            })),
-                            pin: orders.filter( o => !!o.canGroup ).length
-                        }
-                    });
-                    console.log('...', metaList )
-                    this.setData({
-                        list: metaList
                     })
                 }
             }
@@ -127,13 +79,11 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        this.runComputed( );
         if ( options.id ) { 
             this.setData({
                 id: options.id
             });
             this.fetchImgs( );
-            this.fetchOrder( options.id );
         }
 
         /**
@@ -143,7 +93,6 @@ Page({
             id: 'XDGzG97E7L4wLIdu'
         });
         this.fetchImgs( );
-        this.fetchOrder( 'XDGzG97E7L4wLIdu' );
     },
 
     /**

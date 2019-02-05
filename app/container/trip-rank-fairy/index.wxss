@@ -1,0 +1,214 @@
+.con-ptd-top-block {
+    display: flex;
+    padding: 60rpx 45rpx 20rpx;
+}
+
+.con-ptd-top {
+    flex: 1;
+}
+
+.con-ptd-top-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.con-ptd-top-name {
+    color: #fff;
+    font-size: 24rpx;
+    margin-top: 15rpx;
+    letter-spacing: 0.1em;
+}
+
+.con-ptd-top-pin {
+    top: 0;
+    right: 0;
+    color: #fff;
+    z-index: 2;
+    position: absolute;
+    font-size: 22rpx;
+    margin-top: 10rpx;
+    border-radius: 3px;
+    padding: 0rpx 12rpx;
+    letter-spacing: 0.1em;
+    background: #bc4e9c;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    background:-webkit-linear-gradient(to right, #f80759, #bc4e9c);
+    background:linear-gradient(to right, #f80759, #bc4e9c);
+}
+
+.con-ptd-top-img {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: 50%;
+    /* box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.25 ); */
+}
+
+.con-ptd-top-icon-img {
+    width: 80rpx;
+    position: absolute;
+}
+
+.con-ptd-top-icon-img.one {
+    left: 50%;
+    top: -50rpx;
+    transform: translate( -50%, 0 );
+}
+
+.con-ptd-top-icon-img.two {
+    right:12%;
+    top:-22rpx;
+    width:55rpx;
+    transform:rotate(38deg);
+}
+
+.con-ptd-top-icon-img.three {
+    left:12%;
+    top:-22rpx;
+    width:55rpx;
+    transform:rotate(-38deg);
+}
+
+.con-ptd-top-img.three {
+    border: 5px solid #f1eef1;
+}
+
+.con-ptd-top-img.one {
+    border: 5px solid #f5f568;
+}
+
+.con-ptd-top-img.two {
+    border: 5px solid #98f0f9;
+}
+
+
+.con-ptd-rank-block {
+    padding: 20rpx 30rpx;
+}
+
+.con-ptd-rank-block {
+    padding: 20rpx 35rpx;
+}
+
+.con-ptd-rank-list {
+    padding: 10rpx 0;
+    border-radius: 10px;
+    box-sizing: border-box;
+    background: rgba( 255, 255, 255, 0.25 );
+}
+
+.con-ptd-rank-item {
+    display: flex;
+    position: relative;
+    padding: 20rpx 45rpx 20rpx 25rpx;
+}
+
+.con-ptd-rank-item:not(:last-child):after {
+    content: '';
+    width: 80%;
+    height: 1px;
+    position: absolute;
+    transform: scaleY( 0.5 );
+    left: 10%;
+    bottom: 0;
+    background: rgba( 255, 255, 255, 0.80 );
+    background: -webkit-linear-gradient(to right, rgba( 255, 255, 255, 0.10 ), rgba( 255, 255, 255, 0.80 ), rgba( 255, 255, 255, 0.10 ));  
+    background: linear-gradient(to right, rgba( 255, 255, 255, 0.10 ), rgba( 255, 255, 255, 0.80 ), rgba( 255, 255, 255, 0.10 ));
+}
+
+.con-ptd-rank-item-img {
+    height: 90rpx;
+    width: 90rpx;
+    border-radius: 50%;
+    margin-right: 20rpx;
+    border: 2px solid #fff;
+    box-shadow: 3px 3px 10px rgba( 0, 0, 0, 0.15);
+}
+
+.con-ptd-rank-info {
+    flex: 1;
+    align-items: flex-start;
+}
+
+.con-ptd-rank-name-block {
+    display: flex;
+}
+
+.con-ptd-rank-title {
+    color: #fff;
+    z-index: 2;
+    font-size: 20rpx;
+    border-radius: 3px;
+    padding: 0rpx 10rpx;
+    letter-spacing: 0.1em;
+    background: #bc4e9c;
+    margin-left: 15rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    background:-webkit-linear-gradient(to right, #f80759, #bc4e9c);
+    background:linear-gradient(to right, #f80759, #bc4e9c);
+}
+
+.con-ptd-rank-name {
+    color: #fff;
+    font-size: 24rpx;
+    letter-spacing: 0.1em;
+}
+
+.con-ptd-rank-rank {
+    color: #fff;
+    font-size: 42rpx;
+    font-weight: bold;
+    font-style: italic;
+    text-shadow: 3px 3px 5px rgba( 0, 0, 0, 0.25);
+}
+
+.con-ptd-rank-pin {
+    color: #fff;
+    font-size: 22rpx;
+    display: inline-block;
+    border-radius: 5px;
+    padding: 2rpx 10rpx;
+    background: rgba( 255, 255, 255, 0.20 );
+}
+
+.con-ptd-rank-order-block {
+    width: 100%;
+    overflow-x: scroll;
+    padding: 15rpx 0 0;
+}
+
+.con-ptd-rank-order {
+    display: flex;
+    margin-right: 15rpx;
+    flex-direction: column;
+    display: inline-block;
+    position: relative;
+}
+
+.pdt-rank-order-pin {
+    top: -10rpx;
+    right: -10rpx;
+    color: #fff;
+    font-size: 20rpx;
+    border-radius: 3px;
+    padding: 0rpx 10rpx;
+    letter-spacing: 0.1em;
+    background: #bc4e9c;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    background:-webkit-linear-gradient(to right, #f80759, #bc4e9c);
+    background:linear-gradient(to right, #f80759, #bc4e9c);
+    position: absolute;
+
+}
+
+.con-ptd-rank-order-img {
+    width: 80rpx;
+    height: 90rpx;
+    border-radius: 5px;
+    border: 1px solid #fff;
+}
