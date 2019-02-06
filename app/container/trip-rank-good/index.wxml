@@ -1,0 +1,143 @@
+<view class="con-trip-rank-good">
+   
+
+    <!-- 前三排行榜 -->
+    <view class="trg-top3-block">
+
+        <view class="trg-top">
+             <view
+                class="trg-square two"
+                wx:if="{{ top3$[ 1 ]}}"
+            >
+                <image
+                    mode="widthFix"
+                    data-pid="{{ top3$[ 1 ].pid }}"
+                    bindtap="goGoodDetail"
+                    class="trg-square-img two"
+                    src="{{ top3$[ 1 ].img }}"
+                />
+            </view>
+            <view class="trg-top-name two">
+                {{ top3$[ 1 ].goodName }}
+            </view>
+            <view class="trg-top-tips">
+                {{ top3$[ 1 ].oids.length }}人购买
+            </view>
+        </view>
+
+        <view class="trg-top">
+             <view
+                class="trg-square one"
+                wx:if="{{ top3$[ 0 ]}}"
+            >
+                <image
+                    mode="widthFix"
+                     data-pid="{{ top3$[ 0 ].pid }}"
+                    bindtap="goGoodDetail"
+                    class="trg-square-img one"
+                    src="{{ top3$[ 0 ].img }}"
+                />
+            </view>
+            <view class="trg-top-name one">
+                {{ top3$[ 0 ].goodName }}
+            </view>
+            <view class="trg-top-tips">
+                {{ top3$[ 0 ].oids.length }}人购买
+            </view>
+        </view>
+
+        <view class="trg-top">
+             <view
+                class="trg-square three"
+                wx:if="{{ top3$[ 2 ]}}"
+            >
+                <image
+                    mode="widthFix"
+                     data-pid="{{ top3$[ 2 ].pid }}"
+                    bindtap="goGoodDetail"
+                    class="trg-square-img three"
+                    src="{{ top3$[ 2 ].img }}"
+                />
+            </view>
+            <view class="trg-top-name one">
+                {{ top3$[ 2 ].goodName }}
+            </view>
+            <view class="trg-top-tips">
+                {{ top3$[ 2 ].oids.length }}人购买
+            </view>
+        </view>
+
+    </view>
+
+    <!-- 前三以外的排行榜 -->
+    <view
+        class="trg-outtop3-block"
+        wx:if="{{ outtop3$.length > 0 }}"
+    >
+        <view
+            class="trg-outtop3"
+            wx:key="{{ index }}"
+            wx:for="{{ outtop3$ }}"
+        >
+            <view
+                class="trg-odd"
+                wx:if="{{ index % 2 === 0 }}"
+            >
+                <view class="trg-outtop3-content">
+                    <view
+                        data-pid="{{ item.pid }}"
+                        bindtap="goGoodDetail"
+                        class="trg-outtop3-square odd"
+                    >
+                        <image
+                            mode="widthFix"
+                            class="trg-outtop3-square-img"
+                            src="{{ item.img }}"
+                        />
+                    </view>
+                    <view class="trg-outtop3-info">
+                        <view class="trg-outtop3-name">
+                            {{ item.goodName }}
+                        </view>
+                        <view class="trg-outtop3-tips">
+                            {{ item.oids.length }}人购买
+                        </view>
+                    </view>
+                </view>
+                <view class="trg-outtop3-line"></view>
+                <view class="trg-outtop3-empty"></view>
+            </view>
+
+            <view
+                class="trg-even"
+                wx:if="{{ index % 2 !== 0 }}"
+            >
+                <view class="trg-outtop3-empty"></view>
+                <view class="trg-outtop3-line"></view>
+                <view class="trg-outtop3-content even">
+                    <view
+                        data-pid="{{ item.pid }}"
+                        bindtap="goGoodDetail"
+                        class="trg-outtop3-square even"
+                    >
+                        <image
+                            mode="widthFix"
+                            class="trg-outtop3-square-img"
+                            src="{{ item.img }}"
+                        />
+                    </view>
+                    <view class="trg-outtop3-info even">
+                        <view class="trg-outtop3-name">
+                            {{ item.goodName }}
+                        </view>
+                        <view class="trg-outtop3-tips">
+                            {{ item.oids.length }}人购买
+                        </view>
+                    </view>
+                </view>
+            </view>
+
+        </view>
+    </view>
+
+</view>

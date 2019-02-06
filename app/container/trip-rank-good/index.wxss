@@ -1,0 +1,203 @@
+.trg-top3-block {
+    display: flex;
+    padding: 50rpx 60rpx;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.trg-top {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+}
+
+.trg-square {
+    width: 140rpx;
+    height: 140rpx;
+    background: #fff;
+    overflow: hidden;
+    transform: rotate( 45deg );
+    border: 2px solid #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 25px 1px rgba(0,0,0,0.25);
+}
+
+.trg-square.one {
+    width: 200rpx;
+    height: 200rpx;
+    box-shadow: 0 0 25px 1px yellow;
+}
+
+.trg-square.two,
+.trg-square.three {
+    width: 140rpx;
+    height: 140rpx;
+    box-shadow: 0 0 25px 1px rgba(0,0,0,0.25);
+}
+
+.trg-square-img {
+    transform: rotate( -45deg );
+}
+
+.trg-square-img.one {
+    width: 280rpx;
+    margin-top: -40rpx;
+    margin-left: -40rpx;
+}
+
+.trg-square-img.two,
+.trg-square-img.three {
+    width: 220rpx;
+    margin-top: -40rpx;
+    margin-left: -40rpx;
+}
+
+.trg-top-name {
+    color: #fff;
+    font-size: 26rpx;
+    margin-top: 40rpx;
+    letter-spacing: 0.1em;
+    overflow:hidden; 
+    display:-webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.trg-top-name.one {
+    margin-top: 50rpx;
+}
+
+.trg-top-tips {
+    top: 0;
+    right: -8rpx;
+    z-index: 2;
+    display: flex;
+    color: #fff;
+    font-size: 20rpx;
+    border-radius: 3px;
+    padding: 0rpx 10rpx;
+    margin-left: 15rpx;
+    background: #bc4e9c;
+    align-items: center;
+    position: absolute;
+    letter-spacing: 0.1em;
+    justify-content: center;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    background:-webkit-linear-gradient(to right, #f80759, #bc4e9c);
+    background:linear-gradient(to right, #f80759, #bc4e9c);
+}
+
+.trg-outtop3-block {
+    margin-top: 40rpx;
+    padding: 0 0rpx 0;
+    box-sizing: border-box;
+}
+
+.trg-outtop3 {
+
+}
+
+.trg-odd,
+.trg-even {
+    display: flex;
+    margin-top: -40rpx;
+}
+
+.trg-outtop3-content {
+    flex: 1;
+    height: 148rpx;
+    position: relative;
+    background: rgba( 255, 255, 255, 0.2 );
+    background:-webkit-linear-gradient(to right, rgba( 255, 255, 255, 0 ), rgba( 255, 255, 255, 0.2 ));
+    background:linear-gradient(to right, rgba( 255, 255, 255, 0 ), rgba( 255, 255, 255, 0.2 ));
+}
+
+.trg-outtop3-content.even {
+    background: rgba( 255, 255, 255, 0.2 );
+    background:-webkit-linear-gradient(to right, rgba( 255, 255, 255, 0.2 ), rgba( 255, 255, 255, 0 ));
+    background:linear-gradient(to right, rgba( 255, 255, 255, 0.2 ), rgba( 255, 255, 255, 0 ));
+
+}
+
+.trg-outtop3-line {
+    width: 80rpx;
+}
+
+.trg-outtop3-empty {
+    flex: 1;
+    /* background: #fff; */
+}
+
+.trg-outtop3-square {
+    width: 120rpx;
+    height: 120rpx;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    transform: rotate( 45deg );
+    box-shadow: 0 0 25px 1px rgba(0,0,0,0.25);
+}
+
+.trg-outtop3-square.odd {
+    top: 12rpx;
+    right: -42rpx;
+    position: absolute;
+}
+
+.trg-outtop3-square.even {
+    top: 12rpx;
+    left: -42rpx;
+    position: absolute;
+}
+
+.trg-outtop3-square-img {
+    width: 180rpx;
+    margin-top: -40rpx;
+    margin-left: -40rpx;
+    transform: rotate( -45deg );
+}
+
+.trg-outtop3-info {
+    width: 65%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.trg-outtop3-info.even {
+    top: 0;
+    left: 35%;
+    position: absolute;
+    align-items: flex-start;
+}
+
+.trg-outtop3-name {
+    color: #fff;
+    font-size: 26rpx;
+    text-align: right;
+    letter-spacing: 0.1em;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    overflow:hidden; 
+    display:-webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;
+}
+
+.trg-outtop3-tips {
+    z-index: 2;
+    display: flex;
+    font-size: 20rpx;
+    letter-spacing: 0.1em;
+    color: rgba( 255, 255, 255, 0.8 );
+}

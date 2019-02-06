@@ -8,7 +8,7 @@ Page({
      */
     data: {
 
-        active: 0,
+        active: 1,
 
         /** 行程列表 */
         id: '',

@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/trip-deliver/index",
+    "pages/manager-goods-list/index",
     "pages/manager-trip-order/index",
     "pages/trip-enter/index",
     "pages/order-list/index",
@@ -10,7 +11,6 @@
     "pages/manager-trip-list/index",
     "pages/manager-trip-detail/index",
     "pages/manager-goods-detail/index",
-    "pages/manager-goods-list/index",
     "pages/concat/index",
     "pages/manager-person-info/index",
     "pages/index/index",
@@ -35,6 +35,7 @@
     "my-trip-order-deliver": "./container/trip-order-deliver/index",
     "my-trip-order-shoppinglist": "./container/trip-order-shoppinglist/index",
     "my-trip-rank-fairy": "./container/trip-rank-fairy/index",
+    "my-trip-rank-good": "./container/trip-rank-good/index",
     "i-drawer": "./dist/iview/drawer/index",
     "i-modal": "./dist/iview/modal/index",
     "i-icon": "./dist/iview/icon/index",

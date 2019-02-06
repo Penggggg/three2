@@ -1,5 +1,7 @@
 const { http } = require('../../util/http.js');
-
+/**
+ * 快递页面底下的用户排行榜
+ */
 Component({
 
     behaviors: [require('../../behaviores/computed/index.js')],
@@ -76,7 +78,6 @@ Component({
                 success: res => {
                     const { status, data } = res;
                     if ( status === 200 ) {
-                        console.log('===', data )
                         const metaList = data.map( meta => {
                             const { user, orders, address } = meta;
                             return {
@@ -115,8 +116,6 @@ Component({
                             moneyesy: meta.money >= sortByMoney[ 0 ].money
                         }));
 
-
-                        console.log('...', sort3 )
                         this.setData({
                             list: sort3
                         })

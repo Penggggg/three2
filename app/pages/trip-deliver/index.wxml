@@ -9,14 +9,14 @@
             bindtap="setTab"
             class="ptd-tab one {{ active === 0 ? 'active' : '' }}"
         >
-            拼团榜
+            达人榜
         </view>
         <view
             data-active="1"
             bindtap="setTab"
             class="ptd-tab two {{ active === 1 ? 'active' : '' }}"
         >
-            热门榜
+            拔草榜
         </view>
     </view>
 
@@ -26,6 +26,11 @@
         <my-trip-rank-fairy
             tid="{{ id }}"
             wx:if="{{ active === 0 }}"
+        />
+
+        <my-trip-rank-good
+            tid="{{ id }}"
+            wx:if="{{ active === 1 }}"
         />
 
     </view>
