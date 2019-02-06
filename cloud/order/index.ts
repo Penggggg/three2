@@ -810,12 +810,13 @@ export const main = async ( event, context ) => {
                         .map( order => order.openid )
                         .filter( openid => {
                             return !!orders.find( order => {
-                                order.openid === openid && order.pay_status === '1'
+                                return order.openid === openid && String( order.pay_status ) === '1'
                             });
                         })
                 )
             );
 
+            // console.log('------ 以下用户发送推送 ------', orders, users );
             const rs = await Promise.all( users.map( openid => {
                 const target = orders.find( order => order.openid === openid &&
                     (!!order.prepay_id || !!order.form_id ));

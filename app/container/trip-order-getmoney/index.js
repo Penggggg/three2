@@ -429,7 +429,7 @@ Component({
                                 setTimeout(( ) => {
                                     wx.showToast({
                                         duration: 2000,
-                                        title: `发送成功！剩余${res.data}次发送次数`
+                                        title: `发送成功`
                                     });
                                     that.setData({
                                         callMoneyTimes: 3 - res.data
