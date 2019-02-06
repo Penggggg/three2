@@ -8,7 +8,7 @@ Page({
      */
     data: {
 
-        active: 1,
+        active: 0,
 
         /** 行程列表 */
         id: '',
@@ -16,16 +16,9 @@ Page({
         /** 快递图片 */
         delivers: [ ],
 
-        /**
-         * 客户订单列表
-         * {
-         *      pin // 拼团数据
-         *      name // 姓名
-         *      avatar // 头像
-         *      orders // 订单
-         * }[ ]
-         */
-        list: [ ]
+        /** 按钮 */
+        showDeliverBtn: false
+
     },
 
     /** 设置tab */
@@ -73,6 +66,12 @@ Page({
         wx.navigateTo({
             url: '/pages/trip-enter/index'
         });
+    },
+
+    onIsBuyer({ detail }) {
+        this.setData({
+            showDeliverBtn: detail
+        })
     },
 
     /**

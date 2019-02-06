@@ -25,6 +25,7 @@
 
         <my-trip-rank-fairy
             tid="{{ id }}"
+            bindisbuyer="onIsBuyer"
             wx:if="{{ active === 0 }}"
         />
 
@@ -40,6 +41,7 @@
         <view
             class="ptd-btn"
             bindtap="showDeliver"
+            wx:if="{{ showDeliverBtn }}"
         >
             我的快递
         </view>

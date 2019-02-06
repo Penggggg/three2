@@ -75,6 +75,7 @@ App<MyApp>({
 
     },
 
+    /** 是否为新客 */
     getIsNewCustom( ) {
         http({
             url: 'common_is-new-customer',
@@ -118,7 +119,7 @@ App<MyApp>({
 
     /** 设置全局数据 */
     setGlobalData( obj ) {
-        console.log( 'setGlobalData...', obj )
+        console.log( '【---- Global Set ----】', obj )
         Object.keys( obj ).map( key => {
             this.globalData[ key ] = obj[ key ];
         });

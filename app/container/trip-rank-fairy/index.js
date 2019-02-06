@@ -1,4 +1,6 @@
 const { http } = require('../../util/http.js');
+const app = getApp( );
+
 /**
  * 快递页面底下的用户排行榜
  */
@@ -33,7 +35,9 @@ Component({
          *      money // 订单总价
          * }[ ]
          */
-        list: [ ]
+        list: [ ],
+
+        openid: ''
     },
 
     /** 计算属性 */
@@ -54,6 +58,14 @@ Component({
         /** 全部 */
         list$: function( ) {
             return [ ...this.data.list ];
+        },
+
+        /** 登录人是否在清单列表中 */
+        isBuyer$: function( ) {
+            const { openid, list } = this.data;
+            const isBuyer = !!list.find( x => x.openid === openid );
+            !!this.triggerEvent && this.triggerEvent('isbuyer', isBuyer );
+            return isBuyer;
         }
     },
 
@@ -77,10 +89,12 @@ Component({
                 errorMsg: '加载失败，请刷新',
                 success: res => {
                     const { status, data } = res;
+
                     if ( status === 200 ) {
                         const metaList = data.map( meta => {
                             const { user, orders, address } = meta;
                             return {
+                                openid: user.openid,
                                 name: user.nickName,
                                 avatar: user.avatarUrl,
                                 orders: orders
@@ -130,7 +144,20 @@ Component({
             wx.navigateTo({
                 url: `/pages/goods-detail/index?id=${pid}`
             })
-        }
+        },
 
+        /** 检查openid以及是否能展示按钮 */
+        checkAuth( ) {
+            app.watch$('openid', val => {
+                this.setData({
+                    openid: val
+                });
+            });
+        },
+
+    },
+
+    attached: function( ) {
+        this.checkAuth( );
     }
 })
