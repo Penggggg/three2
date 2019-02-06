@@ -194,16 +194,18 @@
     top: -10rpx;
     right: -10rpx;
     color: #fff;
-    font-size: 20rpx;
+    font-size: 16rpx;
     border-radius: 3px;
-    padding: 0rpx 10rpx;
+    /* padding: 0rpx 8rpx; */
     letter-spacing: 0.1em;
     background: #bc4e9c;
     text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
     background:-webkit-linear-gradient(to right, #f80759, #bc4e9c);
     background:linear-gradient(to right, #f80759, #bc4e9c);
     position: absolute;
-
+    border-radius: 50%;
+    width: 15rpx;
+    height: 15rpx;
 }
 
 .con-ptd-rank-order-img {

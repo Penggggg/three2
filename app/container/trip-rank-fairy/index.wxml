@@ -155,7 +155,7 @@
                                 wx:if="{{ order.canGroup }}"
                                 class="pdt-rank-order-pin"
                             >
-                                拼
+                                <!-- 拼 -->
                             </view>
                         </view>
                     </view>

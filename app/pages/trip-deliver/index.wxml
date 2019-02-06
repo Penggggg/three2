@@ -9,14 +9,14 @@
             bindtap="setTab"
             class="ptd-tab one {{ active === 0 ? 'active' : '' }}"
         >
-            Fairy
+            拼团榜
         </view>
         <view
             data-active="1"
             bindtap="setTab"
             class="ptd-tab two {{ active === 1 ? 'active' : '' }}"
         >
-            Goods
+            热门榜
         </view>
     </view>
 
