@@ -18,11 +18,9 @@
     width: 120%;
     height: 380rpx;
     position: fixed;
-    background: linear-gradient(to bottom, #ff5777, #ffe8ee );
-    -webkit-filter: blur(10px); 
-		       -moz-filter: blur(10px);
-		        -ms-filter: blur(10px);    
-		            filter: blur(10px);
+    background: #bc4e9c;  
+    background: -webkit-linear-gradient(to bottom, #f80759, #bc4e9c);  
+    background: linear-gradient(to bottom, #f80759, #bc4e9c); 
 }
 
 .pol-tabs {
@@ -71,7 +69,7 @@
     border-radius: 10px;
     padding-bottom: 10rpx;
     margin-bottom: 25rpx;
-    box-shadow: 3px 3px 10px rgba(0,0,0,0.20);
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.22);
 }
 
 .pol-trip-header-block {
@@ -95,13 +93,13 @@
 }
 
 .pol-trip-name {
-    color: #666;
+    color: #bfbfbf;
     font-size: 24rpx;
     margin-right: 10rpx;
 }
 
 .pol-trip-time {
-    color: #999;
+    color: #bfbfbf;
     font-size: 20rpx;
     display: inline;
     margin-right: 15rpx;
@@ -112,8 +110,21 @@
 }
 
 .pol-trip-header-status {
-    color: #ff5777;
-    font-size: 24rpx;
+    margin-top: 10rpx;
+    min-width:90rpx;
+    line-height:34rpx;
+    color: #fff;
+    font-size: 22rpx;
+    padding: 8rpx 18rpx;
+    border-radius: 15px;
+    display: block;
+    box-sizing: border-box;
+    min-width: 80rpx;
+    border-radius: 3px;
+    background: #bc4e9c;  
+    background: -webkit-linear-gradient(to left, #f80759, #bc4e9c); 
+    background: linear-gradient(to left, #f80759, #bc4e9c); 
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
 }
 
 .pol-trip-order-item {
@@ -132,11 +143,11 @@
 .pol-trip-order-img {
     width: 120rpx;
     height: 120rpx;
-    padding: 5rpx;
     background: #fff;
     border-radius: 5px;
+    border: 2px solid #fff;
     /* margin-right: 20rpx; */
-    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 3px 3px 13px rgba(0, 0, 0, 0.2);
 }
 
 .pol-trip-order-img-cover.disabled {
@@ -156,22 +167,38 @@
 
 .pol-trip-order-title-block {
     flex: 5;
+    display: flex;
     margin-right: 30rpx;
     margin-left: 20rpx;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
 }
 
 .pol-trip-order-name {
-    color: #666;
+    color: #bfbfbf;
     font-size: 24rpx;
+    overflow:hidden; 
+    display:-webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;
 }
 
 .pol-trip-order-name.disabled {
-    color: #999;
+    color: #bfbfbf;
 }
 
 .pol-trip-order-standar {
-    color: #999;
-    font-size: 24rpx;
+    font-size: 22rpx;
+    border-radius: 5px;
+    background: #f5f5f5;
+    padding: 2rpx 15rpx;
+    display: inline-block;
+    margin-right: 10rpx;
+    color: #bfbfbf; 
+    margin-top: 10rpx;
 }
 
 .pol-trip-order-price-block {
@@ -180,7 +207,7 @@
 }
 
 .pol-trip-order-price {
-    color: #333;
+    color: #999;
     font-size: 24rpx;
 }
 
@@ -204,7 +231,22 @@
     padding: 2rpx 10rpx;
     border-radius: 2px;
     margin-right: 10rpx;
+    margin-top: 12rpx;
     border: 1px solid #ff5777;
+}
+
+.pol-trip-order-status-fix {
+    top: -8rpx;
+    left: -8rpx;
+    position: absolute;
+    font-size: 16rpx;
+    color: #fff;
+    padding: 2rpx 10rpx;
+    border-radius: 3px;
+    display: inline-block;
+    background: #bc4e9c;  
+    background: -webkit-linear-gradient(to left, #f80759, #bc4e9c);  
+    background: linear-gradient(to left, #f80759, #bc4e9c);    
 }
 
 .pol-trip-order-sum-block {
@@ -223,13 +265,13 @@
 }
 
 .pol-trip-order-sum {
-    color: #666;
+    color: #999;
     font-size: 22rpx;
     margin-right: 15rpx;
 }
 
 .pol-trip-order-totalprice {
-    color: #666;
+    color: #999;
     font-size: 22rpx;
 }
 
@@ -238,7 +280,7 @@
 }
 
 .pol-totalprice {
-    color: #666;
+    color: #999;
     display: inline;
     font-size: 22rpx;
 }
@@ -275,9 +317,9 @@
 .pol-trip-order-btn {
     color: #999;
     font-size: 24rpx;
-    padding: 12rpx 20rpx;
+    padding: 11rpx 22rpx;
     border-radius: 15px;
-    border: 1px solid rgba( 0, 0, 0, 0.2 );
+    border: 1px solid rgba( 0, 0, 0, 0.15 );
 }
 
 .pol-trip-order-btn:not(:last-child) {
@@ -285,8 +327,17 @@
 }
 
 .pol-trip-order-btn.purple {
-    color: #ff5777;
-    border: 1px solid #ff5777;
+    color: #fff;
+    border: none;
+    display: flex;
+    font-size: 24rpx;
+    padding: 10rpx 20rpx;
+    align-items: center;
+    border-radius: 15px;
+    background: #bc4e9c; 
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    background: -webkit-linear-gradient(to right, #f80759, #bc4e9c);  
+    background: linear-gradient(to right, #f80759, #bc4e9c);
 }
 
 .pol-order-more {

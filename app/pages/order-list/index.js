@@ -79,6 +79,14 @@ Page({
         this.fetchList( index );
     },
 
+    /** 设置微信bar */
+    setNavBar( ) {
+        wx.setNavigationBarColor({
+            frontColor: '#ffffff',
+            backgroundColor: '#f80759'
+        })
+    },
+
     /** 获取当前行程 */
     fetchCurrentTrip( ) {
         http({
@@ -147,8 +155,11 @@ Page({
                     loading: data.data.length === 0
                 });
 
+                // 有订单则显示订单，并设置bar
                 if ( data.data.length !== 0 ) {
+                    this.setNavBar( );
                     this.covertOrder( );
+                // 无订单则显示默认文案
                 } else {
                     this.fetchCurrentTrip( );
                 }
@@ -175,6 +186,30 @@ Page({
         })
     },
 
+    /** 跳到快递排行榜页面 */
+    goDeliver({ currentTarget }) {
+        wx.navigateTo({
+            url: `/pages/trip-deliver/index?id=${currentTarget.dataset.tid}`
+        });
+    },
+
+    /** 去商品详情 */
+    goGoodDetail({ currentTarget }) {
+        const { pid } = currentTarget.dataset.data;
+        wx.navigateTo({
+            url: `/pages/goods-detail/index?id=${pid}`
+        })
+    },
+
+    /** 跳到行程入口 */
+    goTripEntry({ currentTarget }) {
+        if ( !currentTarget || (!!currentTarget && !currentTarget.dataset.isClosed )) {
+            wx.navigateTo({
+                url: `/pages/trip-enter/index`
+            });
+        }
+    },
+
     /** 转换订单列表，为行程订单列表 */
     covertOrder( ) {
 
@@ -199,7 +234,7 @@ Page({
 
         const { metaList } = this.data;
         const orderObj = { };
-
+        // console.log('ooooooo', metaList );
         metaList.map( order => {
 
             let isNeedPrePay = true;
@@ -241,22 +276,22 @@ Page({
                 const d = order.deliver_status;
 
                 if ( isNeedPrePay && p === '0' && b === '5' ) {
-                    statusCN = [ '支付过期，请重新购买' ];
+                    statusCN = [ '支付过期' ];
 
                 } else if ( isNeedPrePay && p === '0' && b !== '5' && b !== '4' ) {
                     statusCN = [ '待付订金' ]
 
                 } else if ( p === '1' && b === '0' ) {
-                    statusCN = [ '跑腿购买中' ]
+                    statusCN = [ '购买中' ]
 
                 } else if ( p === '1' && b === '1' ) {
-                    statusCN = [ '已购买，结算中' ] 
+                    statusCN = [ '结算中' ] 
 
                 } else if ( p === '1' && b === '2' ) {
-                    statusCN = [ '已购买，待付款' ]
+                    statusCN = [ '待付款' ]
 
                 } else if ( p === '1' && b === '4' ) {
-                    statusCN = [ '买不到，退款中' ]
+                    statusCN = [ '已取消' ]
 
                 } else if ( p === '2' && d === '0' ) {
                     statusCN = [ '未发货' ]
@@ -266,7 +301,7 @@ Page({
                 } 
 
                 if ( b === '1' && count - allocatedCount > 0 ) {
-                    const index = statusCN.findIndex( x => x === '已购买，结算中');
+                    const index = statusCN.findIndex( x => x === '结算中');
                     statusCN.splice( index, 1, '货源不足');
                 }
 
@@ -278,18 +313,26 @@ Page({
                 })
             };
 
+            // 创建一个新的 行程键值对
             if ( !orderObj[ order.tid ]) {
                 const d = new Date( order.trip.start_date );
+                const d2 = new Date( order.trip.end_date );
                 orderObj[ order.tid ] = {
                     tid: order.tid,
+                    isClosed: order.trip.isClosed,
                     tripPostage: order.trip.postage,
                     tripPostagefree_atleast: order.trip.postagefree_atleast,
                     tripName: order.trip.title,
                     tripPayment: order.trip.payment,
-                    tripTime: `${d.getMonth( )+1}月${d.getDate( )}出发`,
+                    tripTime: order.trip.isClosed ?
+                        '已结束' :
+                        new Date( ).getTime( ) >= order.trip.start_date ?
+                            `${d2.getMonth( )+1}月${d2.getDate( )}结束` :
+                            `${d.getMonth( )+1}月${d.getDate( )}出发`,
                     meta: [ decorateOrder( order, isNeedPrePay )]
                 };
 
+            // 在行程键值对插入新的订单信息
             } else {
                 orderObj[ order.tid ] = Object.assign({ }, orderObj[ order.tid ], {
                     meta: [ ...orderObj[ order.tid ].meta, decorateOrder( order, isNeedPrePay )]
@@ -306,25 +349,25 @@ Page({
             
             //  处理订单整体状态
             if ( orders.filter( x => x.b !== '4' && x.b !== '5').some( x => x.statusCN[ 0 ] === '待付订金' )) {
-                tripStatusCN = '有未付订金';
+                tripStatusCN = '待付订金';
 
             } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '1' && ( x.b === '0' || x.b === '1' ))) {
-                tripStatusCN = '跑腿购买中';
+                tripStatusCN = '购买中';
 
             } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '1' && x.b === '2' )) {
                 tripStatusCN = '待付尾款';
 
             } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
                 && orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.d === '0')) {
-                tripStatusCN = '已付款，未发货';
+                tripStatusCN = '待发货';
 
             } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
                 && orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.d === '1')) {
-                tripStatusCN = '已付款，已发货';
+                tripStatusCN = '已发货';
 
             } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
                 && orders.some( x => x.d === '0') && orders.some( x => x.d === '1')) {
-                tripStatusCN = '已付款，部分发货';
+                tripStatusCN = '部分发货';
             }
             tripOrders['tripStatusCN'] = tripStatusCN;
 
@@ -336,6 +379,9 @@ Page({
                         order.allocatedCount === undefined || order.allocatedCount === null ? order.count : order.allocatedCount :
                         0;
             }
+
+            // 行程关闭状态
+            // tripOrders['isClose'] = orders.every( x => x. );
 
             // 处理订单商品数量
             const sum = orders.reduce(( x, y ) => {
@@ -377,7 +423,8 @@ Page({
 
             // 已付订金
             const hasPayDepositPrice = orders.reduce(( x, y ) => {
-                const depositPrice = y.depositPrice || 0;
+                const depositPrice = String( y.pay_status ) !== '0' ?
+                    y.depositPrice || 0 : 0;
                 return x + depositPrice * y.count;
             }, 0 )
             tripOrders['hasPayDepositPrice'] = hasPayDepositPrice;
@@ -462,14 +509,6 @@ Page({
         });
     },
 
-    /** 去商品详情 */
-    goGoodDetail({ currentTarget }) {
-        const { pid } = currentTarget.dataset.data;
-        wx.navigateTo({
-            url: `/pages/goods-detail/index?id=${pid}`
-        })
-    },
-
     /** 付剩余订金 */
     payLastDepositPrice({ currentTarget }) {
         const { lastDepositPrice, notPayDepositOrders } = currentTarget.dataset.data;
@@ -507,27 +546,12 @@ Page({
         }, ( ) => { });
     },
 
-    /** 跳到行程入口 */
-    goTripEntry( ) {
-        wx.navigateTo({
-            url: `/pages/trip-enter/index`
-        });
-    },
-
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
         this.watchRole( );
         wx.hideShareMenu( );
-        this.setData({
-            skip: 0,
-            page: 0
-        })
-        setTimeout(( ) => {
-            this.fetchCoupons( );
-            this.fetchList( this.data.active );
-        }, 0 );
     },
 
     /**
@@ -541,7 +565,14 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function ( ) {
-        
+        this.setData({
+            skip: 0,
+            page: 0
+        })
+        setTimeout(( ) => {
+            this.fetchCoupons( );
+            this.fetchList( this.data.active );
+        }, 0 );
     },
 
     /**

@@ -300,7 +300,7 @@ export const main = async ( event, context ) => {
                 .where( where$ )
                 .count( );
 
-            // 获取数据
+            // 获取订单数据
             const data$ = await db.collection('order')
                 .where( where$ )
                 .orderBy('createTime', 'desc')
@@ -333,12 +333,20 @@ export const main = async ( event, context ) => {
             }
 
             const meta = [ ...data$.data, ...fix$.data ];
-            const trips$ = await Promise.all( meta.map( x => {
+
+            // 这里的行程详情用 new Set的方式查询
+            const tripIds = Array.from(
+                new Set( meta.map( m => m.tid ))
+            );
+
+            const trips$ = await Promise.all( tripIds.map( tid => {
                 return db.collection('trip')
                     .where({
-                        _id: x.tid
+                        _id: tid
                     })
                     .field({
+                        end_date: true,
+                        isClosed: true,
                         title: true,
                         start_date: true,
                         payment: true,
@@ -350,7 +358,8 @@ export const main = async ( event, context ) => {
      
             // 聚合行程数据
             const meta2 = meta.map(( x, i ) => Object.assign({ }, x, {
-                trip: trips$[ i ].data[ 0 ]
+                // trip: trips$[ i ].data[ 0 ]
+                trip: (trips$.find( y => y.data[ 0 ]._id === x.tid ) as any).data[ 0 ]
             }));
 
             return ctx.body = {
