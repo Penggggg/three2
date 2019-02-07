@@ -405,7 +405,7 @@
 }
 
 .pol-swiper {
-    width: 610rpx;
+    width: 620rpx;
     margin-top: 30rpx;
     padding-left: 70rpx;
     overflow: visible;
@@ -413,15 +413,15 @@
 }
 
 .pol-swiper.one {
-    width: 250rpx;
+    width: 260rpx;
 }
 
 .pol-swiper.two {
-    width: 430rpx;
+    width: 440rpx;
 }
 
 .pol-swiper.three {
-    width: 610rpx;
+    width: 620rpx;
 }
 
 .swiper-visible {
