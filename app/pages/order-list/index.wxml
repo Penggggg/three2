@@ -1,13 +1,23 @@
 <view class="page-order-list">
 
     <!-- 顶部毛玻璃 -->
-    <view class="pol-header-block"></view>
+    <!-- <view class="pol-header-block"></view> -->
+
+    <view
+        wx:if="{{ loading }}"
+        class="pol-loading-tips"
+    >
+        加载中...
+    </view>
 
     <!-- 内容信息，订单、可能附带推荐、拼团信息 -->
-    <view class="pol-content-block">
+    <view
+        wx:if="{{ !loading }}"
+        class="pol-content-block"
+    >
 
         <!-- 上方tab -->
-        <view class="pol-tabs">
+        <!-- <view class="pol-tabs">
             <view
                 wx:for="{{ tabs }}"
                 data-index="{{ index }}"
@@ -16,28 +26,98 @@
             >
                 {{ item.label }}
             </view>
-        </view>
+        </view> -->
 
         <!-- 订单列表，需要“加载更多”的按钮 -->
         <view class="pol-order-list-block">
 
             <!-- 为空的情况 -->
             <view
-                class="pol-cart-list-item"
+                class="pol-empty-block"
                 wx:if="{{ tripOrders.length === 0 }}"
             >
-                <view class="pol-cart-img-block">
-                    <image
-                        mode="aspectFit"
-                        class="pol-cart-img"
-                        src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/bg-cart.png"
-                    />
+                <!-- 图片 -->
+                <view class="pol-empty-img-block">
+                    <view class="pol-empty-img-container">
+                        <image
+                            mode="aspectFit"
+                            class="pol-empty-img"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/hug.png"
+                        />
+                        <view class="pol-empty-color"></view>
+                    </view>
                 </view>
 
-                <view class="pol-cart-img-tips">
-                    空空如也, 记得对自己好一点哦～
+                <!-- 文案 -->
+                <view class="pol-empty-tips">
+                    空空如也
                 </view>
-                
+
+                <!-- 文案 -->
+                <view class="pol-empty-title">
+                    请对自己好一点
+                </view>
+
+                <!-- 文案 -->
+                <view
+                    class="pol-empty-tips top"
+                    wx:if="{{ shoppinglist.length > 0 }}"
+                >
+                    她们都给自己买了这些礼物～
+                </view>
+
+                <!-- 行程清单 -->
+                <swiper
+                    autoplay="{{ true }}"
+                    circular="{{ true }}"
+                    duration="{{ 1000 }}"
+                    interval="{{ 3000 }}"
+                    class="pol-swiper {{ shoppinglist.length <= 3 ? shoppinglist.length === 1 ? 'one' : shoppinglist.length === 2 ? 'two' : shoppinglist.length === 3 ? 'three' : '' : '' }}"
+                    display-multiple-items="{{ shoppinglist.length <= 3 ? shoppinglist.length : 3 }}"
+                >
+                    <block
+                        wx:key="{{ index }}"
+                        wx:for="{{ shoppinglist }}"
+                    >
+                        <swiper-item class="swiper-visible">
+                            <view
+                                class="pol-swiper-item"
+                            >
+                                <image
+                                    src="{{ item.img }}"
+                                    mode="widthFix"
+                                    class="pol-swiper-image"
+                                />
+                                <view class="pol-swiper-title">
+                                    {{ item.goodName }}
+                                </view>
+                                <view
+                                    wx:if="{{ item.tag[ 0 ]}}"
+                                    class="pol-swiper-tag"
+                                >
+                                    {{ item.tag[ 0 ]}}
+                                </view>
+                            </view>
+                        </swiper-item>
+                    </block>
+                </swiper>
+
+                <!-- 按钮 -->
+                <view
+                    class="pol-empty-link"
+                    bindtap="goTripEntry"
+                >
+                    <view class="pol-empty-round">
+                        <i-icon
+                            size="22"
+                            type="enter"
+                            color="#fff"
+                            class="pol-empty-icon"
+                        />
+                        <view class="pol-empty-round-outer"></view>
+                    </view>
+                </view>
+
             </view>
 
             <!-- 行程订单 -->
@@ -305,8 +385,5 @@
         </view>
 
     </view>
-
-    <!-- 底部导航拦 -->
-    <my-nav />
 
 </view>

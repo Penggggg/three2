@@ -57,7 +57,11 @@ Page({
         // 是否新客户
         isNew: true,
         // 优惠券列表
-        coupons: [ ]
+        coupons: [ ],
+        // 页面是否在加载中
+        loading: true,
+        // 购物清单列表 - 他人买了什么
+        shoppinglist: [ ]
     },
 
     /** 点击上方各类订单 */
@@ -73,6 +77,46 @@ Page({
             active: index
         });
         this.fetchList( index );
+    },
+
+    /** 获取当前行程 */
+    fetchCurrentTrip( ) {
+        http({
+            url: 'trip_enter',
+            data: {
+                shouldGetGoods: false
+            },
+            loadingMsg: 'none',
+            success: res => {
+                const { status, data } = res;
+                if ( status === 200 && data[ 0 ]) {
+                    this.fetchGroupList( data[ 0 ]._id );
+                }
+            }
+        });
+    },
+
+    /** 拉取拼团列表 */
+    fetchGroupList( tid ) {
+        http({
+            url: 'shopping-list_list',
+            data: {
+                tid,
+                needOrders: false
+            },
+            loadingMsg: 'none',
+            success: res => {
+                const { status, data } = res;
+                if ( status === 200 ) {
+                    this.setData({
+                        shoppinglist: data
+                    })
+                }
+                this.setData({
+                    loading: false
+                });
+            }
+        });
     },
 
     /** 拉取订单数据 */
@@ -100,8 +144,15 @@ Page({
                     skip: current,
                     metaList: data.data,
                     canloadMore: total > current,
+                    loading: data.data.length === 0
                 });
-                this.covertOrder( );
+
+                if ( data.data.length !== 0 ) {
+                    this.covertOrder( );
+                } else {
+                    this.fetchCurrentTrip( );
+                }
+                
             }
         })
     },
@@ -456,11 +507,27 @@ Page({
         }, ( ) => { });
     },
 
+    /** 跳到行程入口 */
+    goTripEntry( ) {
+        wx.navigateTo({
+            url: `/pages/trip-enter/index`
+        });
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
         this.watchRole( );
+        wx.hideShareMenu( );
+        this.setData({
+            skip: 0,
+            page: 0
+        })
+        setTimeout(( ) => {
+            this.fetchCoupons( );
+            this.fetchList( this.data.active );
+        }, 0 );
     },
 
     /**
@@ -474,14 +541,7 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function ( ) {
-        this.setData({
-            skip: 0,
-            page: 0
-        })
-        setTimeout(( ) => {
-            this.fetchCoupons( );
-            this.fetchList( this.data.active );
-        }, 0 );
+        
     },
 
     /**

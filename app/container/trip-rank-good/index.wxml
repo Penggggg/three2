@@ -20,7 +20,10 @@
             <view class="trg-top-name two">
                 {{ top3$[ 1 ].goodName }}
             </view>
-            <view class="trg-top-tips">
+            <view
+                class="trg-top-tips"
+                wx:if="{{ top3$[ 1 ].oids.length }}"
+            >
                 {{ top3$[ 1 ].oids.length }}人购买
             </view>
         </view>
@@ -41,7 +44,10 @@
             <view class="trg-top-name one">
                 {{ top3$[ 0 ].goodName }}
             </view>
-            <view class="trg-top-tips">
+            <view
+                class="trg-top-tips"
+                wx:if="{{ top3$[ 0 ].oids.length }}"
+            >
                 {{ top3$[ 0 ].oids.length }}人购买
             </view>
         </view>
@@ -62,7 +68,10 @@
             <view class="trg-top-name one">
                 {{ top3$[ 2 ].goodName }}
             </view>
-            <view class="trg-top-tips">
+            <view
+                class="trg-top-tips"
+                wx:if="{{ top3$[ 2 ].oids.length }}"
+            >
                 {{ top3$[ 2 ].oids.length }}人购买
             </view>
         </view>

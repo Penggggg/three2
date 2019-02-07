@@ -11,9 +11,12 @@ const httpParam = {
 type httpParam = any;
 
 const http = ( params$: httpParam ) => {
+
+    console.log('【---- Http Requert ----】', params$.url );
+
     const params = Object.assign({ }, httpParam, { ...params$ });
 
-    wx.showLoading({
+    params.loadingMsg !== 'none' && wx.showLoading({
         title: params.loadingMsg
     });
 

@@ -7,12 +7,12 @@
 
     <!-- 头像列表 -->
     <swiper
-        class="avatar-swiper {{ imgList.length <= 3 ?'cstm-one' : '' }}"
         autoplay="{{ true }}"
         duration="{{ 1000 }}"
         circular="{{ true }}"
         interval="{{ 2000 }}"
         display-multiple-items="{{ imgList.length > 3 ? 3 : 1 }}"
+        class="avatar-swiper {{ imgList.length <= 3 ?'cstm-one' : '' }}"
     >
         <block
             wx:key="{{ index }}"

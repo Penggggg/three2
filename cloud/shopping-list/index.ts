@@ -316,11 +316,19 @@ export const main = async ( event, context ) => {
 
     /**
      * @description 
+     * {
+     *     tid, 
+     *     needOrders 是否需要返回订单
+     * }
      * 行程的购物清单，用于调整商品价格、购买数量
+     * "看看他人买了什么"
      */
     app.router('list', async( ctx, next ) => {
         try {
-            const { tid } = event.data;
+
+            let orders$: any = [ ];
+            const { tid, needOrders } = event.data;
+            
             
             // 拿到行程下所有的购物清单
             const lists$ = await db.collection('shopping-list')
@@ -330,23 +338,25 @@ export const main = async ( event, context ) => {
                 .get( );
            
             // 查询每条清单底下的每个order详情，这里的每个order都是已付订金的
-            const orders$: any = await Promise.all( lists$.data.map( list => {
-                return Promise.all( list.oids.map( async oid => {
-
-                    const order$ = await db.collection('order').doc( oid )
-                        .get( );
-
-                    const user$ = await db.collection('user')
-                        .where({
-                            openid: order$.data.openid
-                        })
-                        .get( );
-
-                    return Object.assign({ }, order$.data, {
-                        user: user$.data[ 0 ]
-                    });
+            if ( needOrders !== false ) {
+                orders$ = await Promise.all( lists$.data.map( list => {
+                    return Promise.all( list.oids.map( async oid => {
+    
+                        const order$ = await db.collection('order').doc( oid )
+                            .get( );
+    
+                        const user$ = await db.collection('user')
+                            .where({
+                                openid: order$.data.openid
+                            })
+                            .get( );
+    
+                        return Object.assign({ }, order$.data, {
+                            user: user$.data[ 0 ]
+                        });
+                    }));
                 }));
-            }));
+            }
 
             // 查询每条清单底下每个商品的详情
             const goods$: any = await Promise.all( lists$.data.map( async list => {
@@ -369,6 +379,7 @@ export const main = async ( event, context ) => {
                 }
 
                 return {
+                    tag: good$.data.tag,
                     title: good$.data.title,
                     name: standar$ ? standar$.data.name : '',
                     price: standar$ ? standar$.data.price : good$.data.price,
@@ -378,18 +389,26 @@ export const main = async ( event, context ) => {
             }));
 
             const list = lists$.data.map(( l, k ) => {
-                const { img, price, groupPrice, title, name } = goods$[ k ];
-                return Object.assign({ }, l, {
+                const { img, price, groupPrice, title, name, tag } = goods$[ k ];
+                let meta = Object.assign({ }, l, {
+                    tag,
                     img,
                     price,
                     groupPrice,
                     goodName: title,
-                    standarName: name,
-                    order: orders$[ k ],
-                    total: orders$[ k ].reduce(( x, y ) => {
-                        return x + y.count;
-                    }, 0 )
+                    standarName: name
                 });
+
+                if ( needOrders !== false ) {
+                    meta = Object.assign({ }, meta, {
+                        order: orders$[ k ],
+                        total: orders$[ k ].reduce(( x, y ) => {
+                            return x + y.count;
+                        }, 0 )
+                    })
+                }
+
+                return meta;
             });
 
             return ctx.body = {
