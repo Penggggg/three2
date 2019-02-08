@@ -123,8 +123,39 @@
 
             </view>
 
+            <!-- 轮播提示 -->
+            <wxc-notice
+                scroll="{{ true }}"
+                close="{{ true }}"
+                color="#fff"
+                show-icon="{{ true }}"
+                bgColor="transparent"
+                notice="【Tips】行程中看看大家买了什么，加入拼团，拼得越多越省钱！"
+            />
+
             <!-- 头部用户在行程的优惠情况 -->
-            
+            <view
+                class="tog-money-block"
+            >
+                
+                <view class="tog-money-title">
+                    行程最多可省 (元)
+                </view>
+
+                <view class="tog-money">
+                    <wxc-price
+                        icon="sub"
+                        class="tog-money-i"
+                    >
+                        103
+                    </wxc-price>
+                </view>
+
+                <view class="tog-summary-count">
+                    优惠券还可省5元
+                </view>
+
+            </view>
 
             <!-- 行程订单 -->
             <view

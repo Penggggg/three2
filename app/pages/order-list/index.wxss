@@ -52,7 +52,7 @@
 .pol-content-block {
     top: 0;
     left: 0;
-    height: 100vh;
+    min-height: 100vh;
     flex: 1;
     width: 100%;
     z-index: 10;
@@ -61,7 +61,7 @@
 }
 
 .pol-order-list-block {
-    padding: 50rpx 30rpx;
+    padding: 10rpx 30rpx 50rpx;
 }
 
 .pol-order-item {
@@ -531,5 +531,35 @@
     word-break: break-all;
     text-overflow:ellipsis;
     -webkit-box-orient:vertical;
-    /* text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 ); */
+}
+
+.tog-money-block {
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10rpx 0 40rpx;
+}
+
+.tog-money-title {
+    font-size: 20rpx;
+    color: rgba(255,255,255,0.6);
+}
+
+.tog-money-i {
+    color: #fff;
+    font-size: 78rpx;
+    font-weight: bold;
+    text-shadow: 0px 0px 5px #fbe9de;
+}
+
+.tog-order-count {
+    color: #fff;
+    font-size: 22rpx;
+}
+
+.tog-summary-count {
+    color: #fff;
+    font-size: 22rpx;
 }
