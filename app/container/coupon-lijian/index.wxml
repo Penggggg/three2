@@ -44,7 +44,6 @@
 
                 <!-- 分享按钮 -->
                 <button
-                    data-hehe="1123"
                     open-type="share"
                     class="con-lj-share"
                     animation="{{ animationMiddleHeaderItem }}"

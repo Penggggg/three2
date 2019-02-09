@@ -1,8 +1,8 @@
 {
   "pages": [
     "pages/order-list/index",
-    "pages/trip-deliver/index",
     "pages/trip-enter/index",
+    "pages/trip-deliver/index",
     "pages/coupon-list/index",
     "pages/manager-trip-order/index",
     "pages/manager-trip-list/index",
@@ -47,6 +47,7 @@
     "wxc-search": "./dist/packages/@minui/wxc-search/dist/index",
     "wxc-price": "./dist/packages/@minui/wxc-price/dist/index",
     "wxc-popup": "./dist/packages/@minui/wxc-popup/dist/index",
+    "wxc-mask": "./dist/packages/@minui/wxc-mask/dist/index",
     "wxc-progress": "./dist/packages/@minui/wxc-progress/dist/index",
     "wxc-list": "./dist/packages/@minui/wxc-list/dist/index",
     "wxc-input": "./dist/packages/@minui/wxc-input/dist/index",

@@ -51,7 +51,11 @@ Page({
         // 购物清单列表 - 他人买了什么
         shoppinglist: [ ],
         // 当前行程的tid
-        tid: ''
+        tid: '',
+        // 展示当前行程的优惠情况(任务)
+        showTask: 'show',
+        // 展示手指头
+        showFinger: true
     },
 
     /** 设置computed */
@@ -453,7 +457,7 @@ Page({
             // 处理满减
             const t_manjian = !coupons_manjian ? { value: 0, canUsed: false, isUsed: false,  } : {
                 isUsed: coupons_manjian.isUsed,
-                value: coupons_manjian.value,
+                value: Number( coupons_manjian.value ),
                 atleast: coupons_manjian.atleast,
                 canUsed: coupons_manjian.atleast <= totalPrice || !coupons_manjian.atleast
             };
@@ -462,7 +466,7 @@ Page({
             // 处理立减
             const t_lijian = !coupons_lijian ? { value: 0, canUsed: false, isUsed: false } : {
                 isUsed: coupons_lijian.isUsed,
-                value: coupons_lijian.value,
+                value: Number( coupons_lijian.value ),
                 atleast: coupons_lijian.atleast,
                 canUsed: coupons_lijian.atleast <= totalPrice || !coupons_lijian.atleast
             };
@@ -471,13 +475,13 @@ Page({
             // 处理代金券
             const t_daijin = !coupons_daijin ? { value: 0, canUsed: false, isUsed: false } : {
                 isUsed: coupons_daijin.isUsed,
-                value: coupons_daijin.value,
+                value: Number( coupons_daijin.value ),
                 atleast: coupons_daijin.atleast,
                 canUsed: coupons_daijin.atleast <= totalPrice || !coupons_daijin.atleast
             };
             tripOrders['t_daijin'] = t_daijin;
 
-            // 目前的总-可减免，除了优惠券类，还要计算预测成功拼团的减免
+            // 目前的总可减免，除了优惠券类，还要计算预测成功拼团的减免
             let cutoff = 0;
             if ( t_manjian.canUsed ) {
                 cutoff += Number( t_manjian.value );
@@ -494,9 +498,10 @@ Page({
              * ! 处理邮费
              */
 
+
             /** 总减免，包含所有商品都成功拼团的情况 */
             let total_cutoff = 0;
-            if ( t_manjian.canUsed ) {
+            if ( t_manjian.canUsed || !!t_manjian.value ) {
                 total_cutoff += Number( t_manjian.value );
             }
             if ( t_lijian.canUsed ) {
@@ -514,12 +519,78 @@ Page({
             /** 总减免 和 目前减免的比例 */
             tripOrders['cutoff_percent'] = Number( cutoff / total_cutoff ).toFixed( 2 ) * 100;
 
+            /** 是否处于可以结算的状态 */
+            tripOrders['canSettle'] = tripOrders.tripStatusCN === '待付尾款';
+
+            /** 任务列表 */
+            const task = [ ];
+            ['t_lijian', 't_manjian', 't_daijin'].map( quan => {
+                const target = tripOrders[ quan ];
+                if ( target.canUsed || !!target.value ) {
+                    task.push({
+                        type: quan,
+                        price: quan === 't_lijian' ?
+                            target.value < orders[ 0 ].trip.reduce_price ?
+                                orders[ 0 ].trip.reduce_price - target.value :
+                                target.value :
+                            target.value,
+                        title: quan === 't_lijian' ?
+                            '立减券' :
+                            quan === 't_manjian' ?
+                                '满减券' : '代金券',
+                        desc: quan === 't_lijian' ?
+                            '转发即可获得。马上分享行程给闺蜜吧～' :
+                            quan === 't_manjian' ?
+                            target.atleast ? `满${target.atleast}元即可自动使用` : `无门槛满减券` :
+                            target.atleast ? `满${target.atleast}元即可自动使用` : `无门槛代金券`,
+                        share: ( quan === 't_lijian' &&
+                            !!orders[ 0 ].trip.reduce_price &&
+                            target.value < orders[ 0 ].trip.reduce_price ) ? {
+                                title: '[有人@你]跟我一起来拔草～',
+                                path: '/pages/trip-enter/index',
+                                imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+                            } : null,
+                        finished: quan === 't_lijian' ?
+                            (!!orders[ 0 ].trip.reduce_price &&
+                                target.value >= orders[ 0 ].trip.reduce_price ) :
+                                quan === 't_manjian' ?
+                                    tripOrders.totalPrice >= Number( target.atleast ) || tripOrders.totalGroupPrice >= Number( target.atleast ):
+                                    tripOrders.totalPrice >= Number( target.atleast ) || tripOrders.totalGroupPrice >= Number( target.atleast )
+                    });
+                }
+            });
+            tripOrders['task'] = task;
+
         });
         
         console.log(Object.keys( orderObj ).map( tid => orderObj[ tid ]))
         this.setData({
             tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
         })
+    },
+
+    /** 补齐立减券 */
+    fixLiJian({ currentTarget }) {
+        const { tid } = currentTarget.dataset;
+        http({
+            data: {
+                tid,
+            },
+            url: 'coupon_repair-lijian',
+            success: res => {
+                if ( res.status === 200 ) {
+                    this.setData({
+                        showLijian: false
+                    });
+                    setTimeout(( ) => {
+                        wx.showToast({
+                            duration: 2000,
+                            title: '领取成功！'
+                        });
+                    }, 2500 );
+                }
+            }
+        });
     },
 
     /** 监听全局新旧客 */
@@ -576,6 +647,24 @@ Page({
         }, ( ) => { });
     },
 
+    /** 展示任务弹框 */
+    toggleTask( ) {
+        const { showTask } = this.data;
+
+        // 即将打开
+        if ( showTask === 'hide' ) {
+            wx.showShareMenu( );
+        } else {
+            wx.hideShareMenu( );
+        }
+
+        this.setData({
+            showTask: showTask === 'hide' ? 'show' : 'hide',
+            showFinger: false
+        });
+        
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
@@ -605,6 +694,11 @@ Page({
             this.fetchCurrentTrip( );
             this.fetchList( this.data.active );
         }, 0 );
+        setTimeout(( ) => {
+            this.setData({
+                showFinger: false
+            })
+        }, 6000 )
     },
 
     /**
@@ -638,7 +732,7 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    onShareAppMessage: function () {
-
+    onShareAppMessage: function ( event ) {
+        return event.target.dataset.share;
     }
 })

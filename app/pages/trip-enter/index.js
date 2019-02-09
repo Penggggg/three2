@@ -154,7 +154,7 @@ Page({
             title: '行程立减优惠券',
             type: 't_lijian',
             canUseInNext: false,
-            value: money,
+            value: Number( money ),
             atleast: 0
         };
         http({
@@ -275,7 +275,6 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( event ) {
-        console.log( '...', event );
         // 获取另一个立减
         if ( event.from === 'button' ) {
             this.getAnotherLijian( );

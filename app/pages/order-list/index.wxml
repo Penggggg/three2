@@ -137,6 +137,7 @@
             <view
                 class="pol-money-block"
                 wx:if="{{ showDataBar$ }}"
+                bindtap="toggleTask"
             >
                 
                 <view class="pol-money-title">
@@ -182,12 +183,19 @@
                             class="pol-summary-count-icon"
                         ></wxc-icon>  -->
                         {{ tripOrders[ 0 ].cutoff_percent !== 100 ? '还能省' + tripOrders[ 0 ].cutoff_delta + '元': '详情' }}
+                        <image
+                            mode="widthFix"
+                            class="pol-finger-img"
+                            wx:if="{{ showFinger }}"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/finger.png"
+                        />
                     </view>
                 </view>
 
                 
 
             </view>
+
             <!-- 行程订单 -->
             <view
                 wx:key="{{ index }}"
@@ -451,6 +459,74 @@
                 </view>
 
             </view>
+
+            <!-- 任务列表 -->
+            <wxc-mask
+                content-align="bl"
+                status="{{ showTask }}"
+                bindmasktap="toggleTask"
+            >
+                <view class="pol-task-block">
+                    <view class="pol-task-header">
+                        {{ tripOrders[ 0 ].tripName }} ({{ tripOrders[ 0 ].tripTime }})
+                    </view>
+                    <view class="pol-task-close">
+                        <i-icon type="close" color="#80848f" size="18" />
+                    </view>
+                    <view class="pol-task-content">
+                        <view
+                            class="pol-task-item"
+                            wx:key="{{ index }}"
+                            wx:for="{{ tripOrders[ 0 ].task }}"
+                        >
+                            <view class="pol-task-round {{ item.finished ? 'finished' : '' }}"></view>
+                            <view class="pol-task-info">
+                                <view class="pol-task-title">
+                                    {{ item.title }}
+                                </view>
+                                <view class="pol-task-desc">
+                                    {{ item.desc }}
+                                </view>
+                            </view>
+                            <wxc-price
+                                icon="sub"
+                                class="pol-task-price {{ item.finished ? 'finished' : '' }}"
+                            >
+                                {{ item.price }}
+                            </wxc-price>
+                            <view class="pol-task-action">
+                                <button
+                                    open-type="share"
+                                    class="pol-task-btn"
+                                    bindtap="fixLiJian"
+                                    data-share="{{ item.share }}"
+                                    data-tid="{{ tripOrders[ 0 ].tid }}"
+                                    wx:if="{{ item.type === 't_lijian' && item.share && !item.finished }}"
+                                >
+                                    去分享
+                                </button>
+                                <button
+                                    class="pol-task-btn"
+                                    bindtap="goTripEntry"
+                                    wx:if="{{ item.type === 't_manjian' && !item.finished }}"
+                                >
+                                    去凑单
+                                </button>
+                                <view
+                                    wx:if="{{ item.finished }}"
+                                    class="pol-task-btn {{ item.finished ? 'finished' : '' }}"
+                                >
+                                    {{
+                                        item.type === 't_manjian' ?
+                                            '已达到' :
+                                            '已领取'
+                                    }}
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </wxc-mask>
 
         </view>
 

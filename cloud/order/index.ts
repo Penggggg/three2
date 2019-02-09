@@ -344,15 +344,6 @@ export const main = async ( event, context ) => {
                     .where({
                         _id: tid
                     })
-                    .field({
-                        end_date: true,
-                        isClosed: true,
-                        title: true,
-                        start_date: true,
-                        payment: true,
-                        postage: true,
-                        postagefree_atleast: true
-                    })
                     .get( );
             }));
      
