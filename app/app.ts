@@ -49,7 +49,7 @@ App<MyApp>({
                 configurable: true,
                 enumerable: true,
                 set: function( val ) {
-                    console.log(`${key}被set`, val );
+                    // console.log(`${key}被set`, val );
                     const old = that.globalData$[ key ];
                     that.globalData$[ key ] = val;
                     if ( Array.isArray( that.watchCallBack[ key ])) {

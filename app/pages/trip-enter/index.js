@@ -274,9 +274,10 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    onShareAppMessage: function ({ from }) {
+    onShareAppMessage: function ( event ) {
+        console.log( '...', event );
         // 获取另一个立减
-        if ( from === 'button' ) {
+        if ( event.from === 'button' ) {
             this.getAnotherLijian( );
         }
         return {

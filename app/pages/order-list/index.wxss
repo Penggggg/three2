@@ -68,8 +68,8 @@
     background: #fff;
     border-radius: 10px;
     padding-bottom: 10rpx;
-    margin-bottom: 25rpx;
-    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.22);
+    margin-bottom: 40rpx;
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.20);
 }
 
 .pol-trip-header-block {
@@ -533,7 +533,7 @@
     -webkit-box-orient:vertical;
 }
 
-.tog-money-block {
+.pol-money-block {
     z-index: 100;
     display: flex;
     align-items: center;
@@ -542,24 +542,104 @@
     padding: 10rpx 0 40rpx;
 }
 
-.tog-money-title {
+.pol-money-title {
     font-size: 20rpx;
     color: rgba(255,255,255,0.6);
 }
 
-.tog-money-i {
+.pol-money {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin: 15rpx 0;
+}
+
+.pol-money-i {
     color: #fff;
     font-size: 78rpx;
+    /* line-height: 78rpx; */
     font-weight: bold;
+    display: flex;
+    align-items: flex-end;
     text-shadow: 0px 0px 5px #fbe9de;
 }
 
-.tog-order-count {
+.pol-money-i.small {
+    position: relative;
+    font-size: 78rpx;
+    margin-right: 50rpx;
+    color: rgba( 255, 255, 255, 0.6 );
+    text-shadow: 0px 0px 5px rgba( 255, 255, 255, 0.1 );
+}
+
+.pol-money-i.small:after {
+    top: 25%;
+    right: -25rpx;
+    height: 50%;
+    width: 5rpx;
+    content: '';
+    background: #fff;
+    position: absolute;
+    transform: rotate( 25deg );
+}
+
+.pol-money-yuan {
+    height: 65rpx;
+    margin-left: 6rpx;
+    font-size: 30rpx;
+    color: #fff;
+    text-shadow: 0px 0px 5px #fbe9de;
+}
+
+.pol-money-yuan.small {
+    color: rgba( 255, 255, 255, 0.6 );
+    text-shadow: 0px 0px 5px rgba( 255, 255, 255, 0.1 ); 
+}
+
+.pol-top-tips {
+    /* display: flex; */
+    position: relative;
+    align-items: center;
+}
+
+.pol-progress {
+    width: 180rpx;
+}
+
+.pol-order-count {
     color: #fff;
     font-size: 22rpx;
 }
 
-.tog-summary-count {
+.pol-summary-count {
+    top: 30%;
+    display: flex;
     color: #fff;
+    right: -10rpx;
+    margin-left: 8rpx;
     font-size: 22rpx;
+    position: relative;
+    align-items: center;
+    position: absolute;
+    justify-content: center;
+    padding: 1rpx 15rpx;
+    border-radius: 30px;
+    transform: translate( 120%, -50% );
+    background: rgba( 255, 255, 255, 0.15 );
+}
+
+.pol-summary-count:after {
+    /* top: 50%;
+    left: 50%;
+    width: 120%;
+    height: 110%;
+    content: '';
+    position: absolute;
+    border-radius: 30px;
+    transform: translate( -50%, -50% );
+    background: rgba( 255, 255, 255, 0.25 ); */
+}
+
+.pol-summary-count-icon {
+    margin-right: 8rpx;
 }

@@ -1,5 +1,6 @@
 const { http } = require('../../util/http.js');
 const { wxPay } = require('../../util/pay.js');
+const { computed } = require('../../lib/vuefy/index.js');
 const app = getApp( );
 
 Page({
@@ -11,19 +12,6 @@ Page({
         // 上方活动tab
         active: 0,
         // 上方tabs
-        // tabs: [{
-        //     key: 0,
-        //     label: '全部'
-        // }, {
-        //     key: 1,
-        //     label: '待付款'
-        // }, {
-        //     key: 2,
-        //     label: '待发货'
-        // }, {
-        //     key: 3,
-        //     label: '已完成'
-        // }],
         tabs: [{
             key: 0,
             label: '全部订单'
@@ -61,7 +49,20 @@ Page({
         // 页面是否在加载中
         loading: true,
         // 购物清单列表 - 他人买了什么
-        shoppinglist: [ ]
+        shoppinglist: [ ],
+        // 当前行程的tid
+        tid: ''
+    },
+
+    /** 设置computed */
+    runComputed( ) {
+        computed( this, {
+            // 展示顶部的优惠信息
+            showDataBar$: function( ) {
+                const { tid, tripOrders } = this.data;
+                return !!tripOrders[ 0 ] && tripOrders[ 0 ].tid === tid
+            }
+        })
     },
 
     /** 点击上方各类订单 */
@@ -88,7 +89,7 @@ Page({
     },
 
     /** 获取当前行程 */
-    fetchCurrentTrip( ) {
+    fetchCurrentTrip( cb ) {
         http({
             url: 'trip_enter',
             data: {
@@ -98,7 +99,10 @@ Page({
             success: res => {
                 const { status, data } = res;
                 if ( status === 200 && data[ 0 ]) {
-                    this.fetchGroupList( data[ 0 ]._id );
+                    !!cb && cb( data[ 0 ]._id );
+                    this.setData({
+                        tid: data[ 0 ]._id
+                    });
                 }
             }
         });
@@ -106,6 +110,7 @@ Page({
 
     /** 拉取拼团列表 */
     fetchGroupList( tid ) {
+        if ( !tid ) { return; }
         http({
             url: 'shopping-list_list',
             data: {
@@ -161,7 +166,7 @@ Page({
                     this.covertOrder( );
                 // 无订单则显示默认文案
                 } else {
-                    this.fetchCurrentTrip( );
+                    this.fetchCurrentTrip( tid => this.fetchGroupList( tid ));
                 }
                 
             }
@@ -234,7 +239,7 @@ Page({
 
         const { metaList } = this.data;
         const orderObj = { };
-        // console.log('ooooooo', metaList );
+
         metaList.map( order => {
 
             let isNeedPrePay = true;
@@ -343,6 +348,7 @@ Page({
 
         // 处理订单整体状态、合计信息 tripStatusCN
         Object.keys( orderObj ).map( tid => {
+
             let tripStatusCN = '';
             const tripOrders = orderObj[ tid ];
             const orders = tripOrders.meta;
@@ -399,15 +405,14 @@ Page({
             /**
              * 处理订单商品团购价
              * ! 团购价可以为0
-             * ! 无分配团购价时，取分配售价
              */
             const totalGroupPrice = orders.reduce(( x, y ) => {
-                const groupPrice = y.allocatedGroupPrice !== null || y.allocatedGroupPrice !== undefined ?
+                const groupPrice = y.allocatedGroupPrice !== null && y.allocatedGroupPrice !== undefined ?
                     y.allocatedGroupPrice :
-                    y.allocatedPrice ;
+                    y.groupPrice || 0 ;
                 return x + groupPrice * count$( y );
             }, 0 );
-            tripOrders['totalGroupPrice'] = totalGroupPrice || totalPrice;
+            tripOrders['totalGroupPrice'] = totalGroupPrice;
 
             // 剩余订金、未付订金列表
             const notPayDepositOrders = [ ];
@@ -441,12 +446,13 @@ Page({
             tripOrders['lastPrice'] = lastPrice;
 
             const { coupons } = this.data;
-            const coupons_manjian = coupons.find( x => x.type === 't_manjian');
-            const coupons_lijian = coupons.find( x => x.type === 't_lijian');
-            const coupons_daijin = coupons.find( x => x.type === 't_daijin');
+            const coupons_manjian = coupons.find( x => x.type === 't_manjian' && x.tid === tid );
+            const coupons_lijian = coupons.find( x => x.type === 't_lijian' && x.tid === tid );
+            const coupons_daijin = coupons.find( x => x.type === 't_daijin' && x.tid === tid );
    
             // 处理满减
-            const t_manjian = !coupons_manjian ? { value: 0 } : {
+            const t_manjian = !coupons_manjian ? { value: 0, canUsed: false, isUsed: false,  } : {
+                isUsed: coupons_manjian.isUsed,
                 value: coupons_manjian.value,
                 atleast: coupons_manjian.atleast,
                 canUsed: coupons_manjian.atleast <= totalPrice || !coupons_manjian.atleast
@@ -454,7 +460,8 @@ Page({
             tripOrders['t_manjian'] = t_manjian;
            
             // 处理立减
-            const t_lijian = !coupons_lijian ? { value: 0 } : {
+            const t_lijian = !coupons_lijian ? { value: 0, canUsed: false, isUsed: false } : {
+                isUsed: coupons_lijian.isUsed,
                 value: coupons_lijian.value,
                 atleast: coupons_lijian.atleast,
                 canUsed: coupons_lijian.atleast <= totalPrice || !coupons_lijian.atleast
@@ -462,27 +469,50 @@ Page({
             tripOrders['t_lijian'] = t_lijian;
 
             // 处理代金券
-            const t_daijin = !coupons_daijin ? { value: 0 } : {
+            const t_daijin = !coupons_daijin ? { value: 0, canUsed: false, isUsed: false } : {
+                isUsed: coupons_daijin.isUsed,
                 value: coupons_daijin.value,
                 atleast: coupons_daijin.atleast,
                 canUsed: coupons_daijin.atleast <= totalPrice || !coupons_daijin.atleast
             };
             tripOrders['t_daijin'] = t_daijin;
 
-            // 总可减免
+            // 目前的总-可减免，除了优惠券类，还要计算预测成功拼团的减免
             let cutoff = 0;
             if ( t_manjian.canUsed ) {
-                cutoff += t_manjian.value;
+                cutoff += Number( t_manjian.value );
             }
             if ( t_lijian.canUsed ) {
-                cutoff += t_lijian.value;
+                cutoff += Number( t_lijian.value );
             }
             if ( t_daijin.canUsed ) {
-                cutoff += t_daijin.value;
+                cutoff += Number( t_daijin.value );
             }
             tripOrders['cutoff'] = cutoff;
 
-            // 处理订单邮费
+            /**
+             * ! 处理邮费
+             */
+
+            /** 总减免，包含所有商品都成功拼团的情况 */
+            let total_cutoff = 0;
+            if ( t_manjian.canUsed ) {
+                total_cutoff += Number( t_manjian.value );
+            }
+            if ( t_lijian.canUsed ) {
+                total_cutoff += Number( t_lijian.value );
+            }
+            if ( t_daijin.canUsed ) {
+                total_cutoff += Number( t_daijin.value );
+            }
+            total_cutoff += ( totalPrice - totalGroupPrice );
+            tripOrders['total_cutoff'] = total_cutoff;
+
+            /** 总减免 和 目前减免的差值 */
+            tripOrders['cutoff_delta'] = Math.floor( total_cutoff - cutoff );
+
+            /** 总减免 和 目前减免的比例 */
+            tripOrders['cutoff_percent'] = Number( cutoff / total_cutoff ).toFixed( 2 ) * 100;
 
         });
         
@@ -551,6 +581,7 @@ Page({
      */
     onLoad: function (options) {
         this.watchRole( );
+        this.runComputed( );
         wx.hideShareMenu( );
     },
 
@@ -571,6 +602,7 @@ Page({
         })
         setTimeout(( ) => {
             this.fetchCoupons( );
+            this.fetchCurrentTrip( );
             this.fetchList( this.data.active );
         }, 0 );
     },

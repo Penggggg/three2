@@ -12,8 +12,6 @@ type httpParam = any;
 
 const http = ( params$: httpParam ) => {
 
-    console.log('【---- Http Requert ----】', params$.url );
-
     const params = Object.assign({ }, httpParam, { ...params$ });
 
     params.loadingMsg !== 'none' && wx.showLoading({
@@ -41,7 +39,7 @@ const http = ( params$: httpParam ) => {
         success: ( res: any ) => {
             const { result } = res;
             if ( !result ) { return getError( );}
-            
+            console.log(`【---- Request Success : ${params$.url}】`, res.result );
             const { status, data, message } = result;
             if ( status !== 200 ) {
                 getError( message && message !== { } ? message : params.errMsg );
@@ -53,7 +51,8 @@ const http = ( params$: httpParam ) => {
         },
         fail: err => {
             getError( '网络错误', err );
-            params.error && params.error( )
+            params.error && params.error( );
+            console.log(`【---- Request ERROR : ${params$.url}】`);
         },
         complete: ( ) => {
             // wx.hideLoading({ });

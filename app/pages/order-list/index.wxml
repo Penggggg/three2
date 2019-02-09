@@ -135,28 +135,59 @@
 
             <!-- 头部用户在行程的优惠情况 -->
             <view
-                class="tog-money-block"
+                class="pol-money-block"
+                wx:if="{{ showDataBar$ }}"
             >
                 
-                <view class="tog-money-title">
-                    行程最多可省 (元)
+                <view class="pol-money-title">
+                    <!-- <wxc-icon
+                        size="22"
+                        type="help"
+                        color="rgba(255,255,255,0.8)"
+                        class="pol-summary-count-icon"
+                    /> -->
+                    行程已省 (元)
                 </view>
 
-                <view class="tog-money">
+                <view class="pol-money">
+                    <!-- <view
+                        icon="sub"
+                        class="pol-money-i small"
+                    >
+                        45
+                    </view> -->
                     <wxc-price
                         icon="sub"
-                        class="tog-money-i"
+                        class="pol-money-i"
                     >
-                        103
+                        {{ tripOrders[ 0 ].cutoff }}
                     </wxc-price>
                 </view>
 
-                <view class="tog-summary-count">
-                    优惠券还可省5元
+                <view class="pol-top-tips">
+                    <view class="pol-progress">
+                        <wxc-progress
+                            radiud="30"
+                            percent="{{ tripOrders[ 0 ].cutoff_percent }}"
+                            stroke-width="10"
+                            active-color="#fff"
+                            background-color="rgba(255,255,255,0.6)"
+                        />
+                    </view>
+                    <view class="pol-summary-count">
+                        <!-- <wxc-icon
+                            size="22"
+                            type="help"
+                            color="#fff"
+                            class="pol-summary-count-icon"
+                        ></wxc-icon>  -->
+                        {{ tripOrders[ 0 ].cutoff_percent !== 100 ? '还能省' + tripOrders[ 0 ].cutoff_delta + '元': '详情' }}
+                    </view>
                 </view>
 
-            </view>
+                
 
+            </view>
             <!-- 行程订单 -->
             <view
                 wx:key="{{ index }}"
