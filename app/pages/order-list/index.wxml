@@ -470,7 +470,10 @@
                     <view class="pol-task-header">
                         {{ tripOrders[ 0 ].tripName }} ({{ tripOrders[ 0 ].tripTime }})
                     </view>
-                    <view class="pol-task-close">
+                    <view
+                        bindtap="toggleTask"
+                        class="pol-task-close"
+                    >
                         <i-icon type="close" color="#80848f" size="18" />
                     </view>
                     <view class="pol-task-content">
@@ -508,7 +511,7 @@
                                 <button
                                     class="pol-task-btn"
                                     bindtap="goTripEntry"
-                                    wx:if="{{ item.type === 't_manjian' && !item.finished }}"
+                                    wx:if="{{ (item.type === 't_manjian' || item.type === 't_daijin') && !item.finished }}"
                                 >
                                     去凑单
                                 </button>
@@ -517,7 +520,7 @@
                                     class="pol-task-btn {{ item.finished ? 'finished' : '' }}"
                                 >
                                     {{
-                                        item.type === 't_manjian' ?
+                                        item.type === 't_manjian' | item.type === 't_daijin' ?
                                             '已达到' :
                                             '已领取'
                                     }}

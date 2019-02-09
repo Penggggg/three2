@@ -455,27 +455,28 @@ Page({
             const coupons_daijin = coupons.find( x => x.type === 't_daijin' && x.tid === tid );
    
             // 处理满减
-            const t_manjian = !coupons_manjian ? { value: 0, canUsed: false, isUsed: false,  } : {
-                isUsed: coupons_manjian.isUsed,
-                value: Number( coupons_manjian.value ),
+            const t_manjian = !coupons_manjian ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
+                // 处理真的已用，和即将要用的情况
+                isUsed: coupons_manjian.isUsed || coupons_manjian.atleast <= totalPrice || coupons_manjian.atleast <= totalGroupPrice,
+                value: coupons_manjian.value ,
                 atleast: coupons_manjian.atleast,
                 canUsed: coupons_manjian.atleast <= totalPrice || !coupons_manjian.atleast
             };
             tripOrders['t_manjian'] = t_manjian;
            
             // 处理立减
-            const t_lijian = !coupons_lijian ? { value: 0, canUsed: false, isUsed: false } : {
-                isUsed: coupons_lijian.isUsed,
-                value: Number( coupons_lijian.value ),
+            const t_lijian = !coupons_lijian ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
+                isUsed: coupons_lijian.isUsed || coupons_lijian.atleast <= totalPrice || coupons_lijian.atleast <= totalGroupPrice,
+                value: coupons_lijian.value,
                 atleast: coupons_lijian.atleast,
                 canUsed: coupons_lijian.atleast <= totalPrice || !coupons_lijian.atleast
             };
             tripOrders['t_lijian'] = t_lijian;
 
             // 处理代金券
-            const t_daijin = !coupons_daijin ? { value: 0, canUsed: false, isUsed: false } : {
-                isUsed: coupons_daijin.isUsed,
-                value: Number( coupons_daijin.value ),
+            const t_daijin = !coupons_daijin ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
+                isUsed: coupons_daijin.isUsed || coupons_daijin.atleast <= totalPrice || coupons_daijin.atleast <= totalGroupPrice,
+                value: coupons_daijin.value,
                 atleast: coupons_daijin.atleast,
                 canUsed: coupons_daijin.atleast <= totalPrice || !coupons_daijin.atleast
             };
@@ -483,13 +484,13 @@ Page({
 
             // 目前的总可减免，除了优惠券类，还要计算预测成功拼团的减免
             let cutoff = 0;
-            if ( t_manjian.canUsed ) {
+            if ( t_manjian.isUsed ) {
                 cutoff += Number( t_manjian.value );
             }
-            if ( t_lijian.canUsed ) {
+            if ( t_lijian.isUsed ) {
                 cutoff += Number( t_lijian.value );
             }
-            if ( t_daijin.canUsed ) {
+            if ( t_daijin.isUsed ) {
                 cutoff += Number( t_daijin.value );
             }
             tripOrders['cutoff'] = cutoff;
@@ -501,15 +502,9 @@ Page({
 
             /** 总减免，包含所有商品都成功拼团的情况 */
             let total_cutoff = 0;
-            if ( t_manjian.canUsed || !!t_manjian.value ) {
-                total_cutoff += Number( t_manjian.value );
-            }
-            if ( t_lijian.canUsed ) {
-                total_cutoff += Number( t_lijian.value );
-            }
-            if ( t_daijin.canUsed ) {
-                total_cutoff += Number( t_daijin.value );
-            }
+            total_cutoff += Number( t_manjian.value );
+            total_cutoff += Number( t_lijian.value );
+            total_cutoff += Number( t_daijin.value );
             total_cutoff += ( totalPrice - totalGroupPrice );
             tripOrders['total_cutoff'] = total_cutoff;
 
@@ -528,21 +523,26 @@ Page({
                 const target = tripOrders[ quan ];
                 if ( target.canUsed || !!target.value ) {
                     task.push({
+
                         type: quan,
+
                         price: quan === 't_lijian' ?
                             target.value < orders[ 0 ].trip.reduce_price ?
                                 orders[ 0 ].trip.reduce_price - target.value :
                                 target.value :
                             target.value,
+
                         title: quan === 't_lijian' ?
                             '立减券' :
                             quan === 't_manjian' ?
                                 '满减券' : '代金券',
+
                         desc: quan === 't_lijian' ?
                             '转发即可获得。马上分享行程给闺蜜吧～' :
                             quan === 't_manjian' ?
                             target.atleast ? `满${target.atleast}元即可自动使用` : `无门槛满减券` :
                             target.atleast ? `满${target.atleast}元即可自动使用` : `无门槛代金券`,
+
                         share: ( quan === 't_lijian' &&
                             !!orders[ 0 ].trip.reduce_price &&
                             target.value < orders[ 0 ].trip.reduce_price ) ? {
@@ -550,6 +550,7 @@ Page({
                                 path: '/pages/trip-enter/index',
                                 imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
                             } : null,
+
                         finished: quan === 't_lijian' ?
                             (!!orders[ 0 ].trip.reduce_price &&
                                 target.value >= orders[ 0 ].trip.reduce_price ) :
