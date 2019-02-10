@@ -53,7 +53,7 @@ Page({
         // 当前行程的tid
         tid: '',
         // 展示当前行程的优惠情况(任务)
-        showTask: 'show',
+        showTask: 'hide',
         // 展示手指头
         showFinger: true
     },
@@ -106,6 +106,10 @@ Page({
                     !!cb && cb( data[ 0 ]._id );
                     this.setData({
                         tid: data[ 0 ]._id
+                    });
+                } else {
+                    this.setData({
+                        loading: false
                     });
                 }
             }
@@ -466,7 +470,7 @@ Page({
            
             // 处理立减
             const t_lijian = !coupons_lijian ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
-                isUsed: coupons_lijian.isUsed || coupons_lijian.atleast <= totalPrice || coupons_lijian.atleast <= totalGroupPrice,
+                isUsed: true,
                 value: coupons_lijian.value,
                 atleast: coupons_lijian.atleast,
                 canUsed: coupons_lijian.atleast <= totalPrice || !coupons_lijian.atleast
@@ -475,6 +479,7 @@ Page({
 
             // 处理代金券
             const t_daijin = !coupons_daijin ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
+                // 处理真的已用，和即将要用的情况
                 isUsed: coupons_daijin.isUsed || coupons_daijin.atleast <= totalPrice || coupons_daijin.atleast <= totalGroupPrice,
                 value: coupons_daijin.value,
                 atleast: coupons_daijin.atleast,
@@ -499,12 +504,11 @@ Page({
              * ! 处理邮费
              */
 
-
             /** 总减免，包含所有商品都成功拼团的情况 */
             let total_cutoff = 0;
             total_cutoff += Number( t_manjian.value );
-            total_cutoff += Number( t_lijian.value );
             total_cutoff += Number( t_daijin.value );
+            total_cutoff += orders[ 0 ].trip.reduce_price || 0 ;
             total_cutoff += ( totalPrice - totalGroupPrice );
             tripOrders['total_cutoff'] = total_cutoff;
 

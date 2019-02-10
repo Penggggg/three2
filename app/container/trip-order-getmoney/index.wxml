@@ -75,19 +75,7 @@
                             <!-- <view class="tog-user-phone">{{ item.address[ 0 ].phone }}</view> -->
                         </view>
                     </view>
-                    <!-- <form
-                        report-submit="{{ true }}"
-                        data-data="{{ item }}"
-                        bindsubmit="getBackMoney"
-                        wx:if="{{ !item.hasBeenCall || true }}"
-                    >
-                        <button
-                            form-type="submit"
-                            class="tog-statuscn"
-                        >
-                            催款
-                        </button>
-                    </form> -->
+               
                     <view
                         wx:if="{{ callMoneyTimes > 0 || !item.isAllAdjusted  }}"
                         class="tog-statuscn text"
@@ -219,7 +207,7 @@
                                 wx:if="{{ !addressOrder.isAllOk }}"
                                 class="tog-address-info pl"
                             >
-                                暂无
+                                暂无商品
                             </view>
                         </view>
 

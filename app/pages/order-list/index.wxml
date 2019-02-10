@@ -20,18 +20,6 @@
         class="pol-content-block"
     >
 
-        <!-- 上方tab -->
-        <!-- <view class="pol-tabs">
-            <view
-                wx:for="{{ tabs }}"
-                data-index="{{ index }}"
-                wx:key="{{ index }}"
-                class="pol-tabs-item {{ active === index ? 'active' : '' }}"
-            >
-                {{ item.label }}
-            </view>
-        </view> -->
-
         <!-- 订单列表，需要“加载更多”的按钮 -->
         <view class="pol-order-list-block">
 

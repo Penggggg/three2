@@ -216,73 +216,6 @@ Component({
             });
         },
 
-        /** 
-         * 催款按钮
-         * !已弃用
-         */
-        getBackMoney( e ) {
-            const { currentTarget, detail } = e;
-            const userOrders = currentTarget.dataset.data;
-            const { orders } = userOrders;
-            return console.log( e );
-            if ( !userOrders.isAllAdjusted ) {
-                return wx.showToast({
-                    icon: 'none',
-                    title: '还有未分配订单'
-                });
-            }
-            const temp = {
-                form_id: detail.formId,
-                tid: orders[ 0 ].tid,
-                openid: orders[ 0 ].openid,
-                oids: orders.map( o => o._id )
-            };
-
-            // 调整订单状态，并发送消息模板
-            const goAdjust = ( ) => {
-                http({
-                    data: temp,
-                    url: 'order_adjust-status',
-                    success: res => {
-                        const { status, data, message } = res;
-        
-                        // 异常情况
-                        if ( status!== 200 && message.indexOf('行程未结束') === 0 ) {
-                            return setTimeout(( ) => {
-                                this.setData({
-                                    showBtn: true
-                                });
-                            }, 2000 );
-                        }
-
-                        // 刷新列表
-                        if ( status === 200 ) {
-                            this.fetchOrder( this.data.tid );
-                        }
-
-                    }
-                })
-            };
-
-            // alert一下
-            wx.showModal({
-                title: '提示',
-                content: '催款后，客户价格/数量不能再调整',
-                success: res => {
-                    if ( res.confirm ) {
-                        goAdjust( );
-
-                    } else if ( res.cancel ) {
-                        wx.showToast({
-                            icon: 'none',
-                            title: '已取消'
-                        })
-                    }
-                }
-            });
-
-        },
-
         /** 展示调整弹框 */
         onShowModal({ currentTarget }) {
             const currentOrder = currentTarget.dataset.data;
@@ -402,10 +335,11 @@ Component({
                     that.data.clientOders$.map( userOrder => {
                         const { user, orders } = userOrder;
                         orders.map( order => {
-                            const { _id, prepay_id, form_id, pid, sid, openid, pay_status } = order;
+                            const { _id, prepay_id, form_id, pid, sid, openid, pay_status, allocatedCount } = order;
                             const temp = {
                                 oid: _id,
                                 pay_status,
+                                allocatedCount,
                                 prepay_id, form_id, pid, sid, openid
                             };
                             orders$.push( temp );

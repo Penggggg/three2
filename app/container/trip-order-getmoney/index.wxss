@@ -338,6 +338,7 @@
     background: #fff;
     border-radius: 5px;
     margin-bottom: 30rpx;
+    margin-top: 15rpx;
 }
 
 .tog-address-order-item:not(:last-child) {
