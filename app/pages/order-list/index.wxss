@@ -672,7 +672,7 @@ to {transform: translate( -50%,  -20% ) rotate( 180deg );}
     color: #bfbfbf;
     font-size: 22rpx;
     text-align: center;
-    padding: 20rpx 0 0;
+    padding: 20rpx 0 15rpx;
 }
 
 .pol-task-close {
@@ -690,9 +690,13 @@ to {transform: translate( -50%,  -20% ) rotate( 180deg );}
 
 .pol-task-item {
     display: flex;
-    padding: 25rpx 0;
+    padding: 35rpx 0;
     align-items: flex-start;
     position: relative;
+}
+
+.pol-task-item:first-child {
+    padding: 20rpx 0 35rpx;
 }
 
 .pol-task-item:after {
@@ -744,6 +748,21 @@ to {transform: translate( -50%,  -20% ) rotate( 180deg );}
 
 .pol-task-info {
     flex: 1;
+    position: relative;
+}
+
+.pol-task-good-img-con {
+    top: -20rpx;
+    left: 80rpx;
+    position: absolute;
+}
+
+.pol-task-good-img {
+    width: 50rpx;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    position: absolute;
+    box-shadow: 0 0 15px rgba( 0, 0, 0, 0.25 );
 }
 
 .pol-task-price {

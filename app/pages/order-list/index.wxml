@@ -482,7 +482,10 @@
                             wx:key="{{ index }}"
                             wx:for="{{ tripOrders[ 0 ].task }}"
                         >
+                            <!-- 小圆点 -->
                             <view class="pol-task-round {{ item.finished ? 'finished' : '' }}"></view>
+
+                            <!-- 标题、备注 -->
                             <view class="pol-task-info">
                                 <view class="pol-task-title">
                                     {{ item.title }}
@@ -490,13 +493,26 @@
                                 <view class="pol-task-desc">
                                     {{ item.desc }}
                                 </view>
+                                <!-- 图片 -->
+                                <view class="pol-task-good-img-con">
+                                    <image
+                                        src="{{ item.img }}"
+                                        mode="widthFix"
+                                        class="pol-task-good-img"
+                                        wx:if="{{ item.type === 'good' && !!item.img }}"
+                                    />
+                                </view>
                             </view>
+
+                            <!-- 价格 -->
                             <wxc-price
                                 icon="sub"
                                 class="pol-task-price {{ item.finished ? 'finished' : '' }}"
                             >
                                 {{ item.price }}
                             </wxc-price>
+
+                            <!-- 按钮 -->
                             <view class="pol-task-action">
                                 <button
                                     open-type="share"
@@ -515,12 +531,20 @@
                                 >
                                     去凑单
                                 </button>
+                                <button
+                                    open-type="share"
+                                    class="pol-task-btn"
+                                    data-share="{{ item.share }}"
+                                    wx:if="{{ (item.type === 'good') && !item.finished }}"
+                                >
+                                    找人团
+                                </button>
                                 <view
                                     wx:if="{{ item.finished }}"
                                     class="pol-task-btn {{ item.finished ? 'finished' : '' }}"
                                 >
                                     {{
-                                        item.type === 't_manjian' | item.type === 't_daijin' ?
+                                        item.type === 't_manjian' | item.type === 't_daijin' | item.type === 'good' ?
                                             '已达到' :
                                             '已领取'
                                     }}

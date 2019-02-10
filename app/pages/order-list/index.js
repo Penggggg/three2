@@ -519,6 +519,36 @@ Page({
 
             /** 任务列表 */
             const task = [ ];
+
+            orders.map( order => {
+                if ( !!order.groupPrice || !!order.allocatedGroupPrice ) {
+                    task.push({
+                        type: 'good',
+
+                        price: order.allocatedGroupPrice ?
+                            order.allocatedPrice - order.allocatedGroupPrice :
+                            order.price - order.groupPrice,
+
+                        title: '拼团',
+
+                        img: order.img[ 0 ],
+
+                        desc: `${order.name} ${order.standername}`,
+
+                        share: {
+                            title: `省${order.allocatedGroupPrice ?
+                                order.allocatedPrice - order.allocatedGroupPrice :
+                                order.price - order.groupPrice}元！${order.name}`,
+                            path: `/pages/goods-detail/index?id=${order.pid}`,
+                            imageUrl: order.img[ 0 ]
+                        },
+
+                        // 处理真正拼团跟预测拼团
+                        finished: false || order.canGroup
+                    })
+                }
+            });
+            
             ['t_lijian', 't_manjian', 't_daijin'].map( quan => {
                 const target = tripOrders[ quan ];
                 if ( target.canUsed || !!target.value ) {
@@ -560,6 +590,7 @@ Page({
                     });
                 }
             });
+
             tripOrders['task'] = task;
 
         });
