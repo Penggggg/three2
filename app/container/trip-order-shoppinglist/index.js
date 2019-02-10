@@ -26,6 +26,8 @@ Component({
         count: 0,
         // 行程交易额
         sum: 0,
+        // 催款次数
+        callMoneyTimes: 0,
         // 清单列表
         list: [ ],
         // 展示弹框
@@ -106,10 +108,11 @@ Component({
                 errorMsg: '加载失败，请刷新',
                 success: res => {
                     if ( res.status === 200 ) {
-                        const { count, sum } = res.data;
+                        const { count, sum, callMoneyTimes } = res.data;
                         this.setData({
                             sum,
-                            count
+                            count,
+                            callMoneyTimes
                         })
                     }
                 }

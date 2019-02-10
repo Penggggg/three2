@@ -241,6 +241,7 @@
                             <view
                                 bindtap="showModal"
                                 data-data="{{ item }}"
+                                wx:if="{{ !callMoneyTimes }}"
                                 class="tos-trip-order-btn purple"
                             >
                                 调整

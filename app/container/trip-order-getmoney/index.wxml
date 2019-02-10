@@ -77,18 +77,23 @@
                     </view>
                
                     <view
-                        wx:if="{{ callMoneyTimes > 0 || !item.isAllAdjusted  }}"
                         class="tog-statuscn text"
                     >
                         {{ 
                             !item.isAllAdjusted ?
                                 '待分配' :
                                 callMoneyTimes > 0 ?
-                                    !item.hasBeenGivenMoney ?
-                                        '未到帐' :
-                                        '已到帐' :
-                                    ''
-                            }}
+                                    !item.getAllNothing ?
+                                        !item.hasBeenGivenMoney ?
+                                            '未到帐' :
+                                            '已到帐' :
+                                            '' :
+                                ''
+                        }}
+                        {{
+                             item.getNothing && item.retreat ?
+                                '退订金 ' + item.retreat : ''
+                        }}
                     </view>
                 </view>
 

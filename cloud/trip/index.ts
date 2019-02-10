@@ -340,7 +340,7 @@ export const main = async ( event, context ) => {
              */
             const notPayAllClients = Array.from(
                 new Set( orders$.data
-                    .filter( x => x.pay_status === '1' )
+                    .filter( x => x.pay_status === '1' && !!x.allocatedCount )
                     .map( x => x.openid )
             )).length;
 

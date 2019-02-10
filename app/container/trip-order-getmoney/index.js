@@ -98,7 +98,20 @@ Component({
                     // 是否已经结算
                     hasBeenGivenMoney: x.orders
                                         .filter( o => o.base_status !== '4' && o.base_status !== '5' )
+                                        .filter( o => !!o.allocatedCount )
                                         .every( o => o.base_status === '3' ),
+                    // 退还的订金
+                    retreat: x.orders
+                                .filter( o => o.base_status !== '4' && o.base_status !== '5' )
+                                .filter( o => o.allocatedCount === 0 )
+                                .map( o => o.depositPrice || 0 )
+                                .reduce(( z, y ) => z + y, 0 ),
+                    // 是否存在被分配为0
+                    getNothing: x.orders
+                                    .some( o => o.allocatedCount === 0 ),
+                    // 是否全部被分配为0
+                    getAllNothing: x.orders
+                                    .every( o => o.allocatedCount === 0 ),
                     // 未准备好的订单
                     notReadyOrders,
                     // 按是否准备排序的订单
