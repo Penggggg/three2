@@ -277,6 +277,7 @@
                         <view class="pol-trip-order-price-block">
                             <view 
                                 class="pol-trip-order-status-pin"
+                                wx:if="{{ order.allocatedGroupPrice && order.canGroup }}"
                             >
                                 拼
                             </view>
@@ -318,108 +319,65 @@
                     <view class="pol-trip-order-sum">
                         共{{ item.sum }}件商品
                     </view>
-                    <view class="pol-trip-order-totalprice mr">
+                    <view class="pol-trip-order-totalprice">
                         已付订金：<view class="pol-totalprice">¥{{ item.hasPayDepositPrice }}</view>
                     </view>
                 </view>
 
-                <!-- 最大拼团优惠信息 -->
-                <!-- <view
-                    wx:if="{{ item.totalPrice - item.totalGroupPrice > 0 }}"
-                    class="pol-trip-order-sum-block"
-                >
-                    <view class="pol-trip-order-sum">
-                        共{{ item.sum }}件可拼团
-                    </view>
-                    <view class="pol-trip-order-totalprice">
-                        省：<view class="pol-price">-¥{{ item.totalPrice - item.totalGroupPrice }}</view>
-                    </view>
-                </view> -->
-
                 <!-- 优惠券：立减 -->
-                <!-- <view
-                    class="pol-trip-order-sum-block"
-                    wx:if="{{ item.t_lijian.value > 0 }}"
-                >
-                    <image
-                        mode="widthFix"
-                        class="pol-tips-img"
-                        wx:if="{{ item.t_lijian.canUsed }}"
-                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-right.png"                    />
-                    <view class="pol-trip-order-sum">
-                        无门槛立减：
-                    </view>
-                    <view class="pol-trip-order-totalprice">
-                        <view class="pol-pay-price small">减¥{{ item.t_lijian.value }}</view>
-                    </view>
-                </view> -->
-
-                <!-- 优惠券：满减 -->
-                <!-- <view
-                    class="pol-trip-order-sum-block"
-                >
-                    <image
-                        mode="widthFix"
-                        class="pol-tips-img"
-                        wx:if="{{ item.t_manjian.canUsed }}"
-                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-right.png"
-                    />
-                    <view class="pol-trip-order-sum">
-                        满减券：满¥{{ item.t_manjian.atleast }}
-                    </view>
-                    <view class="pol-trip-order-totalprice">
-                        <view class="pol-pay-price small">减¥{{ item.t_manjian.value }}</view>
-                    </view>
-                </view> -->
-
-                <!-- 优惠券：代金券 -->
-                <!-- <view
-                    class="pol-trip-order-sum-block"
-                    wx:if="{{ item.t_daijin.value > 0 }}"
-                >
-                    <image
-                        mode="widthFix"
-                        class="pol-tips-img"
-                        wx:if="{{ item.t_daijin.canUsed }}"
-                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-right.png"                    />
-                    <view class="pol-trip-order-sum">
-                        代金券：满¥{{ item.t_daijin.atleast }}
-                    </view>
-                    <view class="pol-trip-order-totalprice">
-                        <view class="pol-pay-price small">减¥{{ item.t_daijin.value }}</view>
-                    </view>
-                </view> -->
-
-                <!-- 预估最终结算信息 -->
-                <!-- <view
-                    wx:if="{{ item.tripStatusCN !== '待付尾款' }}"
-                    class="pol-trip-order-sum-block"
-                >
-                    <view class="pol-trip-order-sum">
-                        预计：
-                    </view>
-                    <view class="pol-trip-order-totalprice">
-                        <view class="pol-pay-price">
-                           
-                            {{ 
-                                item.totalGroupPrice ===  item.totalPrice ?
-                                    '¥' + item.totalGroupPrice : 
-                                    '¥' + item.totalGroupPrice + '~' + item.totalPrice
-                            }}
-                        </view>
-                    </view>
-                </view> -->
-
-                <!-- 结算最终 -->
                 <view
-                    wx:if="{{ item.tripStatusCN.indexOf('已付款') === 0 }}"
                     class="pol-trip-order-sum-block"
+                    wx:if="{{ !showDataBar$ && (item.t_lijian.canUsed || item.t_manjian.canUsed || item.t_daijin.canUsed) }}"
+                >
+                    <view
+                        class="pol-trip-order-sum"
+                        wx:if="{{ item.t_lijian.canUsed && item.t_lijian.value }}"
+                    >
+                        立减券:
+                    </view>
+                    <view 
+                        class="pol-trip-order-totalprice"
+                        wx:if="{{ item.t_lijian.canUsed && item.t_lijian.value }}"
+                    >
+                        <view class="pol-pay-price small">-{{ item.t_lijian.value }}</view>
+                    </view>
+                    <view
+                        class="pol-trip-order-sum"
+                        wx:if="{{ item.t_manjian.canUsed && item.t_manjian.value }}"
+                    >
+                        满减券:
+                    </view>
+                    <view
+                        class="pol-trip-order-totalprice ml"
+                        wx:if="{{ item.t_manjian.canUsed && item.t_manjian.value }}"
+                    >
+                        <view class="pol-pay-price small">-{{ item.t_manjian.value }}</view>
+                    </view>
+                    <view
+                        class="pol-trip-order-sum"
+                        wx:if="{{ item.t_daijin.canUsed && item.t_daijin.value }}"
+                    >
+                        代金券:
+                    </view>
+                    <view
+                        class="pol-trip-order-totalprice ml"
+                        wx:if="{{ item.t_daijin.canUsed && item.t_daijin.value }}"
+                    >
+                        <view class="pol-pay-price small">-{{ item.t_daijin.value }}</view>
+                    </view>
+                </view>
+
+                <!-- 结算最终 把优惠也计算在里面 -->
+                <!-- wx:if="{{ item.tripStatusCN.indexOf('已付款') === 0 }}" -->
+                <view
+                    class="pol-trip-order-sum-block"
+                    wx:if="{{ item.canSettle || item.isClosed }}"
                 >
                     <view class="pol-trip-order-sum">
-                        合计：
+                        合计:
                     </view>
                     <view class="pol-trip-order-totalprice">
-                        <view class="pol-pay-price">¥{{ item.totalPrice }}</view>
+                        <view class="pol-pay-price small">¥{{ item.wholePriceByDiscount }}</view>
                     </view>
                 </view>
 

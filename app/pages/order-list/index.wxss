@@ -279,7 +279,7 @@
     text-align: right;
     display: flex;
     align-items: center;
-    padding: 15rpx 20rpx 8rpx;
+    padding: 5rpx 20rpx 5rpx;
     box-sizing: border-box;
     justify-content: flex-end;
 }
@@ -303,6 +303,10 @@
 
 .pol-trip-order-totalprice.mr {
     margin-right: 10rpx;
+}
+
+.pol-trip-order-totalprice.ml {
+    margin-left: 10rpx;
 }
 
 .pol-totalprice {
@@ -330,7 +334,7 @@
 .pol-trip-order-btn-block {
     display: flex;
     align-items: center;
-    padding: 0 20rpx 0 30rpx;
+    padding: 15rpx 20rpx 0 30rpx;
     justify-content: space-between;
 }
 

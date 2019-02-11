@@ -408,8 +408,12 @@ Page({
                         0;
             }
 
-            // 行程关闭状态
-            // tripOrders['isClose'] = orders.every( x => x. );
+            // 行程是否已经付过尾款
+            const hasPay = orders.every( x => x.b !== '0' && x.b !== '1' && x.b !== '2' );
+            tripOrders['hasPay'] = hasPay;
+
+            // 是否展示更多
+            tripOrders['showMore'] = !!hasPay || false;
 
             // 处理订单商品数量
             const sum = orders.reduce(( x, y ) => {
@@ -428,6 +432,7 @@ Page({
             /**
              * 处理订单商品团购价
              * ! 团购价可以为0
+             * ! 改：团购价不能为0
              */
             const totalGroupPrice = orders.reduce(( x, y ) => {
                 const groupPrice = y.allocatedGroupPrice !== null && y.allocatedGroupPrice !== undefined ?
@@ -457,20 +462,7 @@ Page({
             }, 0 )
             tripOrders['hasPayDepositPrice'] = hasPayDepositPrice;
 
-            // 剩余尾款
-            // 注意，这里应该计算好因为货存不足，带来多付订金的情况。
-            const lastPrice = orders.reduce(( x, y ) => {
-
-                const depositPrice = y.depositPrice || 0;
-                const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup } = y;
-
-                const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
-                
-                let currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * allocatedCount - count * depositPrice;
-                return x + currentPrice;
-            }, 0 );
-            tripOrders['lastPrice'] = lastPrice;
-
+            // 优惠券
             const { coupons } = this.data;
             const coupons_manjian = coupons.find( x => x.type === 't_manjian' && x.tid === tid );
             const coupons_lijian = coupons.find( x => x.type === 't_lijian' && x.tid === tid );
@@ -504,6 +496,36 @@ Page({
                 canUsed: coupons_daijin.atleast <= totalPrice || !coupons_daijin.atleast
             };
             tripOrders['t_daijin'] = t_daijin;
+
+            // 应付全款（不含优惠券）
+            const wholePriceNotDiscount = orders.reduce(( x, y ) => {
+                const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup } = y;
+                const currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * allocatedCount;
+                return x + currentPrice;
+            }, 0 );
+            tripOrders['wholePriceNotDiscount'] = wholePriceNotDiscount;
+
+            // 应付全款（含优惠券）
+            let wholePriceByDiscount = wholePriceNotDiscount;
+            if ( t_manjian.canUsed ) {
+                wholePriceByDiscount -= t_manjian.value;
+            }
+            if ( t_lijian.canUsed ) {
+                wholePriceByDiscount -= t_lijian.value;
+            } 
+            if ( t_daijin.canUsed ) {
+                wholePriceByDiscount -= t_daijin.value;
+            }
+            tripOrders['wholePriceByDiscount'] = wholePriceByDiscount;
+
+            // 剩余尾款
+            // 注意，这里应该计算好因为货存不足，带来多付订金的情况。
+            let lastPrice = wholePriceByDiscount;
+            orders.map( y => {
+                const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
+                lastPrice -= count * ( y.depositPrice || 0 );
+            });
+            tripOrders['lastPrice'] = lastPrice;
 
             // 目前的总可减免，除了优惠券类，还要计算预测成功拼团的减免
             let cutoff = 0;
@@ -617,7 +639,7 @@ Page({
 
         });
         
-        console.log(Object.keys( orderObj ).map( tid => orderObj[ tid ]))
+        console.log('..', Object.keys( orderObj ).map( tid => orderObj[ tid ]))
         this.setData({
             loading: false,
             tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
