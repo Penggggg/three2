@@ -316,7 +316,7 @@ Page({
                     statusCN = [ '已发货' ]
                 } 
 
-                if ( b === '1' && count - allocatedCount > 0 ) {
+                if (( b === '1' || b === '2') && count - allocatedCount > 0 ) {
                     const index = statusCN.findIndex( x => x === '结算中');
                     statusCN.splice( index, 1, '货源不足');
                 }
