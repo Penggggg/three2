@@ -216,7 +216,10 @@
                             />
                         </view>
                     </view>
-                    <view class="pol-trip-header-status">
+                    <view
+                        class="pol-trip-header-status"
+                        wx:if="{{ item.tripStatusCN }}"
+                    >
                         {{ item.tripStatusCN }}
                     </view>
                 </view>
@@ -227,7 +230,7 @@
                     wx:key="{{ k }}"
                     wx:for-item="order"
                     wx:for="{{ item.meta }}"
-                    class="pol-trip-order-item {{ order.b === '4' || order.b === '5' ? 'disabled' : '' }}"
+                    class="pol-trip-order-item {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}"
                     bindtap="goGoodDetail"
                     data-data="{{ order }}"
                 >
@@ -241,7 +244,7 @@
                                 class="pol-trip-order-img"
                                 src="{{ order.img[ 0 ]}}"
                             />
-                            <view class="pol-trip-order-img-cover {{ order.b === '4' || order.b === '5' ? 'disabled' : '' }}"></view>
+                            <view class="pol-trip-order-img-cover {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}"></view>
                             <!-- 异常状态再显示 -->
                             <view
                                 wx:for-index="k"
@@ -249,15 +252,20 @@
                                 wx:key="{{ k }}"
                                 wx:for="{{ order.statusCN }}"
                                 class="pol-trip-order-status-fix"
-                                wx:if="{{ i === '支付过期' || i === '待付订金' || i === '已取消' || i === '货源不足' }}"
+                                wx:if="{{ i === '支付过期' || i === '待付订金' || i === '已取消' || i === '货源不足' || i === '退订金' }}"
                             >
-                                {{ i }}
+                                {{ i === '退订金' ?
+                                    order.retreat ?
+                                        i + ' ' + order.retreat :
+                                        '' :
+                                    i
+                                }}
                             </view>
                         </view>
 
                         <!-- 产品、型号 -->
                         <view class="pol-trip-order-title-block">
-                            <view class="pol-trip-order-name {{ order.b === '4' || order.b === '5' ? 'disabled' : '' }}">
+                            <view class="pol-trip-order-name {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}">
                                 {{ order.name }}
                             </view>
                             <view class="pol-trip-order-standar">
@@ -267,7 +275,7 @@
 
                         <!-- 价格、数量 -->
                         <view class="pol-trip-order-price-block">
-                            <view class="pol-trip-order-price {{ order.b === '4' || order.b === '5' ? 'disabled' : '' }}">
+                            <view class="pol-trip-order-price {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}">
                                 ¥ {{ order.allocatedPrice || order.price }}
                             </view>
 
@@ -280,7 +288,7 @@
                             <!-- 被分配的采购量 -->
                             <view
                                 class="pol-trip-order-count purple"
-                                wx:if="{{ order.b === '1' && order.count - order.allocatedCount > 0 }}"
+                                wx:if="{{ order.b !== '0' &&  order.b !== '1' && order.allocatedCount !== order.count }}"
                             >
                                 x {{ order.allocatedCount }}
                             </view>
@@ -404,6 +412,7 @@
                 <view class="pol-trip-order-btn-block">
                     <view class="pol-order-more">
                         <!-- 更多 -->
+                        更多
                     </view>
                     <view class="pol-trip-order-btns">
 

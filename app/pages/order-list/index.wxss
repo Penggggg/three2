@@ -253,7 +253,7 @@
     text-align: right;
     display: flex;
     align-items: center;
-    padding: 5rpx 20rpx;
+    padding: 15rpx 20rpx 8rpx;
     box-sizing: border-box;
     justify-content: flex-end;
 }
@@ -310,12 +310,12 @@
 
 .pol-trip-order-btns {
     display: flex;
-    padding: 15rpx 0rpx;
+    padding: 5rpx 0rpx 15rpx;
     box-sizing: border-box;
 }
 
 .pol-trip-order-btn {
-    color: #999;
+    color: #bfbfbf;
     font-size: 24rpx;
     padding: 11rpx 22rpx;
     border-radius: 15px;

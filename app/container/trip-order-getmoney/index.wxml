@@ -78,22 +78,9 @@
                
                     <view
                         class="tog-statuscn text"
+                        wx:if="{{ item.statusCN }}"
                     >
-                        {{ 
-                            !item.isAllAdjusted ?
-                                '待分配' :
-                                callMoneyTimes > 0 ?
-                                    !item.getAllNothing ?
-                                        !item.hasBeenGivenMoney ?
-                                            '未到帐' :
-                                            '已到帐' :
-                                            '' :
-                                ''
-                        }}
-                        {{
-                             item.getNothing && item.retreat ?
-                                '退订金 ' + item.retreat : ''
-                        }}
+                        {{ item.statusCN }}
                     </view>
                 </view>
 

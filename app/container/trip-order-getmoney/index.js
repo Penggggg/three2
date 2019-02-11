@@ -40,7 +40,7 @@ Component({
     computed: {
         clientOders$( ) {
             
-            const { clientOders, showMore } = this.data;
+            const { clientOders, showMore, callMoneyTimes } = this.data;
             const meta = clientOders.map( x => {
 
                 // 已经分配好的订单
@@ -79,45 +79,86 @@ Component({
                     }
                 });
 
+                // 是否所有订单都被分配了，包括 0
+                const isAllAdjusted = x.orders.every( o => o.allocatedCount !== undefined );
+
+                // 是否全部被分配为0
+                const getAllNothing = x.orders
+                    .every( o => o.allocatedCount === 0 );
+
+                // 是否已经结算
+                const hasBeenGivenMoney = x.orders
+                    .filter( o => o.base_status !== '4' && o.base_status !== '5' )
+                    .filter( o => !!o.allocatedCount )
+                    .every( o => o.base_status === '3' );
+
+                // 是否存在被分配为0
+                const getNothing =  x.orders
+                    .some( o => o.allocatedCount === 0 );
+
+                // 退还的订金
+                const retreat = x.orders
+                    .filter( o => o.base_status !== '4' && o.base_status !== '5' )
+                    .filter( o => o.allocatedCount === 0 )
+                    .map( o => o.depositPrice || 0 )
+                    .reduce(( z, y ) => z + y, 0 );
+
+                // 订单中文状态
+                let statusCN = !isAllAdjusted ?
+                    '待分配' :
+                    callMoneyTimes > 0 ?
+                        !getAllNothing ?
+                            !hasBeenGivenMoney ?
+                                '未到帐' :
+                                '已到帐' :
+                            '' :
+                    '';
+                
+                if ( getNothing && retreat ) {
+                    statusCN += ('退订金 ' + retreat);
+                } 
+
                 return Object.assign({ }, x , {
+
+                    statusCN,
+
+                    retreat,
+
+                    getNothing,
+
+                    getAllNothing,
+
+                    isAllAdjusted,
+
+                    hasBeenGivenMoney,
+
                     emptyOrders: [ ],
+
                     // 根据地址展示订单
                     addressOrders,
+
                     // 是否正在展示更多
                     canShowMore,
+
                     // 订单列表展示类型
                     key: x.orders.every( o => o.base_status === '2' ) && !canShowMore? 
+
                             'emptyOrders' :
                             x.orders.every( o => o.base_status === '2' ) && canShowMore ?
                                 'allOrders' :
                                 !x.orders.every( o => o.base_status === '2' ) && canShowMore ?
                                 'allOrders' :
                                 'notReadyOrders',
+
                     // 已经准备好的订单
                     // readyOrders,
-                    // 是否已经结算
-                    hasBeenGivenMoney: x.orders
-                                        .filter( o => o.base_status !== '4' && o.base_status !== '5' )
-                                        .filter( o => !!o.allocatedCount )
-                                        .every( o => o.base_status === '3' ),
-                    // 退还的订金
-                    retreat: x.orders
-                                .filter( o => o.base_status !== '4' && o.base_status !== '5' )
-                                .filter( o => o.allocatedCount === 0 )
-                                .map( o => o.depositPrice || 0 )
-                                .reduce(( z, y ) => z + y, 0 ),
-                    // 是否存在被分配为0
-                    getNothing: x.orders
-                                    .some( o => o.allocatedCount === 0 ),
-                    // 是否全部被分配为0
-                    getAllNothing: x.orders
-                                    .every( o => o.allocatedCount === 0 ),
+                        
                     // 未准备好的订单
                     notReadyOrders,
+
                     // 按是否准备排序的订单
                     allOrders: [ ...notReadyOrders, ...readyOrders ],
-                    // 是否所有订单都被分配了，包括 0
-                    isAllAdjusted: x.orders.every( o => o.allocatedCount !== undefined ),
+
                     // 未被分配的订单量
                     hasNotAdjustedLength: x.orders.filter( o => o.allocatedCount === undefined ).length
                 });

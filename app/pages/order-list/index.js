@@ -102,7 +102,7 @@ Page({
             loadingMsg: 'none',
             success: res => {
                 const { status, data } = res;
-                if ( status === 200 && data[ 0 ]) {
+                if ( status === 200 && !!data[ 0 ]) {
                     !!cb && cb( data[ 0 ]._id );
                     this.setData({
                         tid: data[ 0 ]._id
@@ -300,8 +300,11 @@ Page({
                 } else if ( p === '1' && b === '1' ) {
                     statusCN = [ '结算中' ] 
 
-                } else if ( p === '1' && b === '2' ) {
+                } else if ( p === '1' && b === '2' && !!allocatedCount ) {
                     statusCN = [ '待付款' ]
+
+                } else if ( p === '1' && b === '2' && !allocatedCount ) {
+                    statusCN = [ '退订金' ]
 
                 } else if ( p === '1' && b === '4' ) {
                     statusCN = [ '已取消' ]
@@ -322,7 +325,12 @@ Page({
                     p,
                     b,
                     statusCN,
-                    isNeedPrePay
+                    isNeedPrePay,
+                    retreat: b === '2' && allocatedCount < count ?
+                        !!depositPrice ?
+                            (count - allocatedCount) * depositPrice :
+                            0 :
+                        0
                 })
             };
 
@@ -360,7 +368,7 @@ Page({
             let tripStatusCN = '';
             const tripOrders = orderObj[ tid ];
             const orders = tripOrders.meta;
-            
+
             //  处理订单整体状态
             if ( orders.filter( x => x.b !== '4' && x.b !== '5').some( x => x.statusCN[ 0 ] === '待付订金' )) {
                 tripStatusCN = '待付订金';
@@ -368,8 +376,9 @@ Page({
             } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '1' && ( x.b === '0' || x.b === '1' ))) {
                 tripStatusCN = '购买中';
 
-            } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '1' && x.b === '2' )) {
-                tripStatusCN = '待付尾款';
+            } else if ( orders.filter( x => x.b !== '4' && x.b !== '5' && !!x.allocatedCount ).length > 0 &&
+                orders.filter( x => x.b !== '4' && x.b !== '5' && !!x.allocatedCount ).every( x => x.p === '1' && x.b === '2' )) {
+                    tripStatusCN = '待付尾款';
 
             } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
                 && orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.d === '0')) {
@@ -399,7 +408,8 @@ Page({
 
             // 处理订单商品数量
             const sum = orders.reduce(( x, y ) => {
-                return x + count$( y );
+                // return x + count$( y );
+                return x + y.count
             }, 0 );
             tripOrders['sum'] = sum;
 
