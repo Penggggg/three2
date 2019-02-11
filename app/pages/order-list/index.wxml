@@ -252,7 +252,7 @@
                                 wx:key="{{ k }}"
                                 wx:for="{{ order.statusCN }}"
                                 class="pol-trip-order-status-fix"
-                                wx:if="{{ i === '支付过期' || i === '待付订金' || i === '已取消' || i === '货源不足' || i === '退订金' }}"
+                                wx:if="{{ i === '支付过期' || i === '待付订金' || i === '已取消' || i === '货源不足' || i === '退订金' || i === '拼团成功'}}"
                             >
                                 {{ i === '退订金' ?
                                     order.retreat ?
@@ -275,8 +275,23 @@
 
                         <!-- 价格、数量 -->
                         <view class="pol-trip-order-price-block">
-                            <view class="pol-trip-order-price {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}">
+                            <view 
+                                class="pol-trip-order-status-pin"
+                            >
+                                拼
+                            </view>
+                            <view
+                                wx:if="{{ !order.canGroup && order.allocatedGroupPrice }}"
+                                class="pol-trip-order-price inline {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}"
+                            >
                                 ¥ {{ order.allocatedPrice || order.price }}
+                            </view>
+
+                            <view
+                                wx:if="{{ order.canGroup && order.allocatedGroupPrice }}"
+                                class="pol-trip-order-count inline"
+                            >
+                                ¥ {{ order.allocatedGroupPrice }}
                             </view>
 
                             <!-- 期待的采购量 -->
@@ -534,7 +549,7 @@
                                     data-share="{{ item.share }}"
                                     wx:if="{{ (item.type === 'good') && !item.finished }}"
                                 >
-                                    找人团
+                                    找人拼
                                 </button>
                                 <view
                                     wx:if="{{ item.finished }}"

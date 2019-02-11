@@ -164,8 +164,7 @@ Page({
                     page,
                     skip: current,
                     metaList: data.data,
-                    canloadMore: total > current,
-                    loading: data.data.length === 0
+                    canloadMore: total > current
                 });
 
                 // 有订单则显示订单，并设置bar
@@ -253,7 +252,7 @@ Page({
             let isNeedPrePay = true;
             const { isNew } = this.data;
             const payment = order.trip.payment;
-            const { count, depositPrice, allocatedCount, allocatedGroupPrice, allocatedPrice } = order;
+            const { count, depositPrice, allocatedCount, allocatedGroupPrice, allocatedPrice, canGroup } = order;
 
             if ( isNew && payment === '0' ) {
                 isNeedPrePay = true;
@@ -319,6 +318,10 @@ Page({
                 if (( b === '1' || b === '2') && count - allocatedCount > 0 ) {
                     const index = statusCN.findIndex( x => x === '结算中');
                     statusCN.splice( index, 1, '货源不足');
+                }
+
+                if ( statusCN[ 0 ] === '待付款' && allocatedGroupPrice && canGroup ) {
+                    statusCN = ['拼团成功']
                 }
 
                 return Object.assign({ }, order, {
@@ -399,7 +402,9 @@ Page({
                 return order.b === '0' ?
                     order.count :
                     order.b === '1' || order.b === '2' ?
-                        order.allocatedCount === undefined || order.allocatedCount === null ? order.count : order.allocatedCount :
+                        (order.allocatedCount === undefined || order.allocatedCount === null) ?
+                            order.count :
+                            order.allocatedCount :
                         0;
             }
 
@@ -455,10 +460,13 @@ Page({
             // 剩余尾款
             // 注意，这里应该计算好因为货存不足，带来多付订金的情况。
             const lastPrice = orders.reduce(( x, y ) => {
+
                 const depositPrice = y.depositPrice || 0;
+                const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup } = y;
+
                 const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
-                const { allocatedCount, allocatedPrice } = y;
-                let currentPrice = allocatedPrice * allocatedCount - count * depositPrice;
+                
+                let currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * allocatedCount - count * depositPrice;
                 return x + currentPrice;
             }, 0 );
             tripOrders['lastPrice'] = lastPrice;
@@ -611,6 +619,7 @@ Page({
         
         console.log(Object.keys( orderObj ).map( tid => orderObj[ tid ]))
         this.setData({
+            loading: false,
             tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
         })
     },

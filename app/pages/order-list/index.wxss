@@ -166,7 +166,7 @@
 }
 
 .pol-trip-order-title-block {
-    flex: 5;
+    flex: 1;
     display: flex;
     margin-right: 30rpx;
     margin-left: 20rpx;
@@ -202,13 +202,14 @@
 }
 
 .pol-trip-order-price-block {
-    flex: 1;
+    /* flex: 1; */
     text-align: right;
 }
 
 .pol-trip-order-price {
     color: #999;
     font-size: 24rpx;
+    /* display: inline-block; */
 }
 
 .pol-trip-order-price.disabled {
@@ -218,6 +219,10 @@
 .pol-trip-order-count {
     color: #999;
     font-size: 22rpx;
+}
+
+.pol-trip-order-count.inline {
+    display: inline-block;
 }
 
 .pol-trip-order-count.purple {
@@ -236,17 +241,38 @@
 }
 
 .pol-trip-order-status-fix {
-    top: -8rpx;
+    top: -2rpx;
     left: -8rpx;
-    position: absolute;
     font-size: 16rpx;
     color: #fff;
     padding: 2rpx 10rpx;
     border-radius: 3px;
     display: inline-block;
     background: #bc4e9c;  
+    margin-right: 10rpx;
+    position: absolute;
     background: -webkit-linear-gradient(to left, #f80759, #bc4e9c);  
     background: linear-gradient(to left, #f80759, #bc4e9c);    
+}
+
+.pol-trip-order-status-pin {
+    display: flex;
+    color: #f80759;
+    /* height: 30rpx; */
+    /* width: 30rpx; */
+    /* line-height: 30rpx; */
+    font-size: 18rpx;
+    border-radius: 5px;
+    display: inline-block;
+    padding: 2rpx 6rpx;
+    border: 1px solid #f80759;
+    /* background: #bc4e9c;   */
+    margin-right: 10rpx;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* background: -webkit-linear-gradient(to left, #f80759, #bc4e9c);   */
+    /* background: linear-gradient(to left, #f80759, #bc4e9c);   */
 }
 
 .pol-trip-order-sum-block {
