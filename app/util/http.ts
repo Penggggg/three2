@@ -39,7 +39,7 @@ const http = ( params$: httpParam ) => {
         success: ( res: any ) => {
             const { result } = res;
             if ( !result ) { return getError( );}
-            console.log(`【---- Request Success : ${params$.url}】`, res.result );
+            console.log(`【---- Request Success : ${params$.url}】`, params$.data, res.result );
             const { status, data, message } = result;
             if ( status !== 200 ) {
                 getError( message && message !== { } ? message : params.errMsg );

@@ -468,7 +468,7 @@ export const main = async ( event, context ) => {
             if ( purchase < hasBeenAdjust ) {
                 return ctx.body = {
                     status: 500,
-                    message: `已有${hasBeenAdjust}件已确认，数量不能少于${hasBeenAdjust}`
+                    message: `有${finishAdjustOrders.length}个订单已确认，数量不能少于${hasBeenAdjust}件`
                 }
             }
             
@@ -498,7 +498,7 @@ export const main = async ( event, context ) => {
              * !以下订单都是已付订金的
              * 订单：批量对订单的价格、团购价、购买状态进行调整(已购买/进行中，其他已经确定调整的订单，不做处理)
              * 其实应该也要自动注入订单数量（策略：先到先得，后下单会有得不到单的风险）
-             * !如果已经分配过了，则不再分配采购量
+             * !如果已经分配过了，则不再自动分配采购量
              */
             const sorredOrders = orders$
                 .map(( x: any ) => x.data )
@@ -513,13 +513,18 @@ export const main = async ( event, context ) => {
                 const baseTemp = {
                     allocatedPrice: adjustPrice,
                     allocatedGroupPrice: adjustGroupPrice,
-                    base_status: purchase - order.count >= 0 ? '1' : '0',
+                    // 无论自动分配是否成功，都是被“分配”操作过的
+                    base_status: purchase - order.count >= 0 ? '1' : '1',
                     allocatedCount: purchase - order.count >= 0 ? order.count : 0
                 };
-
-                purchase = purchase - order.count;
                 
-                if ( purchase >= 0 ) {
+                // 分配成功
+                if ( purchase - order.count >= 0 ) {
+                    lastAllocated = purchase - order.count;
+                    purchase = purchase - order.count;
+
+                // 货源不足，分配失败
+                } else {
                     lastAllocated = purchase;
                 }
 
