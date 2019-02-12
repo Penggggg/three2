@@ -377,6 +377,7 @@ export const main = async ( event, context ) => {
     app.router('upadte-to-payed', async( ctx, next ) => {
         try {
 
+            const openId = event.userInfo.openId;
             const { orderIds, prepay_id, form_id } = event.data;
 
             // 更新订单字段
@@ -415,7 +416,8 @@ export const main = async ( event, context ) => {
                 data: {
                     $url: 'create',
                     data: {
-                        list
+                        list,
+                        openId
                     }
                 }
             })

@@ -14,6 +14,7 @@ const _ = db.command;
  * pid
  * ! sid ( 可为空 )
  * oids Array
+ * uids Array
  * buy_status 0,1,2 未购买、已购买、买不全
  * base_status: 0,1 未调整，已调整
  * createTime
@@ -244,7 +245,7 @@ export const main = async ( event, context ) => {
     app.router('create', async( ctx, next ) => {
         try {
 
-            const { list } = event.data;
+            const { list, openId } = event.data;
 
             await Promise.all( list.map( async orderMeta => {
                 const { tid, pid, sid, oid, price, groupPrice } = orderMeta;
@@ -265,6 +266,7 @@ export const main = async ( event, context ) => {
 
                     const meta = Object.assign({ }, query, {
                         oids: [ oid ],
+                        uids: [ openId ],
                         purchase: 0,
                         buy_status: '0',
                         base_status: '0',
@@ -285,19 +287,20 @@ export const main = async ( event, context ) => {
                     let metaShoppingList = find$.data[ 0 ];
                     if ( !metaShoppingList.oids.find( x => x === oid )) {
                         const lastOids = metaShoppingList.oids;
+                        const lastUids = metaShoppingList.uids;
 
                         // 插入到头部，最新的已支付订单就在上面
                         lastOids.unshift( oid );
 
-                        metaShoppingList = Object.assign({ }, metaShoppingList, {
-                            oids: lastOids,
-                            updateTime: new Date( ).getTime( )
-                        });
+                        if ( !lastUids.find( x => x === openId )) {
+                            lastUids.unshift( openId );
+                        }
 
                         const update$ = await db.collection('shopping-list').doc( String( find$.data[ 0 ]._id ))
                             .update({
                                 data: {
                                     oids: lastOids,
+                                    uids: lastUids,
                                     updateTime: new Date( ).getTime( )
                                 }
                             })
@@ -568,25 +571,25 @@ export const main = async ( event, context ) => {
      * @description
      * 获取行程里是否还有未调整的清单
     */
-   app.router('adjust-status', async( ctx, next ) => {
-       try {
-        const { tid } = event.data;
-        const count = await db.collection('shopping-list')
-            .where({
-                tid,
-                base_status: '0'
-            })
-            .count( );
+    app.router('adjust-status', async( ctx, next ) => {
+        try {
+            const { tid } = event.data;
+            const count = await db.collection('shopping-list')
+                .where({
+                    tid,
+                    base_status: '0'
+                })
+                .count( );
 
-        return ctx.body = {
-            status: 200,
-            data: count.total
+            return ctx.body = {
+                status: 200,
+                data: count.total
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
         }
-
-       } catch ( e ) {
-           return ctx.body = { status: 500 };
-       }
-   })
+    })
 
     return app.serve( );
 
