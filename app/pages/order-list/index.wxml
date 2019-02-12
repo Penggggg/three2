@@ -231,8 +231,6 @@
                     wx:for-item="order"
                     wx:for="{{ item.meta }}"
                     class="pol-trip-order-item {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}"
-                    bindtap="goGoodDetail"
-                    data-data="{{ order }}"
                 >
                     <!-- 基本信息 -->
                     <view class="pol-trip-order-info">
@@ -243,6 +241,8 @@
                                 mode="scaleToFill"
                                 class="pol-trip-order-img"
                                 src="{{ order.img[ 0 ]}}"
+                                bindtap="goGoodDetail"
+                                data-data="{{ order }}"
                             />
                             <view class="pol-trip-order-img-cover {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}"></view>
                             <!-- 异常状态再显示 -->
@@ -263,13 +263,35 @@
                             </view>
                         </view>
 
-                        <!-- 产品、型号 -->
+                        <!-- 产品、型号、拼团 -->
                         <view class="pol-trip-order-title-block">
-                            <view class="pol-trip-order-name {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}">
+                            <view
+                                bindtap="goGoodDetail"
+                                data-data="{{ order }}"
+                                class="pol-trip-order-name {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}"
+                            >
                                 {{ order.name }}
                             </view>
-                            <view class="pol-trip-order-standar">
+                            <view
+                                bindtap="goGoodDetail"
+                                data-data="{{ order }}"
+                                class="pol-trip-order-standar"
+                            >
                                 {{ order.standername }}
+                            </view>
+                            <view
+                                bindtap="toggleTask"
+                                class="pol-trip-order-pin-info"
+                                wx:if="{{ order.b === '0' && order.groupPrice }}"
+                            >
+                                拼团可减{{ order.price - order.groupPrice }}元
+                            </view>
+                            <view
+                                bindtap="toggleTask"
+                                class="pol-trip-order-pin-info"
+                                wx:if="{{ order.b === '1' && order.allocatedGroupPrice }}"
+                            >
+                                拼团可减{{ order.allocatedPrice - order.allocatedGroupPrice }}元
                             </view>
                         </view>
 
@@ -282,8 +304,8 @@
                                 拼
                             </view>
                             <view
-                                wx:if="{{ !order.canGroup && order.allocatedGroupPrice }}"
-                                class="pol-trip-order-price inline {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}"
+                                wx:if="{{ !order.canGroup }}"
+                                class="pol-trip-order-price inline {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }} {{ showDataBar$ ? 'grey' : '' }}"
                             >
                                 ¥ {{ order.allocatedPrice || order.price }}
                             </view>
@@ -297,7 +319,7 @@
 
                             <!-- 期待的采购量 -->
                             <view
-                                class="pol-trip-order-count"
+                                class="pol-trip-order-count {{ showDataBar$ ? 'grey' : '' }}"
                             >
                                 x {{ order.count }}
                             </view>
@@ -314,7 +336,7 @@
                 
                 </view>
 
-                <!-- 货款合计信息 -->
+                <!-- 货数、订金信息 -->
                 <view class="pol-trip-order-sum-block">
                     <view class="pol-trip-order-sum">
                         共{{ item.sum }}件商品
@@ -383,9 +405,10 @@
 
                 <!-- 其他按钮 -->
                 <view class="pol-trip-order-btn-block">
-                    <view class="pol-order-more">
+                    <view
+                        class="pol-order-more"
+                    >
                         <!-- 更多 -->
-                        更多
                     </view>
                     <view class="pol-trip-order-btns">
 

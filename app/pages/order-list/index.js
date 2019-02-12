@@ -422,7 +422,7 @@ Page({
             }, 0 );
             tripOrders['sum'] = sum;
 
-            // 处理订单商品总价价格
+            // 处理订单商品总价格（没有任何团购价）
             const totalPrice = orders.reduce(( x, y ) => {
                 const price = y.allocatedPrice || y.price;
                 return x + price * count$( y );;
@@ -430,15 +430,13 @@ Page({
             tripOrders['totalPrice'] = totalPrice;
 
             /**
-             * 处理订单商品团购价
-             * ! 团购价可以为0
-             * ! 改：团购价不能为0
+             * 处理订单商品团购价（团购价优先于售价）
+             * ! 团购价不能为0
              */
             const totalGroupPrice = orders.reduce(( x, y ) => {
-                const groupPrice = y.allocatedGroupPrice !== null && y.allocatedGroupPrice !== undefined ?
-                    y.allocatedGroupPrice :
-                    y.groupPrice || 0 ;
-                return x + groupPrice * count$( y );
+                const price = y.allocatedPrice || y.price;
+                const groupPrice = y.allocatedGroupPrice || y.groupPrice;
+                return x + (groupPrice || price ) * count$( y );
             }, 0 );
             tripOrders['totalGroupPrice'] = totalGroupPrice;
 
@@ -458,7 +456,7 @@ Page({
             const hasPayDepositPrice = orders.reduce(( x, y ) => {
                 const depositPrice = String( y.pay_status ) !== '0' ?
                     y.depositPrice || 0 : 0;
-                return x + depositPrice * y.count;
+                return Number(Number( x + Number(Number( depositPrice * y.count ).toFixed( 2 ))).toFixed( 2 ));
             }, 0 )
             tripOrders['hasPayDepositPrice'] = hasPayDepositPrice;
 
@@ -527,7 +525,7 @@ Page({
             });
             tripOrders['lastPrice'] = lastPrice;
 
-            // 目前的总可减免，除了优惠券类，还要计算预测成功拼团的减免
+            // 目前的总可减免，除了优惠券类，
             let cutoff = 0;
             if ( t_manjian.isUsed ) {
                 cutoff += Number( t_manjian.value );
@@ -539,6 +537,10 @@ Page({
                 cutoff += Number( t_daijin.value );
             }
             tripOrders['cutoff'] = cutoff;
+
+            /**
+             * ! 预测成功拼团的减免
+             */
 
             /**
              * ! 处理邮费
@@ -566,12 +568,15 @@ Page({
 
             orders.map( order => {
                 if ( !!order.groupPrice || !!order.allocatedGroupPrice ) {
+
+                    const price = order.allocatedGroupPrice ?
+                        order.allocatedPrice - order.allocatedGroupPrice :
+                        order.price - order.groupPrice;
+
                     task.push({
                         type: 'good',
 
-                        price: order.allocatedGroupPrice ?
-                            order.allocatedPrice - order.allocatedGroupPrice :
-                            order.price - order.groupPrice,
+                        price: price * order.count,
 
                         title: '拼团',
 
@@ -596,6 +601,7 @@ Page({
             ['t_lijian', 't_manjian', 't_daijin'].map( quan => {
                 const target = tripOrders[ quan ];
                 if ( target.canUsed || !!target.value ) {
+                       
                     task.push({
 
                         type: quan,

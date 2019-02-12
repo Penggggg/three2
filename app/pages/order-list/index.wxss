@@ -216,6 +216,10 @@
     color: #999;
 }
 
+.pol-trip-order-price.grey {
+    color: #bfbfbf;
+}
+
 .pol-trip-order-count {
     color: #999;
     font-size: 22rpx;
@@ -227,6 +231,29 @@
 
 .pol-trip-order-count.purple {
     color: #ff5777;
+}
+
+.pol-trip-order-count.grey {
+    color: #bfbfbf;
+}
+
+.pol-trip-order-pin-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 14rpx;
+    /* line-height:34rpx; */
+    color: #fff;
+    font-size: 20rpx;
+    padding: 2rpx 15rpx;
+    border-radius: 15px;
+    display: block;
+    box-sizing: border-box;
+    border-radius: 3px;
+    background: #bc4e9c;  
+    background: -webkit-linear-gradient(to left, #f80759, #bc4e9c); 
+    background: linear-gradient(to left, #f80759, #bc4e9c); 
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
 }
 
 .pol-trip-order-status {
