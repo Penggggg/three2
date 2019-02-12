@@ -514,18 +514,26 @@ export const main = async ( event, context ) => {
                     allocatedPrice: adjustPrice,
                     allocatedGroupPrice: adjustGroupPrice,
                     // 无论自动分配是否成功，都是被“分配”操作过的
-                    base_status: purchase - order.count >= 0 ? '1' : '1',
-                    allocatedCount: purchase - order.count >= 0 ? order.count : 0
+                    base_status: '1',
+                    /**
+                     * ! v1: 剩余分配量不足采购量就分配0
+                     * ! v2: 剩余分配量不足采购量，就分配剩余的采购量
+                     */
+                    // allocatedCount: purchase - order.count >= 0 ? order.count : 0
+                    allocatedCount: purchase - order.count >= 0 ?
+                        order.count :
+                        purchase
                 };
                 
                 // 分配成功
                 if ( purchase - order.count >= 0 ) {
                     lastAllocated = purchase - order.count;
-                    purchase = purchase - order.count;
+                    purchase -= order.count;
 
-                // 货源不足，分配失败
+                // 货源不足，分配最后的剩余量
                 } else {
-                    lastAllocated = purchase;
+                    lastAllocated = 0;
+                    purchase = 0;
                 }
 
                 const temp = Object.assign({ }, order, baseTemp );

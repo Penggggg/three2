@@ -78,7 +78,7 @@
                
                     <view
                         class="tog-statuscn text"
-                        wx:if="{{ item.statusCN }}"
+                        wx:if="{{ (item.statusCN && item.statusCN.indexOf('退订金') === -1) || (item.statusCN && item.statusCN.indexOf('退订金') !== -1 && callMoneyTimes > 0 ) }}"
                     >
                         {{ item.statusCN }}
                     </view>

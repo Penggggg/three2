@@ -98,9 +98,8 @@ Component({
 
                 // 退还的订金
                 const retreat = x.orders
-                    .filter( o => o.base_status !== '4' && o.base_status !== '5' )
-                    .filter( o => o.allocatedCount === 0 )
-                    .map( o => o.depositPrice || 0 )
+                    .filter( o => o.base_status !== '3' && o.base_status !== '4' && o.base_status !== '5' )
+                    .map( o => ( o.depositPrice || 0 ) * ( o.count - (o.allocatedCount || 0 )))
                     .reduce(( z, y ) => z + y, 0 );
 
                 // 订单中文状态
@@ -114,6 +113,9 @@ Component({
                             '' :
                     '';
                 
+                /**
+                 * !退还订金数，可能存在多余订金的问题
+                 */
                 if ( getNothing && retreat ) {
                     statusCN += ('退订金 ' + retreat);
                 } 

@@ -217,17 +217,14 @@
                                     ''
                                 }}
                             </view> -->
-                            <view>
-                                <!-- <image
-                                    wx:if="{{ item.base_status === '1' && item.lastAllocated }}"
-                                    class="tos-trip-item-image"
-                                    src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/header.png"
-                                /> -->
-                                {{ 
-                                    item.lastAllocated && item.base_status === '1' ?
-                                        item.lastAllocated + ' 件待分配' :
-                                        ''
-                                }}
+                            <view
+                                wx:if="{{ item.lastAllocated && item.base_status === '1' }}"
+                            >
+                                <view class="tos-last-allocated">
+                                    {{ 
+                                        item.lastAllocated + '件待分配'
+                                    }}
+                                </view>
                             </view>
                         </view>
                         <view class="tos-trip-order-btns">

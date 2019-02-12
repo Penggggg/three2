@@ -252,7 +252,7 @@
                                 wx:key="{{ k }}"
                                 wx:for="{{ order.statusCN }}"
                                 class="pol-trip-order-status-fix"
-                                wx:if="{{ i === '支付过期' || i === '待付订金' || i === '已取消' || i === '货源不足' || i === '退订金' || i === '拼团成功'}}"
+                                wx:if="{{ i === '支付过期' || i === '已取消' || (( i === '待付订金'  || i === '货源不足' || i === '退订金' || i === '拼团成功') && order.b !== '1' )}}"
                             >
                                 {{ i === '退订金' ?
                                     order.retreat ?
@@ -295,7 +295,7 @@
                             </view>
                         </view>
 
-                        <!-- 价格、数量 -->
+                        <!-- 价格、数量，调整完成之前，都是看到默认的count跟price -->
                         <view class="pol-trip-order-price-block">
                             <view 
                                 class="pol-trip-order-status-pin"
@@ -303,13 +303,20 @@
                             >
                                 拼
                             </view>
+                            <!-- 正价 调整前 -->
                             <view
                                 wx:if="{{ !order.canGroup }}"
                                 class="pol-trip-order-price inline {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }} {{ showDataBar$ ? 'grey' : '' }}"
                             >
-                                ¥ {{ order.allocatedPrice || order.price }}
+                                ¥ {{
+                                    order.b === '2' || order.b === '3' ?
+                                        order.allocatedPrice :
+                                        order.b === '1' || order.b === '0' ?
+                                            order.price :
+                                            order.allocatedPrice
+                                }}
                             </view>
-
+                            <!--  团购价 -->
                             <view
                                 wx:if="{{ order.canGroup && order.allocatedGroupPrice }}"
                                 class="pol-trip-order-count inline"
