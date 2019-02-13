@@ -26,7 +26,7 @@
             <!-- 为空的情况 -->
             <view
                 class="pol-empty-block"
-                wx:if="{{ tripOrders.length === 0 }}"
+                wx:if="{{ tripOrders.length === 0 && metaList.length === 0 }}"
             >
                 <!-- 图片 -->
                 <view class="pol-empty-img-block">
@@ -72,6 +72,8 @@
                     >
                         <swiper-item class="swiper-visible">
                             <view
+                                data-data="{{ item }}"
+                                bindtap="goGoodDetail"
                                 class="pol-swiper-item"
                             >
                                 <image
@@ -282,16 +284,13 @@
                             <view
                                 bindtap="toggleTask"
                                 class="pol-trip-order-pin-info"
-                                wx:if="{{ order.b === '0' && order.groupPrice }}"
+                                wx:if="{{ order.pining || order.pin_cutoff }}"
                             >
-                                拼团可减{{ order.price - order.groupPrice }}元
-                            </view>
-                            <view
-                                bindtap="toggleTask"
-                                class="pol-trip-order-pin-info"
-                                wx:if="{{ order.b === '1' && order.allocatedGroupPrice }}"
-                            >
-                                拼团可减{{ order.allocatedPrice - order.allocatedGroupPrice }}元
+                                {{
+                                    order.pining ?
+                                        '减' + order.pin_cutoff + '元' :
+                                        '拼团可减' + order.pin_cutoff + '元'
+                                }}
                             </view>
                         </view>
 

@@ -794,12 +794,13 @@ export const main = async ( event, context ) => {
                     .update({
                         data: {
                             base_status: '2',
-                            // 大于2人购买，且被分配数均大于0，才达到“团购”的条件
+                            // 有团购价、大于2人购买，且被分配数均大于0，才达到“团购”的条件
                             canGroup: !!orders.find( o => {
                                 return o.oid !== order.oid &&
                                     o.openid !== order.openid && 
                                     o.pid === order.pid && o.sid === order.sid &&
-                                    o.allocatedCount > 0 && order.allocatedCount > 0
+                                    o.allocatedCount > 0 && order.allocatedCount > 0 &&
+                                    !!o.allocatedGroupPrice
                             })
                         }
                     })

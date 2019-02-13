@@ -591,6 +591,58 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /**
+     * @description
+     * 等待拼团列表 / 可拼团列表
+     * {
+     *    detail: boolean 是否带回商品详情
+     *    type: 'wait' | 'pin' // 等待拼团，已经可以拼团
+     * }
+     */
+    app.router('pin', async( ctx, next ) => {
+        try {
+
+            const type = event.data.type || 'pin';
+            const { tid, detail } = event.data;
+            const shopping$ = await db.collection('shopping-list')
+                .where({
+                    tid,
+                })
+                .get( );
+
+            // uids长度为1，为待拼列表 ( 应不应该有自己 )
+            // uids长度为2，为可以拼团列表
+            let data: any = [ ];
+            const data$ = shopping$.data.filter( s => {
+                if ( type === 'pin' ) {
+                    return !!s.adjustGroupPrice && s.uids.length > 1
+
+                } else {
+                    return !!s.adjustGroupPrice && s.uids.length === 1
+                }
+            });
+
+            data = data$;
+
+            // 注入商品详情
+            if ( detail === undefined || !!detail ) {
+                const data = data$.map( shopping => {
+                    return Object.assign({ }, shopping, {
+                        detail: { }
+                    })
+                });
+            }
+            
+            return ctx.body = {
+                data,
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
+
     return app.serve( );
 
 }

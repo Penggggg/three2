@@ -55,7 +55,9 @@ Page({
         // 展示当前行程的优惠情况(任务)
         showTask: 'hide',
         // 展示手指头
-        showFinger: true
+        showFinger: true,
+        // 用于调整前的拼团预测（列表）
+        pinList: [ ]
     },
 
     /** 设置computed */
@@ -90,6 +92,26 @@ Page({
             frontColor: '#ffffff',
             backgroundColor: '#f80759'
         })
+    },
+
+    /** 拉取拼团列表（预测） */
+    fetchPinList( tid ) {
+        http({
+            url: 'shopping-list_pin',
+            data: {
+                detail: false,
+                type: 'pin'
+            },
+            loadingMsg: 'none',
+            success: res => {
+                if ( res.status === 200 ) {
+                    this.setData({
+                        pinList: res.data
+                    });
+                    this.data.metaList.length > 0 && this.covertOrder( );
+                }
+            }
+        });
     },
 
     /** 获取当前行程 */
@@ -171,6 +193,7 @@ Page({
                 if ( data.data.length !== 0 ) {
                     this.setNavBar( );
                     this.covertOrder( );
+                    this.fetchCurrentTrip( tid => this.fetchPinList( tid ));
                 // 无订单则显示默认文案
                 } else {
                     this.fetchCurrentTrip( tid => this.fetchGroupList( tid ));
@@ -193,7 +216,7 @@ Page({
                 this.setData({
                     coupons: data
                 });
-                this.covertOrder( );
+                this.data.metaList.length > 0 && this.covertOrder( );
             }
         })
     },
@@ -244,9 +267,69 @@ Page({
          *  }
          */
 
-        const { metaList } = this.data;
+        const { metaList, pinList } = this.data;
         const orderObj = { };
 
+
+        // 计算当前可结算的商品数量 
+        const count$ = order => {
+            const b = order.base_status;
+            return b === '0' || b === '1' ?
+                    order.count :
+                    b === '2' || b === '3' ?
+                        order.allocatedCount:
+                        0;
+        }
+
+
+        // 计算当前订单的拼团 (可减免)
+        const pinCutoff$ = order => {
+
+            const b = order.base_status;
+            const { canGroup, allocatedCount, allocatedGroupPrice, allocatedPrice, count, groupPrice, price } = order;
+
+            if (( b === '2' || b === '3' )) {
+
+                if ( canGroup && allocatedGroupPrice ) {
+                    return allocatedCount * ( allocatedPrice - allocatedGroupPrice );
+
+                } else {
+                    return 0;
+                }
+            } else if (( b === '0' || b === '1' )) {
+
+                /**
+                 * 这里不用预测
+                */
+                if ( groupPrice ) {
+                    return count * ( price - groupPrice );
+                } else {
+                    return 0;
+                }
+
+            } else {
+                return 0
+            }
+        }
+
+
+        // 计算当前订单是否处于拼团状态（含预测）
+        const pining$ = order => {
+            
+            const b = order.base_status;
+            if (( b === '2' || b === '3' )) {
+                return order.canGroup;
+
+            } else if (( b === '0' || b === '1' )) {
+                return !!pinList.find( shopping => shopping.sid === order.sid && shopping.pid === order.pid )
+
+            } else {
+                return false;
+            }
+        }
+
+
+        // 处理单个订单 状态
         metaList.map( order => {
 
             let isNeedPrePay = true;
@@ -329,11 +412,13 @@ Page({
                     b,
                     statusCN,
                     isNeedPrePay,
-                    retreat: b === '2' && allocatedCount < count ?
+                    pining: pining$( order ), // 是否处于拼团状态
+                    pin_cutoff: pinCutoff$( order ), // 拼团减免（预测）
+                    retreat: b === '2' && allocatedCount < count ? // 退还订金
                         !!depositPrice ?
                             (count - allocatedCount) * depositPrice :
                             0 :
-                        0
+                        0,
                 })
             };
 
@@ -396,16 +481,7 @@ Page({
                 tripStatusCN = '部分发货';
             }
             tripOrders['tripStatusCN'] = tripStatusCN;
-
-            // 计算当前可结算的商品数量
-            const count$ = order => {
-                return order.b === '0' || order.b === '1' ?
-                        order.count :
-                        order.b === '2' || order.b === '3' ?
-                            order.allocatedCount:
-                            0;
-            }
-    
+   
 
             /** 是否处于可以结算的状态 */
             const canSettle = tripOrders.tripStatusCN === '待付尾款';
@@ -493,6 +569,7 @@ Page({
             if ( t_daijin.canUsed ) {
                 wholePriceByDiscount -= t_daijin.value;
             }
+
             tripOrders['wholePriceByDiscount'] = wholePriceByDiscount;
 
             /**
@@ -543,6 +620,14 @@ Page({
             if ( t_daijin.isUsed ) {
                 cutoff += Number( t_daijin.value );
             }
+
+            orders.map( order => {
+                if ( pinList.find( shopping =>
+                    shopping.pid === order.pid && shopping.sid === order.sid )) {
+                        cutoff += order.pin_cutoff;
+                }
+            });
+
             tripOrders['cutoff'] = cutoff;
 
 
@@ -555,7 +640,17 @@ Page({
             total_cutoff += Number( t_manjian.value ); // 满减
             total_cutoff += Number( t_daijin.value ); // 代金券
             total_cutoff += orders[ 0 ].trip.reduce_price || 0 ; // 立减
-            // total_cutoff += ( wholePriceNotDiscount - wholePriceByDiscount );
+
+            orders.map( order => { // 成功拼团的情况
+                const { groupPrice, price, allocatedGroupPrice, allocatedPrice } = order;
+                if ( !!groupPrice || !!allocatedGroupPrice ) {
+                    const good_cutoff = allocatedGroupPrice ?
+                        allocatedGroupPrice - allocatedPrice :
+                        price - groupPrice;
+                    total_cutoff += good_cutoff * count$( order );
+                }
+            });
+
             tripOrders['total_cutoff'] = total_cutoff;
 
 
@@ -567,10 +662,8 @@ Page({
             tripOrders['cutoff_percent'] = Number( cutoff / total_cutoff ).toFixed( 2 ) * 100;
 
             
-
             /** 任务列表 */
             const task = [ ];
-
             orders.map( order => {
                 if ( !!order.groupPrice || !!order.allocatedGroupPrice ) {
 
@@ -598,7 +691,9 @@ Page({
                         },
 
                         // 处理真正拼团跟预测拼团
-                        finished: false || order.canGroup
+                        finished: !!pinList.find( shopping => {
+                            return shopping.pid === order.pid && shopping.sid === order.sid
+                        })
                     })
                 }
             });
@@ -687,7 +782,9 @@ Page({
             this.setData({
                 isNew: val
             });
-            val !== this.data.isNew && this.covertOrder( );
+            if (val !== this.data.isNew && this.data.metaList.length > 0 ) {
+                this.covertOrder( )
+            }
         });
     },
 
@@ -779,7 +876,6 @@ Page({
         })
         setTimeout(( ) => {
             this.fetchCoupons( );
-            this.fetchCurrentTrip( );
             this.fetchList( this.data.active );
         }, 0 );
         setTimeout(( ) => {
