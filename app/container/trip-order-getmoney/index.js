@@ -391,11 +391,12 @@ Component({
                     that.data.clientOders$.map( userOrder => {
                         const { user, orders } = userOrder;
                         orders.map( order => {
-                            const { _id, prepay_id, form_id, pid, sid, openid, pay_status, allocatedCount } = order;
+                            const { _id, prepay_id, form_id, pid, sid, openid, pay_status, allocatedCount, allocatedGroupPrice } = order;
                             const temp = {
                                 oid: _id,
                                 pay_status,
                                 allocatedCount,
+                                allocatedGroupPrice,
                                 prepay_id, form_id, pid, sid, openid
                             };
                             orders$.push( temp );

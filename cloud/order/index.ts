@@ -756,7 +756,10 @@ export const main = async ( event, context ) => {
      *        pid
      *        sid
      *        openid
-     *        form_id / prepay_id
+     *        prepay_id
+     *        form_id
+     *        allocatedCount
+     *        allocatedGroupPrice
      *    }[ ]
      *    notification: { 
      *       title,
