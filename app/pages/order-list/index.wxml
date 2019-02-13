@@ -288,7 +288,7 @@
                             >
                                 {{
                                     order.pining ?
-                                        '减' + order.pin_cutoff + '元' :
+                                        '拼团成功！减' + order.pin_cutoff + '元' :
                                         '拼团可减' + order.pin_cutoff + '元'
                                 }}
                             </view>
