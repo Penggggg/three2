@@ -9,7 +9,7 @@ const db: DB.Database = cloud.database( );
  *
  * @description 卡券模块
  * -------- 字段 ----------
- * tid 领取该优惠券的所属行程
+ * ! tid 领取该优惠券的所属行程（可无）
  * title 券名称
  * type: 't_lijian' | 't_manjian' | 't_daijin' 券类型：行程立减、行程满减、行程代金券
  * isUsed: 是否已用
@@ -36,6 +36,7 @@ export const main = async ( event, context ) => {
      *   canUseInNext
      *   atleast
      *   value
+     *   fromtid
      *!   valiterm
      *!   reduce_type
      * }
@@ -47,6 +48,7 @@ export const main = async ( event, context ) => {
             const temp = Object.assign({ }, event.data, {
                 openid,
                 isUsed: false,
+                fromtid: event.data.fromtid || event.data.tid,
                 reduce_type: event.data.reduce_type || 'yuan',
                 createTime: new Date( ).getTime( )
             });
@@ -92,19 +94,37 @@ export const main = async ( event, context ) => {
                 .get( );
             const target = find$.data[ 0 ];
 
-            if ( !target ) {
-                return ctx.body = {
-                    status: 200
-                };
+            // 全额补齐
+            if ( !target && !!reduce_price ) {
+                await db.collection('coupon')
+                    .add({
+                        data: {
+                            tid,
+                            openid,
+                            atleast: 0,
+                            fromtid: tid,
+                            value: reduce_price,
+                            type: 't_lijian',
+                            isUsed: false,
+                            canUseInNext: false,
+                            title: '行程立减优惠券',
+                            reduce_type: 'yuan',
+                            createTime: new Date( ).getTime( )
+                        }
+                    })
             }
 
-            await db.collection('coupon')
-                .doc( String( target._id ))
-                .update({
-                    data: {
-                        value: reduce_price
-                    }
-                });
+            // 差额补齐
+            if ( !!target && !!reduce_price ) {
+                await db.collection('coupon')
+                    .doc( String( target._id ))
+                    .update({
+                        data: {
+                            value: reduce_price
+                        }
+                    });
+            }
+            
 
             return ctx.body = {
                 status: 200
@@ -145,6 +165,7 @@ export const main = async ( event, context ) => {
                 .get( );
 
             const trip = trip$.data;
+
             // 行程立减金额/行程满减金额/行程代金券金额
             const { reduce_price, fullreduce_values, cashcoupon_values } = trip;
             

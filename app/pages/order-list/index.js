@@ -96,6 +96,7 @@ Page({
 
     /** 拉取拼团列表（预测） */
     fetchPinList( tid ) {
+
         http({
             url: 'shopping-list_pin',
             data: {
@@ -530,6 +531,7 @@ Page({
             const t_manjian = !coupons_manjian ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
                 // 处理真的已用，和即将要用的情况
                 isUsed: coupons_manjian.isUsed || coupons_manjian.atleast <= wholePriceNotDiscount,
+                id: coupons_manjian._id,
                 value: coupons_manjian.value ,
                 atleast: coupons_manjian.atleast,
                 canUsed: coupons_manjian.atleast <= wholePriceNotDiscount || !coupons_manjian.atleast
@@ -540,9 +542,10 @@ Page({
             // 处理立减
             const t_lijian = !coupons_lijian ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
                 isUsed: true,
+                canUsed: true,
+                id: coupons_lijian._id,
                 value: coupons_lijian.value,
                 atleast: coupons_lijian.atleast,
-                canUsed: true
             };
             tripOrders['t_lijian'] = t_lijian;
 
@@ -551,6 +554,7 @@ Page({
             const t_daijin = !coupons_daijin ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
                 // 处理真的已用，和即将要用的情况
                 isUsed: coupons_daijin.isUsed || coupons_daijin.atleast <= wholePriceNotDiscount,
+                id: coupons_daijin._id,
                 value: coupons_daijin.value,
                 atleast: coupons_daijin.atleast,
                 canUsed: coupons_daijin.atleast <= wholePriceNotDiscount || !coupons_daijin.atleast
@@ -571,11 +575,6 @@ Page({
             }
 
             tripOrders['wholePriceByDiscount'] = wholePriceByDiscount;
-
-            /**
-             * ! 预测成功拼团的减免
-             */
-
 
             // 剩余订金、未付订金列表
             const notPayDepositOrders = [ ];
@@ -606,7 +605,7 @@ Page({
                 const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
                 lastPrice -= count * ( y.depositPrice || 0 );
             });
-            tripOrders['lastPrice'] = lastPrice;
+            tripOrders['lastPrice'] = Number( lastPrice.toFixed( 2 ));
 
 
             // 目前的总可减免，除了优惠券类，
@@ -640,12 +639,12 @@ Page({
             total_cutoff += Number( t_manjian.value ); // 满减
             total_cutoff += Number( t_daijin.value ); // 代金券
             total_cutoff += orders[ 0 ].trip.reduce_price || 0 ; // 立减
-
+        
             orders.map( order => { // 成功拼团的情况
                 const { groupPrice, price, allocatedGroupPrice, allocatedPrice } = order;
                 if ( !!groupPrice || !!allocatedGroupPrice ) {
                     const good_cutoff = allocatedGroupPrice ?
-                        allocatedGroupPrice - allocatedPrice :
+                        allocatedPrice - allocatedGroupPrice:
                         price - groupPrice;
                     total_cutoff += good_cutoff * count$( order );
                 }
@@ -659,7 +658,7 @@ Page({
 
 
             /** 总减免 和 目前减免的比例 */
-            tripOrders['cutoff_percent'] = Number( cutoff / total_cutoff ).toFixed( 2 ) * 100;
+            tripOrders['cutoff_percent'] = Math.floor( Number(Number( cutoff / total_cutoff ).toFixed( 2 )) * 100);
 
             
             /** 任务列表 */
@@ -700,7 +699,7 @@ Page({
             
             ['t_lijian', 't_manjian', 't_daijin'].map( quan => {
                 const target = tripOrders[ quan ];
-                if ( target.canUsed || !!target.value ) {
+                if (( target.canUsed && !!target.value ) || ( quan === 't_lijian' && !!orders[ 0 ].trip.reduce_price )) {
                        
                     task.push({
 
@@ -830,6 +829,55 @@ Page({
             });
             pay( );
         }, ( ) => { });
+    },
+
+    /** 付尾款 */
+    payLast({ currentTarget }) {
+
+        const coupons = [ ];
+        const tripOrder = currentTarget.dataset.data;
+        const { tid, meta, t_daijin, t_lijian, t_manjian, wholePriceByDiscount } = tripOrder;
+        
+        if ( wholePriceByDiscount <= 0 ) { return; }
+
+        if ( t_daijin.isUsed && t_daijin.id ) {
+            coupons.push( t_daijin.id )
+        } 
+        if ( t_lijian.isUsed && t_lijian.id ) {
+            coupons.push( t_lijian.id )
+        } 
+        if ( t_manjian.isUsed && t_manjian.id ) {
+            coupons.push( t_manjian.id )
+        } 
+
+        const orders = meta.map( order => {
+            const { _id, pid, sid, canGroup, allocatedGroupPrice, allocatedCount, allocatedPrice } = order;
+            const final_price = !!canGroup && allocatedGroupPrice ?
+                allocatedCount * allocatedGroupPrice :
+                allocatedCount * allocatedPrice;
+            return {
+                pid,
+                sid,
+                oid: _id,
+                final_price,
+                allocatedCount,
+            }
+        });
+
+        const data = {
+            tid,
+            orders,
+            coupons,
+            integral: wholePriceByDiscount,
+        };
+
+        http({
+            data,
+            url: 'order_pay-last',
+            success: res => {
+
+            }
+        })
     },
 
     /** 展示任务弹框 */

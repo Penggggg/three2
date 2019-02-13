@@ -68,7 +68,10 @@ export const main = async ( event, context ) => {
         
                 await db.collection('user')
                     .add({
-                        data: Object.assign({ }, event.data, { openid })
+                        data: Object.assign({ }, event.data, { 
+                            openid,
+                            integral: 0
+                        })
                     }).catch( err => { throw `${err}`});
         
             // 如果存在，则更新
@@ -78,7 +81,9 @@ export const main = async ( event, context ) => {
                 
                 await db.collection('user').doc(( data$.data[ 0 ] as any)._id )
                     .set({
-                        data: meta
+                        data: Object.assign({ }, meta, {
+                            integral: data$.data[ 0 ].integral
+                        })
                     }).catch( err => { throw `${err}`});
             }    
 

@@ -172,11 +172,11 @@
                             color="#fff"
                             class="pol-summary-count-icon"
                         ></wxc-icon>  -->
-                        {{ tripOrders[ 0 ].cutoff_percent !== 100 ? '还能省' + tripOrders[ 0 ].cutoff_delta + '元': '详情' }}
+                        {{ tripOrders[ 0 ].cutoff_percent !== 100 ? '还能省' + tripOrders[ 0 ].cutoff_delta + '元': '完美省钱~' }}
                         <image
                             mode="widthFix"
                             class="pol-finger-img"
-                            wx:if="{{ showFinger }}"
+                            wx:if="{{ showFinger && tripOrders[ 0 ].cutoff_percent !== 100 }}"
                             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/finger.png"
                         />
                     </view>
@@ -288,7 +288,9 @@
                             >
                                 {{
                                     order.pining ?
-                                        '拼团成功！减' + order.pin_cutoff + '元' :
+                                        order.b === '0' || order.b === '1' ?
+                                            '拼团成功！将减' + order.pin_cutoff + '元' :
+                                            '拼团成功！减' + order.pin_cutoff + '元' :
                                         '拼团可减' + order.pin_cutoff + '元'
                                 }}
                             </view>
@@ -437,8 +439,10 @@
 
                         <!-- 尾款按钮 -->
                         <view
-                            wx:if="{{ item.tripStatusCN === '待付尾款' }}"
+                            data-data="{{ item }}"
+                            bindtap="payLast"
                             class="pol-trip-order-btn purple"
+                            wx:if="{{ item.tripStatusCN === '待付尾款' }}"
                         >
                             付尾款 ¥{{ item.lastPrice || 0 }}
                         </view>

@@ -35,8 +35,8 @@ const _ = db.command;
  * allocatedCount 分配的数量
  * form_id
  * prepay_id,
+ * final_price 最后成交价
  * ! canGroup 是否可以拼团
- * ! final_price 最后成交价
  * ! base_status: 0,1,2,3,4,5 进行中（客户还可以调整自己的订单），代购已购买，已调整，已结算，已取消（买不到），已过期（支付过期）
  * ! pay_status: 0,1,2 未付款，已付订金，已付全款
  * ! deliver_status: 0,1 未发布，已发布、
@@ -861,6 +861,120 @@ export const main = async ( event, context ) => {
             return ctx.body = { status: 500 };
         }
     })
+
+    /** 
+     * @description
+     * 订单付尾款
+     * {
+     *      tid // 领代金券
+     *      integral // 积分总额（user表）
+     *      orders: [{  
+     *          oid // 订单状态
+     *          pid
+     *          final_price // 最终成交额
+     *          allocatedCount // 最终成交量
+     *      }]
+     *      coupons: [ // 卡券消费
+     *          id1,
+     *          id2...
+     *      ]
+     * }
+     */
+    app.router('pay-last', async( ctx, next ) => {
+        try {
+            const openid = event.userInfo.openId;
+            const { tid, integral, orders, coupons } = event.data;
+
+            const user$ = await db.collection('user')
+                .where({
+                    openid
+                })
+                .get( );
+
+            // 增加积分总额
+            await db.collection('user')
+                .doc( String( user$.data[ 0 ]._id ))
+                .update({
+                    data: {
+                        integral: _.inc( integral )
+                    }
+                });
+
+            // 更新订单状态、商品销量
+            await Promise.all( orders.map( order => {
+                return Promise.all([
+                    db.collection('order')
+                        .doc( order.oid )
+                        .update({
+                            data: {
+                                base_status: '3',
+                                pay_status: '2',
+                                final_price: order.final_price,
+                            }
+                        }),
+                    db.collection('goods')
+                        .doc( order.pid )
+                        .update({
+                            data: {
+                                saled: _.inc( order.allocatedCount )
+                            }
+                        })
+                ])
+            }));
+
+            // 更新卡券使用状态
+            await Promise.all( coupons.map( couponid => {
+                return db.collection('coupon')
+                    .doc( couponid )
+                    .update({
+                        data: {
+                            isUsed: true,
+                            canUseInNext: false
+                        }
+                    })
+            }));
+
+            // 达到条件，则领取代金券
+            const trip$ = await db.collection('trip')
+                .doc( tid )
+                .get( );
+
+            let req = {
+                result: {
+                    status: 500
+                }
+            }
+            const { cashcoupon_atleast, cashcoupon_values } = trip$.data;
+            if ( !!cashcoupon_values && integral >= cashcoupon_values ) {
+                const temp = {
+                    openid,
+                    fromtid: tid,
+                    type: 't_daijin',
+                    title: '代金券',
+                    canUseInNext: true,
+                    atleast: cashcoupon_atleast || 0,
+                    value: cashcoupon_values
+                };
+                req = await cloud.callFunction({
+                    data: {
+                        data: temp,
+                        $url: 'create'
+                    },
+                    name: 'coupon'
+                })
+            }
+
+            return ctx.body = {
+                status: 200,
+                data: {
+                    value: req.result.status === 200 ? cashcoupon_values || 0 : 0 
+                }
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 }
+        }
+    });
  
    return app.serve( );
 
