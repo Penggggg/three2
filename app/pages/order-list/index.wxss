@@ -323,6 +323,10 @@
     margin-right: 15rpx;
 }
 
+.pol-trip-order-sum.ml {
+    margin-left: 10rpx;
+}
+
 .pol-trip-order-totalprice {
     color: #999;
     font-size: 22rpx;

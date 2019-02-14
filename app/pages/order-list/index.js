@@ -527,7 +527,7 @@ Page({
             const { coupons } = this.data;
             const coupons_manjian = coupons.find( x => x.type === 't_manjian' && x.tid === tid );
             const coupons_lijian = coupons.find( x => x.type === 't_lijian' && x.tid === tid );
-            const coupons_daijin = coupons.find( x => x.type === 't_daijin' && x.tid === tid );
+            const coupons_daijin = coupons.find( x => x.type === 't_daijin' && (( !x.isUsed && x.canUseInNext ) || ( !!x.isUsed && x.usedBy === tid )));
    
 
             // 处理满减

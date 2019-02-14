@@ -936,6 +936,7 @@ export const main = async ( event, context ) => {
             }));
 
             // 达到条件，则领取代金券
+            // 同时删除上一个未使用过的代金券
             const trip$ = await db.collection('trip')
                 .doc( tid )
                 .get( );
@@ -945,7 +946,6 @@ export const main = async ( event, context ) => {
                     status: 500
                 }
             }
-
             
             const { cashcoupon_atleast, cashcoupon_values } = trip$.data;
 
@@ -960,14 +960,32 @@ export const main = async ( event, context ) => {
                 value: cashcoupon_values
             };
 
-            if ( !!cashcoupon_values && integral >= cashcoupon_values ) {
+            // 无需门槛，有代金券即可领取
+            if ( !!cashcoupon_values ) {
+
+                // 删除上一个未使用的代金券
+                const lastDaijin$ = await db.collection('coupon')
+                    .where({
+                        type: 't_daijin',
+                        isUsed: false,
+                        canUseInNext: true
+                    })
+                    .get( );
+
+                if ( lastDaijin$.data[ 0 ]) {
+                    await db.collection('coupon')
+                        .doc( String( lastDaijin$.data[ 0 ]._id ))
+                        .remove( );
+                }
+
+                // 领取代金券
                 req = await cloud.callFunction({
                     data: {
                         data: temp,
                         $url: 'create'
                     },
                     name: 'coupon'
-                })
+                });
             }
 
             return ctx.body = {

@@ -373,25 +373,25 @@
                         <view class="pol-pay-price small">-{{ item.t_lijian.value }}</view>
                     </view>
                     <view
-                        class="pol-trip-order-sum"
+                        class="pol-trip-order-sum ml"
                         wx:if="{{ item.t_manjian.canUsed && item.t_manjian.value }}"
                     >
                         满减券:
                     </view>
                     <view
-                        class="pol-trip-order-totalprice ml"
+                        class="pol-trip-order-totalprice"
                         wx:if="{{ item.t_manjian.canUsed && item.t_manjian.value }}"
                     >
                         <view class="pol-pay-price small">-{{ item.t_manjian.value }}</view>
                     </view>
                     <view
-                        class="pol-trip-order-sum"
+                        class="pol-trip-order-sum ml"
                         wx:if="{{ item.t_daijin.canUsed && item.t_daijin.value }}"
                     >
                         代金券:
                     </view>
                     <view
-                        class="pol-trip-order-totalprice ml"
+                        class="pol-trip-order-totalprice"
                         wx:if="{{ item.t_daijin.canUsed && item.t_daijin.value }}"
                     >
                         <view class="pol-pay-price small">-{{ item.t_daijin.value }}</view>
