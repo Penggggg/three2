@@ -11,6 +11,7 @@ const db: DB.Database = cloud.database( );
  * -------- 字段 ----------
  * ! tid 领取该优惠券的所属行程（可无）
  * title 券名称
+ * usedBy: 被xxx行程所使用
  * type: 't_lijian' | 't_manjian' | 't_daijin' 券类型：行程立减、行程满减、行程代金券
  * isUsed: 是否已用
  * openid

@@ -213,7 +213,7 @@ Page({
         http({
             url: `coupon_list`,
             data: {
-                isUsed: false
+                // isUsed: false
             },
             success: res => {
                 const { status, data } = res;
@@ -252,7 +252,6 @@ Page({
 
     /** 转换订单列表，为行程订单列表 */
     covertOrder( ) {
-
         /**
          * type orderObj = {
          *   [ key: string ]: {
@@ -569,13 +568,13 @@ Page({
             // 应付全款（含优惠券、拼团折扣）
             let wholePriceByDiscount = wholePriceNotDiscount;
             if ( t_manjian.canUsed ) {
-                wholePriceByDiscount -= t_manjian.value;
+                wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_manjian.value ).toFixed( 2 ));
             }
             if ( t_lijian.canUsed ) {
-                wholePriceByDiscount -= t_lijian.value;
+                wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_lijian.value ).toFixed( 2 ));
             } 
             if ( t_daijin.canUsed ) {
-                wholePriceByDiscount -= t_daijin.value;
+                wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_daijin.value ).toFixed( 2 ));
             }
 
             tripOrders['wholePriceByDiscount'] = wholePriceByDiscount;
@@ -752,13 +751,13 @@ Page({
             }, 0 );
 
             if ( t_manjian.isUsed ) {
-                total += Number( t_manjian.value );
+                total = Number( Number( total - t_manjian.value ).toFixed( 2 ));
             }
             if ( t_lijian.isUsed ) {
-                total += Number( t_lijian.value );
+                total = Number( Number( total - t_lijian.value ).toFixed( 2 ));
             }
             if ( t_daijin.isUsed ) {
-                total += Number( t_daijin.value );
+                total = Number( Number( total - t_daijin.value ).toFixed( 2 ));
             }
 
             tripOrders['total'] = total;
@@ -900,18 +899,25 @@ Page({
                 success: res => {
                     if ( res.status === 200 ) {
 
+                        this.setData({
+                            skip: 0,
+                            page: 0
+                        })
+                        setTimeout(( ) => {
+                            this.fetchCoupons( );
+                            this.fetchList( this.data.active );
+                        }, 0 );
+                    
                         wx.showToast({
                             title: '支付成功'
                         });
 
                         // 如果领取了代金券
-                        if ( res.data.value ) {
-                            setTimeout(( ) => {
-                                this.setData({
-                                    showDaijin: 'show',
-                                    daijin: res.data
-                                });
-                            }, 1500 );
+                        if ( res.data && res.data.value ) {
+                            this.setData({
+                                showDaijin: 'show',
+                                daijin: res.data
+                            });
                         }
                     }
                 }

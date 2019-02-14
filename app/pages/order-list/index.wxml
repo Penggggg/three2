@@ -121,6 +121,7 @@
                 show-icon="{{ true }}"
                 bgColor="transparent"
                 notice="【Tips】行程中看看大家买了什么，加入拼团，拼得越多越省钱！"
+                wx:if="{{ tripOrders.length !== 0 && metaList.length !== 0 }}"
             />
 
             <!-- 头部用户在行程的优惠情况 -->
@@ -407,7 +408,7 @@
                         合计:
                     </view>
                     <view class="pol-trip-order-totalprice">
-                        <view class="pol-pay-price small">¥{{ item.total || item.wholePriceByDiscount }}</view>
+                        <view class="pol-pay-price small">¥{{ item.hasPay ? item.total : item.wholePriceByDiscount }}</view>
                     </view>
                 </view>
 

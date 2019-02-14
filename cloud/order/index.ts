@@ -929,6 +929,7 @@ export const main = async ( event, context ) => {
                     .update({
                         data: {
                             isUsed: true,
+                            usedBy: tid,
                             canUseInNext: false
                         }
                     })
