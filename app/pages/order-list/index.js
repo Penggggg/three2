@@ -57,7 +57,11 @@ Page({
         // 展示手指头
         showFinger: true,
         // 用于调整前的拼团预测（列表）
-        pinList: [ ]
+        pinList: [ ],
+        // 展示代金券（自动领取代金券）
+        showDaijin: 'hide',
+        // 领取代金券的信息
+        daijin: null
     },
 
     /** 设置computed */
@@ -742,6 +746,23 @@ Page({
 
             tripOrders['task'] = task;
 
+            /** 结算后的合计 */
+            let total = orders.reduce(( x, y ) => {
+                return x + ( y.final_price || 0 ) * ( y.allocatedCount || 0 );
+            }, 0 );
+
+            if ( t_manjian.isUsed ) {
+                total += Number( t_manjian.value );
+            }
+            if ( t_lijian.isUsed ) {
+                total += Number( t_lijian.value );
+            }
+            if ( t_daijin.isUsed ) {
+                total += Number( t_daijin.value );
+            }
+
+            tripOrders['total'] = total;
+
         });
         
         console.log('..', Object.keys( orderObj ).map( tid => orderObj[ tid ]))
@@ -836,48 +857,66 @@ Page({
 
         const coupons = [ ];
         const tripOrder = currentTarget.dataset.data;
-        const { tid, meta, t_daijin, t_lijian, t_manjian, wholePriceByDiscount } = tripOrder;
-        
-        if ( wholePriceByDiscount <= 0 ) { return; }
+        const { tid, meta, t_daijin, t_lijian, t_manjian, wholePriceByDiscount, lastPrice } = tripOrder;
 
-        if ( t_daijin.isUsed && t_daijin.id ) {
-            coupons.push( t_daijin.id )
-        } 
-        if ( t_lijian.isUsed && t_lijian.id ) {
-            coupons.push( t_lijian.id )
-        } 
-        if ( t_manjian.isUsed && t_manjian.id ) {
-            coupons.push( t_manjian.id )
-        } 
+        wxPay( lastPrice, ({ prepay_id }) => {
 
-        const orders = meta.map( order => {
-            const { _id, pid, sid, canGroup, allocatedGroupPrice, allocatedCount, allocatedPrice } = order;
-            const final_price = !!canGroup && allocatedGroupPrice ?
-                allocatedCount * allocatedGroupPrice :
-                allocatedCount * allocatedPrice;
-            return {
-                pid,
-                sid,
-                oid: _id,
-                final_price,
-                allocatedCount,
-            }
-        });
+            if ( wholePriceByDiscount <= 0 ) { return; }
 
-        const data = {
-            tid,
-            orders,
-            coupons,
-            integral: wholePriceByDiscount,
-        };
+            if ( t_daijin.isUsed && t_daijin.id ) {
+                coupons.push( t_daijin.id )
+            } 
+            if ( t_lijian.isUsed && t_lijian.id ) {
+                coupons.push( t_lijian.id )
+            } 
+            if ( t_manjian.isUsed && t_manjian.id ) {
+                coupons.push( t_manjian.id )
+            } 
 
-        http({
-            data,
-            url: 'order_pay-last',
-            success: res => {
+            const orders = meta.map( order => {
+                const { _id, pid, sid, canGroup, allocatedGroupPrice, allocatedCount, allocatedPrice } = order;
+                const final_price = !!canGroup && allocatedGroupPrice ?
+                    allocatedCount * allocatedGroupPrice :
+                    allocatedCount * allocatedPrice;
+                return {
+                    pid,
+                    sid,
+                    oid: _id,
+                    final_price,
+                    allocatedCount,
+                }
+            });
 
-            }
-        })
+            const data = {
+                tid,
+                orders,
+                coupons,
+                integral: wholePriceByDiscount,
+            };
+
+            http({
+                data,
+                url: 'order_pay-last',
+                success: res => {
+                    if ( res.status === 200 ) {
+
+                        wx.showToast({
+                            title: '支付成功'
+                        });
+
+                        // 如果领取了代金券
+                        if ( res.data.value ) {
+                            setTimeout(( ) => {
+                                this.setData({
+                                    showDaijin: 'show',
+                                    daijin: res.data
+                                });
+                            }, 1500 );
+                        }
+                    }
+                }
+            })
+        }, ( ) => { })
     },
 
     /** 展示任务弹框 */
@@ -896,6 +935,14 @@ Page({
             showFinger: false
         });
         
+    },
+
+    /** 展示代金券 */
+    toggleDaijin( ) {
+        const { showDaijin } = this.data;
+        this.setData({
+            showDaijin: showDaijin === 'hide' ? 'show' : 'hide'
+        });
     },
 
     /**

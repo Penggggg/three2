@@ -24,7 +24,13 @@ Component({
         title: {
             type: String
         },
-        canUseInNext: {
+        /** 背景透明 */
+        transparent: {
+            type: Boolean,
+            value: false
+        },
+        /** 展示“下次使用” */
+        showNext: {
             type: Boolean,
             value: false
         }
@@ -45,6 +51,7 @@ Component({
 
         /** 处理行程 */
         dealtrip( trip ) {
+            if ( !trip ) { return }
             const start = new Date( trip.start_date );
             const end = new Date( trip.end_date );
             const m1 = start.getMonth( ) + 1;
@@ -59,8 +66,9 @@ Component({
 
         /** 跳到行程入口 */
         goTrip( ) {
+            const { showNext } = this.data
             wx.navigateTo({
-                url: `/pages/trip-enter/index`
+                url: showNext ? `/pages/coupon-list/index` : `/pages/trip-enter/index`
             })
         }
 

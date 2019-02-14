@@ -944,17 +944,22 @@ export const main = async ( event, context ) => {
                     status: 500
                 }
             }
+
+            
             const { cashcoupon_atleast, cashcoupon_values } = trip$.data;
+
+            const temp = {
+                openId: openid,
+                fromtid: tid,
+                type: 't_daijin',
+                title: '行程代金券',
+                canUseInNext: true,
+                isUsed: false,
+                atleast: cashcoupon_atleast || 0,
+                value: cashcoupon_values
+            };
+
             if ( !!cashcoupon_values && integral >= cashcoupon_values ) {
-                const temp = {
-                    openid,
-                    fromtid: tid,
-                    type: 't_daijin',
-                    title: '代金券',
-                    canUseInNext: true,
-                    atleast: cashcoupon_atleast || 0,
-                    value: cashcoupon_values
-                };
                 req = await cloud.callFunction({
                     data: {
                         data: temp,
@@ -966,9 +971,7 @@ export const main = async ( event, context ) => {
 
             return ctx.body = {
                 status: 200,
-                data: {
-                    value: req.result.status === 200 ? cashcoupon_values || 0 : 0 
-                }
+                data: req.result.status === 200 ? temp : null 
             }
 
         } catch ( e ) {

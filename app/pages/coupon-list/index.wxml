@@ -19,7 +19,6 @@
             trip="{{ item.trip }}" 
             isUsed="{{ item.isUsed }}"
             title="{{ item.title }}"
-            canUseInNext="{{ item.canUseInNext }}"
         />
     </view>
 </view>

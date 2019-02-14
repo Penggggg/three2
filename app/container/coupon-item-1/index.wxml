@@ -1,6 +1,6 @@
 <view
     bindtap="goTrip"
-    class="con-coupon-item-1"
+    class="con-coupon-item-1 {{ transparent ? 'transparent' : '' }}"
 >
 
     <view
@@ -40,15 +40,18 @@
 
             <view
                 class="ci1-trip-tips"
-                wx:if="{{ !canUseInNext && !isUsed }}"
+                wx:if="{{ !isUsed && type !== 't_daijin' }}"
             >
                 {{ trip.title }}：{{ trip_start }} ~ {{ trip_end }}
             </view>
             <view
                 class="ci1-trip-tips"
-                wx:if="{{ canUseInNext && !isUsed }}"
+                wx:if="{{ !isUsed && type === 't_daijin' }}"
             >
-                代金券日期不限，快快拔草奖励自己～
+                
+                {{
+                    showNext ? '代金券日期不限，可以下次使用～' : '代金券日期不限，快快拔草奖励自己～'
+                }}
             </view>
             <view
                 class="ci1-trip-tips"
@@ -64,7 +67,7 @@
                     class="ci1-btn-text md"
                     wx:if="{{ !isUsed }}"
                 >
-                    立即
+                    {{ showNext ? '下次' : '立即' }}
                 </view>
                 <view
                     class="ci1-btn-text"

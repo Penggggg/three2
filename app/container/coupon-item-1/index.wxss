@@ -8,6 +8,8 @@
     box-shadow: 8px 5px 10px rgba( 0, 0, 0, 0.25 );
 }
 
+
+
 .con-coupon-item-1::before {
     content: "";
     position: absolute;
@@ -18,6 +20,15 @@
     z-index:1;
     border-top: 70rpx solid #fff;
     border-right: 70rpx solid transparent;
+}
+
+.con-coupon-item-1.transparent {
+    border-top: none;
+    border-left: none;
+}
+
+.con-coupon-item-1.transparent::before {
+    border-top: 70rpx solid transparent;
 }
 
 .ci1-container {

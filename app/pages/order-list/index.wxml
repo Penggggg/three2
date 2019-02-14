@@ -407,7 +407,7 @@
                         合计:
                     </view>
                     <view class="pol-trip-order-totalprice">
-                        <view class="pol-pay-price small">¥{{ item.wholePriceByDiscount }}</view>
+                        <view class="pol-pay-price small">¥{{ item.total || item.wholePriceByDiscount }}</view>
                     </view>
                 </view>
 
@@ -561,5 +561,48 @@
         </view>
 
     </view>
+
+    <!--  -->
+    <wxc-mask 
+        content-align="bl"
+        status="{{ showDaijin }}"
+        bindmasktap="toggleDaijin"
+    >
+        <view class="pol-daijin-block">
+            <view class="pol-daijin-tips-block">
+                <view>
+                    <view
+                        class="pol-daijin-tips"
+                    >
+                        恭喜！运气当头
+                    </view>
+                    <view
+                        class="pol-daijin-tips big"
+                    >
+                        获得一张<view class="pol-daijin-tips-big">代金券</view>
+                    </view>
+                </view>
+                <view
+                    bindtap="toggleDaijin"
+                >
+                    <wxc-icon
+                        size="30"
+                        type="no"
+                        color="#d4460e" 
+                    />
+                </view>
+            </view>
+            <my-coupon-item-1
+                showNext="{{ true }}"
+                transparent="{{ true }}"
+                type="{{ daijin.type }}"
+                value="{{ daijin.value }}"
+                trip="{{ daijin.trip }}" 
+                title="{{ daijin.title }}"
+                isUsed="{{ daijin.isUsed }}"
+                atleast="{{ daijin.atleast }}" 
+            />
+        </view>
+    </wxc-mask>
 
 </view>
