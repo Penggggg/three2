@@ -398,17 +398,29 @@
                     </view>
                 </view>
 
-                <!-- 结算最终 把优惠也计算在里面 -->
-                <!-- wx:if="{{ item.tripStatusCN.indexOf('已付款') === 0 }}" -->
+                <!-- 不是多余订金的情况：结算最终 把优惠也计算在里面 -->
                 <view
                     class="pol-trip-order-sum-block"
-                    wx:if="{{ item.canSettle || item.isClosed }}"
+                    wx:if="{{( item.canSettle || item.isClosed ) && ( item.hasPayDepositPrice <= item.wholePriceByDiscount )}}"
                 >
                     <view class="pol-trip-order-sum">
                         合计:
                     </view>
                     <view class="pol-trip-order-totalprice">
                         <view class="pol-pay-price small">¥{{ item.hasPay ? item.total : item.wholePriceByDiscount }}</view>
+                    </view>
+                </view>
+
+                <!-- 多余订金的情况 -->
+                <view
+                    class="pol-trip-order-sum-block"
+                    wx:if="{{( item.canSettle || item.isClosed ) && item.retreat }}"
+                >
+                    <view class="pol-trip-order-sum">
+                        退款:
+                    </view>
+                    <view class="pol-trip-order-totalprice">
+                        <view class="pol-pay-price small">¥{{ item.retreat }}</view>
                     </view>
                 </view>
 
@@ -443,7 +455,7 @@
                             data-data="{{ item }}"
                             bindtap="payLast"
                             class="pol-trip-order-btn purple"
-                            wx:if="{{ item.tripStatusCN === '待付尾款' }}"
+                            wx:if="{{ item.tripStatusCN === '待付尾款' && item.lastPrice > 0 }}"
                         >
                             付尾款 ¥{{ item.lastPrice || 0 }}
                         </view>

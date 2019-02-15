@@ -469,8 +469,9 @@ Page({
                 tripStatusCN = '购买中';
 
             } else if ( orders.filter( x => x.b !== '4' && x.b !== '5' && !!x.allocatedCount ).length > 0 &&
-                orders.filter( x => x.b !== '4' && x.b !== '5' && !!x.allocatedCount ).every( x => x.p === '1' && x.b === '2' )) {
-                    tripStatusCN = '待付尾款';
+                orders.filter( x => x.b !== '4' && x.b !== '5' && !!x.allocatedCount )
+                    .every( x => x.p === '1' && x.b === '2' )) {
+                        tripStatusCN = '待付尾款';
 
             } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
                 && orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.d === '0')) {
@@ -484,6 +485,9 @@ Page({
                 && orders.some( x => x.d === '0') && orders.some( x => x.d === '1')) {
                 tripStatusCN = '部分发货';
             }
+
+            // 退款
+
             tripOrders['tripStatusCN'] = tripStatusCN;
    
 
@@ -761,6 +765,15 @@ Page({
             }
 
             tripOrders['total'] = total;
+
+            // 应退订金 ( 已付订金 > 应付 )
+            const retreat = hasPayDepositPrice > wholePriceByDiscount ?
+                (hasPayDepositPrice - wholePriceByDiscount).toFixed( 2 ) : 0;
+            tripOrders['retreat'] = retreat;
+
+            if ( retreat > 0 ) {
+                tripOrders['tripStatusCN'] = '需退款';
+            }
 
         });
         

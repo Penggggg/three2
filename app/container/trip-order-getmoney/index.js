@@ -96,8 +96,12 @@ Component({
                 const getNothing =  x.orders
                     .some( o => o.allocatedCount === 0 );
 
-                // 退还的订金
-                const retreat = x.orders
+                // 是否存在货存不足的情况
+                const hasNotEnougth = x.orders
+                    .some( o => o.allocatedCount < o.count );
+
+                // 货存不足订单应退回的订金总额
+                let retreat = x.orders
                     .filter( o => o.base_status !== '3' && o.base_status !== '4' && o.base_status !== '5' )
                     .map( o => ( o.depositPrice || 0 ) * ( o.count - (o.allocatedCount || 0 )))
                     .reduce(( z, y ) => z + y, 0 );
@@ -116,8 +120,8 @@ Component({
                 /**
                  * !退还订金数，可能存在多余订金的问题
                  */
-                if ( getNothing && retreat ) {
-                    statusCN += ('退订金 ' + retreat);
+                if (( hasNotEnougth || getNothing ) && retreat ) {
+                    statusCN += (' 退订金 ' + retreat);
                 } 
 
                 return Object.assign({ }, x , {
@@ -201,9 +205,11 @@ Component({
                         this.setData({
                             title,
                             clients,
-                            callMoneyTimes,
                             notPayAllClients
-                        })
+                        });
+                        setTimeout(( ) => {
+                            this.setData({ callMoneyTimes })
+                        }, 100 );
                     }
                 }
             })
