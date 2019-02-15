@@ -98,13 +98,27 @@ Component({
 
                 // 是否存在货存不足的情况
                 const hasNotEnougth = x.orders
-                    .some( o => o.allocatedCount < o.count );
+                    .some( o => o.allocatedCount !== undefined && o.allocatedCount < o.count );
 
-                // 货存不足订单应退回的订金总额
+                // 货存不足订单应退回的订金总额 ( 订金 - 至少应付（不含优惠券)）
                 let retreat = x.orders
                     .filter( o => o.base_status !== '3' && o.base_status !== '4' && o.base_status !== '5' )
-                    .map( o => ( o.depositPrice || 0 ) * ( o.count - (o.allocatedCount || 0 )))
-                    .reduce(( z, y ) => z + y, 0 );
+                    .map( o => {
+                        if ( o.base_status === '0' || o.base_status === '1' ) { 
+                            return 0;
+
+                        } else if ( o.base_status === '2' ) {
+                            const { canGroup, allocatedCount, allocatedPrice, allocatedGroupPrice, count, depositPrice } = o;
+                            if ( count * depositPrice > allocatedCount * ( canGroup ? allocatedGroupPrice : allocatedPrice )) {
+                                return count * depositPrice - allocatedCount * ( canGroup ? allocatedGroupPrice : allocatedPrice);
+                            
+                            } else {
+                                return 0;
+                            }
+                        }
+                        return 0;
+                    })
+                    .reduce(( z, y ) => Number( Number( z + y ).toFixed( 2 )), 0 );
 
                 // 订单中文状态
                 let statusCN = !isAllAdjusted ?
@@ -121,7 +135,7 @@ Component({
                  * !退还订金数，可能存在多余订金的问题
                  */
                 if (( hasNotEnougth || getNothing ) && retreat ) {
-                    statusCN += (' 退订金 ' + retreat);
+                    statusCN = '退订金 ' + retreat;
                 } 
 
                 return Object.assign({ }, x , {
