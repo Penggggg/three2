@@ -40,17 +40,116 @@ Component({
     computed: {
         clientOders$( ) {
             
-            const { clientOders, showMore, callMoneyTimes } = this.data;
+            const { tid, clientOders, showMore, callMoneyTimes } = this.data;
+
+            // 计算当前可结算的商品数量 
+            const count$ = order => {
+                const b = order.base_status;
+                return b === '0' || b === '1' ?
+                        order.count :
+                        b === '2' || b === '3' ?
+                            order.allocatedCount:
+                            0;
+            }
+
             const meta = clientOders.map( x => {
+
+                const { coupons, orders } = x;
+
+                // 应付全款（不含优惠券）
+                const wholePriceNotDiscount = orders.reduce(( x, y ) => {
+                    let currentPrice = 0;
+                    const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
+                    if ( y.base_status === '2' ) {
+                        currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * count$( y );
+                    } else if ( y.base_status === '0' || y.base_status === '1' ) {
+                        currentPrice = count$( y ) * price;
+                    } else {
+                        currentPrice = 0;
+                    }
+                    return x + currentPrice;
+                }, 0 );
+
+
+                // 优惠券
+                const coupons_manjian = coupons.find( c => c.type === 't_manjian' && c.tid === tid );
+                const coupons_lijian = coupons.find( c => c.type === 't_lijian' && c.tid === tid );
+                const coupons_daijin = coupons.find( c => c.type === 't_daijin' && (( !c.isUsed && c.canUseInNext ) || ( !!c.isUsed && c.usedBy === tid )));
+
+
+                // 处理满减
+                const t_manjian = !coupons_manjian ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
+                    // 处理真的已用，和即将要用的情况
+                    isUsed: coupons_manjian.isUsed || coupons_manjian.atleast <= wholePriceNotDiscount,
+                    id: coupons_manjian._id,
+                    value: coupons_manjian.value ,
+                    atleast: coupons_manjian.atleast,
+                    canUsed: coupons_manjian.atleast <= wholePriceNotDiscount || !coupons_manjian.atleast
+                };
+
+
+                // 处理立减
+                const t_lijian = !coupons_lijian ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
+                    isUsed: true,
+                    canUsed: true,
+                    id: coupons_lijian._id,
+                    value: coupons_lijian.value,
+                    atleast: coupons_lijian.atleast,
+                };
+
+
+                // 处理代金券
+                const t_daijin = !coupons_daijin ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
+                    // 处理真的已用，和即将要用的情况
+                    isUsed: coupons_daijin.isUsed || coupons_daijin.atleast <= wholePriceNotDiscount,
+                    id: coupons_daijin._id,
+                    value: coupons_daijin.value,
+                    atleast: coupons_daijin.atleast,
+                    canUsed: coupons_daijin.atleast <= wholePriceNotDiscount || !coupons_daijin.atleast
+                };
+
+
+                // 应付全款（含优惠券、拼团折扣）
+                let wholePriceByDiscount = wholePriceNotDiscount;
+                if ( t_manjian.canUsed ) {
+                    wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_manjian.value ).toFixed( 2 ));
+                }
+                if ( t_lijian.canUsed ) {
+                    wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_lijian.value ).toFixed( 2 ));
+                } 
+                if ( t_daijin.canUsed ) {
+                    wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_daijin.value ).toFixed( 2 ));
+                }
+
+
+                // 已付订金
+                const hasPayDepositPrice = orders.reduce(( x, y ) => {
+                    const depositPrice = String( y.pay_status ) !== '0' ?
+                        y.depositPrice || 0 : 0;
+                    return Number(Number( x + Number(Number( depositPrice * y.count ).toFixed( 2 ))).toFixed( 2 ));
+                }, 0 )
+
+
+                const retreat = hasPayDepositPrice > wholePriceByDiscount ?
+                    (hasPayDepositPrice - wholePriceByDiscount).toFixed( 2 ) : 0;
+
 
                 // 已经分配好的订单
                 const readyOrders = [ ];
+
+
                 // 未分配好的订单，包含分配不足的订单
                 let notReadyOrders = [ ];
+
+
                 // 分配不足的订单
                 const notEnough = [ ];
+
+
+                // 是否展示更多
                 const canShowMore = !!showMore.find( y => y === x.user.openid );
                 
+
                 // 处理已分配、未分配订单
                 x.orders.map( order => {
                     if ( order.allocatedPrice === undefined ||
@@ -65,8 +164,8 @@ Component({
                         readyOrders.push( order );
                     }
                 });
-
                 notReadyOrders = [ ...notReadyOrders, ...notEnough ];
+
 
                 // 根据地址整理订单
                 const addressOrders = x.address.map( address => {
@@ -79,12 +178,15 @@ Component({
                     }
                 });
 
+
                 // 是否所有订单都被分配了，包括 0
                 const isAllAdjusted = x.orders.every( o => o.allocatedCount !== undefined );
+
 
                 // 是否全部被分配为0
                 const getAllNothing = x.orders
                     .every( o => o.allocatedCount === 0 );
+
 
                 // 是否已经结算
                 const hasBeenGivenMoney = x.orders
@@ -92,37 +194,17 @@ Component({
                     .filter( o => !!o.allocatedCount )
                     .every( o => o.base_status === '3' );
 
+
                 // 是否存在被分配为0
                 const getNothing =  x.orders
                     .some( o => o.allocatedCount === 0 );
+
 
                 // 是否存在货存不足的情况
                 const hasNotEnougth = x.orders
                     .some( o => o.allocatedCount !== undefined && o.allocatedCount < o.count );
 
-                /** 
-                 * ! 应退订金 ( 已付订金 > 应付 )
-                 */
-                // 货存不足订单应退回的订金总额 ( 订金 - 至少应付（不含优惠券)）
-                let retreat = x.orders
-                    .filter( o => o.base_status !== '3' && o.base_status !== '4' && o.base_status !== '5' )
-                    .map( o => {
-                        if ( o.base_status === '0' || o.base_status === '1' ) { 
-                            return 0;
-
-                        } else if ( o.base_status === '2' ) {
-                            const { canGroup, allocatedCount, allocatedPrice, allocatedGroupPrice, count, depositPrice } = o;
-                            if ( count * depositPrice > allocatedCount * ( canGroup ? allocatedGroupPrice : allocatedPrice )) {
-                                return count * depositPrice - allocatedCount * ( canGroup ? allocatedGroupPrice : allocatedPrice);
-                            
-                            } else {
-                                return 0;
-                            }
-                        }
-                        return 0;
-                    })
-                    .reduce(( z, y ) => Number( Number( z + y ).toFixed( 2 )), 0 );
-
+    
                 // 订单中文状态
                 let statusCN = !isAllAdjusted ?
                     '待分配' :
@@ -133,15 +215,21 @@ Component({
                                 '已到帐' :
                             '' :
                     '';
-                
-                /**
-                 * !退还订金数，可能存在多余订金的问题
-                 */
                 if (( hasNotEnougth || getNothing ) && retreat ) {
                     statusCN = '退订金 ' + retreat;
                 } 
 
                 return Object.assign({ }, x , {
+
+                    wholePriceNotDiscount,
+
+                    wholePriceByDiscount,
+
+                    t_manjian,
+
+                    t_lijian,
+
+                    t_daijin,
 
                     statusCN,
 

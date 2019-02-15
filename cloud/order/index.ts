@@ -617,8 +617,8 @@ export const main = async ( event, context ) => {
                     .filter( x => x.openid === user.openid );
 
                 const coupons = coupons$
-                    .map( x => x.data )
-                    .filter( x => x[ 0 ].openid === user.openid )
+                    .map( x => x.data[ 0 ])
+                    .filter( x => x.openid === user.openid )
 
 
                 return {
