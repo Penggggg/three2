@@ -706,7 +706,7 @@ Page({
             
             ['t_lijian', 't_manjian', 't_daijin'].map( quan => {
                 const target = tripOrders[ quan ];
-                if (( target.canUsed && !!target.value ) || ( quan === 't_lijian' && !!orders[ 0 ].trip.reduce_price )) {
+                if ((( quan === 't_manjian' || quan === 't_daijin' ) && !!target.value ) || ( quan === 't_lijian' && !!orders[ 0 ].trip.reduce_price )) {
                        
                     task.push({
 

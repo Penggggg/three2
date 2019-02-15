@@ -565,10 +565,10 @@ export const main = async ( event, context ) => {
                         .map( x => x.openid )
                 ))
                 .map( uid => db.collection('user')
-                            .where({
-                                openid: uid
-                            })
-                            .get( ))
+                    .where({
+                        openid: uid
+                    })
+                    .get( ))
             );
 
             // 地址信息
@@ -582,16 +582,50 @@ export const main = async ( event, context ) => {
                             .get( ))
             );
 
+            // 卡券信息
+            const coupons$ = await Promise.all(
+                Array.from(
+                    new Set( orders$.data 
+                        .map( x => x.openid )
+                ))
+                .map( openid => db.collection('coupon')
+                    .where( _.or([
+                        {
+                            tid,
+                            openid,
+                            type: _.or( _.eq('t_manjian'), _.eq('t_lijian'))
+                        }, {
+                            openid,
+                            isUsed: false,
+                            canUseInNext: true,
+                            type: 't_daijin'
+                        }
+                    ]))
+                    .get( )
+                )
+            )
+;
             const userOders = users$.map( user$ => {
+                
                 const user = user$.data[ 0 ];
-                const orders = orders$.data.filter( x => x.openid === user.openid );
+
+                const orders = orders$.data
+                    .filter( x => x.openid === user.openid );
+
                 const address = address$
-                                    .map( x => x.data )
-                                    .filter( x => x.openid === user.openid );
+                    .map( x => x.data )
+                    .filter( x => x.openid === user.openid );
+
+                const coupons = coupons$
+                    .map( x => x.data )
+                    .filter( x => x[ 0 ].openid === user.openid )
+
+
                 return {
                     user,
                     orders,
-                    address
+                    address,
+                    coupons: coupons.length > 0 ? coupons : [ ]
                 };
             });
 

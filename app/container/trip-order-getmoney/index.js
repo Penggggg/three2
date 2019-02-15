@@ -100,6 +100,9 @@ Component({
                 const hasNotEnougth = x.orders
                     .some( o => o.allocatedCount !== undefined && o.allocatedCount < o.count );
 
+                /** 
+                 * ! 应退订金 ( 已付订金 > 应付 )
+                 */
                 // 货存不足订单应退回的订金总额 ( 订金 - 至少应付（不含优惠券)）
                 let retreat = x.orders
                     .filter( o => o.base_status !== '3' && o.base_status !== '4' && o.base_status !== '5' )
@@ -445,6 +448,7 @@ Component({
                                     that.setData({
                                         callMoneyTimes: 3 - res.data
                                     });
+                                    that.fetchOrder( this.data.tid );
                                 }, 0 );
                             }
                         }
