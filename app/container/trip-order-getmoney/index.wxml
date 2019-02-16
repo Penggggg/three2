@@ -49,31 +49,36 @@
                 wx:for="{{ clientOders$ }}"
                 class="tog-shoppinglist-item"
             >
-                <!-- 头像 -->
+                <!-- 头像、状态、价格总揽 -->
                 <view class="tog-good-info-block">
+
                     <view class="tog-user-avatar-block">
                         <image
                             class="tog-user-avatar"
                             src="{{ item.user.avatarUrl }}"
                         />
-                        <!-- <view
-                            class="tog-avatar-icon"
-                            wx:if="{{ !item.isAllAdjusted }}"
-                        >
-                            {{ item.hasNotAdjustedLength }}
-                        </view> -->
                     </view>
+
                     <view class="tog-name-info">
+
                         <view class="tog-user-name">
                             {{ item.user.nickName }}
                         </view>
+
                         <view
                             class="tog-oder-user-info"
-                            wx:if="{{ item.address.length === 1 }}"
+                            wx:if="{{ !item.isAllAdjusted && item.address.length === 1 }}"
                         >
                             <view class="tog-user-name ml">({{ item.address[ 0 ].username }})</view>
-                            <!-- <view class="tog-user-phone">{{ item.address[ 0 ].phone }}</view> -->
                         </view>
+
+                        <view
+                            class="tog-oder-user-info"
+                            wx:if="{{ item.isAllAdjusted }}"
+                        >
+                            <view class="tog-user-name ml color">¥{{ item.wholePriceByDiscount }}</view>
+                        </view>
+
                     </view>
                
                     <view
@@ -204,6 +209,36 @@
                         </view>
 
                     </view>
+                </view>
+
+                <!-- 详细付款信息 -->
+                <view
+                    class="tog-pay-detail"
+                    wx:if="{{ item.canShowMore && item.isAllAdjusted }}"
+                >
+                    <view class="tog-pay-text">已付订金：¥{{ item.hasPayDepositPrice }}</view>
+                    <view class="tog-pay-text">
+                        <view
+                            class="tog-pay-inline"
+                            wx:if="{{( item.t_lijian.isUsed || item.t_lijian.canUsed ) && ( item.t_lijian.value )}}"
+                        >   
+                            立减券：-<view class="tog-pay-color">{{ item.t_lijian.value }}</view>
+                        </view>
+                        <view
+                            class="tog-pay-inline ml"
+                            wx:if="{{( item.t_manjian.isUsed || item.t_manjian.canUsed ) && ( item.t_manjian.value )}}"
+                        >   
+                            满减券：-<view class="tog-pay-color">{{ item.t_manjian.value }}</view>
+                        </view>
+                        <view
+                            class="tog-pay-inline ml"
+                            wx:if="{{( item.t_daijin.isUsed || item.t_daijin.canUsed ) && ( item.t_daijin.value )}}"
+                        >   
+                            代金券：-<view class="tog-pay-color">{{ item.t_daijin.value }}</view>
+                        </view>
+                    </view>
+                    <view class="tog-pay-text">应付：<view class="tog-pay-color">¥{{ item.wholePriceNotDiscount }}</view></view>
+                    <view class="tog-pay-text">实付：<view class="tog-pay-color">¥{{ item.wholePriceByDiscount }}</view></view>
                 </view>
 
                 <!-- 更多按钮 -->

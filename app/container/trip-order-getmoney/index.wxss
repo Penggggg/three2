@@ -183,6 +183,10 @@
     /* text-shadow:0px 0px 5px rgba( 0, 0, 0, 0.25 ); */
 }
 
+.tog-user-name.color {
+    color: #ff5777;
+}
+
 .tog-user-name.ml {
     margin-left: 15rpx;
 }
@@ -469,4 +473,29 @@
     padding: 20rpx 0;
     background:-webkit-linear-gradient(to right, #f80759, #bc4e9c);
     background:linear-gradient(to right, #f80759, #bc4e9c);
+}
+
+.tog-pay-detail {
+    margin-top: 45rpx;
+    padding: 0 25rpx;
+}
+
+.tog-pay-text {
+    color: #999;
+    font-size: 22rpx;
+    text-align: right;
+    margin-bottom: 8rpx;
+}
+
+.tog-pay-inline {
+    display: inline;
+}
+
+.tog-pay-inline.ml {
+    margin-left: 6rpx;
+}
+
+.tog-pay-color {
+    color: #ff5777;
+    display: inline;
 }

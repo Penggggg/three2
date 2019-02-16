@@ -221,6 +221,8 @@ Component({
 
                 return Object.assign({ }, x , {
 
+                    hasPayDepositPrice,
+
                     wholePriceNotDiscount,
 
                     wholePriceByDiscount,
