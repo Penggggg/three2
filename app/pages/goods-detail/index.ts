@@ -257,7 +257,7 @@ Page({
 
                 return [ ];
             },
-            // 可以拼团的个数
+            // 马上可以拼团的个数
             pinCount$: function( ) {
                 const { detail, shopping } = this.data;
                 if ( !detail ) { 
@@ -426,9 +426,9 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( ) {
-        const { detail } = this.data;
+        const { detail, pin$ } = this.data;
         return {
-            title: `给你看看这宝贝！${detail.title}`,
+            title: `${pin$.length === 0 ? '给你看看这宝贝！' : '一起拼团更实惠！'}${detail.title}`,
             path: `/pages/good-detail/index?${detail._id}&tid=${this.data.tid}`,
             imageUrl: `${detail.img[ 0 ]}`
         }
