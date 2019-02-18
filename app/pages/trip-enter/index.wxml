@@ -121,16 +121,19 @@
                         rank="{{ 1 }}"
                         good="{{ rankGoods[ 0 ]}}"
                         wx:if="{{ rankGoods[ 0 ]}}"
+                        tid="{{ current._id }}"
                     />
                     <my-good-item-2
                         rank="{{ 2 }}"
                         mode="right"
                         good="{{ rankGoods[ 1 ]}}"
+                        tid="{{ current._id }}"
                         wx:if="{{ rankGoods[ 1 ]}}"
                     />
                     <my-good-item-2
                         rank="{{ 3 }}"
                         good="{{ rankGoods[ 2 ]}}"
+                        tid="{{ current._id }}"
                         wx:if="{{ rankGoods[ 2 ]}}"
                     />
                 </view>
@@ -143,6 +146,7 @@
                         wx:for="{{ otherGoods }}"
                         wx:key="{{ index }}"
                         good="{{ item }}"
+                        tid="{{ current._id }}"
                     />
                 </view>
 

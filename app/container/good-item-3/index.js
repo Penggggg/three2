@@ -13,7 +13,12 @@ Component({
         good: {
           type: Object,
           observer: 'dealDetail'
-      }
+        },
+        // 当前行程
+        tid: {
+            type: String,
+            value: ''
+        }
   },
 
   /**
@@ -51,7 +56,7 @@ Component({
       goDetail( ) {
           const { _id } = this.data.good;
           wx.navigateTo({
-              url: `/pages/goods-detail/index?id=${_id}`
+              url: `/pages/goods-detail/index?id=${_id}&tid=${this.data.tid}`
           });
       }
 

@@ -595,30 +595,44 @@ export const main = async ( event, context ) => {
      * @description
      * 等待拼团列表 / 可拼团列表
      * {
+     *    tid,
+     *    pid,
      *    detail: boolean 是否带回商品详情
-     *    type: 'wait' | 'pin' // 等待拼团，已经可以拼团
+     *    !（可无）type: 'wait' | 'pin' // 等待拼团，已经可以拼团
      * }
      */
     app.router('pin', async( ctx, next ) => {
         try {
 
+            const openid = event.userInfo.openId;
             const type = event.data.type || 'pin';
-            const { tid, detail } = event.data;
+            const { tid, detail, pid } = event.data;
+
+            const query = pid ? {
+                tid,
+                pid
+            } : {
+                tid
+            };
+
             const shopping$ = await db.collection('shopping-list')
-                .where({
-                    tid,
-                })
+                .where( query )
                 .get( );
 
             // uids长度为1，为待拼列表 ( 应不应该有自己 )
             // uids长度为2，为可以拼团列表
+            // 拼团、等待拼团
             let data: any = [ ];
             const data$ = shopping$.data.filter( s => {
                 if ( type === 'pin' ) {
                     return !!s.adjustGroupPrice && s.uids.length > 1
 
+                } else if ( type === 'wait' ) {
+                    return !!s.adjustGroupPrice && s.uids.length === 1 && s.uids[ 0 ] !== openid
+
                 } else {
-                    return !!s.adjustGroupPrice && s.uids.length === 1
+                    return ( !!s.adjustGroupPrice && s.uids.length > 1 ) ||
+                        ( !!s.adjustGroupPrice && s.uids.length === 1 && s.uids[ 0 ] !== openid )
                 }
             });
 

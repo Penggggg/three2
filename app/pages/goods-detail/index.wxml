@@ -250,7 +250,7 @@
             >
                 <block
                     wx:key="{{ index }}"
-                    wx:for="{{ pin }}"
+                    wx:for="{{ pin$ }}"
                 >
                     <swiper-item class="swiper-visible">
                         <view
@@ -271,6 +271,12 @@
                             </view>
                             <view class="gd-swiper-title small color">
                                 拼团：¥{{ item.groupPrice }}
+                            </view>
+                            <view
+                                class="gd-swiper-tag"
+                                wx:if="{{ item.canPin }}"
+                            >
+                                本次可拼团
                             </view>
                         </view>
                     </swiper-item>

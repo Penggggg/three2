@@ -13,6 +13,8 @@ Page({
      * 页面的初始数据
      */
     data: {
+        // 行程
+        tid: '',
         // 商品id
         id: '',
         // 商品详情
@@ -36,7 +38,9 @@ Page({
         // 展示弹框
         showTips: 'hide',
         // 拼团列表
-        pin: [ ]
+        pin: [ ],
+        // 商品在本行程的购物清单列表
+        shopping: [ ]
     },
 
     // 展开提示
@@ -93,10 +97,6 @@ Page({
                     });
                 }
 
-                setTimeout(() => {
-                    console.log( '...', this.data.pin )
-                },  50 );
-
                 this.setData!({
                     detail: res.data,
                     loading: false
@@ -118,10 +118,28 @@ Page({
             success: res => {
               if ( res.status !== 200 ) { return; }
               this.setData!({
-                dic: res.data
+                    dic: res.data
               });
             }
         });
+    },
+
+    /** 拉取当前商品的购物请单信息 */
+    fetchShopping( pid, tid ) {
+        http({
+            url: 'shopping-list_pin',
+            data: {
+                pid,
+                tid
+            },
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setData!({
+                    shopping: data
+                })
+            }
+        })
     },
 
     /** 预览图片 */
@@ -206,6 +224,38 @@ Page({
                         }
                     }
                 }
+            },
+            // 拼团列表
+            pin$: function( ) {
+                const { detail, shopping } = this.data;
+
+                if ( !detail ) { 
+                    return [ ];
+                }
+
+                const { standards, groupPrice } = detail;
+
+                if ( standards.length > 0 ) {
+                    return standards
+                        .filter( x => !!x.groupPrice )
+                        .map( x => {
+                            return Object.assign({ }, x, {
+                                canPin: !!shopping.find( s => s.sid === x._id && s.pid === x.pid )
+                            })
+                        })
+
+                } else if ( !!groupPrice ) {
+                    const { price, title, img, _id } = detail;
+                    return [{
+                        price,
+                        name: title,
+                        groupPrice,
+                        img: img[ 0 ],
+                        canPin: !!shopping.find( s => s.pid === _id )
+                    }]
+                }
+
+                return [ ];
             }
         })
     },
@@ -270,7 +320,8 @@ Page({
         this.runComputed( );
         if ( !options!.id ) { return; }
         this.setData!({
-          id: options!.id
+            id: options!.id,
+            tid: options!.tid
         });
     },
   
@@ -306,9 +357,11 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function ( ) {
+        const { id, tid } = this.data;
         this.fetchDic( ); 
         this.checkLike( );
-        this.fetDetail( this.data.id );
+        this.fetDetail( id );
+        this.fetchShopping( id, tid );
     },
   
     /**
