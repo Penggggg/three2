@@ -619,7 +619,7 @@ export const main = async ( event, context ) => {
                 .where( query )
                 .get( );
 
-            // uids长度为1，为待拼列表 ( 应不应该有自己 )
+            // uids长度为1，为待拼列表 ( 不应该有自己 )
             // uids长度为2，为可以拼团列表
             // 拼团、等待拼团
             let data: any = [ ];

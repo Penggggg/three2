@@ -1,17 +1,19 @@
 <view class="p-coupon-list">
     
+    <!-- 通知 -->
     <wxc-notice
         color="#ff5777"
         bgColor="#ffe8ee"
         scroll="{{ true }}"
         close="{{ true }}"
         show-icon="{{ true }}"
-        notice="满减券、无门槛券只能于所在的行程里使用哦～ 不要浪费 尽快使用～ "
+        notice="满减券、无门槛券只能用于所在的行程哦～ 请尽快使用～ "
     />
 
+    <!-- 卡券 -->
     <view class="pcl-coupon-list">
         <my-coupon-item-1
-            wx:for="{{ coupons }}"
+            wx:for="{{ list1$ }}"
             wx:key="{{ index }}"
             type="{{ item.type }}"
             value="{{ item.value }}"
@@ -21,4 +23,59 @@
             title="{{ item.title }}"
         />
     </view>
+
+    <!-- 拼团 -->
+    <view
+        class="pcl-pin-title-block"
+        wx:if="{{ shoppinglist.length > 0 }}"
+    >
+        <view class="pcl-pin-title">
+            本期拼团
+        </view>
+        <view class="pcl-pin-tips">
+            查看更多
+        </view>
+    </view>
+
+    <!-- 拼团列表 -->
+    <swiper
+        autoplay="{{ true }}"
+        circular="{{ true }}"
+        duration="{{ 1000 }}"
+        interval="{{ 3000 }}"
+        class="pcl-swiper {{ shoppinglist.length <= 3 ? shoppinglist.length === 1 ? 'one' : shoppinglist.length === 2 ? 'two' : shoppinglist.length === 3 ? 'three' : '' : '' }}"
+        display-multiple-items="{{ shoppinglist.length <= 3 ? shoppinglist.length : 3 }}"
+    >
+        <block
+            wx:key="{{ index }}"
+            wx:for="{{ shoppinglist }}"
+        >
+            <swiper-item class="swiper-visible">
+                <view
+                    data-data="{{ item }}"
+                    bindtap="goGoodDetail"
+                    class="pcl-swiper-item"
+                >
+                    <image
+                        src="{{ item.img }}"
+                        mode="scaleToFill"
+                        class="pcl-swiper-image"
+                    />
+                    <view class="pcl-swiper-title">
+                        {{ item.goodName }}
+                    </view>
+                    <view class="pcl-swiper-title sm">
+                        ¥{{ item.adjustGroupPrice }}
+                    </view>
+                    <view
+                        wx:if="{{ item.tag[ 0 ]}}"
+                        class="pcl-swiper-tag"
+                    >
+                        {{ item.tag[ 0 ]}}
+                    </view>
+                </view>
+            </swiper-item>
+        </block>
+    </swiper>
+
 </view>

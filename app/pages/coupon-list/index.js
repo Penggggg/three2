@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { computed } = require('../../lib/vuefy/index.js');
 
 Page({
 
@@ -7,7 +8,31 @@ Page({
      */
     data: {
         // 卡券列表
-        coupons: [ ]
+        coupons: [ ],
+        // 当前行程
+        tid: '',
+        // 拼团
+        shoppinglist: [ ]
+    },
+
+    /** 设置computed */
+    runComputed( ) {
+        computed( this, {
+            // 当前行程卡券
+            list1$: function( ) {
+                const { coupons, tid } = this.data;
+                return [
+                    ...coupons.filter( x => x.tid === tid )
+                ]
+            },
+            // 当前行程卡券
+            list2$: function( ) {
+                const { coupons, tid } = this.data;
+                return [
+                    ...coupons.filter( x => x.tid !== tid )
+                ]
+            }
+        })
     },
 
     /** 拉取卡券列表 */
@@ -16,7 +41,6 @@ Page({
             data: { },
             url: 'coupon_list',
             success: res => {
-                console.log( res );
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
                 this.setData({
@@ -26,11 +50,54 @@ Page({
         })
     },
 
+    /** 获取当前行程 */
+    fetchCurrentTrip( cb ) {
+        http({
+            url: 'trip_enter',
+            data: {
+                shouldGetGoods: false
+            },
+            loadingMsg: 'none',
+            success: res => {
+                const { status, data } = res;
+                if ( status === 200 && !!data[ 0 ]) {
+                    !!cb && cb( data[ 0 ]._id );
+                    this.setData({
+                        tid: data[ 0 ]._id
+                    });
+                }
+            }
+        });
+    },
+
+    /** 拉取拼团列表 */
+    fetchGroupList( tid ) {
+        if ( !tid ) { return; }
+        http({
+            url: 'shopping-list_list',
+            data: {
+                tid,
+                needOrders: false
+            },
+            loadingMsg: 'none',
+            success: res => {
+                const { status, data } = res;
+                if ( status === 200 ) {
+                    this.setData({
+                        shoppinglist: data
+                    })
+                }
+            }
+        });
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad: function (options) {
+    onLoad: function ( options ) {
+        this.runComputed( );
         this.fetchList( );
+        this.fetchCurrentTrip( tid => this.fetchGroupList( tid ));
     },
 
     /**

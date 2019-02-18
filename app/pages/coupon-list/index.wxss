@@ -5,5 +5,123 @@
 }
 
 .pcl-coupon-list {
-    padding: 0 25rpx;
+    padding: 25rpx 25rpx 0;
+}
+
+.pcl-swiper {
+    width: 620rpx;
+    height: 260rpx;
+    margin-top: 20rpx;
+    padding-left: 70rpx;
+    overflow: visible;
+    box-sizing: border-box;
+    margin-bottom: 20rpx;
+}
+
+.pcl-swiper.one {
+    width: 260rpx;
+}
+
+.pcl-swiper.two {
+    width: 440rpx;
+}
+
+.pcl-swiper.three {
+    width: 620rpx;
+}
+
+.swiper-visible {
+    overflow: visible;
+}
+
+.pcl-swiper-item {
+    display: flex;
+    overflow: visible;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.pcl-swiper-tag {
+    right: -5rpx;
+    top: 5rpx;
+    position: absolute;
+    color: #fff;
+    z-index: 2;
+    font-size: 20rpx;
+    border-radius: 3px;
+    padding: 0rpx 10rpx;
+    letter-spacing: 0.1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    background:#bc4e9c;
+    background:-webkit-linear-gradient(to left, #f80759, #bc4e9c);
+    background:linear-gradient(to left, #f80759, #bc4e9c);
+}
+
+.pcl-swiper-image {
+    width: 140rpx;
+    height: 140rpx;
+    margin-top: 25rpx;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    box-shadow: 0 0 20px rgba( 0, 0, 0, 0.25 );
+}
+
+.pcl-swiper-title {
+    width: 140rpx;
+    color: #333;
+    font-size: 24rpx;
+    margin-top: 10rpx;
+    /* text-align: center; */
+    letter-spacing: 0.02em;
+    overflow:hidden; 
+    display:-webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow:ellipsis;
+    font-weight: bold;
+    -webkit-box-orient:vertical;
+}
+
+.pcl-swiper-title.sm {
+    margin-top: 5rpx;
+    color: rgba( 0, 0, 0, 0.55 );
+    /* font-weight: bold; */
+}
+
+.pcl-pin-title-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25rpx 35rpx 0 35rpx;
+    box-sizing: border-box;
+}
+
+.pcl-pin-title {
+    font-size: 40rpx;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    color: #333;
+}
+
+.pcl-pin-tips {
+    font-size: 22rpx;
+    color: #666;
+    position: relative;
+    overflow: visible;
+}
+
+.pcl-pin-tips:after {
+    left: -5%;
+    bottom: -3rpx;
+    width: 110%;
+    height: 1px;
+    transform: scaleY( 0.5 );
+    position: absolute;
+    content: '';
+    background: rgba( 0, 0, 0, 0.45 );
 }
