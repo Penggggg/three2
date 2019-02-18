@@ -131,17 +131,25 @@
     position: relative;
 }
 
-.invite-icon {
-    height: 75rpx;
-    width: 75rpx;
+.gd-share-btn {
+    height: 70rpx;
+    width: 70rpx;
     right: 50rpx;
     bottom: 210rpx;
     position: fixed;
+}
+
+.invite-icon {
+    height: 70rpx;
+    width: 70rpx;
     z-index: 2000;
     border-radius: 50%;
-    /* display: flex;
-    align-items: center;
-    justify-content: center; */
+    background: transparent;
+    border: none;
+    outline: none;
+    opacity: 0;
+    border: 2px solid #fff;
+    /* box-shadow: 3px 3px 25px rgba( 0, 0, 0, 0.18 ); */
 }
 
 .invite-icon-img {

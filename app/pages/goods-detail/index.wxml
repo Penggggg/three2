@@ -195,16 +195,18 @@
         </view>
 
         <!-- 分享按钮 -->
-        <button
-            open-type="share"
-            class="invite-icon"
-        >
+        <view class="gd-share-btn">
             <!-- animation="{{ animationMiddleHeaderItem }}" -->
             <image
                 class="invite-icon-img"
                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-share-2.png"
             />
-        </button>
+            <button
+                open-type="share"
+                class="invite-icon"
+            >
+            </button>
+        </view>
 
         <!-- 商品下面的栏 -->
         <my-goods-detail-bar
