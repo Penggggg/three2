@@ -124,7 +124,7 @@ Component({
                     sid: null,
                     limit,
                     groupPrice,
-                    canSelect: stock !== undefined && stock > 0
+                    canSelect: stock === undefined || ( stock !== undefined && stock > 0 )
                 }];
             } else {
                 // 有型号
@@ -139,7 +139,7 @@ Component({
                     price: x.price,
                     limit: x.limit,
                     groupPrice: x.groupPrice,
-                    canSelect: x.stock !== undefined && x.stock > 0
+                    canSelect: x.stock === undefined || ( x.stock !== undefined && x.stock > 0 )
                 }))
             } 
             

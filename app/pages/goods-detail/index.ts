@@ -32,7 +32,19 @@ Page({
         // 动画
         animationMiddleHeaderItem: null,
         // 展示管理入口
-        showBtn: false
+        showBtn: false,
+        // 展示弹框
+        showTips: 'hide',
+        // 拼团列表
+        pin: [ ]
+    },
+
+    // 展开提示
+    toggleTips( ) {
+        const { showTips } = this.data;
+        this.setData!({
+            showTips: showTips === 'show' ? 'hide' : 'show'
+        });
     },
 
     // 进入商品管理
@@ -53,6 +65,8 @@ Page({
     
     /** 拉取商品详情 */
     fetDetail( id ) {
+        const { detail } = this.data;
+        if ( detail ) { return; }
         http({
             data: {
                 _id: id,
@@ -61,6 +75,28 @@ Page({
             url: `good_detail`,
             success: res => {
               if ( res.status !== 200 ) { return; }
+                const { standards, groupPrice } = res.data;
+
+                if ( standards.length > 0 ) {
+                    this.setData!({
+                        pin: standards.filter( x => !!x.groupPrice )
+                    })
+                } else if ( !!groupPrice ) {
+                    const { price, title, img  } = res.data;
+                    (this as any).setData!({
+                        pin: [{
+                            price,
+                            name: title,
+                            groupPrice,
+                            img: img[ 0 ]
+                        }]
+                    });
+                }
+
+                setTimeout(() => {
+                    console.log( '...', this.data.pin )
+                },  50 );
+
                 this.setData!({
                     detail: res.data,
                     loading: false
@@ -71,6 +107,8 @@ Page({
 
     /** 拉取数据字典 */
     fetchDic( ) {
+        const { dic } = this.data;
+        if ( Object.keys( dic ).length > 0 ) { return; }
         http({
             data: {
               dicName: 'goods_category',
@@ -92,6 +130,15 @@ Page({
         this.data.detail && wx.previewImage({
             current: img,
             urls: [ ...(this.data as any).detail.img ],
+        });
+    },
+
+    /** 预览拼团 */
+    previewPin({ currentTarget }) {
+        const { img } = currentTarget.dataset.data;
+        this.data.detail && wx.previewImage({
+            current: img,
+            urls: [ img ],
         });
     },
   
@@ -138,7 +185,7 @@ Page({
                     if ( standards.length === 0 ) {
                         // 有团购的
                         if ( groupPrice !== null && groupPrice !== undefined ) {
-                            return  price - groupPrice;
+                            return  Number( price - groupPrice ).toFixed( 2 );
                         } else {
                             return 0;
                         }
@@ -150,9 +197,9 @@ Page({
                             const sortedGroupPrice = groupPrice.sort(( x, y ) => (( x.groupPrice - x.price ) - ( y.groupPrice - y.price )));
                             if (( sortedGroupPrice[0].groupPrice - sortedGroupPrice[0].price ) ===
                                 ( sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice - sortedGroupPrice[ sortedGroupPrice.length - 1 ].price )) {
-                                return ( sortedGroupPrice[0].price - sortedGroupPrice[0].groupPrice );
+                                return Number(( sortedGroupPrice[0].price - sortedGroupPrice[0].groupPrice )).toFixed( 2 );
                             } else {
-                                return `${sortedGroupPrice[ sortedGroupPrice.length - 1 ].price - sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice}~${sortedGroupPrice[0].price - sortedGroupPrice[0].groupPrice}`;
+                                return `${Number(Number(sortedGroupPrice[ sortedGroupPrice.length - 1 ].price - sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice).toFixed( 2 ))}~${Number( Number( sortedGroupPrice[0].price - sortedGroupPrice[0].groupPrice).toFixed( 2 ))}`
                             }
                         } else {
                             return 0;
@@ -295,7 +342,12 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    // onShareAppMessage: function () {
-  
-    // }
+    onShareAppMessage: function ( ) {
+        const { detail } = this.data;
+        return {
+            title: `真划算！${detail.title}`,
+            path: `/pages/good-detail/index?${detail._id}`,
+            imageUrl: `${detail.img[ 0 ]}`
+        }
+    }
   })

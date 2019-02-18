@@ -1,10 +1,11 @@
 {
   "pages": [
-    "pages/manager-trip-order/index",
-    "pages/order-list/index",
     "pages/trip-enter/index",
-    "pages/manager-goods-detail/index",
+    "pages/manager-trip-order/index",
     "pages/manager-goods-list/index",
+    "pages/goods-detail/index",
+    "pages/manager-goods-detail/index",
+    "pages/order-list/index",
     "pages/coupon-list/index",
     "pages/trip-deliver/index",
     "pages/manager-trip-list/index",
@@ -13,8 +14,7 @@
     "pages/manager-trip-detail/index",
     "pages/concat/index",
     "pages/manager-person-info/index",
-    "pages/index/index",
-    "pages/goods-detail/index"
+    "pages/index/index"
   ],
   "usingComponents": {
     "my-nav": "./container/nav-bar/index",

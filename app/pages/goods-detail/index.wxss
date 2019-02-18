@@ -18,6 +18,7 @@
 
 .red {
     color: #ff5777;
+    text-decoration: underline;
 }
 
 .price {
@@ -131,14 +132,15 @@
 }
 
 .invite-icon {
-    top: 25%;
-    right: 20rpx;
-    position: absolute;
+    right: 50rpx;
+    bottom: 210rpx;
+    position: fixed;
+    z-index: 2000;
 }
 
 .invite-icon-img {
-    height: 40rpx;
-    width: 40rpx;
+    height: 55rpx;
+    width: 55rpx;
 }
 
 .invite-text {
@@ -253,9 +255,9 @@
     height: 100rpx;
     width: 100rpx;
     color: #fff;
-    right: 50rpx;
+    left: 50rpx;
     z-index: 1000;
-    bottom: 200rpx;
+    top: 50rpx;
     position: fixed;
     font-size: 26rpx;
     border-radius: 50%;
@@ -265,4 +267,151 @@
     justify-content: center;
     box-shadow: 3px 3px 10px rgba(0,0,0,0.20);
     text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.gd-pin-tips-block {
+    width: 75vw;
+    padding-top: 50rpx;
+    overflow-y: scroll;
+    background: #fafafa;
+    border-radius: 3px;
+    padding-bottom: 50rpx;
+}
+
+.gd-pin-tips-icon-block {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    box-sizing: border-box;
+}
+
+.gd-pin-tips-icon-round {
+    height: 30vw;
+    width: 30vw;
+    border-radius: 50%;
+    display: flex;
+    background: #ff758c;  
+    align-items: center;
+    position: relative;
+    justify-content: center; 
+    background: -webkit-linear-gradient(to top, #ff758c, #ff7eb3);  
+    background: linear-gradient(to top, #ff758c, #ff7eb3); 
+}
+
+.gd-pin-tips-icon-round::after {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    width: 35vw;
+    height: 35vw;
+    content: '';
+    border-radius: 50%;
+    background: rgba( 255, 117, 140, 0.1);
+    transform: translate( -50%, -50% );
+}
+
+.gd-pin-tips-icon {
+    width: 60rpx;
+}
+
+.gd-pin-tips-title {
+    color: #333;
+    font-size: 35rpx;
+    text-align: center;
+    margin-top: 40rpx;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+}
+
+.gd-pin-tips-content {
+    font-size: 22rpx;
+    padding: 25rpx 35rpx;
+    letter-spacing: 0.05em;
+    color: rgba( 0, 0, 0, 0.45 );
+    text-align: center;
+    text-indent: 2em;
+}
+
+.gd-pin-close {
+    top: 30rpx;
+    right: 30rpx;
+    position: fixed;
+    text-align: center;
+}
+
+.gd-swiper {
+    height: 300rpx;
+    width: 100%;
+    margin-top: 30rpx;
+    padding-left: 70rpx;
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+.gd-swiper.one {
+    width: 260rpx;
+}
+
+.gd-swiper.two {
+    width: 440rpx;
+}
+
+.swiper-visible {
+    overflow: visible;
+}
+
+.gd-swiper-item {
+    display: flex;
+    overflow: visible;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.gd-swiper-image {
+    width: 140rpx;
+    height: 140rpx;
+    margin-top: 25rpx;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    box-shadow: 0 0 20px rgba( 0, 0, 0, 0.25 );
+}
+
+.gd-swiper-title {
+    width: 140rpx;
+    color: #bfbfbf;
+    font-size: 24rpx;
+    margin-top: 10rpx;
+    text-align: center;
+    letter-spacing: 0.05em;
+    overflow :hidden; 
+    display: -webkit-box; 
+    -webkit-line-clamp: 1;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    -webkit-box-orient :vertical;
+}
+
+.gd-swiper-title.small {
+    margin-top: 0;
+}
+
+.gd-swiper-title.color {
+    margin-top: 30rpx;
+    min-width:80rpx;
+    line-height:28rpx;
+    color:#fff;
+    font-size:22rpx;
+    padding:8rpx 18rpx;
+    border-radius:15px;
+    display:block;
+    box-sizing:border-box;
+    min-width:80rpx;
+    transform:translate( 0, -50% );
+    background:#bc4e9c;
+    background:-webkit-linear-gradient(to left, #f80759, #bc4e9c);
+    background:linear-gradient(to left, #f80759, #bc4e9c);
+    text-shadow:0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    
 }

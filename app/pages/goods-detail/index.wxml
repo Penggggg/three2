@@ -93,28 +93,7 @@
             {{ detail.title }}
         </view>
 
-        <!-- v1 - 价格 -->
-        <!-- <view class="padding">
-            <wxc-price
-                icon="sub"
-                class="red price price-item"
-                decimal="small"
-                wx:if="{{ detail }}"
-            > 
-                {{ price }}
-            </wxc-price>
-            <wxc-price
-                status="del"
-                decimal="small"
-                del-color="#666"
-                wx:if="{{ detail }}"
-                class="fade-price price-item"
-            > 
-                原价{{ detail.fadePrice }}
-            </wxc-price>
-        </view> -->
-
-        <!-- v1 - 标签 -->
+        <!-- v1 - 标签、收藏-->
         <view
             wx:if="{{ detail }}"
             class="pgd-tag-block padding"
@@ -153,17 +132,17 @@
             <view class="info-block-item" wx:if="{{ priceGap }}">
 
                 <view class="info-block-item-label">
-                    团购：
+                    拼团：
                 </view>
 
                 <view class="info-block-item-content">
-                    一趟行程中有Ta人购买，<text class="red">自动减{{ priceGap }}元</text>
+                    行程中有Ta人购买，<text class="red" bindtap="toggleTips">自动减{{ priceGap }}元【详情】</text>
                 </view>
 
                 <view class="invite-icon">
                     <image
                         class="invite-icon-img"
-                        src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/wechat.png"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/wechat.png"
                         animation="{{ animationMiddleHeaderItem }}"
                     />
                 </view>
@@ -202,7 +181,7 @@
             <image
                 mode="widthFix"
                 class="detail-info-banner-img"
-                src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/good-info-banner.png"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-info-banner.png"
             />
         </view>
 
@@ -233,5 +212,79 @@
     >
         修改
     </view>
+
+    <!-- 团购提示弹框 -->
+    <wxc-mask
+        content-align="cc"
+        status="{{ showTips }}"
+        bindmasktap="toggleTips"
+    >
+        <view class="gd-pin-tips-block">
+
+            <view class="gd-pin-tips-icon-block">
+                <view class="gd-pin-tips-icon-round">
+                    <image
+                        mode="widthFix"
+                        class="gd-pin-tips-icon"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-money-white.png"
+                    />
+                </view>
+            </view>
+
+            <view class="gd-pin-tips-title">
+                如何省钱
+            </view>
+
+            <view class="gd-pin-tips-content">
+                购买后，如有他人也买了同款商品，会"自动拼团”，并得到“拼团价”。如果闺蜜或者群友刚好也需要～那就邀请她们一起购买吧！
+            </view>
+
+            <!-- 行程清单 -->
+            <swiper
+                autoplay="{{ true }}"
+                circular="{{ true }}"
+                duration="{{ 1000 }}"
+                interval="{{ 3000 }}"
+                class="gd-swiper {{ pin.length <= 2 ? pin.length === 1 ? 'one' : pin.length === 2 ? 'two' : '' : 'two' }}"
+                display-multiple-items="{{ pin.length <= 2 ? pin.length : 2 }}"
+            >
+                <block
+                    wx:key="{{ index }}"
+                    wx:for="{{ pin }}"
+                >
+                    <swiper-item class="swiper-visible">
+                        <view
+                            data-data="{{ item }}"
+                            class="gd-swiper-item"
+                            bindtap="previewPin"
+                        >
+                            <image
+                                src="{{ item.img }}"
+                                mode="scaleToFill"
+                                class="gd-swiper-image"
+                            />
+                            <view class="gd-swiper-title">
+                                {{ item.name }}
+                            </view>
+                            <view class="gd-swiper-title small">
+                                原价：¥{{ item.price }}
+                            </view>
+                            <view class="gd-swiper-title small color">
+                                拼团：¥{{ item.groupPrice }}
+                            </view>
+                        </view>
+                    </swiper-item>
+                </block>
+            </swiper>
+
+            <view
+                class="gd-pin-close"
+                bindtap="toggleTips"
+            >
+                <wxc-icon size="40" type="no" color="rgba(0,0,0,0.1)"></wxc-icon>
+            </view>
+
+        </view>
+    </wxc-mask>
 
 </view>

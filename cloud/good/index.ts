@@ -268,8 +268,8 @@ export const main = async ( event, context ) => {
                 // 更新
                 const meta = Object.assign({ }, event.data );
                 delete meta[ _id ];
-                const { title, category, depositPrice, detail, fadePrice, img, limit, saled, 
-                    standards, tag, updateTime, visiable, price, groupPrice, stock } = meta;
+                const { title, category, depositPrice, detail, fadePrice, img, limit, 
+                    standards, tag, updateTime, visiable, price, groupPrice, stock, saled } = meta;
                 await db.collection('goods').doc( _id ).update({
                     data: { 
                         tag,
