@@ -256,6 +256,36 @@ Page({
                 }
 
                 return [ ];
+            },
+            // 可以拼团的个数
+            pinCount$: function( ) {
+                const { detail, shopping } = this.data;
+                if ( !detail ) { 
+                    return 0;
+                }
+
+                const { standards, groupPrice } = detail;
+
+                if ( !!standards && standards.length > 0 ) {
+                    return standards
+                        .filter( x => !!shopping.find( s => s.sid === x._id && s.pid === x.pid ))
+                        .length;
+
+                } else if ( !!groupPrice ) {
+                    const { _id } = detail;
+                    return !!shopping.find( s => s.pid === _id ) ? 1 : 0
+                }
+
+                return 0;
+            },
+            // 是否有型号
+            hasStanders$: function( ) {
+                const { detail } = this.data;
+                if ( !detail ) { 
+                    return false;
+                }
+                const { standards } = detail;
+                return !!standards && standards.length > 0 ;
             }
         })
     },
@@ -398,8 +428,8 @@ Page({
     onShareAppMessage: function ( ) {
         const { detail } = this.data;
         return {
-            title: `真划算！${detail.title}`,
-            path: `/pages/good-detail/index?${detail._id}`,
+            title: `给你看看这宝贝！${detail.title}`,
+            path: `/pages/good-detail/index?${detail._id}&tid=${this.data.tid}`,
             imageUrl: `${detail.img[ 0 ]}`
         }
     }

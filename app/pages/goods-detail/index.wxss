@@ -132,15 +132,28 @@
 }
 
 .invite-icon {
+    height: 75rpx;
+    width: 75rpx;
     right: 50rpx;
     bottom: 210rpx;
     position: fixed;
     z-index: 2000;
+    border-radius: 50%;
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
 }
 
 .invite-icon-img {
-    height: 55rpx;
-    width: 55rpx;
+    left: 50%;
+    top: 50%;
+    height: 75rpx;
+    width: 75rpx;
+    opacity: 1;
+    border-radius: 50%;
+    transform: translate( -50%, -50% );
+    box-shadow: 3px 3px 25px rgba( 0, 0, 0, 0.15 );
+    position: absolute;
 }
 
 .invite-text {
