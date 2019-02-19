@@ -13,6 +13,7 @@ Page({
      * 页面的初始数据
      */
     data: {
+        tid: '',
         /** 购物车列表 含商品详情、型号详情 */
         cartList: [ ],
         /** 当前选中的购物车的id列表 */
@@ -38,7 +39,9 @@ Page({
         // 订金总额
         sum2: 0,
         // 是否处于结算中
-        isSettling: false
+        isSettling: false,
+        // 拼团列表
+        shoppinglist: [ ]
     },
 
     /** 设置computed */
@@ -85,6 +88,10 @@ Page({
     /** 拉取购物车列表 */
     fetchList: function( ) {
         const that = this;
+
+        if ( this.data.cartList.length > 0 ) {
+            return;
+        }
 
         if ( !this.data.hasInitCart ) {
             wx.showLoading({
@@ -203,6 +210,48 @@ Page({
 
     },
 
+    /** 获取当前行程 */
+    fetchCurrentTrip( cb ) {
+        http({
+            url: 'trip_enter',
+            data: {
+                shouldGetGoods: false
+            },
+            loadingMsg: 'none',
+            success: res => {
+                const { status, data } = res;
+                if ( status === 200 && !!data[ 0 ]) {
+                    !!cb && cb( data[ 0 ]._id );
+                    this.setData({
+                        tid: data[ 0 ]._id,
+                        trip: res.data[ 0 ] ? this.dealTrip( res.data[ 0 ]) : null
+                    });
+                }
+            }
+        });
+    },
+
+    /** 拉取拼团列表 */
+    fetchGroupList( tid ) {
+        if ( !tid ) { return; }
+        http({
+            url: 'shopping-list_list',
+            data: {
+                tid,
+                needOrders: false
+            },
+            loadingMsg: 'none',
+            success: res => {
+                const { status, data } = res;
+                if ( status === 200 ) {
+                    this.setData({
+                        shoppinglist: data
+                    })
+                }
+            }
+        });
+    },
+
     /**  选中、取消选中某个商品 */
     toggleSelectCart: function( e ) {
 
@@ -276,9 +325,19 @@ Page({
 
     /** 跳往商品详情 */
     goDetail({ currentTarget }) {
+        const { tid } = this.data;
         const pid = currentTarget.dataset.cart.detail._id;
         wx.navigateTo({
-            url: `/pages/goods-detail/index?id=${pid}`
+            url: `/pages/goods-detail/index?id=${pid}&tid=${tid}`
+        });
+    },
+
+    /** 跳往商品详情(拼团) */
+    goGoodDetail({ currentTarget }) {
+        const { tid } = this.data;
+        const { pid } = currentTarget.dataset.data;
+        wx.navigateTo({
+            url: `/pages/goods-detail/index?id=${pid}&tid=${tid}`
         });
     },
 
@@ -456,7 +515,6 @@ Page({
 
     /** 监听用户授权情况 */
     checkAuth( ) {
-        console.log('---------')
         app.watch$('isUserAuth', val => {
             if ( val === undefined ) { return; }
             this.setData({
@@ -608,21 +666,6 @@ Page({
 
     },
 
-    /** 拉取最新可用行程 */
-    fetchTrip( ) {
-        http({
-            data: { },
-            url: `trip_enter`,
-            success: res => {
-                if ( res.status === 200 ) {
-                    this.setData({
-                        trip: res.data[ 0 ] ? this.dealTrip( res.data[ 0 ]) : null
-                    });
-                }
-            }
-        });  
-    },
-
     /** 处理详情 */
     dealTrip( tripDetail ) {
 
@@ -645,6 +688,8 @@ Page({
         this.watchRole( );
         this.checkAuth( );
         this.runComputed( );
+        // this.fetchCurrentTrip( tid => this.fetchGroupList( tid ));
+        this.fetchCurrentTrip( tid => { });
     },
 
     /**
@@ -659,7 +704,7 @@ Page({
      */
     onShow: function ( ) {
         this.fetchList( );
-        this.fetchTrip( );
+        // this.fetchTrip( );
     },
 
     /**

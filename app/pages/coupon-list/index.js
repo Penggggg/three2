@@ -91,6 +91,14 @@ Page({
         });
     },
 
+    goGoodDetail({ currentTarget }) {
+        const { tid } = this.data;
+        const { pid } = currentTarget.dataset.data;
+        wx.navigateTo({
+            url: `/pages/goods-detail/index?id=${pid}&tid=${tid}`
+        });
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
