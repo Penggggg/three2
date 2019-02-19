@@ -20,25 +20,27 @@ Component({
             {
                 label: '行程',
                 url: "/pages/trip-enter/index",
-                normal: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-7.png",
-                active: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-8.png"
+                normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-plane.png",
+                active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-plane-active.png"
             }, {
                 label: '超值',
                 url: "/pages/index/index",
-                normal: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-5.png",
-                active: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-6.png"
+                normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-shop.png",
+                active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-shop-active.png"
             }, {
                 label: '购物车',
                 url: "/pages/cart-list/index",
-                normal: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-3.png",
-                active: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-4.png"
+                normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-cart.png",
+                active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-cart-active.png"
             }, {
                 label: '我的',
                 url: "/pages/my/index",
-                normal: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-2-2.png",
-                active: "cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-2.png"
+                normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-person.png",
+                active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-person-active.png"
             }
-        ]
+        ],
+        /** 当前激活的下标 */
+        active: null
     },
 
     /**
@@ -66,16 +68,33 @@ Component({
             const current = pages[ pages.length - 1 ];
             const url = current.route;
 
+            // this.setData({
+            //     active: currentTarget.dataset.index
+            // })
+
             if ( currentTarget.dataset.url.indexOf( url ) === -1 ) {
                 wx.navigateTo({
                     url: currentTarget.dataset.url
+                });
+            }
+        },
+        /** 判断当前路由 */
+        init( ) {
+            const pages = getCurrentPages( )
+            const current = pages[ pages.length - 1 ];
+            const url = current.route;
+ 
+            const activeIndex = this.data.navList.findIndex( x => x.url.indexOf( url ) !== -1 );
+            if ( activeIndex !== -1 ) {
+                this.setData({
+                    active: activeIndex
                 });
             }
         }
     },
 
     attached: function( ) {
-      // this.initAnimation( );
+        this.init( );
     }
 
 })
