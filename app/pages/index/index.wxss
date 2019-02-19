@@ -1,5 +1,16 @@
-/* pages/index/index.wxss */
+
 
 .p-index {
-  min-height: 100vh;
+
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #fafafa;
+    box-sizing: border-box;
+
+}
+
+.pi-content-block {
+    flex: 1;
+    overflow-y: scroll;
 }

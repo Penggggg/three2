@@ -1,393 +1,402 @@
 <!--app/pages/cart-list/index.wxml-->
 
 <view class="p-cart-list">
-    
-    <!-- 顶部栏、购物车、猜你喜欢列表 -->
-    <scroll-view scroll-y class="pcl-cart-like-block">
 
-        <!-- 顶部通知栏、宝贝数量 -->
-        <view class="pcl-info-block">
+    <view class="pcl-content-block">
 
-            <wxc-notice
-                scroll="{{ true }}"
-                close="{{ true }}"
-                show-icon="{{ true }}"
-                wx:if="{{ trip }}"
-                notice="{{ '【' + trip.title + '】' + '于' +  trip.start_date$ + '出发，请放心购买～' }}"
-            />
+        <!-- 顶部栏、购物车、猜你喜欢列表 -->
+        <scroll-view scroll-y class="pcl-cart-like-block">
 
-            <view class="pcl-info-msg">
+            <!-- 顶部通知栏、宝贝数量 -->
+            <view class="pcl-info-block">
 
-                <view class="pcl-info">
-                    共{{ cartList.length }}件宝贝
+                <wxc-notice
+                    scroll="{{ true }}"
+                    close="{{ true }}"
+                    show-icon="{{ true }}"
+                    wx:if="{{ trip }}"
+                    notice="{{ '【' + trip.title + '】' + '于' +  trip.start_date$ + '出发，请放心购买～' }}"
+                />
+
+                <view class="pcl-info-msg">
+
+                    <view class="pcl-info">
+                        共{{ cartList.length }}件宝贝
+                    </view>
+
+                    <view
+                        class="pcl-info"
+                        bindtap="toggleDelete"
+                    >
+                        {{ !isInDelete ? '管理' : '取消' }}
+                    </view>
+
+                </view>
+
+            </view>
+
+            <!-- 购物车列表 -->
+            <view class="pcl-cart-list-block">
+
+                <!-- 空的购物列表 -->
+                <view
+                    class="pcl-cart-list-item"
+                    wx:if="{{ cartList.length === 0 }}"
+                >
+                    <view class="pcl-cart-img-block">
+                        <image
+                            mode="aspectFit"
+                            class="pcl-cart-img"
+                            src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/bg-cart.png"
+                        />
+                    </view>
+
+                    <view class="pcl-cart-img-tips">
+                        购物车空空如也, 记得对自己好一点哦～
+                    </view>
+                    
                 </view>
 
                 <view
-                    class="pcl-info"
-                    bindtap="toggleDelete"
+                    wx:key="{{ index }}"
+                    wx:for="{{ cartList }}"
+                    class="pcl-cart-list-item"
                 >
-                    {{ !isInDelete ? '管理' : '取消' }}
-                </view>
+                    <!-- 选择框、图片、标题、限购、信息、价格、计数器 -->
+                    <view class="pcl-cart-item-top">
 
-            </view>
-
-        </view>
-
-        <!-- 购物车列表 -->
-        <view class="pcl-cart-list-block">
-
-            <!-- 空的购物列表 -->
-            <view
-                class="pcl-cart-list-item"
-                wx:if="{{ cartList.length === 0 }}"
-            >
-                <view class="pcl-cart-img-block">
-                    <image
-                        mode="aspectFit"
-                        class="pcl-cart-img"
-                        src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/bg-cart.png"
-                    />
-                </view>
-
-                <view class="pcl-cart-img-tips">
-                    购物车空空如也, 记得对自己好一点哦～
-                </view>
-                
-            </view>
-
-            <view
-                wx:key="{{ index }}"
-                wx:for="{{ cartList }}"
-                class="pcl-cart-list-item"
-            >
-                <!-- 选择框、图片、标题、限购、信息、价格、计数器 -->
-                <view class="pcl-cart-item-top">
-
-                    <switch
-                        color='#ff5777'
-                        type="checkbox"
-                        data-cart="{{ item }}"
-                        class="pcl-cart-item-radio"
-                        checked="{{ item.selected }}"
-                        catch:change="toggleSelectCart"
-                        disabled="{{ !isInDelete && ( item.current.hasBeenDelete || !item.visiable || item.current.outOfStock )}}"
-                    />
-
-                    <view
-                        class="pcl-flex"
-                        bindtap="goDetail"
-                        data-cart="{{ item }}"
-                    >
-                        <!-- 图片 -->
-                        <image
-                            mode="aspectFill"
-                            class="pcl-cart-item-img"
-                            src="{{ item.current.img }}"
+                        <switch
+                            color='#ff5777'
+                            type="checkbox"
+                            data-cart="{{ item }}"
+                            class="pcl-cart-item-radio"
+                            checked="{{ item.selected }}"
+                            catch:change="toggleSelectCart"
+                            disabled="{{ !isInDelete && ( item.current.hasBeenDelete || !item.visiable || item.current.outOfStock )}}"
                         />
 
-                        <view class="pcl-cart-item-msg-block">
+                        <view
+                            class="pcl-flex"
+                            bindtap="goDetail"
+                            data-cart="{{ item }}"
+                        >
+                            <!-- 图片 -->
+                            <image
+                                mode="aspectFill"
+                                class="pcl-cart-item-img"
+                                src="{{ item.current.img }}"
+                            />
 
-                            <!-- 标题 -->
-                            <view class="pcl-cart-item-title"> 
-                                {{ item.current.title }}
-                            </view> 
+                            <view class="pcl-cart-item-msg-block">
 
-                            <!-- 团购信息 -->
-                            <!-- <view
-                                class="pcl-cart-item-info grey"
-                            >
-                                立即购买<text class="pcl-text-red">自动拼团</text>
-                            </view> -->
+                                <!-- 标题 -->
+                                <view class="pcl-cart-item-title"> 
+                                    {{ item.current.title }}
+                                </view> 
 
-                            <!-- 库存不足信息 -->
-                            <view
-                                class="pcl-cart-item-info grey"
-                                wx:if="{{ item.current.outOfStock }}"
-                            >
-                                赞无货存，请联系群主!
-                            </view>
-
-                            <!-- 库存变动信息 -->
-                            <view
-                                class="pcl-cart-item-info grey"
-                                wx:if="{{ item.current.stock && item.current.stock < item.current.count }}"
-                            >
-                                仅剩<text class="pcl-text-red">{{ item.current.stock }}件！</text>
-                            </view>
-
-                            <!-- 拼团价格信息 -->
-                            <view
-                                class="pcl-cart-item-info grey"
-                                wx:if="{{ item.current.groupPriceGap }}"
-                            >
-                                成功拼团<text class="pcl-text-red">立减{{ item.current.groupPriceGap }}元！</text>
-                            </view>
-
-                            <!-- 订金信息 免订金 -->
-                            <view
-                                class="pcl-cart-item-info grey"
-                                wx:if="{{ !needPrePay && !!item.current.depositPrice }}"
-                            >
-                                <text class="pcl-text-red">{{ isNew ? '本次行程免订金' : '熟客免订金' }}</text>
-                            </view>
-
-                            <view
-                                class="pcl-cart-item-info grey"
-                                wx:elif="{{ !item.current.depositPrice }}"
-                            >
-                                <text class="pcl-text-red">该商品免订金</text>
-                            </view>
-
-                            <!-- 优惠信息 -->
-                            <view
-                                class="pcl-cart-item-info grey"
-                                wx:if="{{ !(item.current.hasBeenDelete) && ( item.visiable ) && ( !item.current.outOfStock ) && (item.current.price < item.current.lastPrice) }}"
-                            >
-                                该商品<text class="pcl-text-red">降价了{{ item.current.lastPrice - item.current.price }}元！</text>
-                            </view>
-
-                            <!-- 限购信息 -->
-                            <!-- <view
-                                wx:if="{{ !(item.current.hasBeenDelete) && ( item.current.limit )}}"
-                                class="pcl-cart-item-info grey"
-                            >
-                                限购{{ item.current.limit }}件
-                            </view> -->
-
-                            <!-- 商品标签 没有降价信息的时候才显示 -->
-                            <view class="pcl-cart-item-tags">
-                                <wxc-label
-                                    class="pcl-tag"
-                                    wx:for-item="tag"
-                                    wx:key="{{ index }}"
-                                    wx:for="{{ item.detail.tag }}"
+                                <!-- 团购信息 -->
+                                <!-- <view
+                                    class="pcl-cart-item-info grey"
                                 >
-                                    {{ tag }}
-                                </wxc-label>
-                            </view>
+                                    立即购买<text class="pcl-text-red">自动拼团</text>
+                                </view> -->
 
-                            <!-- 型号信息 -->
-                            <view
-                                data-cart="{{ item }}"
-                                catch:tap="toggleSku"
-                                class="pcl-standar-block"
-                                wx:if="{{ !(item.current.hasBeenDelete) && item.current.standardName }}"
-                            >
-                                <view></view>
-                                <text class="pcl-standar">{{ item.current.standardName }}</text>
-                            </view>
-
-                            <!-- 价格、数量 -->
-                            <view
-                                class="pcl-cart-item-price-block"
-                            >
-                                <view>
-                               
-                                    <!-- 现价 -->
-                                    <wxc-price
-                                        icon="sub"
-                                        decimal="small"
-                                        class="pcl-price"
-                                    > 
-                                        {{ item.current.price }}
-                                    </wxc-price>
-                                    <!-- 如果有降价信息，则显示降价前的原价，没有降价信息，应该显示划线价 -->
-                                    <text class="pcl-cart-cheap-tips" wx:if="{{ (item.current.price < item.current.lastPrice) }}">上次价格</text>
-                                    <wxc-price
-                                        icon="sub"
-                                        status="del"
-                                        decimal="small"
-                                        class="pcl-price del"
-                                        del-color="#999"
-                                        wx:if="{{ (item.current.price < item.current.lastPrice) }}"
-                                    > 
-                                        {{ item.current.lastPrice }}
-                                    </wxc-price>
-                                    <wxc-price
-                                        wx:else
-                                        icon="sub"
-                                        status="del"
-                                        decimal="small"
-                                        class="pcl-price del"
-                                        del-color="#999"
-                                    > 
-                                        {{ item.detail.fadePrice }}
-                                    </wxc-price>
-                                </view>
+                                <!-- 库存不足信息 -->
                                 <view
-                                    data-cart="{{ item }}"
-                                    class="pcl-counter"
-                                    catch:tap="toggleSku"
-                                    wx:if="{{ !(item.current.hasBeenDelete) && item.visiable && !item.current.outOfStock }}"
+                                    class="pcl-cart-item-info grey"
+                                    wx:if="{{ item.current.outOfStock }}"
                                 >
-                                    <text class="pcl-counter-opt del">-</text>
-                                    {{ item.current.count }}
-                                    <text class="pcl-counter-opt add">+</text>
+                                    赞无货存，请联系群主!
                                 </view>
-                            </view>
 
-                            <view 
-                                wx:if="{{ needPrePay && !!item.current.depositPrice }}"
-                                class="pcl-cart-item-depositprice-block"
-                            >
-                                <!-- 如果需要付订金，则展示订金信息 -->
-                                订金：<wxc-price
-                                    icon="sub"
-                                    decimal="small"
-                                    class="pcl-price small"
-                                > 
-                                    {{ item.current.depositPrice }}
-                                </wxc-price>
-                            </view>
+                                <!-- 库存变动信息 -->
+                                <view
+                                    class="pcl-cart-item-info grey"
+                                    wx:if="{{ item.current.stock && item.current.stock < item.current.count }}"
+                                >
+                                    仅剩<text class="pcl-text-red">{{ item.current.stock }}件！</text>
+                                </view>
 
+                                <!-- 拼团价格信息 -->
+                                <view
+                                    class="pcl-cart-item-info grey"
+                                    wx:if="{{ item.current.groupPriceGap }}"
+                                >
+                                    成功拼团<text class="pcl-text-red">立减{{ item.current.groupPriceGap }}元！</text>
+                                </view>
 
-                            <!-- 加入购物车时的sku被删除，显示重选sku -->
-                            <view
-                                class="pcl-cart-reselect"
-                                wx:if="{{ item.current.hasBeenDelete }}"
-                            >
-                                <view class="pcl-cart-reselect-tips">请重选规格</view>
+                                <!-- 订金信息 免订金 -->
+                                <view
+                                    class="pcl-cart-item-info grey"
+                                    wx:if="{{ !needPrePay && !!item.current.depositPrice }}"
+                                >
+                                    <text class="pcl-text-red">{{ isNew ? '本次行程免订金' : '熟客免订金' }}</text>
+                                </view>
+
+                                <view
+                                    class="pcl-cart-item-info grey"
+                                    wx:elif="{{ !item.current.depositPrice }}"
+                                >
+                                    <text class="pcl-text-red">该商品免订金</text>
+                                </view>
+
+                                <!-- 优惠信息 -->
+                                <view
+                                    class="pcl-cart-item-info grey"
+                                    wx:if="{{ !(item.current.hasBeenDelete) && ( item.visiable ) && ( !item.current.outOfStock ) && (item.current.price < item.current.lastPrice) }}"
+                                >
+                                    该商品<text class="pcl-text-red">降价了{{ item.current.lastPrice - item.current.price }}元！</text>
+                                </view>
+
+                                <!-- 限购信息 -->
+                                <!-- <view
+                                    wx:if="{{ !(item.current.hasBeenDelete) && ( item.current.limit )}}"
+                                    class="pcl-cart-item-info grey"
+                                >
+                                    限购{{ item.current.limit }}件
+                                </view> -->
+
+                                <!-- 商品标签 没有降价信息的时候才显示 -->
+                                <view class="pcl-cart-item-tags">
+                                    <wxc-label
+                                        class="pcl-tag"
+                                        wx:for-item="tag"
+                                        wx:key="{{ index }}"
+                                        wx:for="{{ item.detail.tag }}"
+                                    >
+                                        {{ tag }}
+                                    </wxc-label>
+                                </view>
+
+                                <!-- 型号信息 -->
                                 <view
                                     data-cart="{{ item }}"
                                     catch:tap="toggleSku"
-                                    class="pcl-cart-reselect-btn"
+                                    class="pcl-standar-block"
+                                    wx:if="{{ !(item.current.hasBeenDelete) && item.current.standardName }}"
                                 >
-                                    重选
+                                    <view></view>
+                                    <text class="pcl-standar">{{ item.current.standardName }}</text>
                                 </view>
+
+                                <!-- 价格、数量 -->
+                                <view
+                                    class="pcl-cart-item-price-block"
+                                >
+                                    <view>
+                                
+                                        <!-- 现价 -->
+                                        <wxc-price
+                                            icon="sub"
+                                            decimal="small"
+                                            class="pcl-price"
+                                        > 
+                                            {{ item.current.price }}
+                                        </wxc-price>
+                                        <!-- 如果有降价信息，则显示降价前的原价，没有降价信息，应该显示划线价 -->
+                                        <text class="pcl-cart-cheap-tips" wx:if="{{ (item.current.price < item.current.lastPrice) }}">上次价格</text>
+                                        <wxc-price
+                                            icon="sub"
+                                            status="del"
+                                            decimal="small"
+                                            class="pcl-price del"
+                                            del-color="#999"
+                                            wx:if="{{ (item.current.price < item.current.lastPrice) }}"
+                                        > 
+                                            {{ item.current.lastPrice }}
+                                        </wxc-price>
+                                        <wxc-price
+                                            wx:else
+                                            icon="sub"
+                                            status="del"
+                                            decimal="small"
+                                            class="pcl-price del"
+                                            del-color="#999"
+                                        > 
+                                            {{ item.detail.fadePrice }}
+                                        </wxc-price>
+                                    </view>
+                                    <view
+                                        data-cart="{{ item }}"
+                                        class="pcl-counter"
+                                        catch:tap="toggleSku"
+                                        wx:if="{{ !(item.current.hasBeenDelete) && item.visiable && !item.current.outOfStock }}"
+                                    >
+                                        <text class="pcl-counter-opt del">-</text>
+                                        {{ item.current.count }}
+                                        <text class="pcl-counter-opt add">+</text>
+                                    </view>
+                                </view>
+
+                                <view 
+                                    wx:if="{{ needPrePay && !!item.current.depositPrice }}"
+                                    class="pcl-cart-item-depositprice-block"
+                                >
+                                    <!-- 如果需要付订金，则展示订金信息 -->
+                                    订金：<wxc-price
+                                        icon="sub"
+                                        decimal="small"
+                                        class="pcl-price small"
+                                    > 
+                                        {{ item.current.depositPrice }}
+                                    </wxc-price>
+                                </view>
+
+
+                                <!-- 加入购物车时的sku被删除，显示重选sku -->
+                                <view
+                                    class="pcl-cart-reselect"
+                                    wx:if="{{ item.current.hasBeenDelete }}"
+                                >
+                                    <view class="pcl-cart-reselect-tips">请重选规格</view>
+                                    <view
+                                        data-cart="{{ item }}"
+                                        catch:tap="toggleSku"
+                                        class="pcl-cart-reselect-btn"
+                                    >
+                                        重选
+                                    </view>
+                                </view>
+
                             </view>
 
                         </view>
 
                     </view>
 
-                </view>
+                    <!-- 拼团icon 代表这趟行程有人购买 -->
+                    <view
+                        class="pcl-cart-item-icon"
+                        wx:if="{{ !item.current.hasBeenDelete && item.visiable && item.current.groupPrice }}"
+                    >
+                        可拼团
+                    </view>
 
-                <!-- 拼团icon 代表这趟行程有人购买 -->
-                <view
-                    class="pcl-cart-item-icon"
-                    wx:if="{{ !item.current.hasBeenDelete && item.visiable && item.current.groupPrice }}"
-                >
-                    可拼团
+                    <!-- 下架icon -->
+                    <view
+                        class="pcl-cart-item-icon"
+                        wx:if="{{ !item.visiable }}"
+                    >
+                        已下架
+                    </view>
+                    
                 </view>
-
-                <!-- 下架icon -->
-                <view
-                    class="pcl-cart-item-icon"
-                    wx:if="{{ !item.visiable }}"
-                >
-                    已下架
-                </view>
-                
             </view>
+
+        </scroll-view>   
+        
+        <!-- 底部结算栏 -->
+        <view
+            class="pcl-settlet-block"
+            wx:if="{{ cartList.length !== 0 }}"
+        >
+
+            <!-- 全选 -->
+            <view class="pcl-settlet-radio pcl-text">
+                <switch
+                    checked="{{ isSelectAll }}"
+                    color='#ff5777'
+                    type="checkbox"
+                    bindchange="toggleSelectAll"
+                />
+                全选
+            </view>
+
+            <!-- 合计、结算 -->
+            <view
+                wx:if="{{ !isInDelete }}"
+                class="pcl-settlet-msg"
+            >
+                <view
+                    wx:if="{{ !needPrePay }}"
+                    class="pcl-settlet-price pcl-text"
+                >
+                    合计:
+                    <wxc-price
+                        decimal="small"
+                        class="pcl-price"
+                    > 
+                        {{ sum }}
+                    </wxc-price>
+                </view>
+
+                <view
+                    wx:else
+                    class="pcl-settlet-price pcl-text"
+                >
+                    订金:
+                    <wxc-price
+                        decimal="small"
+                        class="pcl-price"
+                    > 
+                    {{ sum2 }}
+                    </wxc-price>
+                    <view
+                        class="pcl-settlet-deposit-price"
+                    >
+                        总计<wxc-price
+                                decimal="small"
+                                class="pcl-price small"
+                            > 
+                            {{ sum }}
+                        </wxc-price>
+                    </view>
+                </view>
+
+                <!-- 用户授权按钮 -->
+                <button
+                    wx:if="{{ !isUserAuth }}"
+                    class="pcl-settlet-btn"
+                    open-type="getUserInfo"
+                    bindgetuserinfo="getUserAuth"
+                >
+                    结算
+                </button>
+
+                <!-- 结算按钮 拿到 form_id -->
+                <form
+                    wx:else
+                    report-submit="{{ true }}"
+                    bindsubmit="batchSettle"
+                >
+                    <button
+                        form-type="submit"
+                        class="pcl-settlet-btn"
+                    >
+                    {{ isSettling ? '结算中...' : '结算' }}
+                    </button>
+                </form>
+
+            </view>
+
+            <!-- 删除 -->
+            <view
+                wx:else 
+                class="pcl-settlet-msg" 
+            >
+                <view
+                    bindtap="confirmDelete"
+                    class="pcl-settlet-btn blank"
+                >
+                    删除
+                </view>
+            </view>
+
         </view>
 
-    </scroll-view>
+    </view>
+    
+    <view class="pcl-nav-block">
+        <!-- 底部导航栏 -->
+        <my-nav />
+    </view>
 
-    <!-- sku -->
+     <!-- sku -->
     <my-sku-popup
         open="{{ openSku }}"
         skuItems="{{ skuItems }}"
         bind:close="onCloseSku"
         bind:confirm="onConfirmSku"
     />
-    
-    <!-- 底部结算栏 -->
-    <view class="pcl-settlet-block">
-
-        <!-- 全选 -->
-        <view class="pcl-settlet-radio pcl-text">
-            <switch
-                checked="{{ isSelectAll }}"
-                color='#ff5777'
-                type="checkbox"
-                bindchange="toggleSelectAll"
-            />
-            全选
-        </view>
-
-        <!-- 合计、结算 -->
-        <view
-            wx:if="{{ !isInDelete }}"
-            class="pcl-settlet-msg"
-        >
-            <view
-                wx:if="{{ !needPrePay }}"
-                class="pcl-settlet-price pcl-text"
-            >
-                合计:
-                <wxc-price
-                    decimal="small"
-                    class="pcl-price"
-                > 
-                    {{ sum }}
-                </wxc-price>
-            </view>
-
-            <view
-                wx:else
-                class="pcl-settlet-price pcl-text"
-            >
-                订金:
-                <wxc-price
-                    decimal="small"
-                    class="pcl-price"
-                > 
-                {{ sum2 }}
-                </wxc-price>
-                <view
-                    class="pcl-settlet-deposit-price"
-                >
-                    总计<wxc-price
-                            decimal="small"
-                            class="pcl-price small"
-                        > 
-                        {{ sum }}
-                    </wxc-price>
-                </view>
-            </view>
-
-            <!-- 用户授权按钮 -->
-            <button
-                wx:if="{{ !isUserAuth }}"
-                class="pcl-settlet-btn"
-                open-type="getUserInfo"
-                bindgetuserinfo="getUserAuth"
-            >
-                结算
-            </button>
-
-            <!-- 结算按钮 拿到 form_id -->
-            <form
-                wx:else
-                report-submit="{{ true }}"
-                bindsubmit="batchSettle"
-            >
-                <button
-                    form-type="submit"
-                    class="pcl-settlet-btn"
-                >
-                {{ isSettling ? '结算中...' : '结算' }}
-                </button>
-            </form>
-
-        </view>
-
-        <!-- 删除 -->
-        <view
-            wx:else 
-            class="pcl-settlet-msg" 
-        >
-            <view
-                bindtap="confirmDelete"
-                class="pcl-settlet-btn blank"
-            >
-                删除
-            </view>
-        </view>
-
-    </view>
-
-    <!-- 底部导航栏 -->
-    <my-nav />
 
 </view>

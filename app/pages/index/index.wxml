@@ -1,5 +1,9 @@
 <view class='p-index'>
 
-  <my-manager-entry-btn />
-  <my-nav />
+    <view class="pi-content-block"></view>
+
+    <view class="pi-btn-block">
+        <my-manager-entry-btn />
+        <my-nav />
+    </view>
 </view>
