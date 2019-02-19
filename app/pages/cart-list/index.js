@@ -41,7 +41,9 @@ Page({
         // 是否处于结算中
         isSettling: false,
         // 拼团列表
-        shoppinglist: [ ]
+        shoppinglist: [ ],
+        // 是否展示拼团列表
+        showPin: false,
     },
 
     /** 设置computed */
@@ -86,10 +88,10 @@ Page({
     },
 
     /** 拉取购物车列表 */
-    fetchList: function( ) {
+    fetchList: function( jump ) {
         const that = this;
 
-        if ( this.data.cartList.length > 0 ) {
+        if ( !jump && this.data.cartList.length > 0 ) {
             return;
         }
 
@@ -108,6 +110,10 @@ Page({
                 
                 if ( status !== 200 ) { return; }
          
+                if ( data.length === 0 ) {
+                    this.fetchCurrentTrip( tid => this.fetchGroupList( tid ));
+                }
+
                 // 处理：计算当前选择的sku，并设置为current
                 const dealed = data.map( x => {
 
@@ -245,6 +251,7 @@ Page({
                 const { status, data } = res;
                 if ( status === 200 ) {
                     this.setData({
+                        showPin: true,
                         shoppinglist: data
                     })
                 }
@@ -460,7 +467,7 @@ Page({
             url: `cart_update`,
             success: res => {
                 if ( res.status === 200 ) {
-                    this.fetchList( );
+                    this.fetchList( true );
                 }
             }
         });
@@ -500,7 +507,7 @@ Page({
                                 title: '删除成功',
                             });
             
-                            this.fetchList( );
+                            this.fetchList( true );
                             this.setData({
                                 isInDelete: false
                             });
@@ -704,7 +711,6 @@ Page({
      */
     onShow: function ( ) {
         this.fetchList( );
-        // this.fetchTrip( );
     },
 
     /**

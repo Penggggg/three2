@@ -284,9 +284,10 @@
             </view>
 
             <!-- 拼团 -->
-            <!-- <view
+            <view
+                
                 class="pcl-pin-title-block"
-                wx:if="{{ shoppinglist.length > 0 }}"
+                wx:if="{{ showPin && shoppinglist.length > 0 }}"
             >
                 <view class="pcl-pin-title">
                     本期拼团
@@ -294,10 +295,11 @@
                 <view class="pcl-pin-tips">
                     查看更多
                 </view>
-            </view> -->
+            </view>
 
             <!-- 拼团列表 -->
-            <!-- <swiper
+            <swiper
+                wx:if="{{ showPin }}"
                 autoplay="{{ true }}"
                 circular="{{ true }}"
                 duration="{{ 1000 }}"
@@ -335,7 +337,7 @@
                         </view>
                     </swiper-item>
                 </block>
-            </swiper> -->
+            </swiper>
 
         </scroll-view>   
         
