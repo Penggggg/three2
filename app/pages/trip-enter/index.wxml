@@ -15,7 +15,8 @@
             wx:else
         >
 
-            <view
+            <scroll-view
+                scroll-y
                 class="te-container"
             >
 
@@ -29,6 +30,7 @@
                         show-icon="{{ true }}"
                         notice="{{ notice }}"
                         class="te-notice"
+                        wx:if="{{ notice === '暂无下一趟行程 T.T' }}"
                     />
 
                     <!-- 头部信息，标题、时间、参加人数 -->
@@ -64,8 +66,8 @@
 
                         <!-- 社交 - 参加人数，点击跳到拼团页面 -->
                         <view
-                            class="te-header-members"
                             wx:if="{{ current }}"
+                            class="te-header-members {{ notice !== '暂无下一趟行程 T.T' ? 'topper' : '' }}"
                         >
                             <my-social-trip-member
                                 tid="{{ current._id }}"
@@ -151,11 +153,13 @@
                         />
                     </view>
 
+                    <!-- 行程入口 -->
+
                     <!-- 下期信息 -->
 
                 </view>
 
-            </view>
+            </scroll-view>
             
         </view>
 

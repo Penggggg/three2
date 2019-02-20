@@ -73,7 +73,7 @@ Component({
             // })
 
             if ( currentTarget.dataset.url.indexOf( url ) === -1 ) {
-                wx.navigateTo({
+                wx.redirectTo({
                     url: currentTarget.dataset.url
                 });
             }

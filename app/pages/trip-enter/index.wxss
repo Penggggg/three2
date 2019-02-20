@@ -40,7 +40,7 @@
 }
 
 .te-rank-block {
-    padding-top: 15rpx;
+    padding-top: 5rpx;
 }
 
 .te-header-title {
@@ -66,6 +66,10 @@
     left: 50rpx;
     position: fixed;
     z-index: 100;
+}
+
+.te-header-members.topper {
+    top: 30rpx !important;
 }
 
 .te-notice {
@@ -107,7 +111,7 @@
 .te-recommond-list {
     height: 350rpx;
     width: 100vw;
-    margin-top: 15rpx;
+    margin-top: 35rpx;
     padding: 5rpx 40rpx;
     white-space: nowrap;
     overflow-x: scroll;
@@ -130,7 +134,7 @@
 
 .te-logo-bar {
     display: flex;
-    margin-top: 5rpx;
+    margin-top: 15rpx;
     padding: 0 20rpx;
     box-sizing: border-box;
     justify-content: center;
