@@ -23,12 +23,6 @@ Component({
      */
     data: {
         /** 头像列表 */
-        // imgList: [
-        //     'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-1.png',
-        //     'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-2.png',
-        //     'cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-5.png',
-        //     'cloud://dev-0822cd.6465-dev-0822cd/icon-img/nav-icon-7.png'
-        // ],
         imgList: [ ]
     },
 
@@ -58,7 +52,8 @@ Component({
                     if ( res.status === 200 ) {
                         this.setData({
                             imgList: res.data
-                        })
+                        });
+                        this.triggerEvent('change', res.data.length > 99 ? '99+' : res.data.length );
                     }
                 }
             })
@@ -66,6 +61,6 @@ Component({
     },
 
     attached: function( ) {
-        this.fetchDetail( this.data.tid );
+        // this.fetchDetail( this.data.tid );
     }
 })

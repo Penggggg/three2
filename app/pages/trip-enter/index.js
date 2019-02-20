@@ -30,7 +30,9 @@ Page({
         lijian: {
             notGet: 0,
             hasBeenGet: 0
-        }
+        },
+        /** 参加人数 */
+        memberCount: 0
     },
 
     /** 拉取两个最新行程 */
@@ -191,6 +193,13 @@ Page({
             }
         })
         
+    },
+
+    /** 社交弹幕 */
+    onMemberChange({ detail }) {
+        this.setData({
+            memberCount: detail
+        })
     },
 
     /** 处理详情 */
