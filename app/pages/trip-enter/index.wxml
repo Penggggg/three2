@@ -33,7 +33,7 @@
                         wx:if="{{ notice === '暂无下一趟行程 T.T' }}"
                     />
 
-                    <!-- 头部信息，标题、时间、参加人数 -->
+                    <!-- 头部信息，标题、时间 -->
                     <view class="te-header">
 
                         <image
@@ -55,13 +55,6 @@
                             >
                                 {{ current.start_date$ }} ~ {{ current.end_date$ }}
                             </view>
-                            <view
-                                class="te-header-date sm"
-                                wx:if="{{ memberCount }}"
-                            >
-                                已有{{ memberCount }}人参加
-                            </view>
-                            <!-- memberCount -->
                         </view>
 
                         <!-- 社交 - 参加人数，点击跳到拼团页面 -->
@@ -77,7 +70,37 @@
 
                     </view>
 
-                    <!-- 仙女购物单 + 显示可拼 + 显示人 -->
+                    <!-- 仙女购物单、参加人数 -->
+                    <view
+                        class="te-logo-bar"
+                    >
+                        <image
+                            mode="widthFix"
+                            class="te-bar-img"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-img-1.png"
+                        />
+                        <view class="te-logo-bar-text-block">
+                            <view class="te-logo-bar-title">
+                                仙女购物单
+                                <view
+                                    class="te-logo-bar-tips"
+                                    wx:if="{{ memberCount }}"
+                                >
+                                    已有{{ memberCount }}人参加
+                                </view>
+                            </view>
+                        </view>
+                        <view class="te-logo-bar-btn">
+                           <view class="te-logo-bar-icon">
+                                <i-icon type="enter" size="15" color="#fff" />
+                           </view>                    
+                        </view>
+                    </view>
+
+                    <!-- 仙女购物单、参加人数 -->
+                    <!-- <view class="te-shoppinglist-block">
+
+                    </view> -->
 
                     <!-- 满减 -->
                     <my-coupon-manjian

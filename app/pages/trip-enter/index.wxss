@@ -35,7 +35,7 @@
 
 .te-header-msg {
     left: 60rpx;
-    bottom: 20%;
+    bottom: 25%;
     position: absolute;
 }
 
@@ -138,6 +138,72 @@
     padding: 0 20rpx;
     box-sizing: border-box;
     justify-content: center;
+    position: relative;
+}
+
+.te-logo-bar-text-block {
+    top: 50%;
+    left: 85rpx;
+    position: absolute;
+    transform: translate( 0, -50% );
+}
+
+.te-logo-bar-title {
+    display: flex;
+    color: #fff;
+    font-size: 42rpx;
+    line-height: 42rpx;
+    letter-spacing: 0.01em;
+    align-items: flex-end;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.te-logo-bar-tips {
+    display: inline;
+    color: #fff;
+    font-size: 21rpx;
+    line-height: 26rpx;
+    margin-left: 10rpx;
+    letter-spacing: 0.01em;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.te-logo-bar-btn {
+    color: #fff;
+    font-size: 22rpx;
+    font-weight: bold;
+    height: 60rpx;
+    width: 60rpx;
+    border-radius: 50%;
+    top: 50%;
+    right: 45rpx;
+    position: absolute;
+    transform: translate( 0, -50% );
+    background-image: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%);
+    background-image: linear-gradient(to right, #f77062 0%, #fe5196 100%);
+    background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);
+    box-shadow: 3px 3px 25px rgba(0, 0, 0, 0.15);
+}
+
+.te-logo-bar-icon {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate( 0%, -50% );
+    animation: mymove 1.2s linear infinite;
+    -webkit-animation: mymove 1.2s linear infinite; 
+}
+
+@keyframes mymove
+{
+    from {left:5rpx;opacity: 1;}
+    to {left:35rpx;opacity: 0.2;}
+}
+
+@-webkit-keyframes mymove 
+{
+    from {left:5rpx;opacity: 1;}
+    to {left:35rpx;opacity: 0.2;}
 }
 
 .te-bar-img {
@@ -149,4 +215,25 @@
 
 .te-good-list {
     padding: 20rpx 25rpx;
+}
+
+.te-shoppinglist-block {
+
+    margin-top:15rpx;
+    padding:0 20rpx;
+    box-sizing: border-box;
+
+}
+
+.te-shoppinglist-title-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.te-shoppinglist-title {
+    color: #333;
+    font-size: 40rpx;
+    font-weight: bold;
+    letter-spacing: 0.02em;
 }
