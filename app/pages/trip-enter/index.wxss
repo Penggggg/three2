@@ -119,6 +119,10 @@
 }
 
 .te-recommond-list::-webkit-scrollbar {
+    display: none;
+}
+
+.te-recommond-list::-webkit-scrollbar {
     width: 0;
     height: 0;
     color: transparent;
@@ -135,6 +139,7 @@
 .te-logo-bar {
     display: flex;
     margin-top: 15rpx;
+    margin-bottom: 10rpx;
     padding: 0 20rpx;
     box-sizing: border-box;
     justify-content: center;
@@ -185,6 +190,12 @@
     box-shadow: 3px 3px 25px rgba(0, 0, 0, 0.15);
 }
 
+.te-logo-bar-btn.re {
+    right: 0;
+    position: relative !important;
+    transform: translate( 0, 0 );
+}
+
 .te-logo-bar-icon {
     top: 50%;
     left: 50%;
@@ -192,6 +203,12 @@
     transform: translate( 0%, -50% );
     animation: mymove 1.2s linear infinite;
     -webkit-animation: mymove 1.2s linear infinite; 
+}
+
+.te-logo-bar-icon.notanimate {
+    animation: none;
+    -webkit-animation: none;
+    transform: translate( -50%, -50% );
 }
 
 @keyframes mymove
@@ -218,11 +235,60 @@
 }
 
 .te-shoppinglist-block {
-
-    margin-top:15rpx;
-    padding:0 20rpx;
     box-sizing: border-box;
+}
 
+.te-fairy-swiper {
+    height: 360rpx;
+    width: 100%;
+}
+
+.te-fairy-item-container {
+    width: 100%;
+    height: 100%;
+    padding: 25rpx 20rpx 10rpx;
+    box-sizing: border-box;
+}
+
+.te-fairy-item {
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    border-radius: 5px;
+    /* padding: 20rpx 25rpx; */
+    box-sizing: border-box;
+    border-radius: 10px 10px 10px 10px ;
+    box-shadow: 0 0 15px rgba( 0, 0, 0, 0.1 );
+}
+
+.te-fairy-title-block {
+    /* display: flex;
+    align-items: center;
+    justify-content: space-between; */
+    position: relative;
+}
+
+.te-fairy-title-bg {
+
+}
+
+.te-fairy-title-bg-img {
+    width: 100%;
+    max-height: 180rpx;
+    border-radius: 10px 10px 2px 2px;
+}
+
+.te-fairy-content {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    display: flex;
+    position: absolute;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 25rpx;
+    transform: translate( 0, -50% );
+    justify-content: space-between;
 }
 
 .te-shoppinglist-title-block {
@@ -231,9 +297,115 @@
     justify-content: space-between;
 }
 
+.te-fairy-user {
+    display: flex;
+    align-items: center;
+}
+
+.te-fairy-user-img {
+    width: 90rpx;
+    height: 90rpx;
+    border-radius: 50%;
+    box-shadow: 3px 3px 10px rgba( 0, 0, 0, 0.1 );
+}
+
+.te-fairy-user-name-block {
+    display: flex;
+    margin-left: 25rpx;
+    flex-direction: column;
+}
+
+.te-fairy-user-name {
+    color: #fff;
+    font-size: 26rpx;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.te-fairy-user-tips {
+    color: #fff;
+    font-size: 21rpx;
+    letter-spacing: 0.02em;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.te-fairy-entry-btn {
+    color: #f77062;
+    font-size: 22rpx;
+    letter-spacing: 0.02em;
+    text-decoration: underline;
+}
+
 .te-shoppinglist-title {
     color: #333;
     font-size: 40rpx;
     font-weight: bold;
     letter-spacing: 0.02em;
+}
+
+.te-fairy-content-text {
+    margin-top: 15rpx;
+    color: #000;
+    font-size: 22rpx;
+    display: inline;
+    padding: 0 2em;
+    letter-spacing: 0.02em;
+    box-sizing: border-box;
+    overflow: hidden; 
+    display: -webkit-box; 
+    -webkit-line-clamp: 2;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    -webkit-box-orient: vertical;
+}
+
+.te-fairy-intext-name {
+    color: #000;
+    font-size: 22rpx;
+    display: inline;
+}
+
+.te-fairy-intext-good {
+    color: #000;
+    font-size: 22rpx;
+    display: inline;
+}
+
+.te-fairy-intext-tag {
+    color: #000;
+    font-size: 22rpx;
+    display: inline;
+}
+
+.te-fairy-intext-highline {
+    color: #000;
+    font-size: 22rpx;
+    display: inline;
+}
+
+.te-fairy-info-block {
+    display: flex;
+    padding: 0 25rpx;
+    align-items: center;
+}
+
+.te-fairy-img-list-container {
+    flex: 1;
+    margin: 15rpx;
+    overflow-y: scroll;
+    
+}
+
+.te-fairy-img-list {
+    flex: 1;
+    white-space: nowrap;
+}
+
+.te-fairy-good-img {
+    width: 100rpx;
+    height: 100rpx;
+    margin-right: 15rpx;
+    border-radius: 3px;
 }

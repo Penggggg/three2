@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { computed } = require('../../lib/vuefy/index.js');
 const { delayeringGood } = require('../../util/goods.js');
 
 // app/pages/trip-enter/index.js
@@ -32,7 +33,39 @@ Page({
             hasBeenGet: 0
         },
         /** 参加人数 */
-        memberCount: 0
+        memberCount: 0,
+        /** 仙女购物单 */
+        fairyList: [ ]
+    },
+
+    /** 设置computed */
+    runComputed( ) {
+        computed( this, {
+            // 仙女购物单
+            fairyList$: function( ) {
+                const { fairyList } = this.data;
+                const temp = fairyList.map( usersl => {
+                    const { user, shoppinglist } = usersl;
+                    const delta = shoppinglist.reduce(( x, y ) => {
+                        const { adjustPrice, adjustGroupPrice } = y;
+
+                        if ( !adjustGroupPrice || !adjustPrice ) {
+                            return x + 0;
+                        }
+
+                        return x + ( adjustPrice - adjustGroupPrice );
+
+                    }, 0 );
+                    return {
+                        user,
+                        delta,
+                        shoppinglist
+                    }
+                });
+                console.log('....', temp );
+                return temp;
+            }
+        })
     },
 
     /** 拉取两个最新行程 */
@@ -76,7 +109,11 @@ Page({
                     this.setData({
                         notice: text
                     });
-                    this.fetchCoupon( current._id )
+
+                    this.fetchCoupon( current._id );
+                    this.fetchFairy( current._id )
+                    
+
                 } else if ( !next ) {
                     this.setData({
                         notice: `暂无下一趟行程 T.T`
@@ -86,6 +123,24 @@ Page({
             }
         });
 
+    },
+
+    /** 拉取仙女购物单 */
+    fetchFairy( tid ) {
+        http({
+            data: {
+                tid
+            },
+            url: 'shopping-list_fairy-shoppinglist',
+            success: res => {
+                if ( res.status !== 200 ) {
+                    return; 
+                }
+                this.setData({
+                    fairyList: res.data
+                })
+            }
+        })
     },
 
     /** 拉取商品销量排行榜(前20) */
@@ -236,6 +291,7 @@ Page({
      */
     onLoad: function (options) {
         this.fetchRank( );
+        this.runComputed( );
     },
 
     /**

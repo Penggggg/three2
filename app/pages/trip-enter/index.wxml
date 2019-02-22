@@ -71,7 +71,7 @@
                     </view>
 
                     <!-- 仙女购物单、参加人数 -->
-                    <view
+                    <!-- <view
                         class="te-logo-bar"
                     >
                         <image
@@ -95,12 +95,111 @@
                                 <i-icon type="enter" size="15" color="#fff" />
                            </view>                    
                         </view>
-                    </view>
-
-                    <!-- 仙女购物单、参加人数 -->
-                    <!-- <view class="te-shoppinglist-block">
-
                     </view> -->
+ 
+                    <!-- 仙女购物单、参加人数 -->
+                    <view class="te-shoppinglist-block">
+                        <swiper
+                            vertical="{{ true }}"
+                            autoplay="{{ true }}"
+                            duration="{{ 1000 }}"
+                            circular="{{ true }}"
+                            interval="{{ 3000 }}"
+                            class="te-fairy-swiper"
+                            display-multiple-items="{{ 1 }}"
+                        >
+                            <block
+                                wx:key="{{ index }}"
+                                wx:for="{{ fairyList$ }}"
+                            >
+                                <swiper-item>
+                                    <view
+                                        class="te-fairy-item-container"
+                                    >
+                                        <view
+                                            class="te-fairy-item"
+                                        >
+
+                                            <!-- 用户头像、姓名、按钮 -->
+                                            <view class="te-fairy-title-block">
+                                                <view class="te-fairy-title-bg">
+                                                    <image
+                                                        mode="widthFix"
+                                                        class="te-fairy-title-bg-img"
+                                                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-img-1.png"
+                                                    />
+                                                </view>
+                                                <view class="te-fairy-content">
+                                                    <view class="te-fairy-user">
+                                                        <image
+                                                            mode="scaleToFill"
+                                                            class="te-fairy-user-img"
+                                                            src="{{ item.user.avatarUrl }}"
+                                                        />
+                                                        <view class="te-fairy-user-name-block">
+                                                            <view class="te-fairy-user-name">
+                                                                {{ item.user.nickName }}
+                                                            </view>
+                                                            <view class="te-fairy-user-tips">仙女购物单</view>
+                                                        </view>
+                                                    </view>
+                                                    <!-- <view class="te-logo-bar-btn re">
+                                                        <view class="te-logo-bar-icon notanimate">
+                                                                <i-icon type="enter" size="15" color="#fff" />
+                                                        </view>                    
+                                                    </view> -->
+                                                </view>
+                                            </view>
+
+                                            <!-- 文案 -->
+                                            <view class="te-fairy-content-text">
+                                                <view class="te-fairy-intext-name">{{ item.user.nickName }}</view>买了
+                                                <view
+                                                    wx:key="{{ k }}"
+                                                    wx:for-index="k"
+                                                    wx:for-item="good"
+                                                    class="te-fairy-intext-good"
+                                                    wx:for="{{ item.shoppinglist }}"
+                                                >
+                                                    {{ good.detail.title }}<view class="te-fairy-intext-tag">( #{{ good.detail.tag[ 0 ]}} )</view>{{ k !== item.shoppinglist.length - 1 ? '、' : '' }}
+                                                </view>
+                                                <view
+                                                    wx:if="{{ item.delta }}"
+                                                    class="te-fairy-intext-highline"
+                                                >
+                                                    —— 最多省{{ item.delta }}元!
+                                                </view>
+                                            </view>
+
+                                            <!-- 图片列表 -->
+                                            <view class="te-fairy-info-block">
+                                                <view class="te-fairy-img-list-container">
+                                                    <view class="te-fairy-img-list">
+                                                        <image 
+                                                            wx:key="{{ k }}"
+                                                            wx:for-index="k"
+                                                            wx:for-item="good"
+                                                            mode="scaleToFill"
+                                                            class="te-fairy-good-img"
+                                                            wx:for="{{ item.shoppinglist }}"
+                                                            src="{{ good.detail.img[ 0 ] }}"
+                                                        />
+                                                    </view>
+                                                </view>
+                                                <view class="te-logo-bar-btn re">
+                                                    <view class="te-logo-bar-icon notanimate">
+                                                        <i-icon type="enter" size="15" color="#fff" />
+                                                    </view>              
+                                                </view>
+                                            </view>
+                                            
+
+                                        </view>
+                                    </view>
+                                </swiper-item>
+                            </block>
+                        </swiper>
+                    </view>
 
                     <!-- 满减 -->
                     <my-coupon-manjian

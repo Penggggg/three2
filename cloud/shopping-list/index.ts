@@ -655,7 +655,102 @@ export const main = async ( event, context ) => {
         } catch ( e ) {
             return ctx.body = { status: 500 };
         }
+    });
+
+    /** @description
+     * 仙女购物清单
+     */
+    app.router('fairy-shoppinglist', async( ctx, next ) => {
+        try {
+
+            const { tid } = event.data;
+            const limit = event.data.limit || 5;
+
+            /** 行程购物清单 */
+            const shoppingMeta$ = await db.collection('shopping-list')
+                .where({
+                    tid
+                })
+                .get( );
+            
+            let uids: any = [ ];
+            shoppingMeta$.data.map( sl => {
+                uids = [ ...uids, ...sl.uids ];
+            });
+
+            /** 用户id */
+            const userIds = Array.from(
+                new Set( uids )
+            ).slice( 0, limit );
+
+            /** 每个用户的信息 */
+            const users$ = await Promise.all( userIds.map( uid => Promise.all([
+                db.collection('user')
+                    .where({
+                        openid: uid
+                    })
+                    .get( )
+            ])));
+
+            /** 前5个人总的购物清单 */
+            const shoppingMetaFilter = shoppingMeta$.data.filter( s => 
+                !!userIds.find( uid => 
+                    s.uids.find( 
+                        u => u === uid
+                    )
+            ));
+
+            /** 商品id */
+            const pIds = Array.from(
+                new Set( 
+                    shoppingMetaFilter
+                        .map( s => s.pid )
+                )
+            );
+
+            /** 商品详情 */            
+            const details$ = await Promise.all( pIds.map( pid => {
+                return db.collection('goods')
+                    .doc( pid )
+                    .field({
+                        _id: true,
+                        tag: true,
+                        img: true,
+                        title: true
+                    })
+                    .get( )
+            }));
+
+            const shoppingInject = shoppingMetaFilter.map( sl => {
+                const detail = details$.find( x => x.data._id === sl.pid );
+                if ( detail ) {
+                    return Object.assign({ }, sl, {
+                        detail: detail.data
+                    });
+                } else {
+                    return Object.assign({ }, sl );
+                }
+            });
+
+            /** 注入商品详情 */
+            const metaData = users$.map( x => {
+                return {
+                    user: x[ 0 ].data[ 0 ],
+                    shoppinglist: shoppingInject.filter( sl => sl.uids.find( uid => uid === x[ 0 ].data[ 0 ].openid ))
+                }
+            });
+
+            return ctx.body = {
+                status: 200,
+                data: metaData
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
     })
+
+
 
     return app.serve( );
 
