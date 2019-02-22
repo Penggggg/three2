@@ -5,6 +5,11 @@
     "noUnusedParameters": false,
     "module": "CommonJS",
     "target": "ES5",
+    "lib": [
+      "scripthost",
+      "es2016",
+      "es2017"
+    ],
     "allowJs": false,
     "experimentalDecorators": true,
     "noImplicitThis": true,

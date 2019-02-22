@@ -23,7 +23,7 @@
     "@minui/wxc-price": "^1.0.8",
     "@minui/wxc-progress": "^1.0.5",
     "@minui/wxc-search": "^1.0.1",
-    "typescript": "^3.1.6",
+    "typescript": "^3.3.3333",
     "wx-server-sdk": "0.0.26"
   }
 }

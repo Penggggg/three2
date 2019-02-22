@@ -673,17 +673,44 @@ export const main = async ( event, context ) => {
                 })
                 .get( );
             
+        
+            /** 所有uid（含重复） */
             let uids: any = [ ];
             shoppingMeta$.data.map( sl => {
                 uids = [ ...uids, ...sl.uids ];
             });
 
-            /** 用户id */
-            const userIds = Array.from(
-                new Set( uids )
-            ).slice( 0, limit );
+            /** 处理优化
+             * 让购买量更多的用户，展示在前面
+             */
+            let uidMapTimes: {
+                [ key: string ] : number
+            } = { };
+            uids.map( uidstring => {
+                if ( !uidMapTimes[ uidstring ]) {
+                    uidMapTimes = Object.assign({ }, uidMapTimes, {
+                        [ uidstring ]: 1
+                    })
+                } else {
+                    uidMapTimes = Object.assign({ }, uidMapTimes, {
+                        [ uidstring ]: uidMapTimes[ uidstring ] + 1
+                    })
+                }
+            });
 
-            /** 每个用户的信息 */
+            const userIds = Object.entries( uidMapTimes )
+                .sort(( x, y ) => 
+                    y[ 1 ] - x[ 1 ]
+                )
+                .slice( 0, limit )
+                .map( x => x[ 0 ]);
+
+            /** 用户id */
+            // const userIds = Array.from(
+            //     new Set( uids )
+            // ).slice( 0, limit );
+
+            // /** 每个用户的信息 */
             const users$ = await Promise.all( userIds.map( uid => Promise.all([
                 db.collection('user')
                     .where({
