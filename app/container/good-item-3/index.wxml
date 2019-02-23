@@ -37,11 +37,11 @@
     </view>
 
     <!-- 社交，多少人已买 -->
-    <view
+    <!-- <view
         class="gi3-social-trip-member"
     >
 
-        <!-- 头像列表 -->
+        头像列表
         <image
             wx:key="{{ index }}"
             wx:for="{{ imgList }}"
@@ -50,12 +50,12 @@
             class="gi3-swiper-image {{ index !== 0 ? 'child' : '' }}"
         />
 
-        <!-- 文字信息 -->
+        文字信息
         <view class="gi3-info">
             3人已买
         </view>
 
-    </view>
+    </view> -->
 
 
 </view>

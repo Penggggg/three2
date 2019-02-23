@@ -98,7 +98,10 @@
                     </view> -->
  
                     <!-- 仙女购物单、参加人数 -->
-                    <view class="te-shoppinglist-block">
+                    <view
+                        class="te-shoppinglist-block"
+                        wx:if="{{ fairyList$.length > 0 }}"
+                    >
                         <swiper
                             vertical="{{ true }}"
                             autoplay="{{ true }}"

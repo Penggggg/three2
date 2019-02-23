@@ -66,6 +66,7 @@ Component({
         sizeType: ['original'],
         success: function( res ) {
           const filePaths = res.tempFilePaths;
+          // 循环上传
           filePaths.map( file => {
             const Key = file.substr(file.lastIndexOf('/') + 1);
             const Url = `https://${config.Bucket}.cos.${config.Region}.myqcloud.com/${Key}`;
@@ -102,6 +103,14 @@ Component({
           list: [ ...this.data.list, imgUrl ]
         });
         this.judgeIcon();
+
+        // 这里需要通过imgUrl来压缩原图，并再次上传
+        // wx.compressImage({
+        //   src: imgUrl, 
+        //   quality: 50 // 压缩质量
+        //   success: 
+        // })
+
         wx.showToast({ title: '上传成功', icon: 'success', duration: 1500 });
         // 发送事件
         setTimeout(( ) => {

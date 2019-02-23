@@ -47,11 +47,11 @@
         </view> -->
 
         <!-- 社交 多少人已买 -->
-        <view
+        <!-- <view
             class="gi2-social-trip-member {{ mode === 'right' ? 'right' : '' }}"
         >
 
-            <!-- 头像列表 -->
+            头像列表
             <image
                 wx:key="{{ index }}"
                 wx:for="{{ imgList }}"
@@ -60,12 +60,12 @@
                 class="gi2-swiper-image {{ index !== 0 ? 'child' : '' }}"
             />
 
-            <!-- 文字信息 -->
+            文字信息
             <view class="gi2-info">
                 3人已买
             </view>
 
-        </view>
+        </view> -->
 
         <!-- top 标签 -->
         <view class="gi2-top-label-contianer {{ mode === 'right' ? 'right' : '' }}">
