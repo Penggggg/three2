@@ -287,6 +287,13 @@ Component({
             const { list, selectedProduct, selectedProductId, selectedStanderIds } = this.data;
             const { standards } = selectedProduct;
 
+            if ( selectedStanderIds.length === 0 ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '请至少选择一个型号',
+                });
+            }
+
             this.triggerEvent('confirm', {
                 _id: selectedProductId,
                 detail: Object.assign({ }, selectedProduct, {

@@ -20,14 +20,14 @@
       
       <!-- 文本输入类型 -->
       <view
-        class="caf-inputs caf-item {{ !!errData[ item.key ] ? 'error' : '' }}"
+        class="caf-inputs caf-item {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'input' }}"
 
       >
         <text class='caf-item-label'>{{ item.label }}</text>
         <view class='caf-item-input'>
           <view
-            class="error-tips"
+            class="error-tips {{ left ? 'left' : '' }}"
             wx:if="{{errData[ item.key ]}}"
           >
             {{ errData[ item.key ] }}
@@ -39,19 +39,20 @@
             maxlength='{{ item.max || 99999 }}'
             placeholder="{{ item.placeholder || '' }}"
             bindinput='textInput'
+            class="{{ left ? 'left' : '' }}"
           />
         </view>
       </view>
 
       <!-- 多行文本 -->
       <view
-        class="caf-inputs caf-item {{ !!errData[ item.key ] ? 'error' : '' }}"
+        class="caf-inputs caf-item {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'textarea' }}"
       >
         <text class='caf-item-label'>{{ item.label }}</text>
         <view class='caf-item-input'>
           <view
-              class="error-tips"
+              class="error-tips {{ left ? 'left' : '' }}"
               wx:if="{{errData[ item.key ]}}"
             >
             {{ errData[ item.key ] }}
@@ -71,13 +72,13 @@
 
       <!-- 标签 -->
       <view
-        class="caf-inputs caf-item  {{ !!errData[ item.key ] ? 'error' : '' }}"
+        class="caf-inputs caf-item  {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'tag' }}"
       >
         <text class='caf-item-label'>{{ item.label }}</text>
         <view class='caf-item-input'>
           <view
-            class="error-tips"
+            class="error-tips {{ left ? 'left' : '' }}"
             wx:if="{{errData[ item.key ]}}"
           >
             {{ errData[ item.key ] }}
@@ -112,7 +113,7 @@
 
       <!-- select -->
       <view
-        class="caf-inputs caf-item"
+        class="caf-inputs caf-item {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'select' }}"
       >
         <picker
@@ -128,7 +129,7 @@
             <text class="caf-item-label {{ !!errData[ item.key ] ? 'error' : '' }}">{{ item.label }}</text>
             <view class="caf-item-input">
                 <view
-                  class="error-tips"
+                  class="error-tips {{ left ? 'left' : '' }}"
                   wx:if="{{errData[ item.key ]}}"
                 >
                   {{ errData[ item.key ] }}
@@ -145,7 +146,7 @@
         wx:elif="{{ item.type === 'img' }}"
       > 
         <view
-            class="error-tips align"
+            class="error-tips align {{ left ? 'left' : '' }}"
             wx:if="{{errData[ item.key ]}}"
         >
           {{ errData[ item.key ] }}
@@ -160,13 +161,13 @@
 
       <!-- 数字类 -->
       <view
-        class="caf-inputs caf-item  {{ !!errData[ item.key ] ? 'error' : '' }}"
+        class="caf-inputs caf-item  {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'number' }}"
       >
         <text class='caf-item-label'>{{ item.label }}</text>
         <view class='caf-item-input'>
           <view
-            class="error-tips"
+            class="error-tips {{ left ? 'left' : '' }}"
             wx:if="{{errData[ item.key ]}}"
           >
             {{ errData[ item.key ] }}
@@ -178,19 +179,20 @@
             bindinput='textInput'
             value="{{ formData[ item.key ]}}"
             placeholder="{{ item.placeholder || '' }}"
+            class="{{ left ? 'left' : '' }}"
           />
         </view>
       </view>
       
       <!-- switch类型 -->
       <view
-        class="caf-inputs caf-item {{ !!errData[ item.key ] ? 'error' : '' }}"
+        class="caf-inputs caf-item {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'switch' }}"
       >
         <text class='caf-item-label'>{{ item.label }}</text>
         <view class="caf-item-input right">
           <view
-            class="error-tips"
+            class="error-tips {{ left ? 'left' : '' }}"
             wx:if="{{errData[ item.key ]}}"
           >
             {{ errData[ item.key ] }}
@@ -207,7 +209,7 @@
 
       <!-- 日期类型 -->
       <view
-        class="caf-inputs caf-item no-padding"
+        class="caf-inputs caf-item no-padding {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'date' }}"
       >
           <picker
@@ -221,7 +223,7 @@
           >
             <view class="picker date">
               <text class="caf-item-label {{ !!errData[ item.key ] ? 'error' : '' }}">{{ item.label }}</text>
-              <view class="caf-item-input">
+              <view class="caf-item-input {{ left ? 'left' : '' }}">
                   <view
                     class="error-tips"
                     wx:if="{{errData[ item.key ]}}"

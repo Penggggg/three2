@@ -19,7 +19,7 @@
 
 .caf-title-desc {
   color: #999;
-  font-size: 28rpx;
+  font-size: 24rpx;
 }
 
 .caf-item {
@@ -36,20 +36,24 @@
   width: 100%;
   content: '';
   transform: scaleY( 0.5 );
-  background: rgba(0, 0, 0, 0.19);
+  background: rgba(0, 0, 0, 0.1);
   position: absolute;
 }
 
+.caf-item.noline::after {
+  display: none;
+}
+
 .caf-item-label {
-  color: #666;
-  font-size: 32rpx;
+  color: #333;
+  font-size: 24rpx;
   margin-right: 50rpx;
 }
 
 .caf-item-input {
   flex: 1;
   color: #666;
-  font-size: 28rpx;
+  font-size: 24rpx;
 }
 
 .caf-item-input.right {
@@ -110,4 +114,21 @@
   display:flex;
   align-items:center;
   
+}
+
+.left {
+  text-align: left;
+  font-size: 24rpx;
+}
+
+input::-webkit-input-placeholder {
+  color: #bfbfbf;
+}
+
+input::-moz-placeholder {
+  color: #bfbfbf;
+}
+
+input::-ms-input-placeholder {
+  color: #bfbfbf;
 }

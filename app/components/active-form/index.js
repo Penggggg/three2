@@ -11,6 +11,11 @@ Component({
       type: Array,
       value: [ ],
       observer: 'dealFormData'
+    },
+    /** input左对齐 */
+    left: {
+      type: Boolean,
+      value: false
     }
   },
 
@@ -101,7 +106,7 @@ Component({
         const formItemKey = e.currentTarget.dataset.formkey;
         this.setData({
           formData: Object.assign({ }, this.data.formData, {
-            [ formItemKey ]: value 
+            [ formItemKey ]: value.replace(/\-/g, '/')
           })
         });
         this.validateItem( formItemKey );

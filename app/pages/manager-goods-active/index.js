@@ -7,12 +7,69 @@ Page({
      */
     data: {
         /** 展示商品选择 */
-        showProduct: false
+        showProduct: false,
+        /** 当前的商品及其型号列表 */
+        current: null,
+        /** 展示 */
+        showInfo: false
     },
 
     /** 设置computed */
     runComputed( ) {
         computed( this, {
+            // 表单数据
+            meta( ) {
+                const now = new Date( );
+                const year = now.getFullYear( );
+                const month = now.getMonth( ) + 1;
+                const date = now.getDate( );
+    
+                const meta = [
+                    {
+                        key: 'ac_price',
+                        label: '活动价',
+                        type: 'number',
+                        placeholder: '请输入商品活动价',
+                        value: undefined,
+                        rules: [{
+                          validate: val => !!val && !!val.trim( ),
+                          message: '商品活动价不能为空'
+                        }, {
+                            validate: val => Number( val ) > 0,
+                            message: '价格不能为0'
+                        }]
+                    }, {
+                        key: 'ac_groupPrice',
+                        label: '活动团购价',
+                        type: 'number',
+                        placeholder: '无团购价，则不填写',
+                        value: undefined,
+                        rules: [{
+                            validate: val => (!!val && !!val.trim( )) ? Number( val ) > 0 : true,
+                            message: '团购价不能为0'
+                        }]
+                    }, {
+                        key: 'endTime',
+                        label: '结束时间',
+                        type: 'date',
+                        value: undefined,
+                        rules: [{
+                          validate: val => !!val,
+                          message: '结束时间不能为空'
+                        }]
+                    }, {
+                        key: 'stock',
+                        label: '活动限量',
+                        type: 'number',
+                        placeholder: '无限制，则不填写',
+                        value: undefined,
+                        rules: [
+
+                        ]
+                    }
+                ];
+                return meta;
+            }
         })
     },
 
@@ -24,16 +81,61 @@ Page({
         });
     },
 
-    /** 选择产品/型号 */
+    /** 选择产品 */
     onConfirmProduct( e ) {
-        console.log( e );
+        const { _id, detail } = e.detail;
+        this.setData({
+            current: detail,
+            showInfo: true
+        });
+    },
+
+    /** 关闭/展开资费框 */
+    toggleInfo( ) {
+        const { showInfo } = this.data;
+        this.setData({
+            showInfo: showInfo ? false : true
+        })
+    },
+
+    /** 确认资费 */
+    onConfirmInfo( ) {
+        const { current } = this.data;
+        const form1 = this.selectComponent('#form1');
+        const r1 = form1.getData( );
+
+        if ( !r1.result ) {
+            return wx.showToast({
+                icon: 'none',
+                title: '请完善表单信息',
+            });
+        }
+
+        let temp = { };
+        const pid = current._id;
+        const { ac_price, ac_groupPrice, endTime, stock } = r1.data;
+
+        if ( current.standards.length === 0 ) {
+            temp = [ Object.assign({ }, r1.data, {
+                pid,
+                endTime: new Date(`${endTime} 23:59:59`).getTime( )
+            })];
+        } else {
+            temp = current.standards.map( s => Object.assign({ }, r1.data, {
+                pid,
+                sid: s._id,
+                endTime: new Date(`${endTime} 23:59:59`).getTime( )
+            }));
+        }
+
+
     },
 
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-
+        this.runComputed( );
     },
 
     /**

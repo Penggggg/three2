@@ -79,7 +79,7 @@
         </view>
     </i-modal>
 
-<!-- 产品弹窗 -->
+    <!-- 产品弹窗 -->
     <i-modal
         title="型号选择"
         bind:ok="onOk2"

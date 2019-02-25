@@ -1,6 +1,6 @@
 <view class="p-good-active">
 
-    <!-- 可视按钮 -->
+    <!-- 添加按钮 -->
     <view
         bindtap="toggleProduct"
         class='pga-btn-container'
@@ -21,5 +21,19 @@
         bind:confirm="onConfirmProduct"
         shouldChoiceStander="{{ true }}"
     />
+
+    <!-- 活动信息弹框 -->
+    <i-modal
+        title=""
+        bind:ok="onConfirmInfo"
+        visible="{{ showInfo }}"
+        bind:cancel="toggleInfo"
+    >
+        <my-active-form
+            id="form1"
+            left="{{ true }}"
+            meta="{{ meta }}"
+        />
+    </i-modal>
 
 </view>
