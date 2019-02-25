@@ -14,6 +14,11 @@ Component({
             type: Boolean,
             value: false,
             observer: 'setShow'
+        },
+        // 是否需要选择型号
+        shouldChoiceStander: {
+            type: Boolean,
+            value: false
         }
     },
 
@@ -25,14 +30,27 @@ Component({
         show$: false,
         /** 搜索字段 */
         search: '',
-        /** 加载状态 */
-        loading: false,
+        /** 上次搜索的字段 */
+        lastSearch: '',
+        /** 上次搜索的时间 */
+        lastSearchTime: null,
         /** 列表 */
         list: [ ],
         /** 当前选中的商品id */
         selectedProductId: null,
         /** 当前选中的商品 */
-        selectedProduct: null
+        selectedProduct: null,
+
+        /** 已选择的型号列表 */
+        selectedStanderIds: [ ],
+        /** 展示型号选择框 */
+        show2$: false,
+        /** 已选择的型号列表 */
+        selectedStanderIdObj: {
+
+        },
+        /** 搜索截流定时器 */
+        timer: null
     },
 
     /**
@@ -40,7 +58,7 @@ Component({
      */
     methods: {
 
-        /** 点击modal确定 */
+        /** 点击modal确定(产品) */
         onOk( ) {
 
             const { list, selectedProduct, selectedProductId } = this.data;
@@ -50,33 +68,48 @@ Component({
                 return this.fetchList( );
 
             // 暴露已选
-            } else if ( !selectedProductId ) {
+            } else if ( !selectedProductId && selectedProduct.standards.length > 0 ) {
                 wx.showToast({
                     icon: 'none',
                     title: '请点击选中一个商品'
                 })
 
-            }else {
-                this.setData({
-                    list: [ ],
-                    search: '',
-                    selectedProduct: null,
-                    selectedProductId: null
-                });
-                this.triggerEvent('confirm', {
-                    _id: selectedProductId,
-                    detail: selectedProduct
-                });
-                this.onCancel( );
+            } else {
+
+                // 需要选择型号
+                if ( this.data.shouldChoiceStander ) {
+
+                    this.setData({
+                        show$: false,
+                        show2$: true,
+                        selectedStanderIds: [ ],
+                    })
+
+                // 不需要选择型号
+                } else {
+                    this.setData({
+                        list: [ ],
+                        search: '',
+                        selectedStanderIds: [ ],
+                        selectedProduct: null,
+                        selectedProductId: null
+                    });
+                    this.triggerEvent('confirm', {
+                        _id: selectedProductId,
+                        detail: selectedProduct
+                    });
+                    this.onCancel( );
+                }
+
             }
         },
 
-        /** 点击modal取消 */
+        /** 点击modal取消（产品） */
         onCancel( ) {
             this.triggerEvent('close');
         },
 
-        /** 设置展开 */
+        /** 设置展开（产品） */
         setShow( val ) {
             this.setData({
                 show$: val
@@ -85,12 +118,22 @@ Component({
 
         /** 获取列表 */
         fetchList( ) {
-            const { search } = this.data;
+            const { search, lastSearch } = this.data;
+
+            this.setData({
+                lastSearch: search,
+                lastSearchTime: new Date( ).getTime( )
+            });
+
             if ( !search || !search.trim( )) {
                 return wx.showToast({
                     icon: 'none',
                     title: '请输入搜索关键词'
                 })
+            }
+
+            if ( lastSearch === search ) {
+                return; 
             }
 
             http({
@@ -102,7 +145,12 @@ Component({
                 url: `good_list`,
                 success: res => {
                     const { status, data } = res;
+
                     if ( status !== 200 ) { return; }
+
+                    if ( data.search !== search ) {
+                        return;
+                    }
 
                     const meta = data.data.map( x => {
 
@@ -154,6 +202,7 @@ Component({
 
                     this.setData({
                         list: meta,
+                        lastSearch: search,
                         selectedProduct: null,
                         selectedProductId: null
                     });
@@ -164,8 +213,17 @@ Component({
 
         /** 搜索输入 */
         onInput({ detail }) {
+            const { timer } = this.data;
             this.setData({
-                search: detail.value
+                search: detail.value.replace(/\s+/g, "")
+            });
+
+            if ( timer ) {
+                clearTimeout( timer );
+            }
+
+            this.setData({
+                timer: setTimeout(( ) => this.fetchList( ), 500 )
             });
         },
 
@@ -176,6 +234,66 @@ Component({
                 selectedProduct: item,
                 selectedProductId: item._id
             });
+        },
+
+        /** 展开/关闭产品框 */
+        toggleStander( ) {
+            const { show2$ } = this.data;
+            this.setData({
+                show2$: show2$ ? false : true
+            });
+
+            if ( show2$ ) {
+                this.setData({
+                    list: [ ],
+                    search: '',
+                    selectedProduct: null,
+                    selectedProductId: null,
+                    selectedStanderIds: [ ]
+                });
+            }
+        },
+
+        /** 点击型号 */
+        onTapStander({ currentTarget }) {
+
+            const { selectedStanderIds, selectedStanderIdObj } = this.data;
+            let selectedStanderIdObj$ = Object.assign({ }, selectedStanderIdObj );
+
+            const { data } = currentTarget.dataset;
+            const sid = data._id;
+            
+            const existedIndex = selectedStanderIds.findIndex( x => x === sid );
+            // 如果已经存在
+            if ( existedIndex !== -1 ) {
+                selectedStanderIds.splice( existedIndex, 1 );
+                delete selectedStanderIdObj$[ sid ];
+
+            } else {
+                selectedStanderIds.push( sid );
+                selectedStanderIdObj$ = Object.assign({ }, selectedStanderIdObj$, {
+                    [ sid ]: true
+                });
+            }
+
+            this.setData({
+                selectedStanderIds,
+                selectedStanderIdObj: selectedStanderIdObj$
+            });
+        },
+
+        /** 确认型号 */
+        onOk2( ) {
+            const { list, selectedProduct, selectedProductId, selectedStanderIds } = this.data;
+            const { standards } = selectedProduct;
+
+            this.triggerEvent('confirm', {
+                _id: selectedProductId,
+                detail: Object.assign({ }, selectedProduct, {
+                    standards: standards.filter( x => !!selectedStanderIds.find( sid => sid === x._id ))
+                })
+            });
+            this.toggleStander( );
         }
     }
 })

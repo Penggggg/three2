@@ -106,3 +106,44 @@
 .item-price-block {
     text-align: left;
 }
+
+.con-s-title,
+.con-stander-tips {
+    color: #999;
+    font-size: 24rpx;
+    text-align: left;
+    padding: 0 25rpx 10rpx;
+    overflow:hidden; 
+    display:-webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;
+}
+
+.con-stander-block {
+    padding: 0 25rpx;
+    text-align: left;
+}
+
+.con-stander-title {
+    font-size: 24rpx;
+    border-radius: 3px;
+    background:#f5f5f5;
+    padding: 3rpx 12rpx;
+    display: inline-block;
+    margin-top: 5rpx;
+    color:#bfbfbf;
+    margin-left: 10rpx;
+}
+
+.con-stander-title.active {
+    color: #fff;
+    background: #ff5777;
+}
+
+.con-stander-tips {
+    color: #bfbfbf;
+    font-size: 22rpx;
+    margin-top: 15rpx;
+}

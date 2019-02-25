@@ -1,2 +1,25 @@
-<!--app/pages/manager-goods-active/index.wxml-->
-<text>app/pages/manager-goods-active/index.wxml</text>
+<view class="p-good-active">
+
+    <!-- 可视按钮 -->
+    <view
+        bindtap="toggleProduct"
+        class='pga-btn-container'
+    >
+        <wxc-button 
+            type='beauty'
+            bind:click='toggleDrawer'
+            btnStyle='min-width: 100rpx;padding: 0;border-radius: 100rpx;min-height:100rpx;line-height:100rpx'
+        >
+            <wxc-icon color="#fff" size="45" type="add" /> 
+        </wxc-button>
+    </view>
+
+    <!-- 商品选择 -->
+    <my-product-selector
+        show="{{ showProduct }}"
+        bind:close="toggleProduct"
+        bind:confirm="onConfirmProduct"
+        shouldChoiceStander="{{ true }}"
+    />
+
+</view>

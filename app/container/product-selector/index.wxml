@@ -1,7 +1,7 @@
 <!--container/product-selector/index.wxml-->
 <view>
 
-    <!-- 弹窗 -->
+    <!-- 产品弹窗 -->
     <i-modal
         title=""
         bind:ok="onOk"
@@ -76,13 +76,41 @@
 
             </scroll-view>
 
+        </view>
+    </i-modal>
+
+<!-- 产品弹窗 -->
+    <i-modal
+        title="型号选择"
+        bind:ok="onOk2"
+        visible="{{ show2$ }}"
+        bind:cancel="toggleStander"
+    >
+        <view class="modal-container">
+
+            <!-- 商品名称 -->
+            <view class="con-s-title">
+                {{ selectedProduct.title }}
+            </view>
+
+            <!-- 型号 -->
+            <view class="con-stander-block">
+                <view
+                    wx:index="{{ item }}"
+                    wx:key="{{ index }}"
+                    data-data="{{ item }}"
+                    class="con-stander-title {{ selectedStanderIdObj[ item._id ] ? 'active' : '' }}"
+                    bindtap="onTapStander"
+                    wx:for="{{ selectedProduct.standards }}"
+                >
+                    {{ item.name }}
+                </view>
+            </view>
+
             <!-- 提示 -->
-            <!-- <view
-                class="tips"
-                wx:if="{{ !loading && list.length === 0 }}"
-            >
-                ～ 空空如也 ～
-            </view> -->
+            <view class="con-stander-tips">
+                已选{{ selectedStanderIds.length }}个型号
+            </view>
 
         </view>
     </i-modal>
