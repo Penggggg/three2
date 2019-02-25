@@ -65,7 +65,7 @@
     top: 100rpx;
     left: 50rpx;
     position: fixed;
-    z-index: 100;
+    z-index: 5;
 }
 
 .te-header-members.topper {

@@ -23,17 +23,22 @@ Component({
                 title: '我的商品',
                 desc: '新增、编辑、上下架商品',
                 url: '/pages/manager-goods-list/index',
-                img: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-1.png'
+                img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-1.png'
             }, {
                 title: '我的行程',
                 desc: '发布、编辑最新行程',
                 url: '/pages/manager-trip-list/index',
-                img: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-2.png'
+                img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-2.png'
             }, {
                 title: '我的资料',
                 desc: '让新客户主动联系自己',
                 url: '/pages/manager-person-info/index',
-                img: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-3.png'
+                img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-3.png'
+            }, {
+                title: '一口价',
+                desc: '商品特惠活动',
+                url: '/pages/manager-goods-active/index',
+                img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-4.png'
             }
         ]
     },
@@ -66,7 +71,7 @@ Component({
 
         /** 地址跳转 */
         navigate( e ) {
-            wx.navigateTo({
+            wx.redirectTo({
                 url: e.currentTarget.dataset.url
             });
         }

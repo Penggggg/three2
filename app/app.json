@@ -14,7 +14,8 @@
     "pages/trip-deliver/index",
     "pages/manager-trip-detail/index",
     "pages/concat/index",
-    "pages/manager-person-info/index"
+    "pages/manager-person-info/index",
+    "pages/manager-goods-active/index"
   ],
   "usingComponents": {
     "my-nav": "./container/nav-bar/index",
