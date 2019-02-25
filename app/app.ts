@@ -35,10 +35,6 @@ App<MyApp>({
     init( ) {
 
         const that = this;
-        // 云
-        wx.cloud.init({
-            traceUser: true
-        });
         
         // 全局数据
         this.globalData$ = Object.assign({ }, this.globalData );
@@ -75,6 +71,32 @@ App<MyApp>({
 
     },
 
+    /** 初始化云函数数据库 */
+    initCloud( ) {
+        return new Promise(( resolve, reject ) => {
+
+            // 云
+            wx.cloud.init({
+                traceUser: true
+            });
+
+            /**
+             * 这里可能要在指定页面去发起“激活”
+             */
+            // http({
+            //     url: 'common_init',
+            //     success: res => {
+            //         if ( res.status !== 200 ) {
+            //             return reject( );
+            //         }
+            //         resolve( );
+            //     }
+            // })
+
+            resolve( );
+        });
+    },
+
     /** 是否为新客 */
     getIsNewCustom( ) {
         http({
@@ -87,10 +109,11 @@ App<MyApp>({
         })
     },
 
-    /** 获取微信用户登录信息、授权、上传保存 */
+    /** 全局方法，获取微信用户登录信息、授权、上传保存 */
     getWxUserInfo( cb ) {
         wx.getUserInfo({
             success: res => {
+                console.log('333');
                 http({
                     data: res.userInfo,
                     url: 'common_userEdit',
@@ -162,8 +185,19 @@ App<MyApp>({
     /** 生命周期 */
     onLaunch: function( ) {
         this.init( );
-        this.getUserInfo( );
-        this.getIsNewCustom( );
+        this.initCloud( )
+            .then(( ) => {
+                this.getUserInfo( );
+                this.getIsNewCustom( );
+            })
+            .catch( e => {
+                wx.showToast({
+                    icon: 'none',
+                    duration: 2000,
+                    title: '数据库初始错误'
+                });
+            })
+        
     }
 });
 
@@ -175,6 +209,7 @@ export interface MyApp {
     }
     watchingKeys: string[ ]
     init: ( ) => void
+    initCloud: ( ) => Promise<any>
     getUserInfo: ( ) => void,
     getIsNewCustom:  ( ) => void,
     getWxUserInfo: ( cb?: ( ) => void ) => void,

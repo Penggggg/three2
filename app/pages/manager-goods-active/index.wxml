@@ -16,6 +16,7 @@
 
     <!-- 商品选择 -->
     <my-product-selector
+        id="selector1"
         show="{{ showProduct }}"
         bind:close="toggleProduct"
         bind:confirm="onConfirmProduct"

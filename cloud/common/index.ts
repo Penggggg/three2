@@ -18,6 +18,22 @@ export const main = async ( event, context ) => {
 
     const app = new TcbRouter({ event });
 
+    /** 初始化各个数据库 */
+    app.router('init', async( ctx, next ) => {
+        try {
+            const collections = CONFIG.collections;
+            try {
+                collections.map( collectionName => {
+                    (db as any).createCollection( collectionName );
+                });
+            } catch ( e ) { }
+
+            return ctx.body = { status: 200 }
+        } catch ( e ) {
+            return ctx.body = { status: 500, message: e }
+        }
+    })
+
     /** 数据字典 */
     app.router('dic', async( ctx, next ) => {
         try {

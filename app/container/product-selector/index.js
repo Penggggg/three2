@@ -300,7 +300,8 @@ Component({
                     standards: standards.filter( x => !!selectedStanderIds.find( sid => sid === x._id ))
                 })
             });
-            this.toggleStander( );
+            // 型号关闭比较特殊，要由外层关闭
+            // this.toggleStander( );
         }
     }
 })

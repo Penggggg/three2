@@ -1,3 +1,4 @@
+const { http } = require('../../util/http.js');
 const { computed } = require('../../lib/vuefy/index.js');
 
 Page({
@@ -81,13 +82,44 @@ Page({
         });
     },
 
-    /** 选择产品 */
+    /** 选择产品/型号 */
     onConfirmProduct( e ) {
-        const { _id, detail } = e.detail;
+        const { detail } = e.detail;
         this.setData({
-            current: detail,
-            showInfo: true
+            current: detail
         });
+
+        let temp;
+        const pid = detail._id;
+        if ( detail.standards.length === 0 ) {
+            temp = [ Object.assign({ }, {
+                pid,
+                title: detail.title
+            })];
+        } else {
+            temp = detail.standards.map( s => Object.assign({ }, {
+                pid,
+                sid: s._id,
+                title: s.name
+            }));
+        }
+
+        http({
+            data: {
+                list: temp
+            },
+            url: 'activity_check-good-discount',
+            success: res => {
+                if ( res.status === 200 ) {
+                    this.selectComponent('#selector1').toggleStander( );
+                    this.setData({
+                        showInfo: true
+                    });
+                }
+            }
+        })
+
+        
     },
 
     /** 关闭/展开资费框 */
@@ -111,24 +143,47 @@ Page({
             });
         }
 
-        let temp = { };
+        let temp;
         const pid = current._id;
+        const title = current.title;
         const { ac_price, ac_groupPrice, endTime, stock } = r1.data;
 
         if ( current.standards.length === 0 ) {
             temp = [ Object.assign({ }, r1.data, {
                 pid,
+                title,
                 endTime: new Date(`${endTime} 23:59:59`).getTime( )
             })];
         } else {
             temp = current.standards.map( s => Object.assign({ }, r1.data, {
                 pid,
                 sid: s._id,
+                title: s.name,
                 endTime: new Date(`${endTime} 23:59:59`).getTime( )
             }));
         }
 
+        this.onCreate( temp );
+    },
 
+    /** 创建商品活动 */
+    onCreate( temp ) {
+        http({
+            data: {
+                list: temp
+            },
+            url: `activity_create-good-discount`,
+            success: res => {
+                const { status } = res;
+                if ( status === 200 ) {
+                    // 初始化
+                    this.setData({
+                        current: null,
+                        showInfo: false
+                    });
+                }
+            }
+        })
     },
 
     /**
@@ -136,6 +191,7 @@ Page({
      */
     onLoad: function (options) {
         this.runComputed( );
+
     },
 
     /**
