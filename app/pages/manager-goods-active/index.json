@@ -1,5 +1,6 @@
 {
   "usingComponents": {},
   "navigationBarTitleText": "一口价",
-  "navigationBarBackgroundColor": "#f80759"
+  "navigationBarTextStyle": "black",
+  "navigationBarBackgroundColor": "#fff"
 }

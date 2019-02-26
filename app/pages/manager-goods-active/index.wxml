@@ -1,5 +1,18 @@
 <view class="p-good-active">
 
+    <!-- tab栏目 -->
+    <view class="pga-tab-block">
+        <view
+            wx:key="{{ index }}"
+            wx:for="{{ actives }}"
+            data-active="{{ index }}"
+            bindtap="onTabActive"
+            class="pga-tab {{ index === active ? 'active' : '' }}"
+        >
+            {{ item.label }}
+        </view>
+    </view>
+?
     <!-- 添加按钮 -->
     <view
         bindtap="toggleProduct"

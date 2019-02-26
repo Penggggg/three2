@@ -1,7 +1,7 @@
 .p-good-active {
     
     min-height: 100vh;
-    background: #fafafa;
+    background: #fff;
 }
 
 .pga-btn-container {
@@ -11,5 +11,51 @@
     border-radius: 50%;
     z-index: 1000;
     box-shadow: 3px 3px 10px rgba(0,0,0,0.20);
+}
+
+.pga-tab-block {
+    display: flex;
+    background: #fff;
+    align-items: center;
+    padding: 0 40rpx 0rpx;
+    margin-bottom: 15rpx;
+    position: relative;
+    box-sizing: border-box;
+    justify-content: space-around;
+}
+
+.pga-tab-block:after {
+    height: 15rpx;
+    width: 100%;
+    left: 0;
+    content: '';
+    bottom: -20rpx;
+    position: absolute;
+    background: #fafafa;
+}
+
+.pga-tab {
+    color: #333;
+    font-weight: 500;
+    font-size: 30rpx;
+    text-align: center;
+    position: relative;
+    padding-bottom: 20rpx;
+    letter-spacing: 0.02em;
+}
+
+.pga-tab.active {
+    color: #d92a22;
+}
+
+.pga-tab.active::after {
+    height: 3px;
+    width: 100%;
+    left: 0;
+    content: '';
+    bottom: 0rpx;
+    background: #d92a22;
+    position: absolute;
+    border-radius: 30px;
 }
 

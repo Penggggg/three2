@@ -12,13 +12,25 @@ Page({
         /** 当前的商品及其型号列表 */
         current: null,
         /** 展示 */
-        showInfo: false
+        showInfo: false,
+        /** tab: 0 | 1 */
+        active: 0,
+        /** tab数组 */
+        actives: [
+            {
+                label: '已上架',
+                value: 0
+            }, {
+                label: '全部',
+                value: 1
+            }
+        ]
     },
 
     /** 设置computed */
     runComputed( ) {
         computed( this, {
-            // 表单数据
+            // 创建时候的表单数据
             meta( ) {
                 const now = new Date( );
                 const year = now.getFullYear( );
@@ -187,6 +199,14 @@ Page({
                 }
             }
         })
+    },
+
+    /** 点击切换tab */
+    onTabActive({ currentTarget }) {
+        const { active } = currentTarget.dataset;
+        this.setData({
+            active
+        });
     },
 
     /**
