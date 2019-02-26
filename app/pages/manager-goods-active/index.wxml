@@ -12,7 +12,61 @@
             {{ item.label }}
         </view>
     </view>
-?
+
+    <!-- 列表 -->
+    <scroll-view
+        scroll-y
+        lower-threshold="100"
+        bindscrolltolower="fetchList"
+        class='pga-list-container'
+    >
+        <view
+            class="pga-list-item"
+            wx:for="{{ list$ }}"
+            wx:key="{{ index }}"
+        >
+            <!-- 图片 -->
+            <image
+                src="{{ item.img$ }}"
+                mode="scaleToFill"
+                class="pga-item-img"
+            />
+
+           <!-- 标题、型号  -->
+            <view class="pga-item-info-block">
+                <view class="pga-item-title">
+                    {{ item.detail.title }}
+                </view>
+                <view
+                    class="pga-item-standar"
+                    wx:if="{{ item.detail.currentStandard }}"
+                >
+                    {{ item.detail.currentStandard.name }}
+                </view>
+
+                <!-- 价格、按钮 -->
+                <view class="pga-item-action">
+                    <view class="pga-item-price">
+                        <wxc-price
+                            icon="sub"
+                            decimal="small"
+                        > 
+                            {{ item.ac_price }}
+                        </wxc-price>
+                        <wxc-price
+                            icon="sub"
+                            decimal="small"
+                            wx:if="{{ item.ac_groupPrice }}"
+                        > 
+                            {{ item.ac_groupPrice }}
+                        </wxc-price>
+                    </view>
+                </view>
+
+            </view>
+        </view>
+    </scroll-view>
+
     <!-- 添加按钮 -->
     <view
         bindtap="toggleProduct"

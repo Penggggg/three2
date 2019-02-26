@@ -31,12 +31,17 @@ Page({
             pageSize: 0,
             page: 0,
             totalPage: 0
-        }
+        },
+        /** 加载更多 */
+        canLoadMore: true,
+        /** 列表 */
+        list: [ ]
     },
 
     /** 设置computed */
     runComputed( ) {
         computed( this, {
+
             // 创建时候的表单数据
             meta( ) {
                 const now = new Date( );
@@ -89,14 +94,39 @@ Page({
                     }
                 ];
                 return meta;
+            },
+
+            // 列表数据
+            list$( ) {
+                return this.data.list.map( x => {
+                    const { detail } = x;
+
+                    let temp = Object.assign({ }, x );
+
+                    if ( detail.currentStandard ) {
+                        temp = Object.assign({ }, x, {
+                            img$: detail.currentStandard.img
+                        })
+                    }  else {
+                        temp = Object.assign({ }, x, {
+                            img$: detail.img[ 0 ]
+                        })
+                    }
+
+                    return temp;
+                });
             }
         })
     },
 
     /** 拉取列表 */
     fetchList( ) {
-        const { active, pagenation } = this.data;
-        const { page } = pagenation;
+        const { active, pagenation, canLoadMore } = this.data;
+        const { page, totalPage } = pagenation;
+
+        if ( !canLoadMore ) {
+            return;
+        }
 
         let temp = {
             page: page + 1
@@ -112,7 +142,12 @@ Page({
             data: temp,
             url: `activity_good-discount-list`,
             success: res => {
-
+                const { status, data } = res;
+                const { list, pagenation } = data;
+                this.setData({
+                    list,
+                    canLoadMore: totalPage > page + 1
+                })
             }
         })
     },
@@ -260,6 +295,7 @@ Page({
     /** 重新拉取列表 */
     reloadList( ) {
         this.setData({
+            canLoadMore: true,
             pagenation: {
                 total: 0,
                 pageSize: 0,

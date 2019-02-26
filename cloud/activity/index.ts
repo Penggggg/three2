@@ -218,18 +218,24 @@ export const main = async ( event, context ) => {
 
             // 数据处理
             const result = data$.data.map( meta => {
+
                 let good = goods$.find( good$ => {
                     return good$._id === meta.pid
                 });
+
                 const standard = standars$.find( standar$ => {
                     return standar$._id === meta.sid
                 });
+
                 if ( !!standard ) {
                     good = Object.assign({ }, good, {
                         currentStandard: standard
                     });
                 };
-                return good;
+
+                return Object.assign({ }, meta, {
+                    detail: good
+                });
             });
 
             return ctx.body = {
