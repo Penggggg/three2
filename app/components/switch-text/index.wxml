@@ -1,0 +1,23 @@
+<view
+    class="com-switch-text"
+    style="{{ active ? 'background:' + color : 'background:' + activecolor }}"
+>
+    <view
+        catchtap="onTab"
+        class="text-container"
+    >
+        <view
+            class="options-text {{ active === index ? 'opacity' : '' }}"
+            wx:key="{{ index }}"
+            wx:for="{{ options }}"
+        >
+            {{
+                active !== index ? item.label : '1'
+            }}
+        </view>
+        <view
+            class="switch-round {{ active === 0 ? 'left' : 'right' }}"
+        >
+        </view>
+    </view>
+</view>

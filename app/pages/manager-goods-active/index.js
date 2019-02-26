@@ -14,7 +14,7 @@ Page({
         /** 展示 */
         showInfo: false,
         /** tab: 0 | 1 */
-        active: 0,
+        active: 1,
         /** tab数组 */
         actives: [
             {
@@ -35,7 +35,17 @@ Page({
         /** 加载更多 */
         canLoadMore: true,
         /** 列表 */
-        list: [ ]
+        list: [ ],
+        /** 上下架选项 */
+        closeOpts: [
+            {
+                label: '下架',
+                value: true
+            }, {
+                label: '上架',
+                value: false
+            }
+        ]
     },
 
     /** 设置computed */
@@ -82,33 +92,44 @@ Page({
                           validate: val => !!val,
                           message: '结束时间不能为空'
                         }]
-                    }, {
-                        key: 'stock',
-                        label: '活动限量',
-                        type: 'number',
-                        placeholder: '无限制，则不填写',
-                        value: undefined,
-                        rules: [
-
-                        ]
                     }
                 ];
+                // , {
+                //     key: 'stock',
+                //     label: '活动限量',
+                //     type: 'number',
+                //     placeholder: '无限制，则不填写',
+                //     value: undefined,
+                //     rules: [
+
+                //     ]
+                // }
                 return meta;
             },
 
             // 列表数据
             list$( ) {
                 return this.data.list.map( x => {
-                    const { detail } = x;
+                    const { detail, endTime } = x;
 
-                    let temp = Object.assign({ }, x );
+                    const ts2CN = ts => {
+                        const time = new Date( Number( ts ));
+                        const y = time.getFullYear( );
+                        const m = time.getMonth( ) + 1;
+                        const d = time.getDate( );
+                        return `${y}-${m}-${d}`;
+                    }
+
+                    let temp = Object.assign({ }, x, {
+                        time$: ts2CN( endTime )
+                    });
 
                     if ( detail.currentStandard ) {
-                        temp = Object.assign({ }, x, {
+                        temp = Object.assign({ }, temp, {
                             img$: detail.currentStandard.img
                         })
                     }  else {
-                        temp = Object.assign({ }, x, {
+                        temp = Object.assign({ }, temp, {
                             img$: detail.img[ 0 ]
                         })
                     }
@@ -305,6 +326,29 @@ Page({
         });
         this.fetchList( );
     },
+
+    /** 去商品详情 */
+    goDetail({ currentTarget }) {
+        const { pid } = currentTarget.dataset;
+        wx.navigateTo({
+            url: `/pages/goods-detail/index?id=${pid}`
+        });
+    },
+
+    /** 点击准备编辑 */
+    onTapItem({ currentTarget }) {
+        const { data } = currentTarget.dataset;
+        console.log('???')
+    },
+
+    /** 文字选项 */
+    onSwitch( e ) {
+        console.log( e );
+        // const { detail } = e;
+        // this.setData({
+        //     test: detail
+        // });
+    },  
 
     /**
      * 生命周期函数--监听页面加载

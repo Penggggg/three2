@@ -30,15 +30,15 @@ Component({
                 url: '/pages/manager-trip-list/index',
                 img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-2.png'
             }, {
-                title: '我的资料',
-                desc: '让新客户主动联系自己',
-                url: '/pages/manager-person-info/index',
-                img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-3.png'
-            }, {
                 title: '一口价',
                 desc: '商品特惠活动',
                 url: '/pages/manager-goods-active/index',
                 img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-4.png'
+            }, {
+                title: '我的资料',
+                desc: '让新客户主动联系自己',
+                url: '/pages/manager-person-info/index',
+                img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-3.png'
             }
         ]
     },

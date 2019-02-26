@@ -16,6 +16,7 @@
     <!-- 列表 -->
     <scroll-view
         scroll-y
+        wx:if="{{ list$.length > 0 }}"
         lower-threshold="100"
         bindscrolltolower="fetchList"
         class='pga-list-container'
@@ -24,24 +25,34 @@
             class="pga-list-item"
             wx:for="{{ list$ }}"
             wx:key="{{ index }}"
+            data-data="{{ item }}"
+            bindtap="onTapItem"
         >
             <!-- 图片 -->
             <image
                 src="{{ item.img$ }}"
                 mode="scaleToFill"
                 class="pga-item-img"
+                catchtap="goDetail"
+                data-pid="{{ item.pid }}"
             />
 
            <!-- 标题、型号  -->
             <view class="pga-item-info-block">
-                <view class="pga-item-title">
-                    {{ item.detail.title }}
+
+                <view class="pga-item-title {{ !item.detail.currentStandard ? 'pl' : '' }} ">
+                    {{ item.detail.currentStandard ? '【' + item.detail.currentStandard.name + '】' : '' }}{{ item.detail.title }}
                 </view>
-                <view
+
+                <!-- <view
                     class="pga-item-standar"
                     wx:if="{{ item.detail.currentStandard }}"
                 >
                     {{ item.detail.currentStandard.name }}
+                </view> -->
+
+                <view class="pga-item-time">
+                    {{ item.time$ }}到期
                 </view>
 
                 <!-- 价格、按钮 -->
@@ -50,22 +61,49 @@
                         <wxc-price
                             icon="sub"
                             decimal="small"
+                            class="pga-red-price"
                         > 
                             {{ item.ac_price }}
                         </wxc-price>
-                        <wxc-price
-                            icon="sub"
-                            decimal="small"
+                        <view
+                            class="pga-small-label"
                             wx:if="{{ item.ac_groupPrice }}"
-                        > 
-                            {{ item.ac_groupPrice }}
-                        </wxc-price>
+                        >
+                            拼团<wxc-price
+                                    icon="sub"
+                                    decimal="small"
+                                    class="pga-small-price"
+                                > 
+                                    {{ item.ac_groupPrice }}
+                                </wxc-price>
+                        </view>
                     </view>
+                    <my-switch-text
+                        color="#c5c5c5"
+                        activecolor="#d92a22"
+                        bindchange="onSwitch"
+                        options="{{ closeOpts }}"
+                        value="{{ item.isClosed }}"
+                    />
                 </view>
 
             </view>
         </view>
     </scroll-view>
+
+    <!-- 暂无 -->
+    <view
+        class="pga-empty-tips-block"
+        wx:if="{{ list$.length < 1 }}"
+    >
+        <view class="pga-empty-tips">暂无特价商品</view>
+        <view
+            class="pga-create-text"
+            bindtap="toggleProduct"
+        >
+            创建
+        </view>
+    </view>
 
     <!-- 添加按钮 -->
     <view

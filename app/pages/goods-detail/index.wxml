@@ -282,7 +282,7 @@
                                 原价：¥{{ item.price }}
                             </view>
                             <view class="gd-swiper-title small color">
-                                拼团：¥{{ item.groupPrice }}
+                                拼: ¥{{ item.groupPrice }}
                             </view>
                             <view
                                 class="gd-swiper-tag"

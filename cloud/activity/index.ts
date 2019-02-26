@@ -14,7 +14,7 @@ const _ = db.command;
  * type 类型 'good_discount'
  * pid
  * sid
- * stock
+ * stock(可无)
  * endTime
  * ac_price
  * ac_groupPrice
@@ -43,7 +43,7 @@ export const main = async ( event, context ) => {
             
             const { list } = event.data;
             const dataMeta: any[ ] = list.map( x => Object.assign({ }, x, {
-                isClosed: false,
+                isClosed: true,
                 type: 'good_discount',
                 createdTime: new Date( ).getTime( )
             }));

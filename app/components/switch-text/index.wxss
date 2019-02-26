@@ -1,0 +1,50 @@
+.com-switch-text {
+
+    width: 100rpx;
+    border-radius: 30px;
+    position: relative;
+    display: inline-block;
+    padding: 9rpx 15rpx;
+    transition: all ease 0.1;
+    box-sizing: border-box;
+}
+
+.text-container {
+
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.options-text {
+    color: #fff;
+    font-size: 20rpx;
+}
+
+.options-text.opacity {
+    color: transparent;
+}
+
+.switch-round {
+    top: 50%;
+    left: 0rpx;
+    height: 35rpx;
+    width: 35rpx;
+    border-radius: 50%;
+    position: absolute;
+    background: #fff;
+    transition: all ease 0.1s;
+    transform: translate( 0, -50% );
+    box-sizing: border-box;
+    box-shadow: 0 3px 1px 0 rgba(0, 0, 0, 0.05), 0 2px 2px 0 rgba(0, 0, 0, 0.1), 0 3px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.switch-round.left {
+    left: 5rpx;
+}
+
+.switch-round.right {
+    left: 60rpx;
+}

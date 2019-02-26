@@ -89,9 +89,9 @@
         <view class="modal-container">
 
             <!-- 商品名称 -->
-            <view class="con-s-title">
+            <!-- <view class="con-s-title">
                 {{ selectedProduct.title }}
-            </view>
+            </view> -->
 
             <!-- 型号 -->
             <view class="con-stander-block">

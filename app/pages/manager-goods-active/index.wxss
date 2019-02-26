@@ -92,7 +92,7 @@
     width: 180rpx;
     height: 180rpx;
     border-radius: 3px;
-    margin-right: 20rpx;
+    margin-right: 10rpx;
     /* border: 1px solid rgba( 0,0,0,0.5 ); */
 }
 
@@ -103,14 +103,20 @@
 }
 
 .pga-item-title {
-    color: #999;
-    font-size: 26rpx;
+    color: #333;
+    letter-spacing: 0.02em;
+    font-size: 28rpx;
     overflow :hidden; 
     display: -webkit-box; 
     -webkit-line-clamp: 2;
     word-break: break-all;
     text-overflow: ellipsis;
     -webkit-box-orient: vertical;
+    margin-bottom: 5rpx;
+}
+
+.pga-item-title.pl {
+    padding-left: 20rpx;
 }
 
 .pga-item-standar {
@@ -120,6 +126,61 @@
     padding: 2rpx 10rpx;
     display: inline;
     margin-top: 6rpx;
-    color: #bfbfbf;    
+    /* color: #bfbfbf;     */
+    color: rgba( 0, 0, 0, 0.3 );
 }
 
+.pga-item-time {
+    color: #d92a22;
+    font-size: 24rpx;
+    letter-spacing: 0.02em;
+    padding-left: 20rpx;
+    box-sizing: border-box;
+}
+
+.pga-red-price {
+    color: #d92a22;
+    font-size: 40rpx;
+}
+
+.pga-small-label {
+    margin-left: 6rpx;
+    display: inline;
+    font-size: 20rpx;
+    color: #bfbfbf;   
+}
+
+.pga-small-price {
+    display: inline;
+    font-size: 30rpx;
+    color: #bfbfbf;
+}
+
+.pga-item-action {
+    margin-top: 30rpx;
+    display: flex;
+    align-items: center;
+    padding-left: 20rpx;
+    box-sizing: border-box;
+    justify-content: space-between;
+}
+
+.pga-empty-tips-block {
+    top: 40%;
+    left: 50%;
+    position: fixed;
+    transform: translate( -50%, -50% );
+}
+
+.pga-empty-tips {
+    color: #333;
+    font-size: 22rpx;
+    margin-bottom: 10rpx;
+}
+
+.pga-create-text {
+    color: #d92a22;
+    font-size: 30rpx;
+    text-align: center;
+    text-decoration: underline;
+}
