@@ -18,6 +18,7 @@ const _ = db.command;
  * ac_price
  * ac_groupPrice
  * isClosed
+ * createdTime
  */
 export const main = async ( event, context ) => {
 
@@ -42,7 +43,8 @@ export const main = async ( event, context ) => {
             const { list } = event.data;
             const dataMeta: any[ ] = list.map( x => Object.assign({ }, x, {
                 isClosed: false,
-                type: 'good_discount'
+                type: 'good_discount',
+                createdTime: new Date( ).getTime( )
             }));
 
             // 错误定义

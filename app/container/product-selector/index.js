@@ -68,7 +68,7 @@ Component({
                 return this.fetchList( );
 
             // 暴露已选
-            } else if ( !selectedProductId && selectedProduct.standards.length > 0 ) {
+            } else if ( !selectedProductId ) {
                 wx.showToast({
                     icon: 'none',
                     title: '请点击选中一个商品'
@@ -77,7 +77,7 @@ Component({
             } else {
 
                 // 需要选择型号
-                if ( this.data.shouldChoiceStander ) {
+                if ( this.data.shouldChoiceStander && selectedProduct.standards.length > 0 ) {
 
                     this.setData({
                         show$: false,
@@ -241,6 +241,23 @@ Component({
             const { show2$ } = this.data;
             this.setData({
                 show2$: show2$ ? false : true
+            });
+
+            if ( show2$ ) {
+                this.setData({
+                    list: [ ],
+                    search: '',
+                    selectedProduct: null,
+                    selectedProductId: null,
+                    selectedStanderIds: [ ]
+                });
+            }
+        },
+
+        /** 关闭产品框 */
+        closeStander( ) {
+            this.setData({
+                show2$: false
             });
 
             if ( show2$ ) {

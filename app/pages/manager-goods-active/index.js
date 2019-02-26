@@ -111,10 +111,13 @@ Page({
             url: 'activity_check-good-discount',
             success: res => {
                 if ( res.status === 200 ) {
-                    this.selectComponent('#selector1').toggleStander( );
+                    this.selectComponent('#selector1').closeStander( );
                     this.setData({
                         showInfo: true
                     });
+                    wx.showToast({
+                        title: '创建成功！'
+                    })
                 }
             }
         })
