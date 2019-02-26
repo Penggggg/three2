@@ -9,6 +9,7 @@ const _ = db.command;
 /**
  *
  * @description 商品活动模块
+ * ! “一口价”： 同一商品，不同型号都可以参加，一口价是以型号为维度的
  * -------- 字段 ----------
  * type 类型 'good_discount'
  * pid
@@ -149,7 +150,103 @@ export const main = async ( event, context ) => {
         }
     });
 
-    /**  */
+    /** 
+     * @description
+     * 分页查询“一口价”活动商品列表
+     * {
+     *     page:(必填)
+     *     limit:
+     *     isClosed: undefined | true | false
+     * }
+     */
+    app.router('good-discount-list', async( ctx, next ) => {
+        try {
+
+            // 查询条数
+            const limit = event.data.limit || 20;
+            const { isClosed } = event.data;
+
+            // 查询条件            
+            let where$ = {
+                type: 'good_discount'
+            };
+            if ( isClosed !== undefined ) {
+                where$ = Object.assign({ }, where$, {
+                    isClosed
+                });
+            }
+
+            const total$ = await db.collection('activity')
+                .where( where$ )
+                .count( );
+    
+            // 查询活动商品列表
+            const data$ = await db.collection('activity')
+                .where( where$ )
+                .limit( limit )
+                .skip(( event.data.page - 1 ) * limit )
+                .orderBy('createdTime', 'desc')
+                .get( );
+
+            // 商品id列表
+            const goodsIds = Array.from(
+                new Set( data$.data.map( x => x.pid ))
+            ).filter( x => !!x );
+
+            // 型号id列表
+            const sIds = Array.from(
+                new Set( data$.data.map( x => x.sid ))
+            ).filter( x => !!x );
+
+            // 查询商品详情
+            const goods$$ = await Promise.all( goodsIds.map( pid => {
+                return db.collection('goods')
+                    .doc( String( pid ))
+                    .get( )
+            }));
+
+            const goods$ = goods$$.map( x => x.data );
+
+            // 查询型号详情
+            const standars$$ = await Promise.all( sIds.map( sid => {
+                return db.collection('standards')
+                    .doc( String( sid ))
+                    .get( )
+            }));
+
+            const standars$ = standars$$.map( x => x.data );
+
+            // 数据处理
+            const result = data$.data.map( meta => {
+                let good = goods$.find( good$ => {
+                    return good$._id === meta.pid
+                });
+                const standard = standars$.find( standar$ => {
+                    return standar$._id === meta.sid
+                });
+                if ( !!standard ) {
+                    good = Object.assign({ }, good, {
+                        currentStandard: standard
+                    });
+                };
+                return good;
+            });
+
+            return ctx.body = {
+                status: 200,
+                data: {
+                    list: result,
+                    pagenation: {
+                        total: total$.total,
+                        pageSize: limit,
+                        page: event.data.page,
+                        totalPage: Math.ceil( total$.total / limit )
+                    }
+                }
+            }
+
+        } catch ( e ) { return ctx.body = { status: 500 };}
+    })
 
     return app.serve( );
 }

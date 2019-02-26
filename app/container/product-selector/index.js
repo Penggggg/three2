@@ -256,6 +256,7 @@ Component({
 
         /** 关闭产品框 */
         closeStander( ) {
+            const { show2$ } = this.data;
             this.setData({
                 show2$: false
             });

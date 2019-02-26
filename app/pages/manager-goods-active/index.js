@@ -24,7 +24,14 @@ Page({
                 label: '全部',
                 value: 1
             }
-        ]
+        ],
+        /** 分页数据 */
+        pagenation: {
+            total: 0,
+            pageSize: 0,
+            page: 0,
+            totalPage: 0
+        }
     },
 
     /** 设置computed */
@@ -86,6 +93,30 @@ Page({
         })
     },
 
+    /** 拉取列表 */
+    fetchList( ) {
+        const { active, pagenation } = this.data;
+        const { page } = pagenation;
+
+        let temp = {
+            page: page + 1
+        };
+
+        if ( active === 0 ) {
+            temp = Object.assign({ }, temp, {
+                isClosed: false
+            });
+        }
+
+        http({
+            data: temp,
+            url: `activity_good-discount-list`,
+            success: res => {
+
+            }
+        })
+    },
+
     /** 展开关闭产品选择 */
     toggleProduct( ) {
         const { showProduct } = this.data;
@@ -127,9 +158,6 @@ Page({
                     this.setData({
                         showInfo: true
                     });
-                    wx.showToast({
-                        title: '创建成功！'
-                    })
                 }
             }
         })
@@ -183,30 +211,63 @@ Page({
 
     /** 创建商品活动 */
     onCreate( temp ) {
-        http({
-            data: {
-                list: temp
-            },
-            url: `activity_create-good-discount`,
+        wx.showModal({
+            title: '提示',
+            content: '确定要创建此商品活动吗？',
             success: res => {
-                const { status } = res;
-                if ( status === 200 ) {
-                    // 初始化
-                    this.setData({
-                        current: null,
-                        showInfo: false
+                if ( res.confirm ) {
+                    http({
+                        data: {
+                            list: temp
+                        },
+                        loadingMsg: '创建中...',
+                        url: `activity_create-good-discount`,
+                        success: res => {
+                            const { status } = res;
+                            if ( status === 200 ) {
+                                // 初始化
+                                this.setData({
+                                    current: null,
+                                    showInfo: false
+                                });
+                                wx.showToast({
+                                    title: '创建成功！'
+                                });
+                                this.reloadList( );
+                            }
+                        }
                     });
+                } else if ( res.cancel ) {
+                    // console.log('用户点击取消')
                 }
             }
         })
+        
     },
 
     /** 点击切换tab */
     onTabActive({ currentTarget }) {
         const { active } = currentTarget.dataset;
+
+        if ( active === this.data.active ) { return; }
+
         this.setData({
             active
         });
+        this.reloadList( );
+    },
+
+    /** 重新拉取列表 */
+    reloadList( ) {
+        this.setData({
+            pagenation: {
+                total: 0,
+                pageSize: 0,
+                page: 0,
+                totalPage: 0
+            }
+        });
+        this.fetchList( );
     },
 
     /**
@@ -214,7 +275,7 @@ Page({
      */
     onLoad: function (options) {
         this.runComputed( );
-
+        this.fetchList( );
     },
 
     /**
