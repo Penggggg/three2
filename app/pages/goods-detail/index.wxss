@@ -462,8 +462,14 @@
     box-sizing: border-box;
 }
 
+.gd-activity-title-block {
+    display: flex;
+    align-items: center;
+}
+
 .gd-activity-title {
     color: #333;
+    display: inline;
     font-weight: bold;
     letter-spacing: 0.02em;
 }
@@ -494,7 +500,11 @@
 }
 
 .gd-activity-info {
-
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 12rpx;
+    justify-content: space-between;
+    box-sizing: border-box;
 }
 
 .gd-activity-title {
@@ -511,7 +521,6 @@
 
 .gd-activity-price-block {
     display: flex;
-    margin-top: 20rpx;
     align-items: flex-end;
 }
 
@@ -532,4 +541,10 @@
     font-weight: bold;
     color: #ff4422;
     margin-left: 0;
+}
+
+.gd-activity-icon {
+    width: 30rpx;
+    margin-left: 10rpx;
+    display: inline-block;
 }

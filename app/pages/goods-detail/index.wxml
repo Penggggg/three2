@@ -174,8 +174,15 @@
                 class="gd-activity-block"
                 wx:if="{{ activities.length > 0 }}"
             >
-                <view class="gd-activity-title">
-                    超值限时抢
+                <view class="gd-activity-title-block">
+                    <view class="gd-activity-title">
+                        超值限时抢
+                    </view>
+                    <image
+                        mode="widthFix"
+                        class="gd-activity-icon"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-4.png"
+                    />
                 </view>
                 <view class="gd-activity-container">
                     <view class="gd-activity-list">
@@ -191,14 +198,16 @@
                                 bindtap="previewSingleImg"
                             />
                             <view class="gd-activity-info">
-                                <view class="gd-activity-title">
-                                    {{ item.title }}
+                                <view >
+                                    <view class="gd-activity-title">
+                                        {{ item.title }}
+                                    </view>
+                                    <wxc-countdown
+                                        format="hh:mm:ss"
+                                        countdown="{{ item.countdown > 0 ? item.countdown : 0 }}"
+                                        num-style="font-size: 22rpx; color: #fff; padding: 1rpx 10rpx;background: #000; text-align: center; border-radius: 8rpx;"
+                                    />
                                 </view>
-                                <wxc-countdown
-                                    format="hh:mm:ss"
-                                    countdown="{{ item.countdown > 0 ? item.countdown : 0 }}"
-                                    num-style="font-size: 22rpx; color: #fff; padding: 1rpx 10rpx;background: #000; text-align: center; border-radius: 8rpx;"
-                                />
                                 <view class="gd-activity-price-block">
                                     <view class="gd-activity-price">
                                         <wxc-price

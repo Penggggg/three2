@@ -222,7 +222,7 @@ Page({
 
                     return Object.assign({ }, x, { 
                         img,
-                        countdown: Math.ceil(( new Date( ).getTime( ) - x.endTime) / 1000 )
+                        countdown: ( x.endTime - new Date( ).getTime( )) / ( 1000 )
                     });
 
                 });
