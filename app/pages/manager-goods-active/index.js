@@ -45,7 +45,9 @@ Page({
                 label: '上架中',
                 value: false
             }
-        ]
+        ],
+        /** 当前选中的活动单元 */
+        currentTarget: null
     },
 
     /** 设置computed */
@@ -54,10 +56,19 @@ Page({
 
             // 创建时候的表单数据
             meta( ) {
+                const { currentTarget } = this.data;
                 const now = new Date( );
                 const year = now.getFullYear( );
                 const month = now.getMonth( ) + 1;
                 const date = now.getDate( );
+
+                const ts2CN = ts => {
+                    const time = new Date( Number( ts ));
+                    const y = time.getFullYear( );
+                    const m = time.getMonth( ) + 1;
+                    const d = time.getDate( );
+                    return `${y}/${m}/${d}`;
+                }
     
                 const meta = [
                     {
@@ -65,9 +76,9 @@ Page({
                         label: '活动价',
                         type: 'number',
                         placeholder: '请输入商品活动价',
-                        value: undefined,
+                        value: currentTarget ? currentTarget.ac_price : undefined,
                         rules: [{
-                          validate: val => !!val && !!val.trim( ),
+                          validate: val => !!val && !!String( val ).trim( ),
                           message: '商品活动价不能为空'
                         }, {
                             validate: val => Number( val ) > 0,
@@ -78,16 +89,19 @@ Page({
                         label: '活动团购价',
                         type: 'number',
                         placeholder: '无团购价，则不填写',
-                        value: undefined,
+                        value: currentTarget ? currentTarget.ac_groupPrice : undefined,
                         rules: [{
-                            validate: val => (!!val && !!val.trim( )) ? Number( val ) > 0 : true,
-                            message: '团购价不能为0'
-                        }]
+                            validate: val => !!val && !!String( val ).trim( ),
+                            message: '商品活动价不能为空'
+                          }, {
+                              validate: val => Number( val ) > 0,
+                              message: '团购价不能为0'
+                          }]
                     }, {
                         key: 'endTime',
                         label: '结束时间',
                         type: 'date',
-                        value: undefined,
+                        value: currentTarget ? ts2CN( currentTarget.endTime ) : undefined,
                         rules: [{
                           validate: val => !!val,
                           message: '结束时间不能为空'
@@ -118,7 +132,7 @@ Page({
                         const y = time.getFullYear( );
                         const m = time.getMonth( ) + 1;
                         const d = time.getDate( );
-                        return `${y}-${m}-${d}`;
+                        return `${y}/${m}/${d}`;
                     }
 
                     let temp = Object.assign({ }, x, {
@@ -233,7 +247,7 @@ Page({
 
     /** 确认资费 */
     onConfirmInfo( ) {
-        const { current } = this.data;
+        const { current, currentTarget } = this.data;
         const form1 = this.selectComponent('#form1');
         const r1 = form1.getData( );
 
@@ -244,6 +258,13 @@ Page({
             });
         }
 
+        /** 这里是编辑 */
+        if ( !!currentTarget ) {
+            console.log( r1.data );
+            return this.onEdit( Object.assign({ }, currentTarget, r1.data ));
+        }
+        
+        /** 这里是创建 */
         let temp;
         const pid = current._id;
         const title = current.title;
@@ -303,6 +324,53 @@ Page({
         
     },
 
+    /** 编辑商品活动 */
+    onEdit( temp ) {
+        const { _id, ac_groupPrice, ac_price, endTime } = temp;
+        const list = [ ...this.data.list ];
+
+        const updateBody = {
+            ac_price,
+            ac_groupPrice,
+            endTime: new Date(`${endTime} 23:59:59`).getTime( )
+        }
+
+        wx.showModal({
+            title: '提示',
+            content: `确定要更新此商品吗？`,
+            success: res => {
+                if ( res.confirm ) {
+                    http({
+                        data: Object.assign({ }, updateBody, {
+                            acid: _id,
+                        }),
+                        loadingMsg: '更新中...',
+                        url: 'activity_update-good-discount',
+                        success: res => {
+                            if ( res.status === 200 ) {
+
+                                wx.showToast({
+                                    title: '更新成功！'
+                                });
+
+                                const target = list.find( x => x._id === _id );
+                                const existedIndex = list.findIndex( x => x._id === _id );
+                                list.splice( existedIndex, 1, Object.assign({ }, target, updateBody ));
+
+                                this.setData({
+                                    list,
+                                    showInfo: false,
+                                    currentTarget: null
+                                });
+                            }
+                        }
+                    })
+                }
+            }
+        });
+       
+    },
+
     /** 点击切换tab */
     onTabActive({ currentTarget }) {
         const { active } = currentTarget.dataset;
@@ -340,7 +408,10 @@ Page({
     /** 点击准备编辑 */
     onTapItem({ currentTarget }) {
         const { data } = currentTarget.dataset;
-        console.log('???')
+        this.setData({
+            showInfo: true,
+            currentTarget: data
+        })
     },
 
     /** 文字选项 ，开启关闭上下架*/

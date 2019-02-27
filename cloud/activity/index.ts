@@ -19,6 +19,7 @@ const _ = db.command;
  * ac_price
  * ac_groupPrice
  * createdTime
+ * updatedTime
  * isClosed 是否已经上架
  * isDeleted 是否已经手动删除
  */
@@ -47,6 +48,7 @@ export const main = async ( event, context ) => {
                 isClosed: true,
                 isDeleted: false,
                 type: 'good_discount',
+                updatedTime: new Date( ).getTime( ),
                 createdTime: new Date( ).getTime( )
             }));
 
@@ -189,7 +191,7 @@ export const main = async ( event, context ) => {
                 .where( where$ )
                 .limit( limit )
                 .skip(( event.data.page - 1 ) * limit )
-                .orderBy('createdTime', 'desc')
+                .orderBy('updatedTime', 'desc')
                 .get( );
 
             // 商品id列表
@@ -294,7 +296,9 @@ export const main = async ( event, context ) => {
             await db.collection('activity')
                 .doc( acid )
                 .update({
-                    data: updateBody
+                    data: Object.assign({ }, updateBody, {
+                        updatedTime: new Date( ).getTime( )
+                    })
                 });
 
             return ctx.body = {

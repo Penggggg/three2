@@ -136,7 +136,7 @@
         shouldChoiceStander="{{ true }}"
     />
 
-    <!-- 活动信息弹框 -->
+    <!-- 商品一口价活动信息弹框 -->
     <i-modal
         title=""
         bind:ok="onConfirmInfo"
