@@ -225,7 +225,7 @@ Page({
                         countdown: ( x.endTime - new Date( ).getTime( )) / ( 1000 )
                     });
 
-                });
+                }).filter( y => y.endTime > new Date( ).getTime( ));
 
                 this.setData!({
                     pin,

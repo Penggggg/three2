@@ -73,8 +73,10 @@
                 </wxc-price>
             </view>
 
-            <!-- 倒计时 -->
-            <view class="pgd-price-time-block-item countdown">
+            <!-- 行程倒计时 -->
+            <view
+                class="pgd-price-time-block-item countdown"
+            >
                 <view class="pgd-price-time-block-tips">行程开始还剩</view>
                 <wxc-countdown
                     countdown="{{ 1000 }}"
@@ -147,7 +149,10 @@
 
             </view>
 
-            <view class="info-block-item">
+            <view
+                class="info-block-item"
+                wx:if="{{ activities.length === 0 }}"
+            >
 
                 <view class="info-block-item-label">
                     保证：
