@@ -107,7 +107,7 @@
                             autoplay="{{ true }}"
                             duration="{{ 1000 }}"
                             circular="{{ true }}"
-                            interval="{{ 3000 }}"
+                            interval="{{ 4000 }}"
                             class="te-fairy-swiper"
                             display-multiple-items="{{ 1 }}"
                         >
@@ -213,8 +213,8 @@
                         wx:if="{{ loaded && showManjian }}"
                     />
 
-                    <!-- logo -->
-                    <view
+                    <!-- 热门推荐 logo -->
+                    <!-- <view
                         class="te-logo-bar"
                         wx:if="{{ !showManjian }}"
                     >
@@ -223,7 +223,7 @@
                             class="te-bar-img"
                             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/bar-recommend.png"
                         />
-                    </view>
+                    </view> -->
 
                     <!-- 本期推荐 -->
                     <view

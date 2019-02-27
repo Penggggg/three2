@@ -62,7 +62,6 @@ Page({
                         shoppinglist
                     }
                 });
-                console.log('....', temp );
                 return temp;
             }
         })
