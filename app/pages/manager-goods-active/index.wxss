@@ -184,3 +184,13 @@
     text-align: center;
     text-decoration: underline;
 }
+
+.pga-actions {
+    display: flex;
+    align-items: center;
+}
+
+.pga-trash {
+    display: inline;
+    margin-right: 12rpx;
+}

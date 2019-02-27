@@ -4,6 +4,11 @@ Component({
      * 组件的属性列表
      */
     properties: {
+        // sign，可无，用于列表区分
+        sign: {
+            type: String,
+            value: ''
+        },
         // 背景颜色
         color: {
             type: String,
@@ -42,8 +47,16 @@ Component({
 
         /** 点击tab */
         onTab( ) {
+            const { sign } = this.data;
             const target = this.data.options.find( x => x.value !== this.data.value );
-            this.triggerEvent('change', target.value );
+            if ( !sign ) {
+                this.triggerEvent('change', target.value );
+            } else {
+                this.triggerEvent('change', {
+                    sign,
+                    value: target.value
+                });
+            }
         },
 
         /** 根据value改变圆的位置 */

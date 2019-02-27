@@ -44,13 +44,6 @@
                     {{ item.detail.currentStandard ? '【' + item.detail.currentStandard.name + '】' : '' }}{{ item.detail.title }}
                 </view>
 
-                <!-- <view
-                    class="pga-item-standar"
-                    wx:if="{{ item.detail.currentStandard }}"
-                >
-                    {{ item.detail.currentStandard.name }}
-                </view> -->
-
                 <view class="pga-item-time">
                     {{ item.time$ }}到期
                 </view>
@@ -78,13 +71,28 @@
                                 </wxc-price>
                         </view>
                     </view>
-                    <my-switch-text
-                        color="#c5c5c5"
-                        activecolor="#d92a22"
-                        bindchange="onSwitch"
-                        options="{{ closeOpts }}"
-                        value="{{ item.isClosed }}"
-                    />
+
+                    <view class="pga-action">
+                        <view
+                            class="pga-trash"
+                            catchtap="onDelete"
+                            data-acid="{{ item._id }}"
+                        >
+                            <i-icon
+                                type="trash"
+                                size="18"
+                                color="#80848f"
+                            />
+                        </view>
+                        <my-switch-text
+                            sign="{{ item._id }}"
+                            color="#c5c5c5"
+                            activecolor="#d92a22"
+                            bindchange="onSwitch"
+                            options="{{ closeOpts }}"
+                            value="{{ item.isClosed }}"
+                        />
+                    </view>
                 </view>
 
             </view>

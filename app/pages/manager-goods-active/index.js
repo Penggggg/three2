@@ -39,10 +39,10 @@ Page({
         /** 上下架选项 */
         closeOpts: [
             {
-                label: '下架',
+                label: '已下架',
                 value: true
             }, {
-                label: '上架',
+                label: '上架中',
                 value: false
             }
         ]
@@ -109,7 +109,8 @@ Page({
 
             // 列表数据
             list$( ) {
-                return this.data.list.map( x => {
+                const { list } = this.data;
+                return list.map( x => {
                     const { detail, endTime } = x;
 
                     const ts2CN = ts => {
@@ -165,6 +166,7 @@ Page({
             success: res => {
                 const { status, data } = res;
                 const { list, pagenation } = data;
+
                 this.setData({
                     list,
                     canLoadMore: totalPage > page + 1
@@ -341,14 +343,78 @@ Page({
         console.log('???')
     },
 
-    /** 文字选项 */
+    /** 文字选项 ，开启关闭上下架*/
     onSwitch( e ) {
-        console.log( e );
-        // const { detail } = e;
-        // this.setData({
-        //     test: detail
-        // });
+        const { value, sign } = e.detail;
+        const list = [ ...this.data.list ];
+        wx.showModal({
+            title: '提示',
+            content: `确定要${ value ? '下架' : '上架' }此商品活动吗？`,
+            success: res => {
+                if ( res.confirm ) {
+                    http({
+                        data: {
+                            acid: sign,
+                            isClosed: value
+                        },
+                        loadingMsg: value ? '下架中...' : '上架中...',
+                        url: 'activity_update-good-discount',
+                        success: res => {
+                            if ( res.status === 200 ) {
+                                wx.showToast({
+                                    title: value ? '下架成功！' : '上架成功！'
+                                });
+                                const target = list.find( x => x._id === sign );
+                                const existedIndex = list.findIndex( x => x._id === sign );
+                                list.splice( existedIndex, 1, Object.assign({ }, target, {
+                                    isClosed: value
+                                }));
+                                this.setData({
+                                    list
+                                });
+                            }
+                        }
+                    })
+                }
+            }
+        });
     },  
+
+    /** 点击删除一个商品活动 */
+    onDelete({ currentTarget }) {
+        const that = this;
+        const list = [ ...this.data.list ];
+        const { acid } = currentTarget.dataset;
+        wx.showModal({
+            title: '提示',
+            content: '确定要删除此商品活动吗？',
+            success: res => {
+                if ( res.confirm ) {
+                    http({
+                        data: {
+                            acid
+                        },
+                        loadingMsg: '删除中...',
+                        url: 'activity_delete-good-discount',
+                        success: res => {
+                            if ( res.status === 200 ) {
+                                const existedIndex = list.findIndex( x => x._id === acid );
+                                list.splice( existedIndex, 1 );
+                                that.setData({
+                                    list
+                                });
+                                wx.showToast({
+                                    title: '删除成功！'
+                                })
+                            }
+                        }
+                    })
+                } else if ( res.cancel ) {
+                    
+                }
+            }
+        });
+    },
 
     /**
      * 生命周期函数--监听页面加载

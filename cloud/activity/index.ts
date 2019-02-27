@@ -18,8 +18,9 @@ const _ = db.command;
  * endTime
  * ac_price
  * ac_groupPrice
- * isClosed
  * createdTime
+ * isClosed 是否已经上架
+ * isDeleted 是否已经手动删除
  */
 export const main = async ( event, context ) => {
 
@@ -44,6 +45,7 @@ export const main = async ( event, context ) => {
             const { list } = event.data;
             const dataMeta: any[ ] = list.map( x => Object.assign({ }, x, {
                 isClosed: true,
+                isDeleted: false,
                 type: 'good_discount',
                 createdTime: new Date( ).getTime( )
             }));
@@ -123,6 +125,7 @@ export const main = async ( event, context ) => {
                     .where({
                         pid,
                         sid,
+                        isDeleted: false,
                         isClosed: false
                     })
                     .count( )
@@ -168,6 +171,7 @@ export const main = async ( event, context ) => {
 
             // 查询条件            
             let where$ = {
+                isDeleted: false,
                 type: 'good_discount'
             };
             if ( isClosed !== undefined ) {
@@ -252,6 +256,54 @@ export const main = async ( event, context ) => {
             }
 
         } catch ( e ) { return ctx.body = { status: 500 };}
+    });
+
+    /** 
+     * @description 
+     * 手动删除一个商品一口价活动
+     */
+    app.router('delete-good-discount', async( ctx, next ) => {
+        try {
+            const { acid } = event.data;
+            await db.collection('activity')
+                .doc( String( acid ))
+                .update({
+                    data: {
+                        isDeleted: true
+                    }
+                });
+
+            return ctx.body = {
+                status: 200
+            }
+        } catch ( e ) { return ctx.body = { status: 500 };}
+    });
+
+    /** 
+     * @description
+     * 更新商品一口价活动
+     * 全字段里，任意字段
+     * acid
+     */
+    app.router('update-good-discount', async( ctx, next ) => {
+        try {
+            const { acid } = event.data;
+            const updateBody = event.data;
+            delete updateBody.acid;
+
+            await db.collection('activity')
+                .doc( acid )
+                .update({
+                    data: updateBody
+                });
+
+            return ctx.body = {
+                status: 200
+            };
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        } 
     })
 
     return app.serve( );

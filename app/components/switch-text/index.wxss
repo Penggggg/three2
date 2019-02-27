@@ -1,6 +1,6 @@
 .com-switch-text {
 
-    width: 100rpx;
+    width: 110rpx;
     border-radius: 30px;
     position: relative;
     display: inline-block;
@@ -46,5 +46,5 @@
 }
 
 .switch-round.right {
-    left: 60rpx;
+    left: 72rpx;
 }
