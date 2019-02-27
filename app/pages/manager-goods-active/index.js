@@ -76,7 +76,7 @@ Page({
                         label: '活动价',
                         type: 'number',
                         placeholder: '请输入商品活动价',
-                        value: currentTarget ? currentTarget.ac_price : undefined,
+                        value: undefined,
                         rules: [{
                           validate: val => !!val && !!String( val ).trim( ),
                           message: '商品活动价不能为空'
@@ -89,7 +89,7 @@ Page({
                         label: '活动团购价',
                         type: 'number',
                         placeholder: '无团购价，则不填写',
-                        value: currentTarget ? currentTarget.ac_groupPrice : undefined,
+                        value: undefined,
                         rules: [{
                             validate: val => !!val && !!String( val ).trim( ),
                             message: '商品活动价不能为空'
@@ -101,7 +101,7 @@ Page({
                         key: 'endTime',
                         label: '结束时间',
                         type: 'date',
-                        value: currentTarget ? ts2CN( currentTarget.endTime ) : undefined,
+                        value: undefined,
                         rules: [{
                           validate: val => !!val,
                           message: '结束时间不能为空'
@@ -260,7 +260,6 @@ Page({
 
         /** 这里是编辑 */
         if ( !!currentTarget ) {
-            console.log( r1.data );
             return this.onEdit( Object.assign({ }, currentTarget, r1.data ));
         }
         
@@ -316,8 +315,6 @@ Page({
                             }
                         }
                     });
-                } else if ( res.cancel ) {
-                    // console.log('用户点击取消')
                 }
             }
         })
@@ -410,8 +407,26 @@ Page({
         const { data } = currentTarget.dataset;
         this.setData({
             showInfo: true,
-            currentTarget: data
-        })
+            currentTarget: Object.assign({ }, data )
+        });
+
+        const ts2CN = ts => {
+            const time = new Date( Number( ts ));
+            const y = time.getFullYear( );
+            const m = time.getMonth( ) + 1;
+            const d = time.getDate( );
+            return `${y}/${m}/${d}`;
+        }
+
+        setTimeout(( ) => {
+            const form1 = this.selectComponent('#form1');
+            const { ac_groupPrice, ac_price, endTime } = data;
+            form1 && form1.set({
+                ac_groupPrice,
+                ac_price,
+                endTime: ts2CN( endTime )
+            })
+        }, 16 );
     },
 
     /** 文字选项 ，开启关闭上下架*/

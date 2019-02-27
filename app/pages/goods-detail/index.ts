@@ -40,33 +40,148 @@ Page({
         // 拼团列表
         pin: [ ],
         // 商品在本行程的购物清单列表
-        shopping: [ ]
+        shopping: [ ],
+        // 一口价活动列表
+        activities: [ ]
     },
 
-    // 展开提示
-    toggleTips( ) {
-        const { showTips } = this.data;
-        this.setData!({
-            showTips: showTips === 'show' ? 'hide' : 'show'
-        });
-    },
+    /** 设置computed */
+    runComputed( ) {
+        computed( this, {
 
-    // 进入商品管理
-    goManager( ) {
-        wx.navigateTo({
-            url: `/pages/manager-goods-detail/index?id=${this.data.id}`
+            // 计算价格
+            price: function( ) {
+                const { detail } = this.data;
+                if ( !detail ) {
+                    return '';
+                } else {
+                    if ( detail.standards.length === 0 ) {
+                        return detail.price;
+                    } else if ( detail.standards.length === 1 ) {
+                        return detail.standards[ 0 ].price;
+                    } else {
+                        const sortedPrice = detail.standards.sort(( x, y ) => x.price - y.price );
+                        if (  sortedPrice[0].price === sortedPrice[ sortedPrice.length - 1 ].price ) {
+                            return sortedPrice[ 0 ].price;
+                        } else {
+                            return `${sortedPrice[0].price}~${sortedPrice[sortedPrice.length - 1 ].price}`;
+                        }
+                    }
+                }
+            },
+
+            // 商品详情 - 分行显示
+            detailIntro: function( ) {
+                const { detail } = this.data;
+                if ( !detail || ( !!detail && !detail.detail )) {
+                    return [ ];
+                } else {
+                    return detail.detail.split('\n').filter( x => !!x );
+                }
+            },
+
+            // 价格 ～ 团购价的差价
+            priceGap: function( ) {
+                const { detail } = this.data;
+                if ( !detail ) {
+                    return 0;
+                } else {
+                    const { standards, groupPrice, price } = detail;
+                    // 无型号
+                    if ( standards.length === 0 ) {
+                        // 有团购的
+                        if ( groupPrice !== null && groupPrice !== undefined ) {
+                            return  Number( price - groupPrice ).toFixed( 2 );
+                        } else {
+                            return 0;
+                        }
+                    // 有型号
+                    } else {
+                        const groupPrice = standards.filter( x => x.groupPrice !== null && x.groupPrice !== undefined );
+                        // 型号里面有团购的
+                        if ( groupPrice.length > 0 ) {
+                            const sortedGroupPrice = groupPrice.sort(( x, y ) => (( x.groupPrice - x.price ) - ( y.groupPrice - y.price )));
+                            if (( sortedGroupPrice[0].groupPrice - sortedGroupPrice[0].price ) ===
+                                ( sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice - sortedGroupPrice[ sortedGroupPrice.length - 1 ].price )) {
+                                return Number(( sortedGroupPrice[0].price - sortedGroupPrice[0].groupPrice )).toFixed( 2 );
+                            } else {
+                                return `${Number(Number(sortedGroupPrice[ sortedGroupPrice.length - 1 ].price - sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice).toFixed( 2 ))}~${Number( Number( sortedGroupPrice[0].price - sortedGroupPrice[0].groupPrice).toFixed( 2 ))}`
+                            }
+                        } else {
+                            return 0;
+                        }
+                    }
+                }
+            },
+
+            // 拼团列表
+            pin$: function( ) {
+                const { detail, shopping } = this.data;
+
+                if ( !detail ) { 
+                    return [ ];
+                }
+
+                const { standards, groupPrice } = detail;
+
+                if ( standards.length > 0 ) {
+                    return standards
+                        .filter( x => !!x.groupPrice )
+                        .map( x => {
+                            return Object.assign({ }, x, {
+                                canPin: !!shopping.find( s => s.sid === x._id && s.pid === x.pid )
+                            })
+                        })
+
+                } else if ( !!groupPrice ) {
+                    const { price, title, img, _id } = detail;
+                    return [{
+                        price,
+                        name: title,
+                        groupPrice,
+                        img: img[ 0 ],
+                        canPin: !!shopping.find( s => s.pid === _id )
+                    }]
+                }
+
+                return [ ];
+            },
+
+            // 马上可以拼团的个数
+            pinCount$: function( ) {
+                const { detail, shopping } = this.data;
+                if ( !detail ) { 
+                    return 0;
+                }
+
+                const { standards, groupPrice } = detail;
+
+                if ( !!standards && standards.length > 0 ) {
+                    return standards
+                        .filter( x => !!shopping.find( s => s.sid === x._id && s.pid === x.pid ))
+                        .length;
+
+                } else if ( !!groupPrice ) {
+                    const { _id } = detail;
+                    return !!shopping.find( s => s.pid === _id ) ? 1 : 0
+                }
+
+                return 0;
+            },
+
+            // 是否有型号
+            hasStanders$: function( ) {
+                const { detail } = this.data;
+                if ( !detail ) { 
+                    return false;
+                }
+                const { standards } = detail;
+                return !!standards && standards.length > 0 ;
+            },
+
         })
     },
 
-    /** 监听全局管理员权限 */
-    watchRole( ) {
-        (app as any).watch$('role', ( val ) => {
-            this.setData!({
-                showBtn: ( val === 1 )
-            })
-        });
-    },
-    
     /** 拉取商品详情 */
     fetDetail( id ) {
         const { detail } = this.data;
@@ -79,28 +194,47 @@ Page({
             url: `good_detail`,
             success: res => {
               if ( res.status !== 200 ) { return; }
-                const { standards, groupPrice } = res.data;
+
+                let pin: any = [ ];
+                const { standards, groupPrice, activities } = res.data;
 
                 if ( standards.length > 0 ) {
-                    this.setData!({
-                        pin: standards.filter( x => !!x.groupPrice )
-                    })
+                    pin = standards.filter( x => !!x.groupPrice );
+
                 } else if ( !!groupPrice ) {
                     const { price, title, img  } = res.data;
-                    (this as any).setData!({
-                        pin: [{
-                            price,
-                            name: title,
-                            groupPrice,
-                            img: img[ 0 ]
-                        }]
-                    });
+                    pin = [{
+                        price,
+                        name: title,
+                        groupPrice,
+                        img: img[ 0 ]
+                    }];
                 }
 
-                this.setData!({
-                    detail: res.data,
-                    loading: false
+                const activities$ = activities.map( x => {
+
+                    let img = '';
+                    if ( !!x.sid ) {
+                        img = standards.find( y => y._id === x.sid ).img
+                    } else {
+                        img = res.data.img[ 0 ];
+                    }
+
+                    return Object.assign({ }, x, { 
+                        img,
+                        countdown: Math.ceil(( new Date( ).getTime( ) - x.endTime) / 1000 )
+                    });
+
                 });
+
+                this.setData!({
+                    pin,
+                    loading: false,
+                    detail: res.data,
+                    activities: activities$
+                });
+
+                console.log('...', activities$ )
             }
         });
     },
@@ -142,6 +276,30 @@ Page({
         })
     },
 
+    // 展开提示
+    toggleTips( ) {
+        const { showTips } = this.data;
+        this.setData!({
+            showTips: showTips === 'show' ? 'hide' : 'show'
+        });
+    },
+
+    // 进入商品管理
+    goManager( ) {
+        wx.navigateTo({
+            url: `/pages/manager-goods-detail/index?id=${this.data.id}`
+        })
+    },
+
+    /** 监听全局管理员权限 */
+    watchRole( ) {
+        (app as any).watch$('role', ( val ) => {
+            this.setData!({
+                showBtn: ( val === 1 )
+            })
+        });
+    },
+    
     /** 预览图片 */
     previewImg({ currentTarget }) {
         const { img } = currentTarget.dataset;
@@ -151,143 +309,17 @@ Page({
         });
     },
 
-    /** 预览拼团 */
-    previewPin({ currentTarget }) {
-        const { img } = currentTarget.dataset.data;
+    /** 预览单张图片：拼团图片、一口价（限时抢） */
+    previewSingleImg({ currentTarget }) {
+
+        const img = currentTarget.dataset.data ?
+            currentTarget.dataset.data.img:
+            currentTarget.dataset.img;
+
         this.data.detail && wx.previewImage({
             current: img,
             urls: [ img ],
         });
-    },
-  
-    /** 设置computed */
-    runComputed( ) {
-        computed( this, {
-            // 计算价格
-            price: function( ) {
-                const { detail } = this.data;
-                if ( !detail ) {
-                    return '';
-                } else {
-                    if ( detail.standards.length === 0 ) {
-                        return detail.price;
-                    } else if ( detail.standards.length === 1 ) {
-                        return detail.standards[ 0 ].price;
-                    } else {
-                        const sortedPrice = detail.standards.sort(( x, y ) => x.price - y.price );
-                        if (  sortedPrice[0].price === sortedPrice[ sortedPrice.length - 1 ].price ) {
-                            return sortedPrice[ 0 ].price;
-                        } else {
-                            return `${sortedPrice[0].price}~${sortedPrice[sortedPrice.length - 1 ].price}`;
-                        }
-                    }
-                }
-            },
-            // 商品详情 - 分行显示
-            detailIntro: function( ) {
-                const { detail } = this.data;
-                if ( !detail || ( !!detail && !detail.detail )) {
-                    return [ ];
-                } else {
-                    return detail.detail.split('\n').filter( x => !!x );
-                }
-            },
-            // 价格 ～ 团购价的差价
-            priceGap: function( ) {
-                const { detail } = this.data;
-                if ( !detail ) {
-                    return 0;
-                } else {
-                    const { standards, groupPrice, price } = detail;
-                    // 无型号
-                    if ( standards.length === 0 ) {
-                        // 有团购的
-                        if ( groupPrice !== null && groupPrice !== undefined ) {
-                            return  Number( price - groupPrice ).toFixed( 2 );
-                        } else {
-                            return 0;
-                        }
-                    // 有型号
-                    } else {
-                        const groupPrice = standards.filter( x => x.groupPrice !== null && x.groupPrice !== undefined );
-                        // 型号里面有团购的
-                        if ( groupPrice.length > 0 ) {
-                            const sortedGroupPrice = groupPrice.sort(( x, y ) => (( x.groupPrice - x.price ) - ( y.groupPrice - y.price )));
-                            if (( sortedGroupPrice[0].groupPrice - sortedGroupPrice[0].price ) ===
-                                ( sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice - sortedGroupPrice[ sortedGroupPrice.length - 1 ].price )) {
-                                return Number(( sortedGroupPrice[0].price - sortedGroupPrice[0].groupPrice )).toFixed( 2 );
-                            } else {
-                                return `${Number(Number(sortedGroupPrice[ sortedGroupPrice.length - 1 ].price - sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice).toFixed( 2 ))}~${Number( Number( sortedGroupPrice[0].price - sortedGroupPrice[0].groupPrice).toFixed( 2 ))}`
-                            }
-                        } else {
-                            return 0;
-                        }
-                    }
-                }
-            },
-            // 拼团列表
-            pin$: function( ) {
-                const { detail, shopping } = this.data;
-
-                if ( !detail ) { 
-                    return [ ];
-                }
-
-                const { standards, groupPrice } = detail;
-
-                if ( standards.length > 0 ) {
-                    return standards
-                        .filter( x => !!x.groupPrice )
-                        .map( x => {
-                            return Object.assign({ }, x, {
-                                canPin: !!shopping.find( s => s.sid === x._id && s.pid === x.pid )
-                            })
-                        })
-
-                } else if ( !!groupPrice ) {
-                    const { price, title, img, _id } = detail;
-                    return [{
-                        price,
-                        name: title,
-                        groupPrice,
-                        img: img[ 0 ],
-                        canPin: !!shopping.find( s => s.pid === _id )
-                    }]
-                }
-
-                return [ ];
-            },
-            // 马上可以拼团的个数
-            pinCount$: function( ) {
-                const { detail, shopping } = this.data;
-                if ( !detail ) { 
-                    return 0;
-                }
-
-                const { standards, groupPrice } = detail;
-
-                if ( !!standards && standards.length > 0 ) {
-                    return standards
-                        .filter( x => !!shopping.find( s => s.sid === x._id && s.pid === x.pid ))
-                        .length;
-
-                } else if ( !!groupPrice ) {
-                    const { _id } = detail;
-                    return !!shopping.find( s => s.pid === _id ) ? 1 : 0
-                }
-
-                return 0;
-            },
-            // 是否有型号
-            hasStanders$: function( ) {
-                const { detail } = this.data;
-                if ( !detail ) { 
-                    return false;
-                }
-                const { standards } = detail;
-                return !!standards && standards.length > 0 ;
-            }
-        })
     },
 
     /** 设置“喜欢” */
@@ -388,7 +420,7 @@ Page({
      */
     onShow: function ( ) {
         const { id, tid } = this.data;
-        this.fetchDic( ); 
+        // this.fetchDic( ); 
         this.checkLike( );
         this.fetDetail( id );
         this.fetchShopping( id, tid );

@@ -455,3 +455,81 @@
     background:-webkit-linear-gradient(to left, #f80759, #bc4e9c);
     background:linear-gradient(to left, #f80759, #bc4e9c);
 }
+
+.gd-activity-block {
+    font-size:28rpx;
+    padding: 25rpx 25rpx 0;
+    box-sizing: border-box;
+}
+
+.gd-activity-title {
+    color: #333;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+}
+
+.gd-activity-container {
+    width: 100%;
+    overflow-x: scroll;
+    padding: 20rpx 0 20rpx;
+}
+
+.gd-activity-list {
+    display: flex;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+.gd-activity-item {
+    display: flex;
+    margin-right: 25rpx;
+}
+
+.gd-activity-img {
+    width: 150rpx;
+    height: 150rpx;
+    border-radius: 5px;
+    margin-right: 10rpx;
+    margin-right: 20rpx;
+}
+
+.gd-activity-info {
+
+}
+
+.gd-activity-title {
+    color: #333;
+    font-size: 26rpx;
+    margin-bottom: 5rpx;
+    overflow:hidden; 
+    display:-webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;
+}
+
+.gd-activity-price-block {
+    display: flex;
+    margin-top: 20rpx;
+    align-items: flex-end;
+}
+
+.gd-activity-price-big {
+    font-size: 30rpx;
+    font-weight: bold;
+}
+
+.gd-activity-group-price {
+    font-size: 20rpx;
+    font-weight: bold;
+    color: #ff4422;
+    margin-left: 15rpx;
+}
+
+.gd-activity-price-small {
+    font-size: 26rpx;
+    font-weight: bold;
+    color: #ff4422;
+    margin-left: 0;
+}

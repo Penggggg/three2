@@ -124,7 +124,7 @@
         <!-- 分割线 -->
         <view class="drive-line mt"></view>
 
-        <!-- 团购信息、基本保证 -->
+        <!-- 团购信息、基本保证、促销活动（一口价） -->
         <view
             class="info-block"
         >
@@ -161,12 +161,68 @@
                     >
                         <image
                             class="info-block-item-tips-image"
-                            src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/right-icon.png"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/right-icon.png"
                         />
                         {{ item }}
                     </view>
                 </view>
                 
+            </view>
+
+            <!-- 一口价活动 -->
+            <view
+                class="gd-activity-block"
+                wx:if="{{ activities.length > 0 }}"
+            >
+                <view class="gd-activity-title">
+                    超值限时抢
+                </view>
+                <view class="gd-activity-container">
+                    <view class="gd-activity-list">
+                        <view
+                            wx:key="{{ index }}"
+                            class="gd-activity-item"
+                            wx:for="{{ activities }}"
+                        >
+                            <image
+                                class="gd-activity-img"
+                                src="{{ item.img }}"
+                                data-img="{{ item.img }}"
+                                bindtap="previewSingleImg"
+                            />
+                            <view class="gd-activity-info">
+                                <view class="gd-activity-title">
+                                    {{ item.title }}
+                                </view>
+                                <wxc-countdown
+                                    format="hh:mm:ss"
+                                    countdown="{{ item.countdown > 0 ? item.countdown : 0 }}"
+                                    num-style="font-size: 22rpx; color: #fff; padding: 1rpx 10rpx;background: #000; text-align: center; border-radius: 8rpx;"
+                                />
+                                <view class="gd-activity-price-block">
+                                    <view class="gd-activity-price">
+                                        <wxc-price
+                                            icon="sub"
+                                            decimal="small"
+                                            class="gd-activity-price-big"
+                                        > 
+                                            {{ item.ac_price }}
+                                        </wxc-price>
+                                    </view>
+                                    <view class="gd-activity-group-price">
+                                        拼:<wxc-price
+                                                icon="sub"
+                                                decimal="small"
+                                                class="gd-activity-price-small"
+                                            > 
+                                                {{ item.ac_groupPrice }}
+                                            </wxc-price>
+                                    </view>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
             </view>
 
         </view>
@@ -268,7 +324,7 @@
                         <view
                             data-data="{{ item }}"
                             class="gd-swiper-item"
-                            bindtap="previewPin"
+                            bindtap="previewSingleImg"
                         >
                             <image
                                 src="{{ item.img }}"

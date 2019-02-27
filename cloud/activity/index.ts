@@ -14,6 +14,7 @@ const _ = db.command;
  * type 类型 'good_discount'
  * pid
  * sid
+ * title 型号名称
  * stock(可无)
  * endTime
  * ac_price

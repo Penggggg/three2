@@ -41,16 +41,24 @@ export const main = async ( event, context ) => {
 
     const app = new TcbRouter({ event });
 
+    /**
+     * @description
+     * 商品详情
+     * ----- 请求 -----
+     * _id
+     */
     app.router('detail', async( ctx, next ) => {
         try {
 
+            const _id = event.data._id;
             // 获取数据
             const data$ = await db.collection('goods')
                 .where({
-                    _id: event.data._id
+                    _id
                 })
                 .get( );
 
+            // 拼接型号
             const metaList = data$.data;
             const standards = await Promise.all( metaList.map( x => {
                 return db.collection('standards')
@@ -61,13 +69,32 @@ export const main = async ( event, context ) => {
                     .get( );
             }));
 
-            const insertStandars = metaList.map(( x, k ) => Object.assign({ }, x, {
+            // 拼接型号或商品活动
+            const activities$ = await db.collection('activity')
+                .where({
+                    pid: _id,
+                    isClosed: false,
+                    isDeleted: false,
+                    type: 'good_discount'
+                })
+                .field({
+                    pid: true,
+                    sid: true,
+                    title: true,
+                    ac_price: true,
+                    endTime: true,
+                    ac_groupPrice: true
+                })
+                .get( );
+
+            const insert = metaList.map(( x, k ) => Object.assign({ }, x, {
+                activities: activities$.data,
                 standards: standards[ k ].data
             }));
 
             return ctx.body = {
                 status: 200,
-                data: insertStandars[ 0 ]
+                data: insert[ 0 ]
             };
 
         } catch ( e ) {
