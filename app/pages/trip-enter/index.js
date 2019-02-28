@@ -45,25 +45,34 @@ Page({
     /** 设置computed */
     runComputed( ) {
         computed( this, {
+
             // 仙女购物单
             fairyList$: function( ) {
                 const { fairyList } = this.data;
                 const temp = fairyList.map( usersl => {
-                    const { user, shoppinglist } = usersl;
-                    const delta = shoppinglist.reduce(( x, y ) => {
+                    const { user, shoppinglist, coupons } = usersl;
+
+                    // 最多省多少：拼团 + 优惠券
+                    const delta1 = shoppinglist.reduce(( x, y ) => {
                         const { adjustPrice, adjustGroupPrice } = y;
 
                         if ( !adjustGroupPrice || !adjustPrice ) {
                             return x + 0;
                         }
 
-                        return x + ( adjustPrice - adjustGroupPrice );
+                        return x + Number( Number(( adjustPrice - adjustGroupPrice )).toFixed( 2 ));
 
                     }, 0 );
+
+                    const delta2 = coupons.reduce(( x, y ) => {
+                        return Number( Number( x + y.value ).toFixed( 2 ))
+                    }, 0 );
+
                     return {
                         user,
-                        delta,
-                        shoppinglist
+                        coupons,
+                        shoppinglist,
+                        delta: Number( Number( delta1 + delta2 ).toFixed( 2 ))
                     }
                 });
                 return temp;

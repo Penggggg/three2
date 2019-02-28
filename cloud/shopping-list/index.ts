@@ -698,6 +698,7 @@ export const main = async ( event, context ) => {
                 }
             });
 
+            /** 前5名的用户id */
             const userIds = Object.entries( uidMapTimes )
                 .sort(( x, y ) => 
                     y[ 1 ] - x[ 1 ]
@@ -705,12 +706,7 @@ export const main = async ( event, context ) => {
                 .slice( 0, limit )
                 .map( x => x[ 0 ]);
 
-            /** 用户id */
-            // const userIds = Array.from(
-            //     new Set( uids )
-            // ).slice( 0, limit );
-
-            // /** 每个用户的信息 */
+            /** 每个用户的信息 */
             const users$ = await Promise.all( userIds.map( uid => Promise.all([
                 db.collection('user')
                     .where({
@@ -718,6 +714,28 @@ export const main = async ( event, context ) => {
                     })
                     .get( )
             ])));
+
+            /** 前5人的卡券 */
+            const coupons$: any = await Promise.all(
+                userIds.map( uid => 
+                    db.collection('coupon')
+                        .where(_.or([
+                            {
+                                tid,
+                                openid: uid
+                            }, {
+                                openid: uid,
+                                canUseInNext: true
+                            }
+                        ]))
+                        .field({
+                            type: true,
+                            value: true,
+                            openid: true
+                        })
+                        .get( )
+                )
+            )
 
             /** 前5个人总的购物清单 */
             const shoppingMetaFilter = shoppingMeta$.data.filter( s => 
@@ -748,6 +766,7 @@ export const main = async ( event, context ) => {
                     .get( )
             }));
 
+            /** 购物清单注入商品详情 */
             const shoppingInject = shoppingMetaFilter.map( sl => {
                 const detail = details$.find( x => x.data._id === sl.pid );
                 if ( detail ) {
@@ -759,10 +778,11 @@ export const main = async ( event, context ) => {
                 }
             });
 
-            /** 注入商品详情 */
-            const metaData = users$.map( x => {
+            /** 返回结果 */
+            const metaData = users$.map(( x, k ) => {
                 return {
                     user: x[ 0 ].data[ 0 ],
+                    coupons: coupons$[ k ].data, 
                     shoppinglist: shoppingInject.filter( sl => sl.uids.find( uid => uid === x[ 0 ].data[ 0 ].openid ))
                 }
             });
