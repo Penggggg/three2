@@ -1,6 +1,5 @@
-// container/good-item-1/index.js
-
 /**
+ * @description
  * 一行占两格或者2.5格的，单个商品框，用在行程入口的热门推荐、普通商品列表
  */
 Component({

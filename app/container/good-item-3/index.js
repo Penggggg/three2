@@ -1,6 +1,7 @@
 // container/good-item-2/index.js
 /**
- * 沾满一行的商品框，用在行程入口的商品排行榜
+ * @description
+ * 沾满一行两格的商品框，普通商品列表
  */
 Component({
 

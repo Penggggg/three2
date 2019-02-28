@@ -1,5 +1,6 @@
-// container/good-item-2/index.js
 /**
+ * @description
+ * 有3中颜色
  * 沾满一行的商品框，用在行程入口的商品排行榜
  */
 Component({
