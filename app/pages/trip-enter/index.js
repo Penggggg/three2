@@ -35,7 +35,9 @@ Page({
         /** 参加人数 */
         memberCount: 0,
         /** 仙女购物单 */
-        fairyList: [ ]
+        fairyList: [ ],
+        /** 一口价商品列表 */
+        goodDiscounts: [ ]
     },
 
     /** 设置computed */
@@ -63,6 +65,27 @@ Page({
                     }
                 });
                 return temp;
+            }
+        })
+    },
+
+    /** 拉取一口价列表 */
+    fetchDiscount( ) {
+
+        http({
+            data: {
+                page: 1,
+                isClosed: false
+            },
+            url: `activity_good-discount-list`,
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                const { list, pagenation } = data;
+                this.setData({
+                    goodDiscounts: list
+                })
             }
         })
     },
@@ -290,6 +313,7 @@ Page({
      */
     onLoad: function (options) {
         this.fetchRank( );
+        this.fetchDiscount( );
         this.runComputed( );
     },
 

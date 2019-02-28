@@ -179,8 +179,9 @@ Page({
             url: `activity_good-discount-list`,
             success: res => {
                 const { status, data } = res;
-                const { list, pagenation } = data;
+                if ( status !== 200 ) { return; }
 
+                const { list, pagenation } = data;
                 this.setData({
                     list,
                     canLoadMore: totalPage > page + 1
