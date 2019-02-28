@@ -1,0 +1,64 @@
+<view
+    class="good-item-4"
+    bindtap="goDetail"
+>
+
+    <view class="good-item-4-container">
+
+        <!-- 图片 -->
+        <image 
+            mode="aspectFill"
+            lazy-load="{{ true }}"
+            src="{{ good.img[ 0 ]}}"
+            class="gi4-image {{ direction === 'right' ? 'right' : '' }}"
+        />
+
+        <view class="gi4-info-block {{ direction === 'right' ? 'right' : '' }}">
+
+            <view>
+                <view class="gi4-title">
+                    {{ good.title }}
+                </view>
+
+                <view class="gi4-tag">
+                    {{ tag }}
+                </view>
+            </view>
+
+            <view class="gi4-action-block">
+
+                <view class="gi4-price-block">
+                    <view class="gi4-price-low">
+                        <wxc-price
+                            icon="sub"
+                            decimal="small"
+                            class="gi4-price"
+                        > 
+                            {{ good.lowest_price$ }}
+                        </wxc-price>
+                        <image
+                            mode="widthFix"
+                            class="gi4-price-low-img"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-price-low-right.png"
+                        />
+                    </view>
+                    <wxc-price
+                        status="del"
+                        decimal="small"
+                        class="gi4-fadeprice"
+                    > 
+                        {{ good.fadePrice }}
+                    </wxc-price>
+                </view>
+
+                <view class="gi4-buy-btn">
+                    立即购买
+                </view>
+
+            </view>
+
+        </view>
+
+    </view>
+
+</view>

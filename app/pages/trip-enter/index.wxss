@@ -536,7 +536,7 @@
     height: 130rpx;
     border-radius: 3px;
     margin-right: 15rpx;
-    border: 2px solid #fff;
+    /* border: 2px solid #fff; */
     box-shadow: 3px 3px 10px rgba( 0, 0, 0, 0.1 );
 }
 

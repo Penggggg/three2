@@ -8,6 +8,7 @@
     <image 
         class="gi3-image"
         mode="aspectFill"
+        lazy-load="{{ true }}"
         src="{{ good.img[ 0 ]}}"
     />
 

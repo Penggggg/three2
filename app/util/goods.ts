@@ -66,12 +66,12 @@ const delayeringGood = x => {
         // 拿到型号列表的最低价格，含团购价
         let priceList: number[] = [ ];
         x.standards.map( s => {
-            if ( !x.groupPrice ) {
-                priceList.push( x.price )
+            if ( !s.groupPrice ) {
+                priceList.push( s.price )
             } else {
-                priceList.push( x.groupPrice < x.price ?
-                    x.groupPrice :
-                    x.price
+                priceList.push( s.groupPrice < s.price ?
+                    s.groupPrice :
+                    s.price
                 )
             }
         });

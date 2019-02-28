@@ -25,6 +25,7 @@
         <image
             class="gi1-image"
             mode="aspectFill"
+            lazy-load="{{ true }}"
             src="{{ good.img[ 0 ]}}"
         />
     </view>

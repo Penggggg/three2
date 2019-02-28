@@ -29,6 +29,7 @@
     "my-good-item-1": "./container/good-item-1/index",
     "my-good-item-2": "./container/good-item-2/index",
     "my-good-item-3": "./container/good-item-3/index",
+    "my-good-item-4": "./container/good-item-4/index",
     "my-coupon-lijian": "./container/coupon-lijian/index",
     "my-coupon-manjian": "./container/coupon-manjian/index",
     "my-manager-entry-btn": "./container/manager-entry-btn/index",
