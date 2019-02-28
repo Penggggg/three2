@@ -2,7 +2,7 @@
 <view
     bindtap="go"
     wx:if="{{ imgList.length > 0 }}"
-    class="con-social-trip-member"
+    class="con-social-trip-member {{ opacity ? 'opacity' : '' }}"
 >
 
     <!-- 头像列表 -->

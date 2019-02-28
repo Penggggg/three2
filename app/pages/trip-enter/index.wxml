@@ -14,9 +14,9 @@
         <view
             wx:else
         >
-
             <scroll-view
                 scroll-y
+                bindscroll="onScroll"
                 class="te-container"
             >
 
@@ -40,9 +40,8 @@
                         </view>
                         <view
                             class="trip-title"
-                            wx:if="{{ current }}"
                         >
-                            {{ current.title }}
+                            {{ current ? current.title : '超值优惠' }}
                         </view>
                         <view 
                             class="trip-date"
@@ -52,7 +51,7 @@
                         </view>
                     </view>
 
-                    <!-- 头部信息，标题、时间 -->
+                    <!-- 顶部logo -->
                     <view class="te-header">
 
                         <image
@@ -61,48 +60,35 @@
                             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner-1.png"
                         />
 
+                        <view
+                            class="te-tips-btn-block"
+                        >
+                            <view class="te-tips-btn">
+                                Show More
+                            </view>
+                            <image
+                                mode="widthFix"
+                                class="te-header-icon"
+                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-right.png"
+                            />
+                        </view>
+
                         <!-- 社交 - 参加人数，点击跳到拼团页面 -->
-                        <!-- <view
+                        <view
                             wx:if="{{ current }}"
                             class="te-header-members {{ notice !== '暂无下一趟行程 T.T' ? 'topper' : '' }}"
                         >
                             <my-social-trip-member
                                 tid="{{ current._id }}"
+                                opacity="{{ !showMember }}"
                                 bindchange="onMemberChange"
                             />
-                        </view> -->
+                        </view>
 
                     </view>
-
-                    <!-- 仙女购物单、参加人数 -->
-                    <!-- <view
-                        class="te-logo-bar"
-                    >
-                        <image
-                            mode="widthFix"
-                            class="te-bar-img"
-                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-img-1.png"
-                        />
-                        <view class="te-logo-bar-text-block">
-                            <view class="te-logo-bar-title">
-                                仙女购物单
-                                <view
-                                    class="te-logo-bar-tips"
-                                    wx:if="{{ memberCount }}"
-                                >
-                                    已有{{ memberCount }}人参加
-                                </view>
-                            </view>
-                        </view>
-                        <view class="te-logo-bar-btn">
-                           <view class="te-logo-bar-icon">
-                                <i-icon type="enter" size="15" color="#fff" />
-                           </view>                    
-                        </view>
-                    </view> -->
  
                     <!-- 仙女购物单、参加人数 -->
-                    <view
+                    <!-- <view
                         class="te-shoppinglist-block"
                         wx:if="{{ fairyList$.length > 0 }}"
                     >
@@ -127,7 +113,7 @@
                                             class="te-fairy-item"
                                         >
 
-                                            <!-- 用户头像、姓名、按钮 -->
+                                            用户头像、姓名、按钮
                                             <view class="te-fairy-title-block">
                                                 <view class="te-fairy-title-bg">
                                                     <image
@@ -150,15 +136,11 @@
                                                             <view class="te-fairy-user-tips">仙女购物单</view>
                                                         </view>
                                                     </view>
-                                                    <!-- <view class="te-logo-bar-btn re">
-                                                        <view class="te-logo-bar-icon notanimate">
-                                                                <i-icon type="enter" size="15" color="#fff" />
-                                                        </view>                    
-                                                    </view> -->
+                                                    
                                                 </view>
                                             </view>
 
-                                            <!-- 文案 -->
+                                            文案
                                             <view class="te-fairy-content-text">
                                                 <view class="te-fairy-intext-name">{{ item.user.nickName }}</view>买了
                                                 <view
@@ -178,7 +160,7 @@
                                                 </view>
                                             </view>
 
-                                            <!-- 图片列表 -->
+                                            图片列表
                                             <view class="te-fairy-info-block">
                                                 <view class="te-fairy-img-list-container">
                                                     <view class="te-fairy-img-list">
@@ -206,7 +188,7 @@
                                 </swiper-item>
                             </block>
                         </swiper>
-                    </view>
+                    </view> -->
 
                     <!-- 满减 -->
                     <my-coupon-manjian
@@ -216,18 +198,6 @@
                         atleast="{{ current.fullreduce_atleast }}"
                         wx:if="{{ loaded && showManjian }}"
                     />
-
-                    <!-- 热门推荐 logo -->
-                    <!-- <view
-                        class="te-logo-bar"
-                        wx:if="{{ !showManjian }}"
-                    >
-                        <image
-                            mode="widthFix"
-                            class="te-bar-img"
-                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/bar-recommend.png"
-                        />
-                    </view> -->
 
                     <!-- 本期推荐 -->
                     <view
@@ -287,9 +257,8 @@
                     <!-- 下期信息 -->
 
                 </view>
-
-            </scroll-view>
             
+            </scroll-view>     
         </view>
 
         <!-- 管理入口 -->

@@ -6,13 +6,19 @@
     wx:if='{{ showBtn }}'
     class='con-manager-entry-btn-container'
   >
-      <wxc-button 
+      <!-- <wxc-button 
         type='beauty'
         bind:click='toggleDrawer'
         btnStyle='min-width: 100rpx;padding: 0;border-radius: 100rpx;min-height:100rpx;line-height:100rpx'
       >
         <wxc-icon color="#fff" size="45" type="add" /> 
-      </wxc-button>
+      </wxc-button> -->
+      <view 
+        class="manager-entry-btn"
+        bind:click='toggleDrawer'
+      >
+        <wxc-icon color="#fff" size="45" type="add" /> 
+      </view>
   </view>
 
   <!-- 弹框 -->

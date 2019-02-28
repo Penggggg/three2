@@ -15,6 +15,11 @@ Component({
             value: '',
             type: String,
             observer: 'fetchDetail'
+        },
+        // 是否变透明
+        opacity: {
+            value: false,
+            type: Boolean,
         }
     },
 

@@ -8,6 +8,10 @@
     background: rgba( 0, 0, 0, 0.35 );
 }
 
+.con-social-trip-member.opacity {
+    opacity: 0;
+}
+
 .avatar-swiper {
     height: 50rpx;
     width: 130rpx;

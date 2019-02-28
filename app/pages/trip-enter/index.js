@@ -37,7 +37,9 @@ Page({
         /** 仙女购物单 */
         fairyList: [ ],
         /** 一口价商品列表 */
-        goodDiscounts: [ ]
+        goodDiscounts: [ ],
+        /** 是否展示社交弹幕 */
+        showMember: false
     },
 
     /** 设置computed */
@@ -305,6 +307,16 @@ Page({
     closeManjian( ) {
         this.setData({
             showManjian: false
+        })
+    },
+
+    /** 页面滚动 */
+    onScroll( e ) {
+        const { scrollTop } = e.detail;
+        const { showMember } = this.data;
+        if ( showMember ) { return; }
+        this.setData({
+            showMember: scrollTop > 100
         })
     },
 
