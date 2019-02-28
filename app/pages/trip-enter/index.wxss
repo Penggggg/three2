@@ -9,7 +9,7 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #fafafa;
+    background: #fff;
     box-sizing: border-box;
 }
 
@@ -408,4 +408,46 @@
     height: 100rpx;
     margin-right: 15rpx;
     border-radius: 3px;
+}
+
+.te-trip-info {
+    display: flex;
+    box-sizing: border-box;
+    padding: 0rpx 35rpx 15rpx;
+    align-items: flex-end;
+    overflow: visible;
+}
+
+.trip-decorate {
+    color: #333;
+    font-size: 36rpx;
+    font-weight: bold;
+    position: relative;
+    letter-spacing: 0.2em;
+    margin-right: 20rpx;
+}
+
+.trip-decorate:after {
+    left: -10%;
+    width: 110%;
+    height: 20rpx;
+    content: '';
+    bottom: 5rpx;
+    position: absolute;
+    border-radius: 30rpx;
+    background: rgba( 255,107,149, 0.22 );
+}
+
+.trip-title {
+    color: #333;
+    font-size: 34rpx;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+    margin-right: 20rpx;
+}
+
+.trip-date {
+    color: #333;
+    font-size: 22rpx;
+    letter-spacing: 0.02em;
 }

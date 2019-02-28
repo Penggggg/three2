@@ -24,41 +24,45 @@
                 <view class="te-content">
 
                     <!-- 顶部公告 -->
-                    <wxc-notice
+                    <!-- <wxc-notice
                         wx:if="{{ notice }}"
                         scroll="{{ true }}"
                         show-icon="{{ true }}"
                         notice="{{ notice }}"
                         class="te-notice"
                         wx:if="{{ notice === '暂无下一趟行程 T.T' }}"
-                    />
+                    /> -->
+
+                    <!-- 行程基本信息 -->
+                    <view class="te-trip-info">
+                        <view class="trip-decorate">
+                            TRIP
+                        </view>
+                        <view
+                            class="trip-title"
+                            wx:if="{{ current }}"
+                        >
+                            {{ current.title }}
+                        </view>
+                        <view 
+                            class="trip-date"
+                            wx:if="{{ current }}"
+                        >
+                            {{ current.start_date$ }} ~ {{ current.end_date$ }}
+                        </view>
+                    </view>
 
                     <!-- 头部信息，标题、时间 -->
                     <view class="te-header">
 
                         <image
-                            mode="aspectFill"
+                            mode="widthFix"
                             class="te-header-img"
-                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner.png"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner-1.png"
                         />
 
-                        <!-- 基本信息 -->
-                        <view
-                            class="te-header-msg"
-                        >
-                            <view class="te-header-title">
-                                {{ current ? current.title : '' }}
-                            </view>
-                            <view 
-                                class="te-header-date"
-                                wx:if="{{ current }}"
-                            >
-                                {{ current.start_date$ }} ~ {{ current.end_date$ }}
-                            </view>
-                        </view>
-
                         <!-- 社交 - 参加人数，点击跳到拼团页面 -->
-                        <view
+                        <!-- <view
                             wx:if="{{ current }}"
                             class="te-header-members {{ notice !== '暂无下一趟行程 T.T' ? 'topper' : '' }}"
                         >
@@ -66,7 +70,7 @@
                                 tid="{{ current._id }}"
                                 bindchange="onMemberChange"
                             />
-                        </view>
+                        </view> -->
 
                     </view>
 
