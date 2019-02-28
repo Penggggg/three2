@@ -64,6 +64,7 @@ Component({
 
         /** 弹窗开关 */
         toggleDrawer( ) {
+            console.log('??')
             this.setData({
                 showDrawer: !this.data.showDrawer
             })

@@ -15,7 +15,7 @@
       </wxc-button> -->
       <view 
         class="manager-entry-btn"
-        bind:click='toggleDrawer'
+        bindtap='toggleDrawer'
       >
         <wxc-icon color="#fff" size="45" type="add" /> 
       </view>
