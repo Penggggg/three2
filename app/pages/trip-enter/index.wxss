@@ -513,7 +513,9 @@
     width: 100vw;
     overflow-x: scroll;
     overflow-y: visible;
+    box-sizing: border-box;
     padding-bottom: 25rpx;
+    padding-right: 25rpx;
 }
 
 .te-fairy-simple-list {
@@ -527,7 +529,6 @@
 .te-fairy-simple-item {
     display: flex;
     align-items: center;
-    margin-right: 35rpx;
     overflow: visible;
 }
 
@@ -538,6 +539,10 @@
     margin-right: 15rpx;
     /* border: 2px solid #fff; */
     box-shadow: 3px 3px 10px rgba( 0, 0, 0, 0.1 );
+}
+
+.te-fairy-simple-info {
+    margin-right: 35rpx;
 }
 
 .te-fairy-simple-info-value {

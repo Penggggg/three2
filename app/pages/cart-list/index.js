@@ -614,7 +614,7 @@ Page({
 
                     // 去往订单列表
                     const goOrders = ( ) => {
-                        wx.navigateTo({
+                        wx.redirectTo({
                             url: '/pages/order-list/index'
                         });
                     }

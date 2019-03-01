@@ -180,25 +180,6 @@
 
                     <!-- 热门销售(前三) -->
                     <view class="te-rank-block">
-                        <!-- <my-good-item-2
-                            rank="{{ 1 }}"
-                            good="{{ rankGoods[ 0 ]}}"
-                            wx:if="{{ rankGoods[ 0 ]}}"
-                            tid="{{ current._id }}"
-                        />
-                        <my-good-item-2
-                            rank="{{ 2 }}"
-                            mode="right"
-                            good="{{ rankGoods[ 1 ]}}"
-                            tid="{{ current._id }}"
-                            wx:if="{{ rankGoods[ 1 ]}}"
-                        />
-                        <my-good-item-2
-                            rank="{{ 3 }}"
-                            good="{{ rankGoods[ 2 ]}}"
-                            tid="{{ current._id }}"
-                            wx:if="{{ rankGoods[ 2 ]}}"
-                        /> -->
                         <my-good-item-4
                             good="{{ rankGoods[ 0 ]}}"
                             wx:if="{{ rankGoods[ 0 ]}}"

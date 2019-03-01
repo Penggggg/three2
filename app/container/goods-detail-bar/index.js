@@ -254,7 +254,7 @@ Component({
                             pay( );
                         }, ( ) => {
                             // 失败/成功-订单列表
-                            wx.navigateTo({
+                            wx.redirectTo({
                                 url: '/pages/order-list/index'
                             });
                         });
