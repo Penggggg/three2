@@ -81,7 +81,6 @@ Page({
             // 热门推荐前四
             recommendGoods$: function( ) {
                 const { recommendGoods } = this.data;
-                console.log('....', recommendGoods )
                 return recommendGoods.slice( 0, 4 );
             }
         })

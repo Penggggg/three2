@@ -136,7 +136,10 @@ Page({
                     }
 
                     let temp = Object.assign({ }, x, {
-                        time$: ts2CN( endTime )
+                        // 中文时间
+                        time$: ts2CN( endTime ),
+                        // 是否过期
+                        hasPass: new Date( ).getTime( ) >= endTime
                     });
 
                     if ( detail.currentStandard ) {
@@ -148,7 +151,7 @@ Page({
                             img$: detail.img[ 0 ]
                         })
                     }
-
+                    console.log('...', temp )
                     return temp;
                 });
             }

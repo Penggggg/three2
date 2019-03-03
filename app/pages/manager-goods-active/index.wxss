@@ -138,6 +138,10 @@
     box-sizing: border-box;
 }
 
+.pga-item-time.grey {
+    color: #bfbfbf;
+}
+
 .pga-red-price {
     color: #d92a22;
     font-size: 40rpx;

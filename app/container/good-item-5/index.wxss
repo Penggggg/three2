@@ -9,9 +9,9 @@
 }
 
 .good-item-5:before {
-    top: 0;
-    left: 0;
-    height: 100%;
+    top: 5%;
+    right: 0;
+    height: 90%;
     width: 1px;
     content: '';
     position: absolute;

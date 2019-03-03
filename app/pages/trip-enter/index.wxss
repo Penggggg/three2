@@ -585,3 +585,22 @@
     border: 2px solid #fff;
     box-shadow: -3px -1px 5px rgba( 0, 0, 0, 0.2 );
 }
+
+.recommond-swiper {
+    width: 100vw;
+    height: 150rpx;
+    box-sizing: border-box;
+    padding: 0 20rpx;
+    position: relative;
+}
+
+.recommond-swiper:before {
+    top: -15rpx;
+    left: 5%;
+    width: 90%;
+    height: 1px;
+    content: '';
+    position: absolute;
+    transform: scaleY( 0.5 );
+    background: rgba( 0, 0, 0, 0.06 );
+}

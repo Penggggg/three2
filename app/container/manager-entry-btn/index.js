@@ -64,7 +64,6 @@ Component({
 
         /** 弹窗开关 */
         toggleDrawer( ) {
-            console.log('??')
             this.setData({
                 showDrawer: !this.data.showDrawer
             })
@@ -72,7 +71,7 @@ Component({
 
         /** 地址跳转 */
         navigate( e ) {
-            wx.redirectTo({
+            wx.navigateTo({
                 url: e.currentTarget.dataset.url
             });
         }

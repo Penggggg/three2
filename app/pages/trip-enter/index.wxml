@@ -160,7 +160,7 @@
                         wx:if="{{ loaded && showManjian }}"
                     />
 
-                    <!-- 本期推荐版本2 -->
+                    <!-- 本期推荐版本2 标题 -->
                     <view
                         class="te-block"
                     >
@@ -179,23 +179,26 @@
                         </view>
                     </view>
 
-                    <!-- 本期推荐 版本2 -->
-                    <view
-                        scroll-x
-                        wx:if="{{ recommendGoods.length > 0 }}"
-                        class="te-recommond-list"
+                    <swiper
+                        autoplay="{{ true }}"
+                        duration="{{ 1000 }}"
+                        circular="{{ true }}"
+                        interval="{{ 4000 }}"
+                        display-multiple-items="{{ 2 }}"
+                        class="recommond-swiper"
                     >
-                        <view
+                        <block
                             wx:key="{{ index }}"
-                            class="te-recommond-item2"
                             wx:for="{{ recommendGoods }}"
                         >
-                            <my-good-item-5
-                                good="{{ item }}"
-                                tid="{{ current._id }}"
-                            />
-                        </view>
-                    </view>
+                            <swiper-item>
+                                <my-good-item-5
+                                    good="{{ item }}"
+                                    tid="{{ current._id }}"
+                                />
+                            </swiper-item>
+                        </block>
+                    </swiper>
 
                     <!-- 本期推荐 版本1 -->
                     <!-- <view

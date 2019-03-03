@@ -44,8 +44,18 @@
                     {{ item.detail.currentStandard ? '【' + item.detail.currentStandard.name + '】' : '' }}{{ item.detail.title }}
                 </view>
 
-                <view class="pga-item-time">
+                <view
+                    class="pga-item-time"
+                    wx:if="{{ !item.hasPass }}"
+                >
                     {{ item.time$ }}到期
+                </view>
+
+                <view
+                    class="pga-item-time grey"
+                    wx:if="{{ item.hasPass }}"
+                >
+                    已到期
                 </view>
 
                 <!-- 价格、按钮 -->
@@ -85,12 +95,13 @@
                             />
                         </view>
                         <my-switch-text
-                            sign="{{ item._id }}"
                             color="#c5c5c5"
+                            sign="{{ item._id }}"
                             activecolor="#d92a22"
                             bindchange="onSwitch"
                             options="{{ closeOpts }}"
                             value="{{ item.isClosed }}"
+                            wx:if="{{ !item.hasPass }}"
                         />
                     </view>
                 </view>
