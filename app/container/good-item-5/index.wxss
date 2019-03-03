@@ -1,0 +1,73 @@
+.good-item-5 {
+    width: 100%;
+    display: flex;
+    box-sizing: border-box;
+    padding: 10rpx 20rpx;
+    align-items: center;
+    position: relative;
+    justify-content: space-between;
+}
+
+.good-item-5:before {
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 1px;
+    content: '';
+    position: absolute;
+    transform: scaleX( 0.5 );
+    background: rgba( 0, 0, 0, 0.1 );
+}
+
+.gi5-info {
+    flex: 1;
+    overflow:hidden;
+    display:-webkit-box;
+    -webkit-line-clamp:1;
+    word-break:break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;    
+}
+
+.gi5-title-block {
+    display: flex;
+    align-items: center;
+}
+
+.gi5-icon {
+    color: #fff;
+    font-size: 20rpx;
+    padding: 2rpx 10rpx;
+    border-radius: 5px;
+    margin-right: 10rpx;
+    background: #e3d2be;  
+    background: -webkit-linear-gradient(to right, #e3d2be, #d9c5a7);  
+    background: linear-gradient(to right, #e3d2be, #d9c5a7); 
+}
+
+.gi5-title {
+    flex: 1;
+    color: #333;
+    font-size: 22rpx;
+    overflow:hidden; 
+    display:-webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;
+}
+
+.git-tag {
+    color: #999;
+    font-size: 22rpx;
+    margin-top: 8rpx;
+}
+
+.gi5-img {
+    width: 100rpx;
+    height: 100rpx;
+    border-radius: 5px;
+    margin-left: 20rpx;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px rgba( 0, 0, 0, 0.2 );
+}

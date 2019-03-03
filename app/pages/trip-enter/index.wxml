@@ -89,17 +89,17 @@
  
                     <!-- 仙女购物单版本2 -->
                     <view
-                        class="te-fairy-simple-title-block"
+                        class="te-fairy-simple-title-block te-block"
                         wx:if="{{ fairyList$.length > 1 }}"
                     >
-                        <view class="te-fairy-simple-title">
+                        <view class="te-fairy-simple-title te-block-title">
                             仙女购物单
                         </view>
                         <view class="te-fairy-simple-entry">
                             View all
                         </view>
                     </view>
-                    <view class="te-fairy-simple-list-contanier">
+                    <view scroll-x class="te-fairy-simple-list-contanier">
                         <view class="te-fairy-simple-list">
                             <view
                                 wx:key="{{ index }}"
@@ -160,7 +160,44 @@
                         wx:if="{{ loaded && showManjian }}"
                     />
 
-                    <!-- 本期推荐 -->
+                    <!-- 本期推荐版本2 -->
+                    <view
+                        class="te-block"
+                    >
+                        <view class="te-block-title">
+                            店主推荐
+                        </view>
+                        <view class="te-recommond-img-list">
+                            <image
+                                mode="scaleToFill"
+                                wx:key="{{ index }}"
+                                lazy-load="{{ true }}"
+                                class="te-recommond-icon-img"
+                                wx:for="{{ recommendGoods$ }}"
+                                src="{{ item.img[ 0 ]}}"
+                            />
+                        </view>
+                    </view>
+
+                    <!-- 本期推荐 版本2 -->
+                    <view
+                        scroll-x
+                        wx:if="{{ recommendGoods.length > 0 }}"
+                        class="te-recommond-list"
+                    >
+                        <view
+                            wx:key="{{ index }}"
+                            class="te-recommond-item2"
+                            wx:for="{{ recommendGoods }}"
+                        >
+                            <my-good-item-5
+                                good="{{ item }}"
+                                tid="{{ current._id }}"
+                            />
+                        </view>
+                    </view>
+
+                    <!-- 本期推荐 版本1 -->
                     <!-- <view
                         scroll-x
                         wx:if="{{ recommendGoods.length > 0 }}"

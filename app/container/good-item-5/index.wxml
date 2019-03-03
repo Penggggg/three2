@@ -1,0 +1,28 @@
+<view
+    class="good-item-5"
+    bindtap="goDetail"
+>
+    <view class="gi5-info">
+        
+        <view class="gi5-title-block">
+            
+            <view class="gi5-icon">
+                推荐
+            </view>
+            <view class="gi5-title">
+                {{ good.title }}
+            </view>
+        </view>
+
+        <view class="git-tag">
+            {{ tag }}
+        </view>
+
+    </view>
+
+    <image
+        class="gi5-img"
+        mode="aspectFill"
+        src="{{ good.img[ 0 ] }}"
+    />
+</view>

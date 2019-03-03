@@ -76,6 +76,13 @@ Page({
                     }
                 });
                 return temp;
+            },
+
+            // 热门推荐前四
+            recommendGoods$: function( ) {
+                const { recommendGoods } = this.data;
+                console.log('....', recommendGoods )
+                return recommendGoods.slice( 0, 4 );
             }
         })
     },
@@ -205,7 +212,6 @@ Page({
                 check: 't_lijian,t_manjian,t_daijin'
             },
             success: res => {
-                // console.log( res );
                 if ( res.status !== 200 ) { return; }
 
                 const { reduce_price } = this.data.current;
