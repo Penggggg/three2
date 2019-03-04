@@ -409,11 +409,16 @@ Page({
     onLoad: function (options) {
         this.watchRole( );
         this.runComputed( );
-        if ( !options!.id ) { return; }
+
         this.setData!({
-            id: options!.id,
-            tid: options!.tid
+            id: 'W_o__NWuZ2FdFeZK',
+            tid: 'XDGzG97E7L4wLIdu'
         });
+        // if ( !options!.id ) { return; }
+        // this.setData!({
+        //     id: options!.id,
+        //     tid: options!.tid
+        // });
     },
   
     /**
