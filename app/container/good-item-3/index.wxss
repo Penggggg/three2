@@ -23,8 +23,8 @@
 
 .gi3-title {
     width: 100%;
-    color: rgba( 0, 0, 0, 0.53 );
-    font-size: 28rpx;
+    color:#4d4d4d;
+    font-size:22rpx;
     overflow: hidden; 
     display: -webkit-box; 
     -webkit-line-clamp: 2;
@@ -36,6 +36,8 @@
     text-indent: 105rpx;
     padding: 0 20rpx;
     box-sizing: border-box;
+    letter-spacing:0.05em;
+
 }
 
 .gi3-tips-label {
@@ -124,4 +126,30 @@
     color: #fff;
     font-size: 20rpx;
     margin-left: 5rpx;
+}
+
+.gi3-tag-block {
+    right: 10rpx;
+    bottom: 12rpx;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    border-radius: 3px;
+    padding: 3rpx 5rpx;
+    background: #ff8787; 
+    background: -webkit-linear-gradient(to right, #ff61ab, #ff8787); 
+    background: linear-gradient(to right, #ff61ab, #ff8787); 
+}
+
+.gi3-activity-icon {
+    width: 20rpx;
+    margin-right: 2rpx;
+    display: inline-block;
+}
+
+.gi3-tag-text {
+    color: #fff;
+    font-size: 17rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+
 }
