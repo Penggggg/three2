@@ -129,13 +129,19 @@
         bindtap="toggleProduct"
         class='pga-btn-container'
     >
-        <wxc-button 
+        <view 
+            bindtap='toggleDrawer'
+            class="pga-my-btn"
+        >
+            <wxc-icon color="#fff" size="45" type="add" /> 
+        </view>
+        <!-- <wxc-button 
             type='beauty'
             bind:click='toggleDrawer'
             btnStyle='min-width: 100rpx;padding: 0;border-radius: 100rpx;min-height:100rpx;line-height:100rpx'
         >
             <wxc-icon color="#fff" size="45" type="add" /> 
-        </wxc-button>
+        </wxc-button> -->
     </view>
 
     <!-- 商品选择 -->

@@ -151,7 +151,6 @@ Page({
                             img$: detail.img[ 0 ]
                         })
                     }
-                    console.log('...', temp )
                     return temp;
                 });
             }

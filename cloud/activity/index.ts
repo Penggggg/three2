@@ -66,6 +66,7 @@ export const main = async ( event, context ) => {
                     .where({
                         pid,
                         sid,
+                        isDeleted: false,
                         isClosed: false
                     })
                     .count( )

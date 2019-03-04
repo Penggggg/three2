@@ -131,6 +131,7 @@
             class="info-block"
         >
 
+            <!-- 拼团文案 -->
             <view class="info-block-item" wx:if="{{ priceGap }}">
 
                 <view class="info-block-item-label">
@@ -149,11 +150,11 @@
 
             </view>
 
+            <!-- 保证，三个icon -->
             <view
                 class="info-block-item"
                 wx:if="{{ activities.length === 0 }}"
             >
-
                 <view class="info-block-item-label">
                     保证：
                 </view>

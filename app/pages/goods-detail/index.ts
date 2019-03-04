@@ -116,7 +116,8 @@ Page({
 
             // 拼团列表
             pin$: function( ) {
-                const { detail, shopping } = this.data;
+                let meta: any = [ ];
+                const { detail, shopping, activities } = this.data;
 
                 if ( !detail ) { 
                     return [ ];
@@ -125,26 +126,56 @@ Page({
                 const { standards, groupPrice } = detail;
 
                 if ( standards.length > 0 ) {
-                    return standards
+                    meta = standards
                         .filter( x => !!x.groupPrice )
                         .map( x => {
                             return Object.assign({ }, x, {
+                                sid: x._id,
                                 canPin: !!shopping.find( s => s.sid === x._id && s.pid === x.pid )
                             })
-                        })
+                        });
 
                 } else if ( !!groupPrice ) {
                     const { price, title, img, _id } = detail;
-                    return [{
+                    meta = [{
                         price,
+                        pid: _id,
                         name: title,
                         groupPrice,
+                        sid: undefined,
                         img: img[ 0 ],
                         canPin: !!shopping.find( s => s.pid === _id )
-                    }]
+                    }];
                 }
 
-                return [ ];
+                // 根据活动，更改、新增拼团项目
+                activities.map( ac => {
+                    if ( !ac.ac_groupPrice ) { return; }
+                    const pinTarget = meta.find( x => x.pid === ac.pid && x.sid === ac.sid );
+                    const pinTargetIndex = meta.findIndex( x => x.pid === ac.pid && x.sid === ac.sid );
+
+                    // 替换
+                    if ( pinTargetIndex !== -1 ) {
+                        meta.splice( pinTargetIndex, 1, Object.assign({ }, pinTarget, {
+                            price: ac.ac_price,
+                            groupPrice: ac.ac_groupPrice
+                        }));
+
+                    // 新增
+                    } else {
+                        meta.push({
+                            sid: ac.sid,
+                            pid: ac.pid,
+                            img: ac.img,
+                            name: ac.title,
+                            canPin: false,
+                            price: ac.ac_price,
+                            groupPrice: ac.ac_groupPrice 
+                        })
+                    }
+                });
+
+                return meta;
             },
 
             // 马上可以拼团的个数
@@ -233,8 +264,6 @@ Page({
                     detail: res.data,
                     activities: activities$
                 });
-
-                console.log('...', activities$ )
             }
         });
     },
