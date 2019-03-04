@@ -283,6 +283,7 @@
         <my-goods-detail-bar
             pid="{{ id }}"
             detail="{{ detail }}"
+            activities="{{ activities }}"
         />
 
     </view> 

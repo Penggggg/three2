@@ -15,6 +15,11 @@ Component({
             type: Object,
             value: null,
             observer: 'dealDetail'
+        },
+        // 活动列表
+        activities: {
+            type: Object,
+            value: [ ]
         }
     },
 
@@ -46,8 +51,6 @@ Component({
         animationSkuBg: null,
         // 展开sku
         openSku: false,
-        // sku展示队列 _id, canSelect是否能选、 title名称、price价格、stock库存、pid产品id、sid型号id、img图片、limit限购数量
-        skuItems: [ ],
         // 选择sku的类型：cart、buy，（购物车、立即购买）
         skuSelectType: null,
         // 可用想起
@@ -57,7 +60,70 @@ Component({
     },
 
     computed: {
+        // sku展示队列 _id, canSelect是否能选、 title名称、price价格、stock库存、pid产品id、sid型号id、img图片、limit限购数量
+        skuItems$( ) {
+            const { detail, activities } = this.data;
 
+            if ( !detail ) { 
+                return [ ];
+            }
+
+            let skuItems = [ ];
+            const { _id, stock, standards, price, title, img, limit, groupPrice } = detail;
+
+            if ( standards.length === 0 ) {
+                // 只有单品本身
+                const target = activities.find( ac => ac.pid === _id );
+
+                skuItems = [{
+                    _id,
+                    title: '默认型号',
+                    price,
+                    stock,
+                    pid: _id,
+                    img: img[ 0 ],
+                    sid: null,
+                    limit,
+                    groupPrice,
+                    canSelect: stock === undefined || ( stock !== undefined && stock > 0 )
+                }];
+
+                // 根据活动 更改价格
+                if ( target ) {
+                    skuItems = [ Object.assign({ }, skuItems[ 0 ], {
+                        acid: ac._id,
+                        price: ac.ac_price,
+                        groupPrice: ac.ac_groupPrice
+                    })];
+                }
+            } else {
+
+                // 有型号
+                skuItems = standards.map( x => ({
+                    _id: x._id,
+                    sid: x._id,
+                    pid: x.pid,
+                    title: x.name,
+                    img: x.img,
+                    stock: x.stock,
+                    price: x.price,
+                    limit: x.limit,
+                    groupPrice: x.groupPrice,
+                    canSelect: x.stock === undefined || ( x.stock !== undefined && x.stock > 0 )
+                }))
+
+                // 根据活动 更改价格
+                skuItems = skuItems.map( sku => {
+                    const target = activities.find( ac => ac.pid === sku.pid && ac.sid === sku.sid );
+                    return Object.assign({ }, sku, {
+                        acid: target ? target._id : undefined,
+                        price: target ? target.ac_price : sku.price,
+                        groupPrice: target ? target.ac_groupPrice : sku.groupPrice,
+                    });
+                });
+            } 
+            return skuItems;
+        }
     },
 
     /**
@@ -107,44 +173,19 @@ Component({
             if ( !data ) { return; }
 
             let result = false;
-            let skuItems = [ ];
             const that = this;
             const { _id, stock, standards, price, title, img, limit, groupPrice } = data;
                     
             if ( standards.length === 0 ) {
                 // 只有单品本身
                 result = stock === undefined || stock > 0;
-                skuItems = [{
-                    _id,
-                    title: '默认型号',
-                    price,
-                    stock,
-                    pid: _id,
-                    img: img[ 0 ],
-                    sid: null,
-                    limit,
-                    groupPrice,
-                    canSelect: stock === undefined || ( stock !== undefined && stock > 0 )
-                }];
+
             } else {
                 // 有型号
                 result = standards.some( x => x.stock === undefined || x.stock > 0 )
-                skuItems = standards.map( x => ({
-                    _id: x._id,
-                    sid: x._id,
-                    pid: x.pid,
-                    title: x.name,
-                    img: x.img,
-                    stock: x.stock,
-                    price: x.price,
-                    limit: x.limit,
-                    groupPrice: x.groupPrice,
-                    canSelect: x.stock === undefined || ( x.stock !== undefined && x.stock > 0 )
-                }))
             } 
             
             that.setData({
-                skuItems,
                 hasStock: result
             });
         },

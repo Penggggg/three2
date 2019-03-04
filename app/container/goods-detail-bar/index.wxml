@@ -69,7 +69,7 @@
     <!-- sku -->
     <my-sku-popup
         open="{{ openSku }}"
-        skuItems="{{ skuItems }}"
+        skuItems="{{ skuItems$ }}"
         bind:close="onCloseSku"
         bind:confirm="onConfirmSku"
     />
