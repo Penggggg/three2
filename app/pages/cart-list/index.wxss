@@ -448,17 +448,29 @@
 }
 
 .pcl-pin-title {
-    font-size: 40rpx;
-    font-weight: bold;
-    letter-spacing: 0.05em;
-    color: #333;
+    color:#333;
+    font-size:30rpx;
+    font-weight:bold;
+    position:relative;
+    letter-spacing:0.02em;
+}
+
+.pcl-pin-title:after {
+    left: -10%;
+    width: 110%;
+    height: 15rpx;
+    content: '';
+    bottom: 5rpx;
+    position: absolute;
+    border-radius: 30rpx;
+    background: rgba( 255,107,149, 0.20 );
 }
 
 .pcl-pin-tips {
-    font-size: 22rpx;
-    color: #666;
-    position: relative;
-    overflow: visible;
+    color: #eb2f96;
+    font-size: 20rpx;
+    font-weight: bold;
+    letter-spacing: 0.02em;
 }
 
 .pcl-pin-tips:after {
