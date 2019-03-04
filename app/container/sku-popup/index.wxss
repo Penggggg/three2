@@ -18,20 +18,22 @@
     /* top: 0; */
     left: 0;
     opacity: 0;
-    bottom: -75vh;
+    bottom: -60vh;
     width: 100vw;
-    height: 75vh;
+    height: 60vh;
     position: fixed;
     z-index: 10000;
     background: rgba( 0, 0, 0, 0 );
 }
 
 .sku-container-block {
+    display: flex;
     height: 100%;
-    padding: 20rpx 20rpx 0;
     position: relative;
     background: #fff;
+    padding: 20rpx 20rpx 0;
     box-sizing: border-box;
+    flex-direction: column;
     border-radius: 10px 10px 0 0;
 }
 
@@ -83,17 +85,20 @@
 }
 
 .sku-title {
-    color: #666;
+    color: #4d4d4d;
     font-size: 28rpx;
 }
 
 
 
 .sku-standards-and-buy-block {
-    height: 580rpx;
+    /* height: 580rpx; */
+    flex: 1;
+    box-sizing: border-box;
     padding-top: 50rpx;
     position: relative;
     margin-bottom: 20rpx;
+    overflow-y: scroll;
     border-bottom: 1px solid #fafafa;
 }
 
@@ -124,10 +129,10 @@
 }
 
 .sku-standards-item {
-    color: #666;
-    font-size: 28rpx;
+    color: #999;
+    font-size: 24rpx;
     padding: 5rpx 22rpx;
-    background: #eee;
+    background: #f5f5f5;
     border-radius: 10px;
     margin-right: 15rpx;
     margin-bottom: 15rpx;
@@ -135,13 +140,13 @@
 }
 
 .sku-standards-item.out_select {
-    color: rgba( 0, 0, 0, 0.2 );
+    color: #bfbfbf;
 }
 
 .sku-standards-item.selecting {
     color: #ff5777;
     background: #ffe8ee;
-    border: 1px solid #ff5777;
+    /* border: 1px solid #ff5777; */
 }
 
 .sku-count-block {
@@ -152,6 +157,10 @@
 
 .sku-count-title {
     margin-bottom: 0;
+}
+
+.sku-btn-block {
+    padding-bottom: 25rpx;
 }
 
 .sku-btn {
@@ -167,3 +176,5 @@
 .sku-btn.lh {
     line-height: 45rpx;
 }
+
+

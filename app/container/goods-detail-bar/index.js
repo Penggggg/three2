@@ -110,6 +110,7 @@ Component({
                     limit: x.limit,
                     groupPrice: x.groupPrice,
                     canSelect: x.stock === undefined || ( x.stock !== undefined && x.stock > 0 )
+                    // canSelect: false
                 }))
 
                 // 根据活动 更改价格

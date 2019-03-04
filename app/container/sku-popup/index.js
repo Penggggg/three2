@@ -61,10 +61,10 @@ Component({
             });
             
             if ( open ) {
-                animationSkuMeta.opacity( 0.3 ).translateY( '-75vh' ).opacity( 1 ).step( );
+                animationSkuMeta.opacity( 0.3 ).translateY( '-60vh' ).opacity( 1 ).step( );
                 animationSkuBgMeta.opacity( 1 ).step( );
             } else {
-                animationSkuMeta.opacity( 0.5 ).translateY( '75vh' ).opacity( 0 ).step( );
+                animationSkuMeta.opacity( 0.5 ).translateY( '60vh' ).opacity( 0 ).step( );
                 animationSkuBgMeta.opacity( 0 ).step( );
             }
 
