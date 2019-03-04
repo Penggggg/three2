@@ -38,9 +38,10 @@
     </view>
 
     <!-- 活动标签 -->
-    <!-- wx:if="{{ good.hasActivity }}" -->
+    
     <view
         class="gi3-tag-block"
+        wx:if="{{ good.hasActivity }}"
     >
         <image
             mode="widthFix"
