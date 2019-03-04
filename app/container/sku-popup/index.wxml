@@ -47,13 +47,25 @@
 
                 <!-- 价格 -->
                 <view class="sku-price-block" wx:if="{{ selectedSku }}">
-                    <wxc-price
-                        icon="sub"
-                        decimal="small"
-                        class="sku-price"
-                    > 
-                        {{ selectedSku.price }}
-                    </wxc-price>
+                    <view class="sku-price-set">
+                        <wxc-price
+                            icon="sub"
+                            decimal="small"
+                            class="sku-price"
+                        > 
+                            {{ selectedSku.price }}
+                        </wxc-price>
+                        <view class="sku-price-text">
+                            拼团
+                        </view><wxc-price
+                                icon="sub"
+                                decimal="small"
+                                class="sku-price sm"
+                                wx:if="{{ selectedSku.groupPrice }}"
+                            > 
+                                {{ selectedSku.groupPrice }}
+                            </wxc-price>
+                    </view>
                     <view
                         class="sku-stock"
                         wx:if="{{ selectedSku.stock }}"

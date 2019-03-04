@@ -72,10 +72,26 @@
     flex-direction: column;
 }
 
+.sku-price-set {
+    display: flex;
+    align-items: flex-end;
+}
+
 .sku-price {
     color: #ff5777;
-    margin-bottom: 5rpx;
     font-size: 38rpx;
+    height: 45rpx;
+}
+
+.sku-price-text {
+    color: #ff5777;
+    font-size: 20rpx;
+    margin-left: 30rpx;
+}
+
+.sku-price.sm {
+    font-size: 24rpx;
+    height: 35rpx;
 }
 
 .sku-stock {
