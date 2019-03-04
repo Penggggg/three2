@@ -248,7 +248,7 @@
         <!-- banner -->
         <view class="detail-info-banner">
             <image
-                mode="widthFix"
+                mode="scaleToFill"
                 class="detail-info-banner-img"
                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-info-banner.png"
             />

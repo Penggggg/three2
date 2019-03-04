@@ -273,6 +273,7 @@
 }
 
 .detail-info-banner-img {
+    width: 85%;
     height: 200rpx;
     border-radius: 6px;
 }
