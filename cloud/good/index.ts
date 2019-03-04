@@ -139,7 +139,7 @@ export const main = async ( event, context ) => {
                 })
                 .count( );
 
-            // 获取数据
+            // 获取商品数据
             const data$ = await db.collection('goods')
                 .where({
                     category,
@@ -150,6 +150,7 @@ export const main = async ( event, context ) => {
                 .orderBy('saled', 'desc')
                 .get( );
 
+            // 获取型号数据
             const standards = await Promise.all( data$.data.map( x => {
                 return db.collection('standards')
                     .where({
@@ -163,13 +164,32 @@ export const main = async ( event, context ) => {
                 standards: standards[ k ].data
             }));
 
+            // 获取活动数据数据
+            const activities$ = await Promise.all(
+                data$.data.map( good => {
+                    return db.collection('activity')
+                        .where({
+                            pid: good._id,
+                            isClosed: false,
+                            isDeleted: false,
+                            type: 'good_discount',
+                            endTime: _.gt( new Date( ).getTime( ))
+                        })
+                        .get( )
+                })
+            );
+
+            const insertActivity = insertStandars.map(( x, k ) => Object.assign({ }, x, {
+                activities: activities$[ k ].data
+            }));
+
             return ctx.body = {
                 status: 200,
                 data: {
                     search: search$.replace(/\s+/g),
                     pageSize: limit,
                     page: event.data.page,
-                    data: insertStandars,
+                    data: insertActivity,
                     total: total$.total,
                     totalPage: Math.ceil( total$.total / limit )
                 }
@@ -183,6 +203,9 @@ export const main = async ( event, context ) => {
         }
     });
 
+    /**
+     * 商品列表（ 含standards、activities子表）
+     */
     app.router('list', async( ctx, next ) => {
         try {
      

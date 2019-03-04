@@ -6,12 +6,30 @@
     <view class="good-item-4-container">
 
         <!-- 图片 -->
-        <image 
-            mode="aspectFill"
-            lazy-load="{{ true }}"
-            src="{{ good.img[ 0 ]}}"
-            class="gi4-image {{ direction === 'right' ? 'right' : '' }}"
-        />
+        <view
+            class="gi4-image-block {{ direction === 'right' ? 'right' : '' }}"
+        >
+            <image 
+                mode="aspectFill"
+                lazy-load="{{ true }}"
+                src="{{ good.img[ 0 ]}}"
+                class="gi4-image"
+            />
+            <view
+                class="gi4-tag-block"
+                wx:if="{{ good.hasActivity }}"
+            >
+                <image
+                    mode="widthFix"
+                    class="gi4-activity-icon"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                />
+                <view class="gi4-tag-text">
+                    活动
+                </view>
+            </view>
+        </view>
+        
 
         <view class="gi4-info-block {{ direction === 'right' ? 'right' : '' }}">
 

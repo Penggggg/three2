@@ -201,24 +201,6 @@
                         </block>
                     </swiper>
 
-                    <!-- 本期推荐 版本1 -->
-                    <!-- <view
-                        scroll-x
-                        wx:if="{{ recommendGoods.length > 0 }}"
-                        class="te-recommond-list"
-                    >
-                        <view
-                            class="te-recommond-item"
-                            wx:key="{{ index }}"
-                            wx:for="{{ recommendGoods }}"
-                        >
-                            <my-good-item-1
-                                thin="{{ true }}"
-                                good="{{ item }}"
-                            />
-                        </view>
-                    </view> -->
-
                     <!-- 热门销售(前三) -->
                     <view class="te-rank-block">
                         <my-good-item-4
