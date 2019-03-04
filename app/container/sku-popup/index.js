@@ -16,6 +16,11 @@ Component({
             type: Array,
             value: [ ],
             observer: 'initSelectedSku'
+        },
+        // 商品订金
+        depositPrice: {
+            type: Number,
+            value: 0,
         }
     },
 

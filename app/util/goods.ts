@@ -1,9 +1,9 @@
 
 /** 
- * 商品 ～ 价格区间、库存区间、差价、最低价格（含团购价）
+ * 商品 ～ 价格区间、库存区间、差价、最低价格（含团购价/一口价）
  */
 const delayeringGood = x => {
-
+ 
     if ( !x ) {
         return null
     }
@@ -29,6 +29,7 @@ const delayeringGood = x => {
 
     };
 
+    // 无条件注入 特价活动的价格、团购价
     const decorateItem2 = activities => {
         if ( Array.isArray( activities )) {
             activities.map( ac => {
@@ -75,9 +76,56 @@ const delayeringGood = x => {
         lowest_price$: allPriceArr[ 0 ],
         /** 是否有活动 */
         hasActivity: Array.isArray( x.activities ) && x.activities.length > 0,
+        /** 拼团信息 */
+        goodPins: dealGoodPin( x )
     })
 
 };
+
+/** 处理商品的拼团差价，返回拼团列表和拼团差价区间（含特价） */
+const dealGoodPin = good => {
+    const { activities, standards, price, groupPrice } = good;
+
+    // 单品 
+    if ( standards.length === 0 ) {
+        return {
+            list: [{
+                price,
+                groupPrice
+            }],
+            maxDelta: price - groupPrice
+        }
+    } else {
+
+        const meta = standards.map( standard => {
+            const acTarget = activities.find( ac => ac.pid === standard.pid && ac.sid === standard._id );
+            if (( !!acTarget && !!acTarget.ac_groupPrice ) || standard.groupPrice ) {
+                if ( acTarget ) {
+                    return {
+                        price: acTarget.ac_price,
+                        groupPrice: acTarget.ac_groupPrice
+                    }
+                } else {
+                    return {
+                        price: standard.price,
+                        groupPrice: standard.groupPrice
+                    }
+                }
+            }
+            return null;
+        }).filter( x => !!x );
+
+        const deltas = meta.map( x => 
+            x.price - x.groupPrice
+        ).sort(( x, y ) => y - x );
+
+        return {
+            list: meta,
+            maxDelta: deltas[ 0 ],
+            maxGap: `${deltas[ deltas.length - 1 ]} ~ ${deltas[ 0 ]}`
+        };
+    }
+}
 
 export {
     delayeringGood

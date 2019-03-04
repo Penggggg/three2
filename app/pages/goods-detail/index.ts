@@ -1,6 +1,7 @@
 
 import { http } from '../../util/http.js';
 import { computed } from '../../lib/vuefy/index.js';
+import { delayeringGood } from '../../util/goods.js';
 
 const app = getApp( );
 
@@ -52,22 +53,9 @@ Page({
             // 计算价格
             price: function( ) {
                 const { detail } = this.data;
-                if ( !detail ) {
-                    return '';
-                } else {
-                    if ( detail.standards.length === 0 ) {
-                        return detail.price;
-                    } else if ( detail.standards.length === 1 ) {
-                        return detail.standards[ 0 ].price;
-                    } else {
-                        const sortedPrice = detail.standards.sort(( x, y ) => x.price - y.price );
-                        if (  sortedPrice[0].price === sortedPrice[ sortedPrice.length - 1 ].price ) {
-                            return sortedPrice[ 0 ].price;
-                        } else {
-                            return `${sortedPrice[0].price}~${sortedPrice[sortedPrice.length - 1 ].price}`;
-                        }
-                    }
-                }
+                const result = delayeringGood( detail );
+                console.log('...', result );
+                return result ? result.price$ : '';
             },
 
             // 商品详情 - 分行显示
@@ -84,33 +72,10 @@ Page({
             priceGap: function( ) {
                 const { detail } = this.data;
                 if ( !detail ) {
-                    return 0;
+                    return ''
                 } else {
-                    const { standards, groupPrice, price } = detail;
-                    // 无型号
-                    if ( standards.length === 0 ) {
-                        // 有团购的
-                        if ( groupPrice !== null && groupPrice !== undefined ) {
-                            return  Number( price - groupPrice ).toFixed( 2 );
-                        } else {
-                            return 0;
-                        }
-                    // 有型号
-                    } else {
-                        const groupPrice = standards.filter( x => x.groupPrice !== null && x.groupPrice !== undefined );
-                        // 型号里面有团购的
-                        if ( groupPrice.length > 0 ) {
-                            const sortedGroupPrice = groupPrice.sort(( x, y ) => (( x.groupPrice - x.price ) - ( y.groupPrice - y.price )));
-                            if (( sortedGroupPrice[0].groupPrice - sortedGroupPrice[0].price ) ===
-                                ( sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice - sortedGroupPrice[ sortedGroupPrice.length - 1 ].price )) {
-                                return Number(( sortedGroupPrice[0].price - sortedGroupPrice[0].groupPrice )).toFixed( 2 );
-                            } else {
-                                return `${Number(Number(sortedGroupPrice[ sortedGroupPrice.length - 1 ].price - sortedGroupPrice[ sortedGroupPrice.length - 1 ].groupPrice).toFixed( 2 ))}~${Number( Number( sortedGroupPrice[0].price - sortedGroupPrice[0].groupPrice).toFixed( 2 ))}`
-                            }
-                        } else {
-                            return 0;
-                        }
-                    }
+                    const result = delayeringGood( detail );
+                    return result.goodPins.maxGap;
                 }
             },
 

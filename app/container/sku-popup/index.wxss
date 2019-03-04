@@ -68,6 +68,7 @@
 }
 
 .sku-price-block {
+    height: 150rpx;
     display: flex;
     flex-direction: column;
 }
@@ -85,27 +86,35 @@
 
 .sku-price-text {
     color: #ff5777;
-    font-size: 20rpx;
+    font-size: 24rpx;
     margin-left: 30rpx;
 }
 
 .sku-price.sm {
-    font-size: 24rpx;
-    height: 35rpx;
+    font-size: 28rpx;
 }
 
 .sku-stock {
     color: #999;
-    font-size: 28rpx;
-    margin-bottom: 5rpx;
+    margin-top: 10rpx;
+    font-size: 26rpx;
+    margin-bottom: -15rpx;
 }
 
 .sku-title {
     color: #4d4d4d;
     font-size: 28rpx;
+    margin-top: 15rpx;
 }
 
+.sku-title.nmt {
+    margin-top: 0;
+}
 
+.sku-pin-title {
+    font-size: 22rpx;
+    color: #4d4d4d;
+}
 
 .sku-standards-and-buy-block {
     /* height: 580rpx; */
@@ -119,7 +128,7 @@
 }
 
 .sku-standards-block {
-    padding: 25rpx 20rpx;
+    padding: 0 25rpx 20rpx;
     position: relative;
 }
 
@@ -144,6 +153,10 @@
     margin-bottom: 20rpx;
 }
 
+.sku-info-title.mt {
+    margin-top: 18rpx;
+}
+
 .sku-standards-item {
     color: #999;
     font-size: 24rpx;
@@ -162,6 +175,7 @@
 .sku-standards-item.selecting {
     color: #ff5777;
     background: #ffe8ee;
+    border: 1px solid #ffe8ee;
     /* border: 1px solid #ff5777; */
 }
 
@@ -193,4 +207,12 @@
     line-height: 45rpx;
 }
 
+.sku-info-text {
+    font-size: 24rpx;
+}
+
+.deposit-price {
+    color: #ff5777;
+    font-size: 30rpx;
+}
 

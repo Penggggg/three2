@@ -55,16 +55,6 @@
                         > 
                             {{ selectedSku.price }}
                         </wxc-price>
-                        <view class="sku-price-text">
-                            拼团
-                        </view><wxc-price
-                                icon="sub"
-                                decimal="small"
-                                class="sku-price sm"
-                                wx:if="{{ selectedSku.groupPrice }}"
-                            > 
-                                {{ selectedSku.groupPrice }}
-                            </wxc-price>
                     </view>
                     <view
                         class="sku-stock"
@@ -76,6 +66,18 @@
                         class="sku-title"
                     >
                         已选择：{{ selectedSku.title }}
+                    </view>
+                    <view
+                        class="sku-pin-title"
+                         wx:if="{{ selectedSku.groupPrice }}"
+                    >
+                        成功拼团：<wxc-price
+                            icon="sub"
+                            decimal="small"
+                            class="sku-price sm"
+                        > 
+                            {{ selectedSku.groupPrice }}
+                        </wxc-price>
                     </view>
                 </view>
 
@@ -118,6 +120,24 @@
                     />
                 </view>
                 
+                <!-- 订金 -->
+                <view
+                    class="sku-standards-block"
+                    wx:if="{{ depositPrice }}"
+                >
+                    <view class="sku-info-title mt">
+                        订金
+                    </view>
+                    <view class="sku-info-text">
+                        <wxc-price
+                            icon="sub"
+                            decimal="small"
+                            class="deposit-price"
+                        > 
+                            {{ depositPrice }}
+                        </wxc-price>
+                    </view>
+                </view>
 
             </scroll-view>
 

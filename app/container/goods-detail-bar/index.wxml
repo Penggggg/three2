@@ -70,6 +70,7 @@
     <my-sku-popup
         open="{{ openSku }}"
         skuItems="{{ skuItems$ }}"
+        depositPrice="{{ detail.depositPrice }}"
         bind:close="onCloseSku"
         bind:confirm="onConfirmSku"
     />
