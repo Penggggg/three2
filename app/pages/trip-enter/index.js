@@ -79,9 +79,20 @@ Page({
             },
 
             // 热门推荐前四
-            recommendGoods$: function( ) {
+            recommendGoodsTop$: function( ) {
                 const { recommendGoods } = this.data;
                 return recommendGoods.slice( 0, 4 );
+            },
+
+            // 热门推荐 + 活动标志 
+            recommendGoods$: function( ) {
+                const { goodDiscounts, recommendGoods } = this.data;
+                const meta = recommendGoods.map( x => Object.assign({ }, x, {
+                    // 是否有特价活动
+                    hasActivity: !!goodDiscounts.find( y => y.pid === x.pid )
+                }));
+                console.log('...', meta )
+                return meta;
             }
         })
     },

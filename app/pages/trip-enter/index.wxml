@@ -173,12 +173,13 @@
                                 wx:key="{{ index }}"
                                 lazy-load="{{ true }}"
                                 class="te-recommond-icon-img"
-                                wx:for="{{ recommendGoods$ }}"
+                                wx:for="{{ recommendGoodsTop$ }}"
                                 src="{{ item.img[ 0 ]}}"
                             />
                         </view>
                     </view>
 
+                    <!-- 本期推荐版本2 -->
                     <swiper
                         autoplay="{{ true }}"
                         duration="{{ 1000 }}"
@@ -189,7 +190,7 @@
                     >
                         <block
                             wx:key="{{ index }}"
-                            wx:for="{{ recommendGoods }}"
+                            wx:for="{{ recommendGoods$ }}"
                         >
                             <swiper-item>
                                 <my-good-item-5

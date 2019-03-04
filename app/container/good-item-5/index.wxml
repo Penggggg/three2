@@ -20,9 +20,11 @@
 
     </view>
 
-    <image
-        class="gi5-img"
-        mode="aspectFill"
-        src="{{ good.img[ 0 ] }}"
-    />
+    <view class="gi5-img-block">
+        <image
+            class="gi5-img"
+            mode="aspectFill"
+            src="{{ good.img[ 0 ] }}"
+        />
+    </view>
 </view>

@@ -106,6 +106,7 @@ const delayeringGood = x => {
     }
 
     return Object.assign({ }, x, {
+        pid: x._id,
         // 库存区间
         stock$: stock,
         // 价格区间
