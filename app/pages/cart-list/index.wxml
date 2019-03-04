@@ -11,6 +11,9 @@
             <view class="pcl-info-block">
 
                 <wxc-notice
+                    color="#4d4d4d"
+                    bg-color="#fff"
+                    icon-color="#4d4d4d"
                     scroll="{{ true }}"
                     close="{{ true }}"
                     show-icon="{{ true }}"
@@ -25,7 +28,7 @@
                     </view>
 
                     <view
-                        class="pcl-info"
+                        class="pcl-info-btn"
                         bindtap="toggleDelete"
                     >
                         {{ !isInDelete ? '管理' : '取消' }}
@@ -122,7 +125,7 @@
                                     class="pcl-cart-item-info grey"
                                     wx:if="{{ item.current.groupPriceGap }}"
                                 >
-                                    成功拼团<text class="pcl-text-red">立减{{ item.current.groupPriceGap }}元！</text>
+                                    成功拼团可<text class="pcl-text-red">立减{{ item.current.groupPriceGap }}元！</text>
                                 </view>
 
                                 <!-- 订金信息 免订金 -->
@@ -148,16 +151,8 @@
                                     该商品<text class="pcl-text-red">降价了{{ item.current.lastPrice - item.current.price }}元！</text>
                                 </view>
 
-                                <!-- 限购信息 -->
-                                <!-- <view
-                                    wx:if="{{ !(item.current.hasBeenDelete) && ( item.current.limit )}}"
-                                    class="pcl-cart-item-info grey"
-                                >
-                                    限购{{ item.current.limit }}件
-                                </view> -->
-
                                 <!-- 商品标签 没有降价信息的时候才显示 -->
-                                <view class="pcl-cart-item-tags">
+                                <!-- <view class="pcl-cart-item-tags">
                                     <wxc-label
                                         class="pcl-tag"
                                         wx:for-item="tag"
@@ -166,7 +161,7 @@
                                     >
                                         {{ tag }}
                                     </wxc-label>
-                                </view>
+                                </view> -->
 
                                 <!-- 型号信息 -->
                                 <view

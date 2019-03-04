@@ -815,15 +815,21 @@ to {transform: translate( -50%,  -20% ) rotate( 180deg );}
 .pol-task-good-img-con {
     top: -20rpx;
     left: 80rpx;
+    width: 50rpx;
+    height: 50rpx;
+    overflow: hidden;
     position: absolute;
+    border-radius: 5px;
+    border: 2px solid #fff;
+    box-shadow: 0 0 15px rgba( 0, 0, 0, 0.25 );
 }
 
 .pol-task-good-img {
-    width: 50rpx;
+    width: 100%;
     border-radius: 5px;
-    border: 2px solid #fff;
+    /* border: 2px solid #fff; */
     position: absolute;
-    box-shadow: 0 0 15px rgba( 0, 0, 0, 0.25 );
+    /* box-shadow: 0 0 15px rgba( 0, 0, 0, 0.25 ); */
 }
 
 .pol-task-price {

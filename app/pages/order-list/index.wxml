@@ -510,12 +510,15 @@
                                     {{ item.desc }}
                                 </view>
                                 <!-- 图片 -->
-                                <view class="pol-task-good-img-con">
+                                <view
+                                    class="pol-task-good-img-con"
+                                    wx:if="{{ item.type === 'good' && !!item.img }}"
+                                >
                                     <image
                                         src="{{ item.img }}"
                                         mode="widthFix"
                                         class="pol-task-good-img"
-                                        wx:if="{{ item.type === 'good' && !!item.img }}"
+                                        
                                     />
                                 </view>
                             </view>
