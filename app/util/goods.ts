@@ -5,7 +5,6 @@
  * ! 此处默认 团购价小于原价，但不一定有团购价
  */
 const delayeringGood = x => {
-
     if ( !x ) {
         return null
     }

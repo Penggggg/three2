@@ -26,5 +26,18 @@
             mode="aspectFill"
             src="{{ good.img[ 0 ] }}"
         />
+        <view
+            class="gi5-tag-block"
+            wx:if="{{ good.hasActivity }}"
+        >
+            <image
+                mode="widthFix"
+                class="gd-activity-icon"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+            />
+            <view class="gi5-tag-text">
+                活动
+            </view>
+        </view>
     </view>
 </view>

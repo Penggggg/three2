@@ -86,12 +86,11 @@ Page({
 
             // 热门推荐 + 活动标志 
             recommendGoods$: function( ) {
-                const { goodDiscounts, recommendGoods } = this.data;
+                const { recommendGoods } = this.data;
                 const meta = recommendGoods.map( x => Object.assign({ }, x, {
                     // 是否有特价活动
-                    hasActivity: !!goodDiscounts.find( y => y.pid === x.pid )
+                    hasActivity: Array.isArray( x.activities ) && x.activities.length > 0
                 }));
-                console.log('...', meta )
                 return meta;
             }
         })
@@ -350,7 +349,7 @@ Page({
      */
     onLoad: function (options) {
         this.fetchRank( );
-        this.fetchDiscount( );
+        // this.fetchDiscount( );
         this.runComputed( );
     },
 
