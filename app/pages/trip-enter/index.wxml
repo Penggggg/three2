@@ -99,7 +99,10 @@
                             View all
                         </view>
                     </view>
-                    <view scroll-x class="te-fairy-simple-list-contanier">
+                    <view
+                        wx:if="{{ fairyList$.length > 1 }}"
+                        scroll-x class="te-fairy-simple-list-contanier"
+                    >
                         <view class="te-fairy-simple-list">
                             <view
                                 wx:key="{{ index }}"

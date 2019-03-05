@@ -197,6 +197,10 @@
     -webkit-box-orient: vertical;
 }
 
+.info-block-item-content.flex {
+    display: flex !important;
+}
+
 .info-block-item-tips {
     display: flex;
     align-items: center;

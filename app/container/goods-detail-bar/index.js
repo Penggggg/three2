@@ -73,7 +73,7 @@ Component({
 
             if ( standards.length === 0 ) {
                 // 只有单品本身
-                const target = activities.find( ac => ac.pid === _id );
+                const ac = activities.find( ac => ac.pid === _id );
 
                 skuItems = [{
                     _id,
@@ -89,7 +89,7 @@ Component({
                 }];
 
                 // 根据活动 更改价格
-                if ( target ) {
+                if ( ac ) {
                     skuItems = [ Object.assign({ }, skuItems[ 0 ], {
                         acid: ac._id,
                         price: ac.ac_price,

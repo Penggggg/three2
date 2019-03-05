@@ -125,7 +125,8 @@
                                     class="pcl-cart-item-info grey"
                                     wx:if="{{ item.current.groupPriceGap }}"
                                 >
-                                    成功拼团可<text class="pcl-text-red">立减{{ item.current.groupPriceGap }}元！</text>
+                                    <!-- 成功拼团可<text class="pcl-text-red">立减{{ item.current.groupPriceGap }}元！</text> -->
+                                    拼团价<text class="pcl-text-red">¥{{ item.current.groupPrice }}</text> 
                                 </view>
 
                                 <!-- 订金信息 免订金 -->
@@ -189,7 +190,7 @@
                                             {{ item.current.price }}
                                         </wxc-price>
                                         <!-- 如果有降价信息，则显示降价前的原价，没有降价信息，应该显示划线价 -->
-                                        <text class="pcl-cart-cheap-tips" wx:if="{{ (item.current.price < item.current.lastPrice) }}">上次价格</text>
+                                        <!-- <text class="pcl-cart-cheap-tips" wx:if="{{ (item.current.price < item.current.lastPrice) }}">上次价格</text>
                                         <wxc-price
                                             icon="sub"
                                             status="del"
@@ -209,7 +210,7 @@
                                             del-color="#999"
                                         > 
                                             {{ item.detail.fadePrice }}
-                                        </wxc-price>
+                                        </wxc-price> -->
                                     </view>
                                     <view
                                         data-cart="{{ item }}"
@@ -260,12 +261,12 @@
                     </view>
 
                     <!-- 拼团icon 代表这趟行程有人购买 -->
-                    <view
+                    <!-- <view
                         class="pcl-cart-item-icon"
                         wx:if="{{ !item.current.hasBeenDelete && item.visiable && item.current.groupPrice }}"
                     >
                         可拼团
-                    </view>
+                    </view> -->
 
                     <!-- 下架icon -->
                     <view
@@ -382,7 +383,7 @@
                     > 
                     {{ sum2 }}
                     </wxc-price>
-                    <view
+                    <!-- <view
                         class="pcl-settlet-deposit-price"
                     >
                         总计<wxc-price
@@ -391,7 +392,7 @@
                             > 
                             {{ sum }}
                         </wxc-price>
-                    </view>
+                    </view> -->
                 </view>
 
                 <!-- 用户授权按钮 -->

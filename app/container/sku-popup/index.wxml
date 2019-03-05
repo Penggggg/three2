@@ -71,7 +71,7 @@
                         class="sku-pin-title"
                          wx:if="{{ selectedSku.groupPrice }}"
                     >
-                        成功拼团：<wxc-price
+                        拼团价：<wxc-price
                             icon="sub"
                             decimal="small"
                             class="sku-price sm"

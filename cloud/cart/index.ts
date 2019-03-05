@@ -15,7 +15,7 @@ const db: DB.Database = cloud.database( );
  *      count: 选购数量
  *      standard_id: 型号id
  *      current_price: 当时的价格
-
+ *      acid: 当时商品的一口价id
  */
 export const main = async ( event, context ) => {
 

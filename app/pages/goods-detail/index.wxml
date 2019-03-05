@@ -159,7 +159,7 @@
                     保证：
                 </view>
 
-                <view class="info-block-item-content">
+                <view class="info-block-item-content flex">
                     <view
                         wx:for="{{ promiseTips }}"
                         wx:key="{{ index }}"
