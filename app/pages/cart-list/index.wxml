@@ -23,7 +23,7 @@
 
                 <view class="pcl-info-msg">
 
-                    <view class="pcl-info">
+                    <view class="pcl-info big">
                         共{{ cartList.length }}件宝贝
                     </view>
 

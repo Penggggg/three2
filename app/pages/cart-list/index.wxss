@@ -49,6 +49,26 @@
     font-size: 32rpx;
 }
 
+
+.pcl-info.big {
+    color:#333;
+    font-size:30rpx;
+    font-weight:bold;
+    position:relative;
+    letter-spacing:0.02em;
+}
+
+.pcl-info.big:after {
+    left: -10%;
+    width: 110%;
+    height: 15rpx;
+    content: '';
+    bottom: 5rpx;
+    position: absolute;
+    border-radius: 30rpx;
+    background: rgba( 255,107,149, 0.20 );
+}
+
 .pcl-info-btn {
     color: #fff;
     font-size: 24rpx;
@@ -61,7 +81,7 @@
 
 .pcl-cart-like-block {
     /* height: 970rpx; */
-    flex: 1;
+    height: 100%;
     background: #fff;
     overflow-y: scroll;
     box-sizing: border-box;
@@ -390,8 +410,8 @@
 }
 
 .pcl-swiper-tag {
-    right: -5rpx;
-    top: 5rpx;
+    left:15rpx;
+    top:15rpx;
     position: absolute;
     color: #fff;
     z-index: 2;
