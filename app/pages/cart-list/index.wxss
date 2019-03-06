@@ -40,6 +40,7 @@
 .pcl-info-msg {
     display: flex;
     align-items: center;
+    margin: 15rpx 0;
     justify-content: space-between;
 }
 
@@ -89,7 +90,7 @@
 
 .pcl-cart-list-block {
     padding: 0 25rpx;
-    margin-top: -120rpx;
+    margin-top: -90rpx;
 }
 
 .pcl-cart-img-block {
