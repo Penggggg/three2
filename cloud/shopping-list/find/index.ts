@@ -1,7 +1,7 @@
 /**
  * @param 
  */
-const find$ = async( data: { tid?: string, pid?: string, sid?: string, status?: any }, db: DB.Database, ctx ) => {
+const find$ = async( data: { tid?: string, pid?: string, sid?: string, buy_status?: any }, db: DB.Database, ctx ) => {
     try {
         
         let filterData = { };
@@ -12,9 +12,7 @@ const find$ = async( data: { tid?: string, pid?: string, sid?: string, status?: 
         });
 
         const data$ = await db.collection('shopping-list')
-            .where({
-                ...filterData
-            })
+            .where( filterData )
             .get( );
             
         return {

@@ -3,8 +3,8 @@ import { http } from './http';
 /**
  * 
  * @param tid 行程id
- * @param from 订单来源
- * @param targetBuys 预付订单列表
+ * @param from 订单来源 'buy' | 
+ * @param targetBuys 预付订单列表，数据结构如下
  * {
         sid,
         pid,
@@ -14,8 +14,9 @@ import { http } from './http';
         groupPrice,
         tid: trip._id,
         depositPrice: depositPrice || 0,
+ *!     acid: 一口价活动的id，可无
         type: 'pre', // 预付类型订单，
-  *      !cid?: temp.cart._id,
+ *!     cid?: temp.cart._id,
         name: `${title}`,
         standername: standardName,
         address: {

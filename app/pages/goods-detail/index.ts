@@ -374,16 +374,16 @@ Page({
         this.watchRole( );
         this.runComputed( );
         
-        this.setData!({
-            id: 'XH6O55T75u22YLcn',
-            tid: 'XDGzG97E7L4wLIdu'
-        });
-
-        // if ( !options!.id ) { return; }
         // this.setData!({
-        //     id: options!.id,
-        //     tid: options!.tid
+        //     id: 'XH6O55T75u22YLcn',
+        //     tid: 'XDGzG97E7L4wLIdu'
         // });
+
+        if ( !options!.id ) { return; }
+        this.setData!({
+            id: options!.id,
+            tid: options!.tid
+        });
     },
   
     /**

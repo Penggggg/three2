@@ -24,6 +24,7 @@ const _ = db.command;
  * price,
  * groupPrice,
  * deposit_price: 商品订金 (可为空)
+ * ! acid 商品活动id
  * ! isOccupied, 是否占库存
  * group_price (可为空)
  * type: 'custom' | 'normal' | 'pre' 自定义加单、普通加单、预订单
@@ -59,6 +60,7 @@ export const main = async ( event, context ) => {
      *          pid
      *          price
      *          name
+     *          acid
      *          standername
      *          groupPrice
      *          count
@@ -402,11 +404,11 @@ export const main = async ( event, context ) => {
             }));
 
             const list = find$.map( x => {
-                const { _id, tid, pid, sid, price, groupPrice  } = x.data[ 0 ];
+                const { _id, tid, pid, sid, price, groupPrice, acid } = x.data[ 0 ];
                 return {
                     oid: _id,
-                    tid, pid, sid, price,
-                    groupPrice: groupPrice
+                    acid, groupPrice,
+                    tid, pid, sid, price
                 }
             });
 

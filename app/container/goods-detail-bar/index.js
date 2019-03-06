@@ -216,7 +216,7 @@ Component({
         buy( item, form_id ) {
 
             const { trip } = this.data;
-            const { sid, pid, price, count, img, title, groupPrice } = item;
+            const { sid, pid, price, count, img, title, groupPrice, acid } = item;
 
             // 判断是否没有最新行程
             if ( !trip ) {
@@ -236,6 +236,7 @@ Component({
                         sid,
                         pid,
                         tid: trip._id,
+                        acid,
                         price,
                         count,
                         img: [ img ],

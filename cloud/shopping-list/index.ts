@@ -12,13 +12,14 @@ const _ = db.command;
  * --------- 字段 ----------
  * tid
  * pid
- * ! sid ( 可为空 )
+ * sid ( 可为空 )
  * oids Array
  * uids Array
  * buy_status 0,1,2 未购买、已购买、买不全
  * base_status: 0,1 未调整，已调整
  * createTime
  * updateTime
+ * ! acid 活动id
  * lastAllocated 剩余分配量
  * purchase 采购数量
  * adjustPrice 分配的数清单售价
@@ -101,7 +102,7 @@ export const main = async ( event, context ) => {
                     tid: i.tid,
                     pid: i.pid,
                     sid: i.sid,
-                    status: '2'
+                    buy_status: '2'
                 }, db, ctx )
             }))
 
@@ -115,7 +116,7 @@ export const main = async ( event, context ) => {
                     tid: i.tid,
                     pid: i.pid,
                     sid: i.sid,
-                    status: '1'
+                    buy_status: '1'
                 }, db, ctx )
             }));
 
@@ -239,16 +240,19 @@ export const main = async ( event, context ) => {
      *    tid,
      *    pid,
      *    sid,
-     *    oid
+     *    oid,
+     *    price,
+     *    groupPrice,
+     *    acid
      * }[ ]
      */
     app.router('create', async( ctx, next ) => {
         try {
 
             const { list, openId } = event.data;
-
+ 
             await Promise.all( list.map( async orderMeta => {
-                const { tid, pid, sid, oid, price, groupPrice } = orderMeta;
+                const { tid, pid, sid, oid, price, groupPrice, acid } = orderMeta;
                 let query = {
                     tid,
                     pid
@@ -258,13 +262,20 @@ export const main = async ( event, context ) => {
                     query['sid'] = sid;
                 }
 
+                // 插入活动的查询条件
+                query = Object.assign({ }, query, {
+                    acid: acid || _.eq( undefined )
+                });
+
                 const find$ = await db.collection('shopping-list')
                     .where( query )
                     .get( );
 
                 if ( find$.data.length === 0 ) {
 
-                    const meta = Object.assign({ }, query, {
+                    const meta = Object.assign({ }, query,{
+                        acid: acid || undefined
+                    },{
                         oids: [ oid ],
                         uids: [ openId ],
                         purchase: 0,
