@@ -157,7 +157,10 @@
 .pcl-cart-item-msg-block {
     display: flex;
     max-width: 400rpx;
+    box-sizing: border-box;
+    padding-bottom: 15rpx;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 .pcl-cart-item-title {
@@ -175,11 +178,20 @@
 .pcl-cart-item-info {
     color: #ff5777;
     font-size: 22rpx;
+    margin-top: 8rpx;
     margin-bottom: 8rpx;
 }
 
 .pcl-cart-item-info.grey {
     color: #999;
+}
+
+.pcl-cart-item-info.mn {
+    margin: 0;
+}
+
+.pcl-cart-item-info.ml {
+    margin-left: 10rpx;
 }
 
 .pcl-standar-block {
@@ -207,6 +219,11 @@
     align-items: center;
     margin-top: 20rpx;
     justify-content: space-between;
+}
+
+.pcl-cart-item-price-set {
+    display: flex;
+    align-items: flex-end;
 }
 
 .pcl-cart-cheap-tips {
@@ -261,6 +278,10 @@
     color: #ff5777;
     font-size: 34rpx;
     margin-right: 10rpx;
+}
+
+.pcl-price.lh {
+    line-height: 38rpx;
 }
 
 .pcl-price.small {
