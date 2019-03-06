@@ -142,6 +142,10 @@
     margin-right: 15rpx;
 }
 
+.pcl-cart-item-img-block {
+    position: relative;
+}
+
 .pcl-cart-item-img {
     width: 180rpx;
     height: 180rpx;
@@ -502,4 +506,30 @@
     position: absolute;
     content: '';
     background: #666;
+}
+
+.pcl-tag-block {
+    top: -8rpx;
+    left: -8rpx;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    border-radius: 3px;
+    padding: 3rpx 5rpx;
+    background: #ff8787; 
+    background: -webkit-linear-gradient(to right, #ff61ab, #ff8787); 
+    background: linear-gradient(to right, #ff61ab, #ff8787); 
+}
+
+.pcl-activity-icon {
+    width: 20rpx;
+    margin-right: 2rpx;
+    display: inline-block;
+}
+
+.pcl-tag-text {
+    color: #fff;
+    font-size: 17rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+
 }

@@ -84,11 +84,26 @@
                             data-cart="{{ item }}"
                         >
                             <!-- 图片 -->
-                            <image
-                                mode="aspectFill"
-                                class="pcl-cart-item-img"
-                                src="{{ item.current.img }}"
-                            />
+                            <view class="pcl-cart-item-img-block">
+                                <image
+                                    mode="aspectFill"
+                                    class="pcl-cart-item-img"
+                                    src="{{ item.current.img }}"
+                                />
+                                <view
+                                    class="pcl-tag-block"
+                                    wx:if="{{ item.activity }}"
+                                >
+                                    <image
+                                        mode="widthFix"
+                                        class="pcl-activity-icon"
+                                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                                    />
+                                    <view class="pcl-tag-text">
+                                        限时活动
+                                    </view>
+                                </view>
+                            </view>
 
                             <view class="pcl-cart-item-msg-block">
 
@@ -120,13 +135,22 @@
                                     仅剩<text class="pcl-text-red">{{ item.current.stock }}件！</text>
                                 </view>
 
-                                <!-- 拼团价格信息 -->
+                                <!-- 拼团价格信息（原拼团） -->
                                 <view
                                     class="pcl-cart-item-info grey"
-                                    wx:if="{{ item.current.groupPriceGap }}"
+                                    wx:if="{{ !item.activity && item.current.groupPrice }}"
                                 >
                                     <!-- 成功拼团可<text class="pcl-text-red">立减{{ item.current.groupPriceGap }}元！</text> -->
                                     拼团价<text class="pcl-text-red">¥{{ item.current.groupPrice }}</text> 
+                                </view>
+
+                                <!-- 拼团价格信息（原拼团） -->
+                                <view
+                                    class="pcl-cart-item-info grey"
+                                    wx:if="{{ item.activity && item.activity.ac_groupPrice }}"
+                                >
+                                    <!-- 成功拼团可<text class="pcl-text-red">立减{{ item.current.groupPriceGap }}元！</text> -->
+                                    拼团价<text class="pcl-text-red">¥{{ item.activity.ac_groupPrice }}</text> 
                                 </view>
 
                                 <!-- 订金信息 免订金 -->
@@ -186,31 +210,20 @@
                                             icon="sub"
                                             decimal="small"
                                             class="pcl-price"
+                                            wx:if="{{ !item.activity }}"
                                         > 
                                             {{ item.current.price }}
                                         </wxc-price>
-                                        <!-- 如果有降价信息，则显示降价前的原价，没有降价信息，应该显示划线价 -->
-                                        <!-- <text class="pcl-cart-cheap-tips" wx:if="{{ (item.current.price < item.current.lastPrice) }}">上次价格</text>
+
+                                        <!-- 活动现价 -->
                                         <wxc-price
                                             icon="sub"
-                                            status="del"
                                             decimal="small"
-                                            class="pcl-price del"
-                                            del-color="#999"
-                                            wx:if="{{ (item.current.price < item.current.lastPrice) }}"
+                                            class="pcl-price"
+                                            wx:if="{{ item.activity }}"
                                         > 
-                                            {{ item.current.lastPrice }}
+                                            {{ item.activity.ac_price }}
                                         </wxc-price>
-                                        <wxc-price
-                                            wx:else
-                                            icon="sub"
-                                            status="del"
-                                            decimal="small"
-                                            class="pcl-price del"
-                                            del-color="#999"
-                                        > 
-                                            {{ item.detail.fadePrice }}
-                                        </wxc-price> -->
                                     </view>
                                     <view
                                         data-cart="{{ item }}"

@@ -166,6 +166,7 @@
                     <!-- 本期推荐版本2 标题 -->
                     <view
                         class="te-block"
+                        wx:if="{{ recommendGoodsTop$.length > 0 }}"
                     >
                         <view class="te-block-title">
                             店主推荐
@@ -188,8 +189,9 @@
                         duration="{{ 1000 }}"
                         circular="{{ true }}"
                         interval="{{ 4000 }}"
-                        display-multiple-items="{{ 2 }}"
                         class="recommond-swiper"
+                        wx:if="{{ recommendGoods$.length > 0 }}"
+                        display-multiple-items="{{ 2 }}"
                     >
                         <block
                             wx:key="{{ index }}"

@@ -144,7 +144,6 @@ Page({
                         // 如果商品的型号还是为 0 
                         if ( detail.standards.length === 0 ) {
                             current = {
-                                sid: null,
                                 standardName: null,
                                 stock,
                                 price,
@@ -196,15 +195,25 @@ Page({
                         }
                         
                     }
+
+                    let activity = null;
+                    // 注入活动（一口价）
+                    if ( Array.isArray( detail.activities )) {
+                        activity = detail.activities.find( ac => ac.pid === current.pid && ac.sid === current.sid );   
+                    }
                     
                     return Object.assign({ }, x , {
                         current,
+                        // 活动
+                        activity,
+                        // 是否可选
                         visiable: detail.visiable,
                         // 勾选框
                         selected: !!this.data.selectCartIdList.find( x => x === cart._id )
                     });
                 });
                 
+                console.log('...', dealed );
                 this.setData({
                     cartList: dealed,
                     hasInitCart: true
