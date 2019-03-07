@@ -46,7 +46,7 @@ Component({
             const count$ = order => {
                 const b = order.base_status;
                 return b === '0' || b === '1' ?
-                        order.count :
+                        order.allocatedCount || order.count :
                         b === '2' || b === '3' ?
                             order.allocatedCount:
                             0;
@@ -63,7 +63,7 @@ Component({
                     if ( y.base_status === '2' ) {
                         currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * count$( y );
                     } else if ( y.base_status === '0' || y.base_status === '1' ) {
-                        currentPrice = count$( y ) * price;
+                        currentPrice = count$( y ) * ( allocatedPrice || price );
                     } else {
                         currentPrice = 0;
                     }

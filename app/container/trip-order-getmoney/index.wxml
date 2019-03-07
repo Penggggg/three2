@@ -118,8 +118,21 @@
                             bindtap="onShowModal"
                             class="tog-order-info-block"
                         >
-                            <view class="tog-text big">{{ order.name }}</view>
+                            <view class="tog-text big">{{ order.acid ? '【活动】' : '' }}{{ order.name }}</view>
                             <view class="tog-stander">{{ order.standername }}</view>
+                            <view
+                                class="tog-tag-block"
+                                wx:if="{{ order.acid }}"
+                            >
+                                <image
+                                    mode="widthFix"
+                                    class="tog-activity-icon"
+                                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                                />
+                                <view class="tog-tag-text">
+                                    活动商品
+                                </view>
+                            </view>
                         </view>
                         <view
                             data-data="{{ order }}"
