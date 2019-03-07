@@ -243,7 +243,7 @@ export const main = async ( event, context ) => {
      *    oid,
      *    price,
      *    groupPrice,
-     *    acid
+     *!   acid
      * }[ ]
      */
     app.router('create', async( ctx, next ) => {
