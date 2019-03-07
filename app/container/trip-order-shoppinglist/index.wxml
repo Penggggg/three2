@@ -46,11 +46,19 @@
                             class="tos-trip-order-img"
                             bindtap="goGoodDetail"
                         />
-                        <!-- <view
-                            class="tos-img-dotted"
-                            wx:if="{{ item.base_status === '0' }}"
+                        <view
+                            class="tos-tag-block"
+                            wx:if="{{ item.acid }}"
                         >
-                        </view> -->
+                            <image
+                                mode="widthFix"
+                                class="tos-activity-icon"
+                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                            />
+                            <view class="tos-tag-text">
+                                活动商品
+                            </view>
+                        </view>
                     </view>
 
                     <view class="tos-other-info">
@@ -65,7 +73,7 @@
                                 class="tos-trip-order-title-block"
                             >
                                 <view class="tos-trip-order-name">
-                                    {{ item.goodName }}
+                                    {{ item.acid ? '【活动】' : '' }}{{ item.goodName }}
                                 </view>
                                 <view
                                     class="tos-trip-order-standar"

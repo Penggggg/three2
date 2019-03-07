@@ -453,17 +453,21 @@ export const main = async ( event, context ) => {
                 .doc( shoppingId )
                 .get( );
    
+            console.log('111111', shopping$ );
+
             const orders$ = await Promise.all( shopping$.data.oids.map( oid => {
                 return db.collection('order')
                     .doc( oid )
                     .get( );
             }));
 
-            // 最后分配量
+            console.log('2222222', orders$ );
+
+            // 剩余分配量
             let lastAllocated = 0;
 
             /**
-             * 剩余分配量
+             * 总分配量
              */
             let purchase = event.data.purchase;
 
@@ -474,10 +478,14 @@ export const main = async ( event, context ) => {
                 .map(( x: any ) => x.data )
                 .filter( o => o.base_status === '2' );
 
+            console.log('333333', finishAdjustOrders);
+
             // 已分配量
             const hasBeenAdjust = finishAdjustOrders.reduce(( x, y ) => {
                 return x + y.allocatedCount;
             }, 0 );
+
+            console.log('444444', hasBeenAdjust );
 
             if ( purchase < hasBeenAdjust ) {
                 return ctx.body = {
@@ -501,6 +509,8 @@ export const main = async ( event, context ) => {
 
             delete temp['_id'];
 
+            console.log('555555', temp)
+
             // 更新清单
             await db.collection('shopping-list')
                 .doc( shoppingId )
@@ -519,9 +529,13 @@ export const main = async ( event, context ) => {
                 .filter(( x: any ) => x.base_status === '0' || x.base_status === '1' )
                 .sort(( x: any, y: any ) => x.createTime - y.createTime );
 
+            console.log('666666', sorredOrders );
+
             // 剩余分配量
             purchase -= hasBeenAdjust;
 
+            console.log( '777', purchase  );
+        
             await Promise.all( sorredOrders.map( async order => {
 
                 const baseTemp = {

@@ -304,3 +304,30 @@
     /* background: -webkit-linear-gradient(to right, #f80759, #bc4e9c); 
     background: linear-gradient(to right, #f80759, #bc4e9c); */
 }
+
+
+.tos-tag-block {
+    top: -8rpx;
+    left: -8rpx;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    border-radius: 3px;
+    padding: 3rpx 5rpx;
+    background: #ff8787; 
+    background: -webkit-linear-gradient(to right, #ff61ab, #ff8787); 
+    background: linear-gradient(to right, #ff61ab, #ff8787); 
+}
+
+.tos-activity-icon {
+    width: 20rpx;
+    margin-right: 2rpx;
+    display: inline-block;
+}
+
+.tos-tag-text {
+    color: #fff;
+    font-size: 17rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+
+}
