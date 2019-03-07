@@ -70,9 +70,10 @@ export const catchLostOrders = async ( ) => {
 
         find1$.data.map( order => {
 
-            const { sid, pid, _id } = order;
+            const { sid, pid, _id, acid } = order;
             const currentGoodShoppingList = tripShoppingList.find( x => x.sid === sid && x.pid === pid );
 
+            // 如果没有购物清单，则创建
             if ( !currentGoodShoppingList ) {
                 lostOrders.push({
                     tid,
@@ -80,6 +81,8 @@ export const catchLostOrders = async ( ) => {
                     pid,
                     oid: _id
                 })
+            
+            // 如果有购物清单、但是清单里面的oids没有它，就插入并更新
             } else {
                 const { oids } = currentGoodShoppingList;
                 if ( !oids.find( x => x === _id )) {

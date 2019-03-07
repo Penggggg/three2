@@ -534,7 +534,7 @@ export const main = async ( event, context ) => {
             // 剩余分配量
             purchase -= hasBeenAdjust;
 
-            console.log( '777', purchase  );
+            console.log( '777', purchase );
         
             await Promise.all( sorredOrders.map( async order => {
 
