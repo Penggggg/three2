@@ -402,7 +402,27 @@ export const main = async ( event, context ) => {
                 }
             }));
 
+            // 查询清单对应的活动详情
+            const activities$: any = await Promise.all( lists$.data.map( async list => {
+                const { acid } = list;
+                if ( !acid ) {
+                    return {
+                        ac_price: null,
+                        ac_groupPrice: null
+                    }
+                } else {
+                    const meta = await db.collection('activity')
+                        .doc( String( acid ))
+                        .get( );
+                    return {
+                        ac_price: meta.data.ac_price,
+                        ac_groupPrice: meta.data.ac_groupPrice,
+                    }
+                }
+            }));
+
             const list = lists$.data.map(( l, k ) => {
+                const { ac_groupPrice, ac_price } = activities$[ k ];
                 const { img, price, groupPrice, title, name, tag } = goods$[ k ];
                 let meta = Object.assign({ }, l, {
                     tag,
@@ -410,7 +430,9 @@ export const main = async ( event, context ) => {
                     price,
                     groupPrice,
                     goodName: title,
-                    standarName: name
+                    standarName: name,
+                    ac_groupPrice,
+                    ac_price
                 });
 
                 if ( needOrders !== false ) {

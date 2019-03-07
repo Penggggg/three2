@@ -134,7 +134,7 @@
                                             decimal="small"
                                             class="tos-compare-total-number small"
                                         > 
-                                            {{ item.price }}
+                                            {{ item.ac_price || item.price }}
                                         </wxc-price>
                                     </view>
 
@@ -175,7 +175,7 @@
                                             decimal="small"
                                             class="tos-compare-total-number small"
                                         > 
-                                            {{ item.groupPrice }}
+                                            {{ item.ac_groupPrice || item.groupPrice }}
                                         </wxc-price>
                                     </view>
 
