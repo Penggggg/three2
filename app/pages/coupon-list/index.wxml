@@ -2,8 +2,9 @@
     
     <!-- 通知 -->
     <wxc-notice
-        color="#ff5777"
-        bgColor="#ffe8ee"
+        color="#4d4d4d"
+        bg-color="#fff"
+        icon-color="#4d4d4d"
         scroll="{{ true }}"
         close="{{ true }}"
         show-icon="{{ true }}"
@@ -33,7 +34,7 @@
             本期拼团
         </view>
         <view class="pcl-pin-tips">
-            查看更多
+            View all
         </view>
     </view>
 
