@@ -203,7 +203,7 @@
                             >
                                 <view class="tog-address-good">
                                     <view class="tog-address-goodname">
-                                        {{ orderitem.name }}
+                                        {{ orderitem.acid ? '【活动商品】' : '' }}{{ orderitem.name }}
                                     </view>
                                     <view class="tog-address-stander">
                                         {{ orderitem.standername }}

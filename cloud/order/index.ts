@@ -605,8 +605,10 @@ export const main = async ( event, context ) => {
                     ]))
                     .get( )
                 )
-            )
-;
+            );
+
+            console.log('....', coupons$, coupons$.map( x => x.data ))
+
             const userOders = users$.map( user$ => {
                 
                 const user = user$.data[ 0 ];
@@ -619,15 +621,14 @@ export const main = async ( event, context ) => {
                     .filter( x => x.openid === user.openid );
 
                 const coupons = coupons$
-                    .map( x => x.data[ 0 ])
-                    .filter( x => x.openid === user.openid )
-
+                    .map( x => x.data )
+                    .filter( x => x[ 0 ].openid === user.openid )
 
                 return {
                     user,
                     orders,
                     address,
-                    coupons: coupons.length > 0 ? coupons : [ ]
+                    coupons: coupons.length > 0 ? coupons[ 0 ] : [ ]
                 };
             });
 
