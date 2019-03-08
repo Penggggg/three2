@@ -34,7 +34,7 @@
                     <view class="pm-bar-item-content">
                         <image
                             class="pm-bar-item-image"
-                            src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/header.png"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/header.png"
                         />
                     </view>
                     <view class="pm-bar-item-title">我的收藏</view>

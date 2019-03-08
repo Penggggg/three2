@@ -202,7 +202,7 @@
                     >
                         <image
                             class="pol-trip-item-image"
-                            src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/header.png"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/header.png"
                         />
                         <view class="pol-trip-name">
                             {{ item.tripName }} <view class="pol-trip-time">( {{ item.tripTime }} )</view>
@@ -248,7 +248,7 @@
                                 data-data="{{ order }}"
                             />
                             <view class="pol-trip-order-img-cover {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}"></view>
-                            <!-- 异常状态再显示 -->
+                            <!-- 异常状态显示 -->
                             <view
                                 wx:for-index="k"
                                 wx:for-item="i"
@@ -271,9 +271,21 @@
                             <view
                                 bindtap="goGoodDetail"
                                 data-data="{{ order }}"
-                                class="pol-trip-order-name {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}"
+                                class="pol-trip-order-name {{ order.acid ? 'pl' : '' }} {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}"
                             >
-                                {{ order.name }}
+                                <view
+                                    class="pol-tag-block"
+                                    wx:if="{{ order.acid }}"
+                                >
+                                    <image
+                                        mode="widthFix"
+                                        class="pol-activity-icon"
+                                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                                    />
+                                    <view class="pol-tag-text">
+                                        活动
+                                    </view>
+                                </view>{{ order.name }}
                             </view>
                             <view
                                 bindtap="goGoodDetail"
