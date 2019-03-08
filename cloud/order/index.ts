@@ -607,8 +607,6 @@ export const main = async ( event, context ) => {
                 )
             );
 
-            console.log('....', coupons$, coupons$.map( x => x.data ))
-
             const userOders = users$.map( user$ => {
                 
                 const user = user$.data[ 0 ];
