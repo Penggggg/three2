@@ -736,6 +736,7 @@ export const main = async ( event, context ) => {
                     return {
                         tag: good.tag,
                         title: good.title,
+                        saled: good.saled,
                         name: standar ? standar.name : '',
                         price: standar ? standar.price : good.price,
                         img: standar ? standar.img : good.img[ 0 ],
@@ -778,7 +779,7 @@ export const main = async ( event, context ) => {
 
                 users$ = users$.map( x => x.data[ 0 ]);
 
-                data = data$.map(( shopping, k ) => {
+                data = data.map(( shopping, k ) => {
                     return Object.assign({ }, shopping, {
                         users: shopping.uids.map( uid => users$.find( x => x.openid === uid ))
                     })
