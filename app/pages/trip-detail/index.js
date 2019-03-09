@@ -16,7 +16,8 @@ Page({
         http({
             data: {
                 tid,
-                type: 'wait'
+                type: 'wait',
+                showUser: true
             },
             url: 'shopping-list_pin',
             success: res => {

@@ -646,16 +646,18 @@ export const main = async ( event, context ) => {
      * {
      *    tid,
      *    pid,
-     *    detail: boolean 是否带回商品详情
-     *    !（可无）type: 'wait' | 'pin' // 等待拼团，已经可以拼团
+     *    detail: boolean 是否带回商品详情（默认带回）
+     *    showUser: boolean 是否需要用户头像等信息（默认不带回）
+     *    type: undefined | 'wait' | 'pin' // 等待拼团，已拼团，均有
      * }
      */
     app.router('pin', async( ctx, next ) => {
         try {
 
-            const openid = event.userInfo.openId;
             const type = event.data.type;
+            const openid = event.userInfo.openId;
             const { tid, detail, pid } = event.data;
+            const showUser = event.data.showUser || false;
 
             const query = pid ? {
                 tid,
@@ -688,44 +690,100 @@ export const main = async ( event, context ) => {
 
             data = data$;
 
+            // 查询每条清单底下每个商品的详情
             if ( detail === undefined || !!detail ) {
 
-                // 查询每条清单底下每个商品的详情
-                const goods$ = await Promise.all( data$.map( async list => {
+                // 商品
+                const goodIds = Array.from(
+                    new Set( data$.map( list => 
+                        list.pid
+                    ))
+                );
+
+                // 型号
+                const standarsIds = Array.from(
+                    new Set( data$.map( list => 
+                        list.sid
+                    ))
+                ).filter( x => !!x );
+
+                
+
+                // 商品
+                let allGoods$: any = await Promise.all( goodIds.map( goodId => {
+                    return db.collection('goods')
+                        .doc( goodId )
+                        .get( );
+                }));
+
+                allGoods$ = allGoods$.map( x => x.data );
+
+                // 型号
+                let allStandars$: any = await Promise.all( standarsIds.map( sid => {
+                    return db.collection('standards')
+                        .doc( sid )
+                        .get( );
+                }));
+
+                allStandars$ = allStandars$.map( x => x.data );
+
+                const good$ = data$.map( list => {
 
                     const { pid, sid } = list;
-                    const collectionName = !!sid ? 'standards' : 'goods';
-
-                    // 型号
-                    let standar$: any = null;
-
-                    // 商品
-                    const good$ = await db.collection('goods')
-                        .doc( pid )
-                        .get( );
-
-                    if ( !!sid ) {
-                        standar$ = await db.collection('standards')
-                            .doc( sid )
-                            .get( );
-                    }
+                    const good: any = allGoods$.find( x => x._id === pid );
+                    const standar = allStandars$.find( x => x._id === sid );
 
                     return {
-                        tag: good$.data.tag,
-                        title: good$.data.title,
-                        name: standar$ ? standar$.data.name : '',
-                        price: standar$ ? standar$.data.price : good$.data.price,
-                        img: standar$ ? standar$.data.img : good$.data.img[ 0 ],
-                        groupPrice: standar$ ? standar$.data.groupPrice : good$.data.groupPrice,
+                        tag: good.tag,
+                        title: good.title,
+                        name: standar ? standar.name : '',
+                        price: standar ? standar.price : good.price,
+                        img: standar ? standar.img : good.img[ 0 ],
+                        groupPrice: standar ? standar.groupPrice : good.groupPrice,
                     }
-                }));
+                });
 
                 // 注入商品详情
                 data = data$.map(( shopping, k ) => {
                     return Object.assign({ }, shopping, {
-                        detail: goods$[ k ]
+                        detail: good$[ k ]
                     })
                 });
+            }
+
+            // 展示用户头像
+            if ( showUser ) {
+
+                let uids: string[ ] = [ ];
+                data$.map( list => {
+                    uids = [ ...uids, ...list.uids ];
+                });
+
+                uids = Array.from(
+                    new Set( uids )
+                );
+ 
+                let users$: any = await Promise.all( uids.map( uid => {
+                    return db.collection('user')
+                        .where({
+                            openid: uid
+                        })
+                        .field({
+                            openid: true,
+                            avatarUrl: true,
+                            nickName: true
+                        })
+                        .get( );
+                }));
+
+                users$ = users$.map( x => x.data[ 0 ]);
+
+                data = data$.map(( shopping, k ) => {
+                    return Object.assign({ }, shopping, {
+                        users: shopping.uids.map( uid => users$.find( x => x.openid === uid ))
+                    })
+                });
+
             }
             
             return ctx.body = {
@@ -734,6 +792,7 @@ export const main = async ( event, context ) => {
             }
 
         } catch ( e ) {
+            console.log('...', e );
             return ctx.body = { status: 500 };
         }
     });
