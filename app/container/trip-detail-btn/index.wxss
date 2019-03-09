@@ -1,0 +1,42 @@
+/* container/tdb-bar/index.wxss */
+.con-tdb-bar {
+  
+    left: 4vw;
+    bottom: 0;
+    width: 92vw;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    box-sizing: border-box;
+    border-radius: 5px 5px 0 0 ;
+    box-shadow: 0 0 15px rgba( 0, 0, 0, 0.08 );
+
+}
+   
+  .con-tdb-item {
+    flex: 1;
+    display: flex;
+    padding: 15rpx;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .con-tdb-bar-img {
+    width: 50rpx;
+    height: 50rpx;
+  }
+  
+  .con-tdb-text {
+    color: #bfbfbf;
+    margin-top: 10rpx;
+    line-height: 24rpx;
+    font-size: 24rpx;
+    font-weight: 200;
+  }
+  
+  .con-tdb-text.active {
+    color: #999;
+  }

@@ -1,0 +1,6 @@
+<view class="p-trip-detail">
+    
+    <my-trip-detail-btn
+        tid="{{ tid }}"
+    />
+</view>
