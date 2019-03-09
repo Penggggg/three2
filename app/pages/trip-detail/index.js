@@ -1,3 +1,6 @@
+const { computed } = require('../../lib/vuefy/index.js');
+const { http } = require('../../util/http.js');
+
 Page({
 
     /**
@@ -8,14 +11,31 @@ Page({
         tid: ''
     },
 
+    /** 拉取等待拼团 */
+    fetchWaitPin( tid ) {
+        http({
+            data: {
+                tid,
+                type: 'wait'
+            },
+            url: 'shopping-list_pin',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+            }
+        })
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        if ( options.id ) { 
+        const tid = options.id;
+        if ( tid ) { 
             this.setData({
-                tid: options.id
+                tid
             });
+            this.fetchWaitPin( tid )
         }
         /**
          * !请记得去掉这段代码
@@ -23,6 +43,7 @@ Page({
         this.setData({
             tid: 'XDGzG97E7L4wLIdu'
         });
+        this.fetchWaitPin( 'XDGzG97E7L4wLIdu' )
     },
 
     /**

@@ -132,13 +132,12 @@ Page({
                             pid: ac.pid,
                             img: ac.img,
                             name: ac.title,
-                            canPin: false,
+                            canPin: !!shopping.find( s => s.sid === ac.sid && s.pid === ac.pid ),
                             price: ac.ac_price,
                             groupPrice: ac.ac_groupPrice 
                         })
                     }
                 });
-
                 return meta;
             },
 
@@ -257,7 +256,8 @@ Page({
             url: 'shopping-list_pin',
             data: {
                 pid,
-                tid
+                tid,
+                detail: false
             },
             success: res => {
                 const { status, data } = res;

@@ -333,15 +333,17 @@ export const main = async ( event, context ) => {
      * {
      *     tid, 
      *     needOrders 是否需要返回订单
+     *     need
      * }
      * 行程的购物清单，用于调整商品价格、购买数量
-     * "看看他人买了什么"
      */
     app.router('list', async( ctx, next ) => {
         try {
 
             let orders$: any = [ ];
-            const { tid, needOrders } = event.data;
+
+            const { tid, needOrders,  } = event.data;
+            const openid = event.data.openId || event.userInfo.openId;
             
             
             // 拿到行程下所有的购物清单
@@ -640,7 +642,7 @@ export const main = async ( event, context ) => {
 
     /**
      * @description
-     * 等待拼团列表 / 可拼团列表
+     * 等待拼团列表 / 可拼团列表 ( 可指定商品 - 商品详情页面 )
      * {
      *    tid,
      *    pid,
@@ -652,7 +654,7 @@ export const main = async ( event, context ) => {
         try {
 
             const openid = event.userInfo.openId;
-            const type = event.data.type || 'pin';
+            const type = event.data.type;
             const { tid, detail, pid } = event.data;
 
             const query = pid ? {
@@ -666,30 +668,62 @@ export const main = async ( event, context ) => {
                 .where( query )
                 .get( );
 
-            // uids长度为1，为待拼列表 ( 不应该有自己 )
+            // uids长度为1，为待拼列表 ( 查询待拼列表时，可以有自己，让客户知道系统会列出来 )
             // uids长度为2，为可以拼团列表
-            // 拼团、等待拼团
             let data: any = [ ];
             const data$ = shopping$.data.filter( s => {
                 if ( type === 'pin' ) {
-                    return !!s.adjustGroupPrice && s.uids.length > 1
+                    return !!s.adjustGroupPrice && s.uids.length > 1;
 
                 } else if ( type === 'wait' ) {
-                    return !!s.adjustGroupPrice && s.uids.length === 1 && s.uids[ 0 ] !== openid
+                    // return !!s.adjustGroupPrice && s.uids.length === 1 && s.uids[ 0 ] !== openid
+                    return !!s.adjustGroupPrice && s.uids.length === 1;
 
                 } else {
-                    return ( !!s.adjustGroupPrice && s.uids.length > 1 ) ||
-                        ( !!s.adjustGroupPrice && s.uids.length === 1 && s.uids[ 0 ] !== openid )
+                    // return ( !!s.adjustGroupPrice && s.uids.length > 1 ) ||
+                    //     ( !!s.adjustGroupPrice && s.uids.length === 1 && s.uids[ 0 ] !== openid )
+                    return !!s.adjustGroupPrice;
                 }
             });
 
             data = data$;
 
-            // 注入商品详情
             if ( detail === undefined || !!detail ) {
-                const data = data$.map( shopping => {
+
+                // 查询每条清单底下每个商品的详情
+                const goods$ = await Promise.all( data$.map( async list => {
+
+                    const { pid, sid } = list;
+                    const collectionName = !!sid ? 'standards' : 'goods';
+
+                    // 型号
+                    let standar$: any = null;
+
+                    // 商品
+                    const good$ = await db.collection('goods')
+                        .doc( pid )
+                        .get( );
+
+                    if ( !!sid ) {
+                        standar$ = await db.collection('standards')
+                            .doc( sid )
+                            .get( );
+                    }
+
+                    return {
+                        tag: good$.data.tag,
+                        title: good$.data.title,
+                        name: standar$ ? standar$.data.name : '',
+                        price: standar$ ? standar$.data.price : good$.data.price,
+                        img: standar$ ? standar$.data.img : good$.data.img[ 0 ],
+                        groupPrice: standar$ ? standar$.data.groupPrice : good$.data.groupPrice,
+                    }
+                }));
+
+                // 注入商品详情
+                data = data$.map(( shopping, k ) => {
                     return Object.assign({ }, shopping, {
-                        detail: { }
+                        detail: goods$[ k ]
                     })
                 });
             }
@@ -705,7 +739,7 @@ export const main = async ( event, context ) => {
     });
 
     /** @description
-     * 仙女购物清单
+     * 仙女购物清单 ( 买了多少、卡券多少、省了多少 )
      */
     app.router('fairy-shoppinglist', async( ctx, next ) => {
         try {

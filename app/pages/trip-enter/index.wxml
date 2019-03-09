@@ -146,7 +146,7 @@
                                             {{ item.delta }}
                                         </view>
                                         <view class="te-fairy-simple-info-label">
-                                            最多可省
+                                            元最多省
                                         </view>
                                     </view>
                                 </view>
