@@ -263,13 +263,19 @@ export const main = async ( event, context ) => {
                 }
 
                 // 插入活动的查询条件
-                query = Object.assign({ }, query, {
-                    acid: acid || _.eq( undefined )
-                });
+                if ( !!acid ) {
+                    query = Object.assign({ }, query, {
+                        acid
+                    });
+                }
+
+                console.log('111111', query );
 
                 const find$ = await db.collection('shopping-list')
                     .where( query )
                     .get( );
+
+                console.log( '2222', find$.data );
 
                 if ( find$.data.length === 0 ) {
 

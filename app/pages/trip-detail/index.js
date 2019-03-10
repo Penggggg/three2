@@ -17,6 +17,9 @@ Page({
         /** 等待拼团列表 */
         waitPin: [ ],
 
+        /** 拼团列表 */
+        pingList: [ ]
+
     },
 
     /** 设置computed */
@@ -27,6 +30,14 @@ Page({
             waitPin$: function( ) {
                 const { waitPin } = this.data;
                 return waitPin.sort(( x, y ) => {
+                    return x.detail.saled - y.detail.saled;
+                });
+            },
+
+            /** 等待拼团列表 */
+            pingList$: function( ) {
+                const { pingList } = this.data;
+                return pingList.sort(( x, y ) => {
                     return x.detail.saled - y.detail.saled;
                 });
             }
@@ -60,7 +71,24 @@ Page({
     /** 拉取已经拼团成功的商品列表 */
     fetchPin( tid ) {
         return new Promise(( resolve, reject ) => {
-            resolve( );
+            http({
+                data: {
+                    tid,
+                    type: 'pin',
+                    showUser: true
+                },
+                url: 'shopping-list_pin',
+                success: res => {
+                    const { status, data } = res;
+                    if ( status !== 200 ) {
+                        return reject( );
+                    }
+                    this.setData({ 
+                        pingList: data
+                    });
+                    resolve( );
+                }
+            });
         });
     },
 

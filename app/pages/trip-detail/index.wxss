@@ -44,6 +44,7 @@
 }
 
 .ptd-swiper {
+    height: 170rpx;
     margin-top: 25rpx;
 }
 

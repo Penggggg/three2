@@ -97,6 +97,19 @@
             </block>
         </swiper>
 
+        <!-- 热门拼团 -->
+        <view
+            class="ptd-pin-title-block"
+            wx:if="{{ waitPin$.length > 0 }}"
+        >
+            <view class="ptd-pin-title">
+                热门拼团
+            </view>
+            <view class="ptd-pin-tips">
+                Hot Pin
+            </view>
+        </view>
+
     </view>
     
     <my-trip-detail-btn
