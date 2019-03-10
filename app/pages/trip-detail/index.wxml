@@ -1,6 +1,102 @@
 <view class="p-trip-detail">
+
+    <view
+        wx:if="{{ loading }}"
+        class="ptd-loading-tips"
+    >
+        加载中...
+    </view>
+
+    <view
+        wx:else
+    >
+
+        <!-- 等待拼团 -->
+        <view
+            class="ptd-pin-title-block"
+            wx:if="{{ waitPin$.length > 0 }}"
+        >
+            <view class="ptd-pin-title">
+                仙女待拼
+            </view>
+            <view class="ptd-pin-tips">
+                Cheap cost
+            </view>
+        </view>
+
+        <!-- 等待拼团 -->
+        <swiper
+            autoplay="{{ false }}"
+            circular="{{ true }}"
+            duration="{{ 1000 }}"
+            interval="{{ 3000 }}"
+            class="ptd-swiper"
+            wx:if="{{ waitPin$.length > 0 }}"
+            display-multiple-items="{{ 2 }}"
+        >
+            <block
+                wx:key="{{ index }}"
+                wx:for="{{ waitPin$ }}"
+            >
+                <swiper-item class="ptd-swiper-item-container">
+                    <view class="ptd-swiper-item">
+                        <view class="ptd-waitpin-img-container">
+                            <image
+                                lazy-load="true"
+                                mode="widthFix"
+                                class="ptd-waitpin-img"
+                                src="{{ item.detail.img }}"
+                            />
+                        </view>
+                        <view class="ptd-waitpin-info-block">
+                            <view>
+                                <view class="ptd-waitpin-title-block">
+                                    <view class="ptd-waitpin-title">
+                                        {{ item.detail.title }}
+                                    </view>
+                                    <view
+                                        class="ptd-lh"
+                                        wx:if="{{ item.detail.name }}"
+                                    >
+                                        <view
+                                            class="ptd-waitpin-name"
+                                        >
+                                            {{ item.detail.name }}
+                                        </view>
+                                    </view>
+                                </view>
+                            </view>
+                            <view class="ptd-waitpin-price-block">
+                                <view class="ptd-waitpin-price-lh">
+                                    <view class="ptd-waitpin-price-label">
+                                        拼团价
+                                    </view>
+                                    <wxc-price
+                                        icon="sub"
+                                        decimal="small"
+                                        class="ptd-waitpin-price"
+                                    > 
+                                        {{ item.adjustGroupPrice }}
+                                    </wxc-price>
+                                </view>
+                                <image 
+                                    lazy-load="true"
+                                    mode="widthFix"
+                                    class="ptd-waitpin-avatar"
+                                    src="{{ item.users[ 0 ].avatarUrl }}"
+                                />
+                            </view>
+                        </view>
+                        
+                    </view>
+                </swiper-item>
+            </block>
+        </swiper>
+
+    </view>
     
     <my-trip-detail-btn
         tid="{{ tid }}"
     />
+
 </view>
