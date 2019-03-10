@@ -78,6 +78,14 @@ Page({
         });
     },
 
+    /** 跳到商品详情 */
+    goDetail({ currentTarget }) {
+        const { data } = currentTarget.dataset;
+        wx.navigateTo({
+            url: `/pages/goods-detail/index?id=${data.pid}&tid=${this.data.tid}`
+        });
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
