@@ -269,13 +269,9 @@ export const main = async ( event, context ) => {
                     });
                 }
 
-                console.log('111111', query );
-
                 const find$ = await db.collection('shopping-list')
                     .where( query )
                     .get( );
-
-                console.log( '2222', find$.data );
 
                 if ( find$.data.length === 0 ) {
 
@@ -740,6 +736,7 @@ export const main = async ( event, context ) => {
                     const standar = allStandars$.find( x => x._id === sid );
 
                     return {
+                        good,
                         tag: good.tag,
                         title: good.title,
                         saled: good.saled,

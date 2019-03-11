@@ -1,3 +1,8 @@
+.p-trip-detail {
+    min-height: 100vh;
+    padding-bottom: 100rpx;
+}
+
 .ptd-pin-title-block {
     display: flex;
     align-items: center;
@@ -30,17 +35,6 @@
     font-size: 20rpx;
     font-weight: bold;
     letter-spacing: 0.02em;
-}
-
-.ptd-pin-tips:after {
-    left: -5%;
-    bottom: -3rpx;
-    width: 110%;
-    height: 1px;
-    transform: scaleY( 0.5 );
-    position: absolute;
-    content: '';
-    background: #666;
 }
 
 .ptd-swiper {
@@ -156,4 +150,96 @@
     font-size: 26rpx;
     text-align: center;
     padding-top: 200rpx;
+}
+
+.ptd-pin-list {
+    padding: 20rpx 25rpx;
+}
+
+.ptd-pin-item {
+    border-radius: 10px;
+    margin-bottom: 55rpx;
+    box-shadow: 3px 3px 10px rgba( 0, 0, 0, 0.1 );
+}
+
+.ptd-pin-img-block {
+    position: relative;
+}
+
+.ptd-pin-img-only-p {
+    width: 100%;
+    display: block;
+    border-radius: 10px 10px 0 0 ;
+}
+
+.ptd-pin-title-only-p-block {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    position: absolute;
+}
+
+.ptd-pin-title-only-p {
+    color: #fff;
+    font-size: 30rpx;
+    padding: 5rpx 25rpx;
+    letter-spacing: 0.03em;
+    box-sizing: border-box;
+    overflow: hidden; 
+    display: -webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    background: rgba( 0, 0, 0, 0.18 );
+}
+
+.ptd-pin-item-info-block {
+    padding: 25rpx 25rpx 15rpx;
+    box-sizing: border-box;
+    border-radius: 0 0 10px 10px;
+}
+
+.ptd-pin-item-member-block {
+    display: flex;
+    align-items: center;
+}
+
+.ptd-pin-item-member-title {
+    color: #4d4d4d;
+    font-size: 24rpx;
+    font-weight: bold;
+    position: relative;
+    letter-spacing: 0.02em;
+    margin-right: 30rpx;
+}
+
+.ptd-pin-item-member-list {
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+.ptd-pin-item-member-img {
+    width: 50rpx;
+    height: 50rpx;
+    border-radius: 50%;
+    margin-left: -8rpx;
+    border: 2px solid #fff;
+    box-shadow: -3px -1px 5px rgba( 0, 0, 0, 0.2 );    
+}
+
+.ptd-pin-item-info {
+    color: #333;
+    font-size: 22rpx;
+    letter-spacing: 0.02em;
+    line-height: 32rpx;
+}
+
+.ptd-pin-good-title {
+    color: #333;
+    font-size: 30rpx;
+    margin: 20rpx;
+    letter-spacing: 0.03em;
+    margin: 20rpx 0 30rpx;
+    padding-left: 20rpx;
 }

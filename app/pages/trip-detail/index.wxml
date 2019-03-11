@@ -32,7 +32,7 @@
             interval="{{ 3000 }}"
             class="ptd-swiper"
             wx:if="{{ waitPin$.length > 0 }}"
-            display-multiple-items="{{ 2 }}"
+            display-multiple-items="{{ waitPin$.length > 1 ? 2 : 1 }}"
         >
             <block
                 wx:key="{{ index }}"
@@ -100,7 +100,7 @@
         <!-- 热门拼团 -->
         <view
             class="ptd-pin-title-block"
-            wx:if="{{ waitPin$.length > 0 }}"
+            wx:if="{{ pingList$.length > 0 }}"
         >
             <view class="ptd-pin-title">
                 热门拼团
@@ -110,10 +110,76 @@
             </view>
         </view>
 
+        <!-- 热门拼团 -->
+        <view
+            class="ptd-pin-list"
+            wx:if="{{ pingList$.length > 0 }}"
+        >
+            <view
+                class="ptd-pin-item"
+                wx:key="{{ index }}"
+                wx:for="{{ pingList$ }}"
+            >
+                <!-- 只有主体商品 -->
+                <view
+                    wx:if="{{ !item.sid }}"
+                    class="ptd-pin-img-block only-p"
+                >
+                    <image 
+                        mode="widthFix"
+                        lazy-load="{{ true }}"
+                        class="ptd-pin-img-only-p"
+                        src="{{ item.detail.img }}"
+                    />
+                    <view class="ptd-pin-title-only-p-block">
+                        <view class="ptd-pin-title-only-p">
+                            {{ item.detail.title }}
+                        </view>
+                    </view>
+                </view>
+                <!-- 商品详情 -->
+                <view class="ptd-pin-item-info-block">
+
+                    <!-- 显示参团人数 -->
+                    <view class="ptd-pin-item-member-block">
+                        <view class="ptd-pin-item-member-title">
+                            {{ item.users.length }}人已拼团
+                        </view>
+                        <view class="ptd-pin-item-member-list">
+                            <image
+                                mode="scaleToFill"
+                                lazy-load="{{ true }}"
+                                wx:key="{{ k }}"
+                                wx:for-index="k"
+                                wx:for-item="user"
+                                wx:for="{{ item.users }}"
+                                src="{{ user.avatarUrl }}"
+                                class="ptd-pin-item-member-img"
+                            />
+                        </view>
+                    </view>
+
+                    <!-- 商品名称 -->
+                    <view
+                        wx:if="{{ item.sid }}"
+                        class="ptd-pin-good-title"
+                    >
+                        {{ item.detail.title }}
+                    </view>
+
+                    <!-- 商品介绍 -->
+                    <view class="ptd-pin-item-info">
+                        {{ item.detail.good.detail }}
+                    </view>
+
+                </view>
+            </view>
+        </view>
+
     </view>
     
-    <my-trip-detail-btn
+    <!-- <my-trip-detail-btn
         tid="{{ tid }}"
-    />
+    /> -->
 
 </view>
