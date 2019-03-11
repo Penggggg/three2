@@ -114,6 +114,15 @@ Page({
         });
     },
 
+    /** 预览图片 */
+    priviewSingle({ currentTarget }) {
+        const { img, imgs } = currentTarget.dataset;
+        wx.previewImage({
+            current: img,
+            urls: imgs || [ img ],
+        })
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */

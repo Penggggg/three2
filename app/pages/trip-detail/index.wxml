@@ -120,7 +120,7 @@
                 wx:key="{{ index }}"
                 wx:for="{{ pingList$ }}"
             >
-                <!-- 只有主体商品 -->
+                <!-- 主图：只有主体商品 -->
                 <view
                     wx:if="{{ !item.sid }}"
                     class="ptd-pin-img-block only-p"
@@ -130,6 +130,8 @@
                         lazy-load="{{ true }}"
                         class="ptd-pin-img-only-p"
                         src="{{ item.detail.img }}"
+                        data-img="{{ item.detail.img }}"
+                        bindtap="priviewSingle"
                     />
                     <view class="ptd-pin-title-only-p-block">
                         <view class="ptd-pin-title-only-p">
@@ -137,6 +139,32 @@
                         </view>
                     </view>
                 </view>
+
+                <!-- 主图：型号 -->
+                <view
+                    wx:else
+                    class="ptd-pin-img-block with-standar"
+                >
+                    <image 
+                        mode="widthFix"
+                        lazy-load="{{ true }}"
+                        class="ptd-pin-img-standar"
+                        src="{{ item.detail.img }}"
+                        data-img="{{ item.detail.img }}"
+                        bindtap="priviewSingle"
+                    />
+                    <view class="ptd-pin-img-small-con">
+                        <image
+                            mode="widthFix"
+                            lazy-load="{{ true }}"
+                            class="ptd-pin-img-small"
+                            src="{{ item.detail.good.img[ 0 ]}}"
+                            data-img="{{ item.detail.good.img[ 0 ] }}"
+                            bindtap="priviewSingle"
+                        />
+                    </view>
+                </view>
+
                 <!-- 商品详情 -->
                 <view class="ptd-pin-item-info-block">
 
@@ -172,14 +200,45 @@
                         {{ item.detail.good.detail }}
                     </view>
 
+                    <!-- 商品图片、价格按钮 -->
+                    <view class="ptd-pin-item-action-block">
+                        <view class="ptd-pin-item-good-imgs">
+                            <image
+                                mode="scaleToFill"
+                                lazy-load="{{ true }}"
+                                src="{{ img }}"
+                                wx:for-index="k"
+                                wx:for-item="img"
+                                wx:key="{{ k }}"
+                                class="ptd-pin-item-good-img-item"
+                                wx:for="{{ item.detail.good.img }}"
+                                data-img="{{ img }}"
+                                data-imgs="{{ item.detail.good.img }}"
+                                bindtap="priviewSingle"
+                            />
+                        </view>
+                        <view>
+                            <view class="ptd-pin-btn">
+                                <view class="ptd-pin-btn-text">拼团价</view>
+                                <wxc-price
+                                    icon="sub"
+                                    decimal="small"
+                                    class="ptd-pin-btn-price"
+                                > 
+                                    {{ item.adjustGroupPrice }}
+                                </wxc-price>
+                            </view>
+                        </view>
+                    </view>
+
                 </view>
             </view>
         </view>
 
     </view>
     
-    <!-- <my-trip-detail-btn
+    <my-trip-detail-btn
         tid="{{ tid }}"
-    /> -->
+    />
 
 </view>

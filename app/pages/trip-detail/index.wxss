@@ -158,7 +158,7 @@
 
 .ptd-pin-item {
     border-radius: 10px;
-    margin-bottom: 55rpx;
+    margin-bottom: 65rpx;
     box-shadow: 3px 3px 10px rgba( 0, 0, 0, 0.1 );
 }
 
@@ -166,10 +166,42 @@
     position: relative;
 }
 
+.ptd-pin-img-block.with-standar {
+    height: 350rpx;
+    overflow: hidden;
+    display: flex;
+    /* align-items: center; */
+}
+
 .ptd-pin-img-only-p {
     width: 100%;
     display: block;
     border-radius: 10px 10px 0 0 ;
+}
+
+.ptd-pin-img-standar {
+    width: 60%;
+    display: block;
+    border-radius: 10px 0 0 0 ;
+}
+
+.ptd-pin-img-small {
+    
+    width: 100%;
+    
+}
+
+.ptd-pin-img-small-con {
+    top: 50%;
+    right: 40rpx;
+    width: 28%;
+    height: 200rpx;
+    overflow: hidden;
+    position: absolute;
+    transform: translate( 0, -50% );
+    border-radius: 3px;
+    border: 2px solid #fff;
+    box-shadow: 3px 3px 25px rgba( 0, 0, 0, 0.1 );
 }
 
 .ptd-pin-title-only-p-block {
@@ -195,7 +227,7 @@
 }
 
 .ptd-pin-item-info-block {
-    padding: 25rpx 25rpx 15rpx;
+    padding: 25rpx 25rpx 35rpx;
     box-sizing: border-box;
     border-radius: 0 0 10px 10px;
 }
@@ -242,4 +274,54 @@
     letter-spacing: 0.03em;
     margin: 20rpx 0 30rpx;
     padding-left: 20rpx;
+}
+
+.ptd-pin-item-action-block {
+    display: flex;
+    margin-top: 35rpx;
+    align-items: flex-end;
+}
+
+.ptd-pin-item-good-imgs {
+    flex: 1;
+    white-space: nowrap;
+    overflow-y: scroll;
+    margin-right: 15rpx;
+}
+
+.ptd-pin-item-good-img-item {
+    width: 100rpx;
+    height: 100rpx;
+    border-radius: 3px;
+    margin-right: 22rpx;
+}
+
+.ptd-pin-btn {
+    display: flex;
+    align-items: flex-end;
+    padding: 7rpx 18rpx;
+    border-radius: 3px;
+    /* background: #ff8787; 
+    background: -webkit-linear-gradient(to right, #ff61ab, #ff8787); 
+    background: linear-gradient(to right, #ff61ab, #ff8787);  */
+    background: #bc4e9c;  
+    background: -webkit-linear-gradient(to left, #f80759, #bc4e9c);  
+    background: linear-gradient(to left, #f80759, #bc4e9c); 
+
+}
+
+.ptd-pin-btn-text {
+    color: #fff;
+    margin-right: 10rpx;
+    font-size: 20rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.ptd-pin-btn-price {
+    color: #fff;
+    display: block;
+    line-height: 40rpx;
+    height: 40rpx;
+    font-size: 40rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
 }
