@@ -73,15 +73,15 @@
 }
 
 .con-ptd-top-img.three {
-    border: 5px solid #f1eef1;
+    border: 5px solid #fad0c4;
 }
 
 .con-ptd-top-img.one {
-    border: 5px solid #f5f568;
+    border: 5px solid #fee140;
 }
 
 .con-ptd-top-img.two {
-    border: 5px solid #98f0f9;
+    border: 5px solid #feada6;
 }
 
 
