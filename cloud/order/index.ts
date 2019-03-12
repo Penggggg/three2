@@ -242,6 +242,7 @@ export const main = async ( event, context ) => {
      * 分页 + query 查询订单列表（未聚合）
      * ----- 请求 ------
      * {
+     *!    tid: 行程id （可无）
      *     page: number
      *     skip: number
      *     type: 我的全部 | 未付款订单 | 待发货 | 已完成 | 管理员（行程订单）| 管理员（所有订单）
@@ -254,11 +255,12 @@ export const main = async ( event, context ) => {
     app.router('list', async( ctx, next ) => {
         try {
 
-            // 查询条数
-            const limit = 10;
-
             let where$ = { };
-            const { type } = event.data;
+            const { type, tid } = event.data;
+
+            // 查询条数
+            const limit = tid ? 99 : 10;
+
             const openid = event.userInfo.openId;
 
             // 我的全部
@@ -297,12 +299,22 @@ export const main = async ( event, context ) => {
                 };
             }
 
+            // 行程订单
+            if ( tid ) {
+                where$ = Object.assign({ }, where$, {
+                    tid
+                });
+            }
+
             // 获取总数
             const total$ = await db.collection('order')
                 .where( where$ )
                 .count( );
 
             // 获取订单数据
+            /**
+             * ! 如果是有指定tid的，则不需要limit了，直接拉取行程所有的订单
+             */
             const data$ = await db.collection('order')
                 .where( where$ )
                 .orderBy('createTime', 'desc')
@@ -323,7 +335,8 @@ export const main = async ( event, context ) => {
                 data: [ ]
             };
 
-            if ( last ) { 
+            // 如果没有tid参数，才去做fix的动作
+            if ( last && !tid ) { 
                 fix$ = await db.collection('order')
                     .where({
                         openid,

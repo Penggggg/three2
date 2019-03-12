@@ -159,7 +159,7 @@
 .ptd-pin-item {
     border-radius: 10px;
     margin-bottom: 65rpx;
-    box-shadow: 3px 3px 10px rgba( 0, 0, 0, 0.1 );
+    box-shadow: 0px 0px 10px rgba( 0, 0, 0, 0.1 );
 }
 
 .ptd-pin-img-block {

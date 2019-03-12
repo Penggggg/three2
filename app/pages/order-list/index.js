@@ -61,7 +61,11 @@ Page({
         // 展示代金券（自动领取代金券）
         showDaijin: 'hide',
         // 领取代金券的信息
-        daijin: null
+        daijin: null,
+        // 通过参数传入的tid
+        tidParam: '',
+        // 是否来自与行程详情
+        fromDetail: false
     },
 
     /** 设置computed */
@@ -100,6 +104,8 @@ Page({
 
     /** 拉取拼团列表（预测） */
     fetchPinList( tid ) {
+
+        if ( this.data.pinList.length !== 0 ) { return; }
 
         http({
             url: 'shopping-list_pin',
@@ -146,6 +152,7 @@ Page({
     /** 拉取拼团列表 */
     fetchGroupList( tid ) {
         if ( !tid ) { return; }
+        if ( this.data.shoppinglist.length !== 0 ) { return; }
         http({
             url: 'shopping-list_list',
             data: {
@@ -169,14 +176,27 @@ Page({
 
     /** 拉取订单数据 */
     fetchList( index ) {
-        const { page, keyMapType, skip } = this.data;
-        const type = keyMapType[ index ];
+        const { page, keyMapType, skip, canloadMore, metaList, tidParam, fromDetail } = this.data;
+        const type = typeof index !== 'object' ?
+            keyMapType[ index ] :
+            keyMapType[ 0 ];
+
+        if ( !canloadMore ) { return; }
+
+        let reqData = {
+            type,
+            skip,
+            page: page + 1
+        };
+
+        if ( !!tidParam && !!fromDetail ) {
+            reqData = Object.assign({ }, reqData, {
+                tid: tidParam
+            });
+        }
+
         http({
-            data: {
-                type,
-                skip,
-                page: page + 1
-            },
+            data: reqData,
             url: 'order_list',
             loadMsg: '加载中...',
             success: res => {
@@ -190,7 +210,7 @@ Page({
                 this.setData({
                     page,
                     skip: current,
-                    metaList: data.data,
+                    metaList: [ ...metaList, ...data.data ],
                     canloadMore: total > current
                 });
 
@@ -777,7 +797,6 @@ Page({
 
         });
         
-        console.log('..', Object.keys( orderObj ).map( tid => orderObj[ tid ]))
         this.setData({
             loading: false,
             tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
@@ -971,6 +990,14 @@ Page({
         this.watchRole( );
         this.runComputed( );
         wx.hideShareMenu( );
+
+        const { tid, fromDetail } = options;
+        if ( tid ) { 
+            this.setData({
+                tidParam: tid || null,
+                fromDetail: fromDetail === 'true'
+            });
+        }
     },
 
     /**

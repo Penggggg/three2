@@ -2,9 +2,9 @@
   "pages": [
     "pages/trip-detail/index",
     "pages/trip-enter/index",
+    "pages/order-list/index",
     "pages/manager-trip-order/index",
     "pages/cart-list/index",
-    "pages/order-list/index",
     "pages/coupon-list/index",
     "pages/manager-trip-list/index",
     "pages/goods-detail/index",

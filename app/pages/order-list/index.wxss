@@ -5,6 +5,15 @@
     flex-direction: column;
 }
 
+.pol-scroll-view {
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.pol-scroll-view.pb {
+    padding-bottom: 50rpx;
+}
+
 .pol-loading-tips {
     color: #999;
     font-size: 26rpx;
@@ -61,7 +70,7 @@
 }
 
 .pol-order-list-block {
-    padding: 10rpx 30rpx 50rpx;
+    padding: 10rpx 30rpx 0rpx;
 }
 
 .pol-order-item {
@@ -69,7 +78,7 @@
     border-radius: 10px;
     padding-bottom: 10rpx;
     margin-bottom: 40rpx;
-    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.20);
+    /* box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.20); */
 }
 
 .pol-trip-header-block {

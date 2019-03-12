@@ -9,7 +9,8 @@ Component({
         // 行程id
         tid: {
             type: String,
-            value: ''
+            value: '',
+            observer: 'initTid'
         }
     },
 
@@ -18,14 +19,19 @@ Component({
      */
     data: {
         // 当前活动下标
-        active: 0
+        active: 0,
+        // 行程tid
+        tid: ''
     },
 
     computed: {
         // 按钮
+        /**
+         * ! 这里有bug，不能computed props的属性
+         */
         navList$( ) {
             const { tid } = this.data;
-            return [
+            const meta = [
                 {
                     title: '推荐',
                     url: `/pages/trip-detail/index?id=${tid}`,
@@ -33,7 +39,7 @@ Component({
                     activeImg: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-kouhong-active.png'
                 }, {
                     title: '我的',
-                    url: `/pages/trip-detail/index?id=${tid}`,
+                    url: `/pages/order-list/index?tid=${tid}&fromDetail=true`,
                     img: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-person.png",
                     activeImg: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-person-active.png"
                 }, {
@@ -42,7 +48,8 @@ Component({
                     img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-jiangbei.png',
                     activeImg: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-jiangbei-active.png'
                 }
-            ]
+            ];
+            return meta;
         }
     },
 
@@ -69,12 +76,18 @@ Component({
             const pages = getCurrentPages( )
             const current = pages[ pages.length - 1 ];
             const url = current.route;
-            
+
             if ( currentTarget.dataset.url.indexOf( url ) === -1 ) {
                 wx.redirectTo({
                     url: currentTarget.dataset.url
                 });
             }
+        },
+        /** 初始化tid */
+        initTid( tid ) {
+            this.setData({
+                tid,
+            })
         }
     },
 
