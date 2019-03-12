@@ -153,6 +153,7 @@
 }
 
 .ptd-pin-list {
+    margin-top: 20rpx;
     padding: 20rpx 25rpx;
 }
 
