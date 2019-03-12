@@ -5,13 +5,11 @@ view {
 .page-trip-deliver {
     height: 100vh;
     display: flex;
+    box-sizing: border-box;
+    padding-top: 90rpx;
     padding-bottom: 120rpx;
     flex-direction: column;
     position: relative;
-    /* background: #f5576c; 
-    background: -webkit-linear-gradient(to bottom, #f093fb, #f5576c);  
-    background: linear-gradient(to bottom, #f093fb, #f5576c); */
-    
     background: #FFAFBD;  
     background: -webkit-linear-gradient(to bottom, #ffc3a0, #FFAFBD);  
     background: linear-gradient(to bottom, #ffc3a0, #FFAFBD); 
@@ -21,16 +19,20 @@ view {
 
 .ptd-content {
     flex: 1;
-    margin-bottom: 20rpx;
+    box-sizing: border-box;
     overflow-y: scroll;
 }
 
 
 .ptd-btn-block {
+    left: 0;
+    bottom: 0;
+    width: 100vw;
     display: flex;
     padding: 0 35rpx 30rpx;
     box-sizing: border-box;
     background: transparent;
+    position: fixed;
 }
 
 .ptd-btn:first-child {
@@ -64,7 +66,10 @@ view {
 
 .ptd-tab-block {
     text-align: center;
-    margin-bottom: 15rpx;
+    top: 0;
+    left: 50%;
+    position: fixed;
+    transform: translate( -50%, 0 );
 }
 
 .ptd-tab {
