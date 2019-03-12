@@ -136,29 +136,33 @@
 .con-ptd-rank-name-block {
     display: flex;
     position: relative;
+    align-items: center;
     margin-bottom: 10rpx;
 }
 
 .con-ptd-rank-title {
+    max-height: 30rpx;
     color: #fff;
     z-index: 2;
     font-size: 20rpx;
     border-radius: 3px;
     padding: 0rpx 10rpx;
     letter-spacing: 0.1em;
-    background: #bc4e9c;
     margin-left: 15rpx;
     display: flex;
     justify-content: center;
     align-items: center;
     text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    background: #ff9a9e;
+    /* background: #bc4e9c;
     background:-webkit-linear-gradient(to right, #f80759, #bc4e9c);
-    background:linear-gradient(to right, #f80759, #bc4e9c);
+    background:linear-gradient(to right, #f80759, #bc4e9c); */
+    background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%);
 }
 
 .con-ptd-rank-name {
     color: #fff;
-    font-size: 24rpx;
+    font-size: 28rpx;
     letter-spacing: 0.1em;
     text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
 }
@@ -186,13 +190,18 @@
 .con-ptd-rank-order-block {
     width: 100%;
     overflow-x: scroll;
-    padding: 25rpx 0 0;
+    padding: 25rpx 0 0 10rpx;
+}
+
+.con-ptd-rank-order-container {
+    position: relative;
+    width: 90rpx;
+    height: 90rpx;
+    margin-right: 15rpx;
+    display: inline-block;
 }
 
 .con-ptd-rank-order {
-    display: flex;
-    margin-right: 15rpx;
-    flex-direction: column;
     display: inline-block;
     position: relative;
     width: 90rpx;
@@ -204,20 +213,23 @@
 
 .pdt-rank-order-pin {
     top: -10rpx;
-    right: -10rpx;
+    left: -5rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #fff;
     font-size: 16rpx;
     border-radius: 3px;
-    /* padding: 0rpx 8rpx; */
     letter-spacing: 0.1em;
-    background: #bc4e9c;
     text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
-    background:-webkit-linear-gradient(to right, #f80759, #bc4e9c);
-    background:linear-gradient(to right, #f80759, #bc4e9c);
     position: absolute;
     border-radius: 50%;
-    width: 15rpx;
-    height: 15rpx;
+    width: 30rpx;
+    height: 30rpx;
+    /* background: #bc4e9c;
+    background:-webkit-linear-gradient(to right, #f80759, #bc4e9c);
+    background:linear-gradient(to right, #f80759, #bc4e9c); */
+    background-image: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%);
 }
 
 .con-ptd-rank-order-img {

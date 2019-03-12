@@ -562,10 +562,15 @@ export const main = async ( event, context ) => {
     /** 
      * @description
      * 代购清帐催款的订单列表
+     * {
+     *     tid 
+     *     needCoupons: false | true | undefined
+     *     needAddress: false | true | undefined
+     * }
      */
     app.router('daigou-list', async( ctx, next ) => {
         try {
-            const { tid } = event.data;
+            const { tid, needCoupons, needAddress } = event.data;
             const orders$ = await db.collection('order')
                 .where({
                     tid,
@@ -587,38 +592,45 @@ export const main = async ( event, context ) => {
             );
 
             // 地址信息
-            const address$ = await Promise.all(
-                Array.from(
-                    new Set( orders$.data
-                        .map( x => x.aid )
-                ))
-                .map( aid => db.collection('address')
-                            .doc( aid )
-                            .get( ))
-            );
-
+            let address$: any = [ ];
+            if ( !!needAddress || needAddress === undefined ) {
+                address$ = await Promise.all(
+                    Array.from(
+                        new Set( orders$.data
+                            .map( x => x.aid )
+                    ))
+                    .map( aid => db.collection('address')
+                                .doc( aid )
+                                .get( ))
+                );
+            }
+            
             // 卡券信息
-            const coupons$ = await Promise.all(
-                Array.from(
-                    new Set( orders$.data 
-                        .map( x => x.openid )
-                ))
-                .map( openid => db.collection('coupon')
-                    .where( _.or([
-                        {
-                            tid,
-                            openid,
-                            type: _.or( _.eq('t_manjian'), _.eq('t_lijian'))
-                        }, {
-                            openid,
-                            isUsed: false,
-                            canUseInNext: true,
-                            type: 't_daijin'
-                        }
-                    ]))
-                    .get( )
-                )
-            );
+            let coupons$: any = [ ];
+            if ( !!needCoupons || needCoupons === undefined ) {
+                coupons$ = await Promise.all(
+                    Array.from(
+                        new Set( orders$.data 
+                            .map( x => x.openid )
+                    ))
+                    .map( openid => db.collection('coupon')
+                        .where( _.or([
+                            {
+                                tid,
+                                openid,
+                                type: _.or( _.eq('t_manjian'), _.eq('t_lijian'))
+                            }, {
+                                openid,
+                                isUsed: false,
+                                canUseInNext: true,
+                                type: 't_daijin'
+                            }
+                        ]))
+                        .get( )
+                    )
+                );
+            }
+            
 
             const userOders = users$.map( user$ => {
                 
@@ -627,19 +639,23 @@ export const main = async ( event, context ) => {
                 const orders = orders$.data
                     .filter( x => x.openid === user.openid );
 
-                const address = address$
-                    .map( x => x.data )
-                    .filter( x => x.openid === user.openid );
+                const address = address$.length > 0 ?
+                    address$
+                        .map( x => x.data )
+                        .filter( x => x.openid === user.openid ) :
+                    undefined;
 
-                const coupons = coupons$
-                    .map( x => x.data )
-                    .filter( x => x[ 0 ].openid === user.openid )
+                const coupons = coupons$.length > 0 ?
+                    coupons$
+                        .map( x => x.data )
+                        .filter( x => x[ 0 ].openid === user.openid ) :
+                    undefined;
 
                 return {
                     user,
                     orders,
                     address,
-                    coupons: coupons.length > 0 ? coupons[ 0 ] : [ ]
+                    coupons: (!!coupons && coupons.length > 0 ) ? coupons[ 0 ] : [ ]
                 };
             });
 
@@ -649,6 +665,7 @@ export const main = async ( event, context ) => {
             }
 
         } catch ( e ) {
+            console.log( '...', e );
             return ctx.body = { status: 500 };
         }
     });

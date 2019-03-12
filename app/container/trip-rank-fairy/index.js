@@ -83,12 +83,44 @@ Component({
             http({
                 url: 'order_daigou-list',
                 data: {
-                    tid
+                    tid,
+                    needAddress: false,
+                    needCoupons: false,
                 },
                 loadMsg: '加载中...',
                 errorMsg: '加载失败，请刷新',
                 success: res => {
                     const { status, data } = res;
+
+                    const findCanGroup = ( order ) => {
+                        if ( order.canGroup !== undefined ) {
+                            return !!order.canGroup;
+
+                        } else if ( order.base_status === '0' || order.base_status === '1') {
+                            if ( !order.groupPrice ) {
+                                return false
+                            } else {
+                                const otherUsers = data.filter( x => x.user.openid !== order.openid );
+                                return otherUsers.some( otherUser => 
+                                    otherUser.orders.some( o => 
+                                        o.sid === order.sid && o.pid === order.pid
+                                    )
+                                )
+                            }
+
+                        } else {
+                            if ( !order.allocatedGroupPrice ) {
+                                return false
+                            } else {
+                                const otherUsers = data.filter( x => x.user.openid !== order.openid );
+                                return otherUsers.some( otherUser => 
+                                    otherUser.orders.some( o => 
+                                        o.sid === order.sid && o.pid === order.pid
+                                    )
+                                )
+                            }
+                        }
+                    }
 
                     if ( status === 200 ) {
                         const metaList = data.map( meta => {
@@ -98,15 +130,15 @@ Component({
                                 name: user.nickName,
                                 avatar: user.avatarUrl,
                                 orders: orders
-                                    // .filter( o => !!o.allocatedCount )
+                                    .filter( o => o.base_status !== '4' && !!o.base_status !== '5' )
                                     .map( o => ({
                                         pid: o.pid,
                                         imgs: o.img,
-                                        canGroup: !!o.canGroup
+                                        canGroup: findCanGroup( o )
                                     })),
-                                pin: orders.filter( o => !!o.canGroup ).length,
+                                pin: orders.filter( o => findCanGroup( o )).length,
                                 money: orders
-                                    // .filter( o => !!o.allocatedCount )
+                                    .filter( o => o.base_status !== '4' && !!o.base_status !== '5' )
                                     .reduce(( x, y ) => {
                                         const price = y.canGroup && y.allocatedGroupPrice ?
                                             y.allocatedCount * y.allocatedGroupPrice :

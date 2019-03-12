@@ -9,20 +9,17 @@
                 wx:if="{{ top3$[ 2 ]}}"
             >
                 <image
+                    lazy-load="{{ true }}"
                     class="con-ptd-top-img three"
                     src="{{ top3$[ 2 ].avatar }}"
                 />
                 <view class="con-ptd-top-name">
                     {{ top3$[ 2 ].name }}
                 </view>
-                <!-- <view
-                    class="con-ptd-top-pin"
-                    wx:if="top3$[ 2 ].pin"
-                >
-                    {{ top3$[ 2 ].pin }}连拼团
-                </view> -->
+               
                 <image
                     mode="widthFix"
+                    lazy-load="{{ true }}"
                     class="con-ptd-top-icon-img three"
                     src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tongguan.png"
                 />
@@ -35,20 +32,17 @@
                 wx:if="{{ top3$[ 0 ]}}"
             >
                 <image
+                    lazy-load="{{ true }}"
                     class="con-ptd-top-img one"
                     src="{{ top3$[ 0 ].avatar }}"
                 />
                 <view class="con-ptd-top-name">
                     {{ top3$[ 0 ].name }}
                 </view>
-                <!-- <view
-                    class="con-ptd-top-pin"
-                    wx:if="top3$[ 0 ].pin"
-                >
-                    拼团王
-                </view> -->
+                
                 <image
                     mode="widthFix"
+                    lazy-load="{{ true }}"
                     class="con-ptd-top-icon-img one"
                     src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-huangguan.png"
                 />
@@ -61,20 +55,17 @@
                 wx:if="{{ top3$[ 1 ]}}"
             >
                 <image
+                    lazy-load="{{ true }}"
                     class="con-ptd-top-img two"
                     src="{{ top3$[ 1 ].avatar }}"
                 />
                 <view class="con-ptd-top-name">
                     {{ top3$[ 1 ].name }}
                 </view>
-                <!-- <view
-                    class="con-ptd-top-pin"
-                    wx:if="top3$[ 1 ].pin"
-                >
-                    {{ top3$[ 1 ].pin }}连拼团
-                </view> -->
+                
                 <image
                     mode="widthFix"
+                    lazy-load="{{ true }}"
                     class="con-ptd-top-icon-img two"
                     src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-yinguan.png"
                 />
@@ -101,6 +92,7 @@
                 <image
                     mode="widthFix"
                     src="{{ item.avatar }}"
+                    lazy-load="{{ true }}"
                     class="con-ptd-rank-item-img"
                 />
 
@@ -143,15 +135,18 @@
                             wx:for-index="k"
                             wx:for-item="order"
                             wx:for="{{ item.orders }}"
-                            class="con-ptd-rank-order"
+                            class="con-ptd-rank-order-container"
                             data-pid="{{ order.pid }}"
                             bindtap="goGoodDetail"
                         >
-                            <image
-                                mode="widthFix"
-                                class="con-ptd-rank-order-img"
-                                src="{{ order.imgs[ 0 ]}}"
-                            />
+                            <view class="con-ptd-rank-order">
+                                <image
+                                    lazy-load="{{ true }}"
+                                    mode="widthFix"
+                                    class="con-ptd-rank-order-img"
+                                    src="{{ order.imgs[ 0 ]}}"
+                                />
+                            </view>
                             <view
                                 wx:if="{{ order.canGroup }}"
                                 class="pdt-rank-order-pin"
