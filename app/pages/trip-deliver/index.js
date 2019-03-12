@@ -17,7 +17,13 @@ Page({
         delivers: [ ],
 
         /** 按钮 */
-        showDeliverBtn: false
+        showDeliverBtn: false,
+
+        // 通过参数传入的tid
+        tidParam: '',
+
+        // 是否来自与行程详情
+        fromDetail: false
 
     },
 
@@ -85,13 +91,14 @@ Page({
             this.fetchImgs( );
         }
 
-        /**
-         * !请记得去掉这段代码
-         */
-        this.setData({
-            id: 'XDGzG97E7L4wLIdu'
-        });
-        this.fetchImgs( );
+        const { tid, fromDetail } = options;
+        if ( tid ) { 
+            this.setData({
+                tidParam: tid || null,
+                fromDetail: fromDetail === 'true'
+            });
+        }
+
     },
 
     /**

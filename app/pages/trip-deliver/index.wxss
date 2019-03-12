@@ -5,11 +5,18 @@ view {
 .page-trip-deliver {
     height: 100vh;
     display: flex;
+    padding-bottom: 120rpx;
     flex-direction: column;
     position: relative;
-    background: #f5576c; 
+    /* background: #f5576c; 
     background: -webkit-linear-gradient(to bottom, #f093fb, #f5576c);  
-    background: linear-gradient(to bottom, #f093fb, #f5576c);
+    background: linear-gradient(to bottom, #f093fb, #f5576c); */
+    
+    background: #FFAFBD;  
+    background: -webkit-linear-gradient(to bottom, #ffc3a0, #FFAFBD);  
+    background: linear-gradient(to bottom, #ffc3a0, #FFAFBD); 
+
+
 }
 
 .ptd-content {

@@ -103,7 +103,7 @@
 .con-ptd-rank-item {
     display: flex;
     position: relative;
-    padding: 20rpx 45rpx 20rpx 25rpx;
+    padding: 30rpx 5rpx 30rpx 25rpx;
 }
 
 .con-ptd-rank-item:not(:last-child):after {
@@ -135,6 +135,8 @@
 
 .con-ptd-rank-name-block {
     display: flex;
+    position: relative;
+    margin-bottom: 10rpx;
 }
 
 .con-ptd-rank-title {
@@ -162,10 +164,13 @@
 }
 
 .con-ptd-rank-rank {
+    top: -10rpx;
+    right: 40rpx;
     color: #fff;
     font-size: 42rpx;
     font-weight: bold;
     font-style: italic;
+    position: absolute;
     text-shadow: 3px 3px 5px rgba( 0, 0, 0, 0.25);
 }
 
@@ -181,7 +186,7 @@
 .con-ptd-rank-order-block {
     width: 100%;
     overflow-x: scroll;
-    padding: 15rpx 0 0;
+    padding: 25rpx 0 0;
 }
 
 .con-ptd-rank-order {
@@ -190,6 +195,11 @@
     flex-direction: column;
     display: inline-block;
     position: relative;
+    width: 90rpx;
+    height: 90rpx;
+    overflow: hidden;
+    border-radius: 5px;
+    border: 1px solid #fff;
 }
 
 .pdt-rank-order-pin {
@@ -211,8 +221,7 @@
 }
 
 .con-ptd-rank-order-img {
-    width: 80rpx;
-    height: 90rpx;
+    width: 90rpx;
+    min-height: 90rpx;
     border-radius: 5px;
-    border: 1px solid #fff;
 }

@@ -98,7 +98,7 @@ Component({
                                 name: user.nickName,
                                 avatar: user.avatarUrl,
                                 orders: orders
-                                    .filter( o => !!o.allocatedCount )
+                                    // .filter( o => !!o.allocatedCount )
                                     .map( o => ({
                                         pid: o.pid,
                                         imgs: o.img,
@@ -106,7 +106,7 @@ Component({
                                     })),
                                 pin: orders.filter( o => !!o.canGroup ).length,
                                 money: orders
-                                    .filter( o => !!o.allocatedCount )
+                                    // .filter( o => !!o.allocatedCount )
                                     .reduce(( x, y ) => {
                                         const price = y.canGroup && y.allocatedGroupPrice ?
                                             y.allocatedCount * y.allocatedGroupPrice :

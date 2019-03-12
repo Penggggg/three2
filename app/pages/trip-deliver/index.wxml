@@ -24,20 +24,23 @@
     <view class="ptd-content">
 
         <my-trip-rank-fairy
-            tid="{{ id }}"
+            tid="{{ id || tidParam }}"
             bindisbuyer="onIsBuyer"
             wx:if="{{ active === 0 }}"
         />
 
         <my-trip-rank-good
-            tid="{{ id }}"
+            tid="{{ id || tidParam }}"
             wx:if="{{ active === 1 }}"
         />
 
     </view>
 
     <!-- 按钮 -->
-    <view class="ptd-btn-block">
+    <view
+        class="ptd-btn-block"
+        wx:if="{{ !tidParam && !fromDetail }}"
+    >
         <view
             class="ptd-btn"
             bindtap="showDeliver"
@@ -52,5 +55,11 @@
             超值行程
         </view>
     </view>
+
+    <!-- 行程详情导航栏 -->
+    <my-trip-detail-btn
+        tid="{{ tidParam }}"
+        wx:if="{{ !!tidParam && !!fromDetail }}"
+    />
 
 </view>

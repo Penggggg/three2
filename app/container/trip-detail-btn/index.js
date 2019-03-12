@@ -44,7 +44,7 @@ Component({
                     activeImg: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-person-active.png"
                 }, {
                     title: '排行榜',
-                    url: `/pages/trip-detail/index?id=${tid}`,
+                    url: `/pages/trip-deliver/index?tid=${tid}&fromDetail=true`,
                     img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-jiangbei.png',
                     activeImg: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-jiangbei-active.png'
                 }

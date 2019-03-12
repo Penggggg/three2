@@ -128,12 +128,13 @@
                         >
                             有钱任性💰
                         </view>
-                    </view>
 
-                    <!-- 拼团 -->
-                    <!-- <view class="con-ptd-rank-pin">
-                        {{ item.pin }}连拼团
-                    </view> -->
+                        <!-- 排名 -->
+                        <view class="con-ptd-rank-rank">
+                            {{ index < 3 ? 'No.' : '' }}{{ index + 1 }}
+                        </view>
+                        
+                    </view>
 
                     <!-- 商品列表 -->
                     <view class="con-ptd-rank-order-block">
@@ -155,17 +156,13 @@
                                 wx:if="{{ order.canGroup }}"
                                 class="pdt-rank-order-pin"
                             >
-                                <!-- 拼 -->
+                                拼
                             </view>
                         </view>
                     </view>
 
                 </view>
 
-                <!-- 排名 -->
-                <view class="con-ptd-rank-rank">
-                    {{ index < 3 ? 'No.' : '' }}{{ index + 1 }}
-                </view>
             </view>
         </view>
 
