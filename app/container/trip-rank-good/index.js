@@ -67,9 +67,16 @@ Component({
                     // 按订单数量排序
                     const metaList = data.sort(( x, y ) => y.oids.length - x.oids.length );
                     this.setData({ 
-                        list: metaList
+                        list: metaList.map( x => {
+                            const { acid, ac_price, ac_groupPrice, adjustGroupPrice, adjustPrice, groupPrice, price } = x;
+                            const price$ = ac_groupPrice || ac_price ||
+                                adjustGroupPrice || adjustPrice ||
+                                groupPrice || price;
+                            return Object.assign({ }, x , {
+                                price$
+                            });
+                        })
                     });
-                    console.log('...', metaList );
                 }
             });
         },

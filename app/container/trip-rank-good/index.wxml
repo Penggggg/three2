@@ -5,7 +5,7 @@
     <view class="trg-top3-block">
 
         <view class="trg-top">
-             <view
+            <view
                 class="trg-square two"
                 wx:if="{{ top3$[ 1 ]}}"
             >
@@ -17,8 +17,20 @@
                     src="{{ top3$[ 1 ].img }}"
                 />
             </view>
+
             <view class="trg-top-name two">
                 {{ top3$[ 1 ].goodName }}
+            </view>
+            <view
+                wx:if="{{ top3$[ 1 ].price$ }}"
+            >
+                <wxc-price
+                    icon="sub"
+                    decimal="small"
+                    class="trg-top-price"
+                > 
+                    {{ top3$[ 1 ].price$ }}
+                </wxc-price>
             </view>
             <view
                 class="trg-top-tips"
@@ -45,6 +57,17 @@
                 {{ top3$[ 0 ].goodName }}
             </view>
             <view
+                wx:if="{{ top3$[ 0 ].price$ }}"
+            >
+                <wxc-price
+                    icon="sub"
+                    decimal="small"
+                    class="trg-top-price"
+                > 
+                    {{ top3$[ 0 ].price$ }}
+                </wxc-price>
+            </view>
+            <view
                 class="trg-top-tips"
                 wx:if="{{ top3$[ 0 ].oids.length }}"
             >
@@ -67,6 +90,17 @@
             </view>
             <view class="trg-top-name one">
                 {{ top3$[ 2 ].goodName }}
+            </view>
+            <view
+                wx:if="{{ top3$[ 2 ].price$ }}"
+            >
+                <wxc-price
+                    icon="sub"
+                    decimal="small"
+                    class="trg-top-price"
+                > 
+                    {{ top3$[ 2 ].price$ }}
+                </wxc-price>
             </view>
             <view
                 class="trg-top-tips"
@@ -108,8 +142,20 @@
                         <view class="trg-outtop3-name">
                             {{ item.goodName }}
                         </view>
-                        <view class="trg-outtop3-tips">
+                        <view class="trg-outtop3-tips mt">
                             {{ item.oids.length }}人购买
+                        </view>
+                        <view
+                            wx:if="{{ item.price$ }}"
+                            class="trg-outtop3-tips"
+                        >
+                            <wxc-price
+                                icon="sub"
+                                decimal="small"
+                                class="trg-outtop3-tips mt big"
+                            > 
+                                {{ item.price$ }}
+                            </wxc-price>
                         </view>
                     </view>
                 </view>
@@ -139,8 +185,20 @@
                         <view class="trg-outtop3-name">
                             {{ item.goodName }}
                         </view>
-                        <view class="trg-outtop3-tips">
+                        <view class="trg-outtop3-tips mt">
                             {{ item.oids.length }}人购买
+                        </view>
+                        <view
+                            wx:if="{{ item.price$ }}"
+                            class="trg-outtop3-tips"
+                        >
+                            <wxc-price
+                                icon="sub"
+                                decimal="small"
+                                class="trg-outtop3-tips mt big"
+                            > 
+                                {{ item.price$ }}
+                            </wxc-price>
                         </view>
                     </view>
                 </view>

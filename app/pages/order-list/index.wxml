@@ -488,108 +488,114 @@
                 </view>
             </scroll-view>
 
-            <!-- 任务列表 -->
-            <wxc-mask
-                content-align="bl"
-                status="{{ showTask }}"
-                bindmasktap="toggleTask"
-            >
-                <view class="pol-task-block">
-                    <view class="pol-task-header">
-                        {{ tripOrders[ 0 ].tripName }} ({{ tripOrders[ 0 ].tripTime }})
-                    </view>
-                    <view
-                        bindtap="toggleTask"
-                        class="pol-task-close"
-                    >
-                        <i-icon type="close" color="#80848f" size="18" />
-                    </view>
-                    <view class="pol-task-content">
-                        <view
-                            class="pol-task-item"
-                            wx:key="{{ index }}"
-                            wx:for="{{ tripOrders[ 0 ].task }}"
-                        >
-                            <!-- 小圆点 -->
-                            <view class="pol-task-round {{ item.finished ? 'finished' : '' }}"></view>
-
-                            <!-- 标题、备注 -->
-                            <view class="pol-task-info">
-                                <view class="pol-task-title">
-                                    {{ item.title }}
-                                </view>
-                                <view class="pol-task-desc">
-                                    {{ item.desc }}
-                                </view>
-                                <!-- 图片 -->
-                                <view
-                                    class="pol-task-good-img-con"
-                                    wx:if="{{ item.type === 'good' && !!item.img }}"
-                                >
-                                    <image
-                                        lazy-load="{{ true }}"
-                                        src="{{ item.img }}"
-                                        mode="widthFix"
-                                        class="pol-task-good-img"
-                                        
-                                    />
-                                </view>
-                            </view>
-
-                            <!-- 价格 -->
-                            <wxc-price
-                                icon="sub"
-                                class="pol-task-price {{ item.finished ? 'finished' : '' }}"
-                            >
-                                {{ item.price }}
-                            </wxc-price>
-
-                            <!-- 按钮 -->
-                            <view class="pol-task-action">
-                                <button
-                                    open-type="share"
-                                    class="pol-task-btn"
-                                    bindtap="fixLiJian"
-                                    data-share="{{ item.share }}"
-                                    data-tid="{{ tripOrders[ 0 ].tid }}"
-                                    wx:if="{{ item.type === 't_lijian' && item.share && !item.finished }}"
-                                >
-                                    去分享
-                                </button>
-                                <button
-                                    class="pol-task-btn"
-                                    bindtap="goTripEntry"
-                                    wx:if="{{ (item.type === 't_manjian' || item.type === 't_daijin') && !item.finished }}"
-                                >
-                                    去凑单
-                                </button>
-                                <button
-                                    open-type="share"
-                                    class="pol-task-btn"
-                                    data-share="{{ item.share }}"
-                                    wx:if="{{ (item.type === 'good') && !item.finished }}"
-                                >
-                                    找人拼
-                                </button>
-                                <view
-                                    wx:if="{{ item.finished }}"
-                                    class="pol-task-btn {{ item.finished ? 'finished' : '' }}"
-                                >
-                                    {{
-                                        item.type === 't_manjian' | item.type === 't_daijin' | item.type === 'good' ?
-                                            '已达到' :
-                                            '已领取'
-                                    }}
-                                </view>
-                            </view>
-                        </view>
-                    </view>
-                </view>
-            </wxc-mask>
-
         </view>
 
     </view>
+
+    <!-- 行程详情导航栏 -->
+    <my-trip-detail-btn
+        tid="{{ tidParam }}"
+        wx:if="{{ !!tidParam && !!fromDetail }}"
+    />
+
+    <!-- 任务列表 -->
+    <wxc-mask
+        content-align="bl"
+        status="{{ showTask }}"
+        bindmasktap="toggleTask"
+    >
+        <view class="pol-task-block">
+            <view class="pol-task-header">
+                {{ tripOrders[ 0 ].tripName }} ({{ tripOrders[ 0 ].tripTime }})
+            </view>
+            <view
+                bindtap="toggleTask"
+                class="pol-task-close"
+            >
+                <i-icon type="close" color="#80848f" size="18" />
+            </view>
+            <view class="pol-task-content">
+                <view
+                    class="pol-task-item"
+                    wx:key="{{ index }}"
+                    wx:for="{{ tripOrders[ 0 ].task }}"
+                >
+                    <!-- 小圆点 -->
+                    <view class="pol-task-round {{ item.finished ? 'finished' : '' }}"></view>
+
+                    <!-- 标题、备注 -->
+                    <view class="pol-task-info">
+                        <view class="pol-task-title">
+                            {{ item.title }}
+                        </view>
+                        <view class="pol-task-desc">
+                            {{ item.desc }}
+                        </view>
+                        <!-- 图片 -->
+                        <view
+                            class="pol-task-good-img-con"
+                            wx:if="{{ item.type === 'good' && !!item.img }}"
+                        >
+                            <image
+                                lazy-load="{{ true }}"
+                                src="{{ item.img }}"
+                                mode="widthFix"
+                                class="pol-task-good-img"
+                                
+                            />
+                        </view>
+                    </view>
+
+                    <!-- 价格 -->
+                    <wxc-price
+                        icon="sub"
+                        class="pol-task-price {{ item.finished ? 'finished' : '' }}"
+                    >
+                        {{ item.price }}
+                    </wxc-price>
+
+                    <!-- 按钮 -->
+                    <view class="pol-task-action">
+                        <button
+                            open-type="share"
+                            class="pol-task-btn"
+                            bindtap="fixLiJian"
+                            data-share="{{ item.share }}"
+                            data-tid="{{ tripOrders[ 0 ].tid }}"
+                            wx:if="{{ item.type === 't_lijian' && item.share && !item.finished }}"
+                        >
+                            去分享
+                        </button>
+                        <button
+                            class="pol-task-btn"
+                            bindtap="goTripEntry"
+                            wx:if="{{ (item.type === 't_manjian' || item.type === 't_daijin') && !item.finished }}"
+                        >
+                            去凑单
+                        </button>
+                        <button
+                            open-type="share"
+                            class="pol-task-btn"
+                            data-share="{{ item.share }}"
+                            wx:if="{{ (item.type === 'good') && !item.finished }}"
+                        >
+                            找人拼
+                        </button>
+                        <view
+                            wx:if="{{ item.finished }}"
+                            class="pol-task-btn {{ item.finished ? 'finished' : '' }}"
+                        >
+                            {{
+                                item.type === 't_manjian' | item.type === 't_daijin' | item.type === 'good' ?
+                                    '已达到' :
+                                    '已领取'
+                            }}
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </wxc-mask>
 
     <!-- 结算获得代金券 -->
     <wxc-mask 
@@ -634,10 +640,6 @@
         </view>
     </wxc-mask>
 
-    <!-- 行程详情导航栏 -->
-    <my-trip-detail-btn
-        tid="{{ tidParam }}"
-        wx:if="{{ !!tidParam && !!fromDetail }}"
-    />
+    
 
 </view>

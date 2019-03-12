@@ -99,6 +99,14 @@ Page({
             });
         }
 
+        /**
+         * !请记得去掉这段代码
+         */
+        this.setData({
+            id: 'XDGzG97E7L4wLIdu'
+        });
+
+
     },
 
     /**
