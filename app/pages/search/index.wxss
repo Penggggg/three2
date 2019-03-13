@@ -1,5 +1,7 @@
 .p-search {
-    min-height: 100vh;
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
     box-sizing: border-box;
 }
 
@@ -40,4 +42,23 @@
     margin-right: 20rpx;
     border-radius: 6px;
     margin-bottom: 25rpx;
+}
+
+.ps-result-container {
+    flex: 1;
+    overflow: hidden;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    padding: 20rpx 15rpx;
+}
+
+.ps-result-waterfall {
+    column-count: 2;
+}
+
+.ps-result-item {
+    width: 46vw;
+    box-sizing: border-box;
+    margin: 0 0.125em 1em;
+    break-inside: avoid;
 }

@@ -4,13 +4,14 @@
     <view class="ps-search-block">
         <my-client-search-bar
             value="{{ search }}"
-            bindconfirm="onSearch"
+            bindconfirm="onConfirm"
         />
     </view>
 
     <!-- 历史记录 -->
     <view
         class="ps-title-block"
+        wx:if="{{ history.length > 0 && result.length === 0 }}"
     >
         <view class="ps-block-title">
             历史记录
@@ -21,7 +22,10 @@
     </view>
 
     <!-- 历史记录列表 -->
-    <view class="ps-history-list">
+    <view
+        class="ps-history-list"
+        wx:if="{{ history.length > 0 && result.length === 0 }}"
+    >
         <view
             data-data="{{ item }}"
             wx:key="{{ index }}"
@@ -32,5 +36,27 @@
             {{ item }}
         </view>
     </view>
+  
+    <!-- 列表 -->
+    <scroll-view
+        scroll-y
+        lower-threshold="100"
+        class='ps-result-container'
+        bindscrolltolower="fetchList"
+        wx:if="{{ result.length > 0 }}"
+    >
+        <view class="ps-result-waterfall">
+            <view
+                wx:key="{{ index }}"
+                wx:for="{{ result }}"
+                class="rs-result-item"
+            >
+                <my-good-item-3
+                    good="{{ item }}"
+                    tid="123"
+                />
+            </view>
+        </view>
+    </scroll-view>
 
 </view>

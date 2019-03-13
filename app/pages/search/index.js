@@ -9,27 +9,58 @@ Page({
      */
     data: {
 
+        // 搜索页
+        page: 0,
+
         // 历史搜搜数据列表
         history: [ ],
 
         // 搜索
-        search: ''
+        search: '',
+
+        // 搜索结果
+        result: [ ],
+
+        /** 能否记载更多 */
+        canLoadMore: true
 
     },
 
-    /** 搜索 */
-    onSearch({ detail }) {
-        const search = detail;
-        this.addHistory( search );
+    fetchList( ) {
+        const { page, result, search } = this.data;
 
         // 搜索
         http({
             data: {
                 search,
-                page: 1
+                page: page + 1
             },
-            url: 'good_client-search'
+            url: 'good_client-search',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                
+                const { page, totalPage } = data;
+                this.setData({
+                    page,
+                    canLoadMore: totalPage > page,
+                    result: page === 1 ? data.data : [ ...result, ...data.data ]
+                })
+            }
         })
+    },
+
+    /** 确认搜索 */
+    onConfirm({ detail }) {
+
+        const search = detail;
+        this.addHistory( search );
+
+        this.setData({
+            page: 0
+        })
+
+        this.fetchList( )
     },
 
     /** 加入历史记录 */
@@ -66,7 +97,7 @@ Page({
         this.setData({
             search: data
         });
-        this.onSearch({
+        this.onConfirm({
             detail: data
         });
     },
