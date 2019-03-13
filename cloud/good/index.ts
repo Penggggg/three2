@@ -186,7 +186,7 @@ export const main = async ( event, context ) => {
             return ctx.body = {
                 status: 200,
                 data: {
-                    search: search$.replace(/\s+/g),
+                    search: search$.replace(/\s+/g, ''),
                     pageSize: limit,
                     page: event.data.page,
                     data: insertActivity,
@@ -270,7 +270,7 @@ export const main = async ( event, context ) => {
             return ctx.body = {
                 status: 200,
                 data: {
-                    search: event.data.title.replace(/\s+/g),
+                    search: event.data.title.replace(/\s+/g, ''),
                     pageSize: limit,
                     page: event.data.page,
                     data: insertCart,

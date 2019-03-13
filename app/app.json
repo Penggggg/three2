@@ -43,6 +43,7 @@
     "my-trip-rank-fairy": "./container/trip-rank-fairy/index",
     "my-trip-rank-good": "./container/trip-rank-good/index",
     "my-trip-detail-btn": "./container/trip-detail-btn/index",
+    "my-client-search-bar": "./container/client-search-bar/index",
     "i-drawer": "./dist/iview/drawer/index",
     "i-modal": "./dist/iview/modal/index",
     "i-icon": "./dist/iview/icon/index",

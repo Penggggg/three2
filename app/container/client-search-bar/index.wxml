@@ -1,0 +1,44 @@
+<view>
+    <view class="con-search-bar">
+        <view class="csb-search-block">
+
+            <view class="csb-icon">
+                <wxc-icon
+                    size="35"
+                    type="search"
+                    color="#bfbfbf"
+                />
+            </view>
+
+            <input
+                focus="{{ focus }}"
+                class="csb-input"
+                value="{{ search }}"
+                bindinput="onInput"
+                bindconfirm="onConfirm"
+                bindblur="onBlur"
+                bindfocus="onFocus"
+            />
+
+            <view
+                class="csb-close"
+                wx:if="{{ search }}"
+                bindtap="onClose"
+            >
+                <wxc-icon
+                    size="15"
+                    type="close"
+                    color="#fff"
+                    class="csb-close-btn"
+                />
+            </view>
+            
+        </view>
+        <view
+            bindtap="onConfirm"
+            class="csb-search-btn"
+        >
+            搜索
+        </view>
+    </view>
+</view>
