@@ -1,3 +1,4 @@
+const { http } = require('../../util/http.js');
 
 const storageKey = 'client-search';
 
@@ -22,6 +23,13 @@ Page({
         this.addHistory( search );
 
         // 搜索
+        http({
+            data: {
+                search,
+                page: 1
+            },
+            url: 'good_client-search'
+        })
     },
 
     /** 加入历史记录 */

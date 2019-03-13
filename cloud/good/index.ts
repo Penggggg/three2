@@ -473,6 +473,65 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /** @description
+     * 客户端搜索
+     * ! search 不会是空字符串
+     * {
+     *    search,
+     *    page
+     * }
+     */
+    app.router('client-search', async( ctx, next ) => {
+        try {
+
+            // 查询条数
+            const limit = 20;
+            const { search, page } = event.data;
+
+            /**
+             * 搜索纬度：
+             * 商品标题
+             * 详情
+             *! 标签（未实现）
+             */
+            const query = _.or([
+                {
+                    title: new RegExp( search.replace( /\s+/g, '' ), 'i' )
+                }, {
+                    detail: new RegExp( search.replace( /\s+/g, '' ), 'i' )
+                }
+            ]);
+
+            // 获取总数
+            const total$ = await db.collection('goods')
+                .where( query )
+                .count( );
+
+            // 获取数据
+            const data$ = await db.collection('goods')
+                .where( query )
+                .limit( limit )
+                .skip(( page - 1 ) * limit )
+                .orderBy('updateTime', 'desc')
+                .get( );
+
+            return ctx.body = {
+                status: 200,
+                data: {
+                    page,
+                    pageSize: limit,
+                    data: data$.data,
+                    total: total$.total,
+                    search: search.replace( /\s+/g, '' ),
+                    totalPage: Math.ceil( total$.total / limit )
+                }
+            };
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
+
     return app.serve( );
 
 };
