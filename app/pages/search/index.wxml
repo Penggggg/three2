@@ -1,5 +1,36 @@
-<view>
-    <my-client-search-bar
-        bindconfirm="onSearch"
-    />
+<view class="p-search">
+
+    <!-- 搜索框 -->
+    <view class="ps-search-block">
+        <my-client-search-bar
+            value="{{ search }}"
+            bindconfirm="onSearch"
+        />
+    </view>
+
+    <!-- 历史记录 -->
+    <view
+        class="ps-title-block"
+    >
+        <view class="ps-block-title">
+            历史记录
+        </view>
+        <view class="ps-fairy-simple-entry">
+            
+        </view>
+    </view>
+
+    <!-- 历史记录列表 -->
+    <view class="ps-history-list">
+        <view
+            data-data="{{ item }}"
+            wx:key="{{ index }}"
+            wx:for="{{ history }}"
+            class="ps-history-item"
+            bindtap="onSelectHistory"
+        >
+            {{ item }}
+        </view>
+    </view>
+
 </view>
