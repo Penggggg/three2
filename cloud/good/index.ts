@@ -496,11 +496,15 @@ export const main = async ( event, context ) => {
              */
             const query = _.or([
                 {
+                    visiable: true,
+                    isDelete: _.neq( true ),
                     title: new RegExp( search.replace( /\s+/g, '' ), 'i' )
                 }, {
+                    visiable: true,
+                    isDelete: _.neq( true ),
                     detail: new RegExp( search.replace( /\s+/g, '' ), 'i' )
                 }
-            ]);
+            ])
 
             // 获取总数
             const total$ = await db.collection('goods')
@@ -515,12 +519,38 @@ export const main = async ( event, context ) => {
                 .orderBy('updateTime', 'desc')
                 .get( );
 
+            // 拼接型号或商品活动
+            const activities$ = await Promise.all( data$.data.map( good => {
+                return db.collection('activity')
+                    .where({
+                        pid: good._id,
+                        isClosed: false,
+                        isDeleted: false,
+                        type: 'good_discount'
+                    })
+                    .field({
+                        pid: true,
+                        sid: true,
+                        title: true,
+                        ac_price: true,
+                        endTime: true,
+                        ac_groupPrice: true
+                    })
+                    .get( );
+            }));
+
+            const insertActivities = data$.data.map(( meta, k ) => {
+                return Object.assign({ }, meta, {
+                    activity: activities$[ k ].data.length === 0 ? null : activities$[ k ].data[ 0 ]
+                });
+            })
+
             return ctx.body = {
                 status: 200,
                 data: {
                     page,
                     pageSize: limit,
-                    data: data$.data,
+                    data: insertActivities,
                     total: total$.total,
                     search: search.replace( /\s+/g, '' ),
                     totalPage: Math.ceil( total$.total / limit )

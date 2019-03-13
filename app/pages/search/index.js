@@ -48,6 +48,8 @@ Page({
         temp = temp.slice( 0, 6 );
         
         wx.setStorageSync( storageKey, JSON.stringify( temp ));
+
+        this.initHistory( );
     },
 
     /** 初始化历史记录 */
