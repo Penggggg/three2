@@ -44,12 +44,20 @@ Page({
                 if ( status !== 200 ) { return; }
                 
                 const { page, totalPage } = data;
+
+                // 转换一下顺序
+                const changeSort = arr => {
+                    const arr1 = arr.filter(( x, k ) => k % 2 === 0 );
+                    const arr2 = arr.filter(( x, k ) => k % 2 === 1 )
+                    return [ ...arr1, ...arr2 ]
+                };
+
                 this.setData({
                     page,
                     canLoadMore: totalPage > page,
                     result: page === 1 ?
-                        data.data.map( delayeringGood ) :
-                        [ ...result, ...data.data ].map( delayeringGood )
+                        changeSort( data.data ).map( delayeringGood ) :
+                        changeSort([ ...result, ...data.data ]).map( delayeringGood )
                 });
             }
         })

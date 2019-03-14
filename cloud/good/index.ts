@@ -516,7 +516,7 @@ export const main = async ( event, context ) => {
                 .where( query )
                 .limit( limit )
                 .skip(( page - 1 ) * limit )
-                .orderBy('updateTime', 'desc')
+                .orderBy('saled', 'desc')
                 .get( );
 
             // 拼接型号或商品活动
