@@ -474,37 +474,58 @@ export const main = async ( event, context ) => {
     })
 
     /** @description
-     * 客户端搜索
+     * 客户端搜索商品列表（ 分类搜搜、或文字搜搜 ）
      * ! search 不会是空字符串
      * {
      *    search,
-     *    page
+     *    page,
+     *    category
      * }
      */
     app.router('client-search', async( ctx, next ) => {
         try {
 
             // 查询条数
-            const limit = 20;
-            const { search, page } = event.data;
+            const limit = 10;
+            const { search, page, category } = event.data;
 
-            /**
-             * 搜索纬度：
-             * 商品标题
-             * 详情
-             *! 标签（未实现）
-             */
-            const query = _.or([
-                {
-                    visiable: true,
-                    isDelete: _.neq( true ),
-                    title: new RegExp( search.replace( /\s+/g, '' ), 'i' )
-                }, {
-                    visiable: true,
-                    isDelete: _.neq( true ),
-                    detail: new RegExp( search.replace( /\s+/g, '' ), 'i' )
-                }
-            ])
+            let query: any = null;
+
+            if ( !!search ) {
+
+                /**
+                 * 搜索纬度：
+                 * 商品标题
+                 * 详情
+                 *! 标签（未实现）
+                */
+                query = _.or([
+                    {
+                        visiable: true,
+                        isDelete: _.neq( true ),
+                        title: new RegExp( search.replace( /\s+/g, '' ), 'i' )
+                    }, {
+                        visiable: true,
+                        isDelete: _.neq( true ),
+                        detail: new RegExp( search.replace( /\s+/g, '' ), 'i' )
+                    }
+                ]);
+
+            }
+
+            if ( !!category ) {
+                query = _.or([
+                    {
+                        category,
+                        visiable: true,
+                        isDelete: _.neq( true )
+                    }, {
+                        category,
+                        visiable: true,
+                        isDelete: _.neq( true )
+                    }
+                ]);
+            }
 
             // 获取总数
             const total$ = await db.collection('goods')
@@ -552,8 +573,8 @@ export const main = async ( event, context ) => {
                     pageSize: limit,
                     data: insertActivities,
                     total: total$.total,
-                    search: search.replace( /\s+/g, '' ),
-                    totalPage: Math.ceil( total$.total / limit )
+                    totalPage: Math.ceil( total$.total / limit ),
+                    search: !!search ? search.replace( /\s+/g, '' ) : undefined
                 }
             };
 

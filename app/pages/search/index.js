@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { computed } = require('../../lib/vuefy/index.js');
 const { delayeringGood } = require('../../util/goods.js');
 
 const storageKey = 'client-search';
@@ -28,6 +29,24 @@ Page({
         /** tid */
         tid: ''
 
+    },
+
+    /** 设置computed */
+    runComputed( ) {
+        computed( this, {
+            // 列表
+            result$( ) {
+                const { result } = this.data;
+                console.log('???', result );
+                const changeSort = arr => {
+                    const arr1 = arr.filter(( x, k ) => k % 2 === 0 );
+                    const arr2 = arr.filter(( x, k ) => k % 2 === 1 )
+                    return [ ...arr1, ...arr2 ]
+                };
+    
+                return changeSort( result ).map( delayeringGood );
+            }
+        })
     },
 
     /** 获取当前行程 */
@@ -68,20 +87,12 @@ Page({
                 if ( status !== 200 ) { return; }
                 
                 const { page, totalPage } = data;
-
-                // 转换一下顺序
-                const changeSort = arr => {
-                    const arr1 = arr.filter(( x, k ) => k % 2 === 0 );
-                    const arr2 = arr.filter(( x, k ) => k % 2 === 1 )
-                    return [ ...arr1, ...arr2 ]
-                };
-
                 this.setData({
                     page,
                     canLoadMore: totalPage > page,
                     result: page === 1 ?
-                        changeSort( data.data ).map( delayeringGood ) :
-                        changeSort([ ...result, ...data.data ]).map( delayeringGood )
+                        data.data :
+                        [ ...result, ...data.data ]
                 });
             }
         })
@@ -145,6 +156,7 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+        this.runComputed( );
         this.initHistory( );
         this.fetchCurrentTrip( );
     },

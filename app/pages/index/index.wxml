@@ -48,6 +48,24 @@
             </view>
         </view>
 
+        <!-- 内容层 -->
+        <view
+            class="pi-classify-content"
+            wx:if="{{ !loading }}"
+        >
+            <view
+                wx:if="{{ active === 'recommand' }}"
+            >
+
+            </view>
+
+            <my-good-classify-list
+                tid="{{ tid }}"
+                classify="{{ active }}"
+                wx:if="{{ active !== 'recommand' }}"
+            />
+        </view>
+
     </view>
 
     <!-- 导航按钮 -->

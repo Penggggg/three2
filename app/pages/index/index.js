@@ -17,7 +17,9 @@ Page({
         loading: true,
 
         // 当前选中的分类
-        active: 'recommand'
+        active: '0',
+
+        tid: ''
 
     },
 
@@ -61,7 +63,28 @@ Page({
         })
     },
 
+    /** 获取当前行程 */
+    fetchCurrentTrip( cb ) {
+        http({
+            url: 'trip_enter',
+            data: {
+                shouldGetGoods: false
+            },
+            loadingMsg: 'none',
+            success: res => {
+                const { status, data } = res;
+                if ( status === 200 && !!data[ 0 ]) {
+                    !!cb && cb( data[ 0 ]._id );
+                    this.setData({
+                        tid: data[ 0 ]._id
+                    });
+                }
+            }
+        });
+    },
+
     onLoad( options ) {
         this.fetchDic( );
+        this.fetchCurrentTrip( );
     }
 });

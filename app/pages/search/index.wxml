@@ -44,12 +44,12 @@
         lower-threshold="100"
         class='ps-result-container'
         bindscrolltolower="fetchList"
-        wx:if="{{ result.length > 0 }}"
+        wx:if="{{ result$.length > 0 }}"
     >
         <view class="ps-result-waterfall">
             <view
                 wx:key="{{ index }}"
-                wx:for="{{ result }}"
+                wx:for="{{ result$ }}"
                 class="ps-result-item"
             >
                 <my-good-item-6

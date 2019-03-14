@@ -1,0 +1,30 @@
+<scroll-view
+    scroll-y
+    lower-threshold="100"
+    class='con-good-classify-list'
+    bindscrolltolower="fetchClassify"
+    wx:if="{{ result$.length > 0 }}"
+>
+
+    <view class="gcl-result-waterfall">
+        <view
+            wx:key="{{ index }}"
+            wx:for="{{ result$ }}"
+            class="gcl-result-item"
+        >
+            <my-good-item-6
+                good="{{ item }}"
+                tid="{{ tid }}"
+            />
+        </view>
+    </view>
+
+    <!-- 暂无更多 -->
+    <view
+        class="gcl-nomore"
+        wx:if="{{ !canLoadMore }}"
+    >
+        No More
+    </view>
+</scroll-view>
+
