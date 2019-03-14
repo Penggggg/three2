@@ -54,7 +54,7 @@
             >
                 <my-good-item-6
                     good="{{ item }}"
-                    tid="123"
+                    tid="{{ tid }}"
                 />
             </view>
         </view>

@@ -23,10 +23,34 @@ Page({
         result: [ ],
 
         /** 能否记载更多 */
-        canLoadMore: true
+        canLoadMore: true,
+
+        /** tid */
+        tid: ''
 
     },
 
+    /** 获取当前行程 */
+    fetchCurrentTrip( cb ) {
+        http({
+            url: 'trip_enter',
+            data: {
+                shouldGetGoods: false
+            },
+            loadingMsg: 'none',
+            success: res => {
+                const { status, data } = res;
+                if ( status === 200 && !!data[ 0 ]) {
+                    !!cb && cb( data[ 0 ]._id );
+                    this.setData({
+                        tid: data[ 0 ]._id
+                    });
+                }
+            }
+        });
+    },
+
+    /** 拉取列表 */
     fetchList( ) {
         const { page, result, search, canLoadMore } = this.data;
 
@@ -122,6 +146,7 @@ Page({
      */
     onLoad: function (options) {
         this.initHistory( );
+        this.fetchCurrentTrip( );
     },
 
     /**
