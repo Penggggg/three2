@@ -37,6 +37,7 @@
         </view>
     </view>
   
+    
     <!-- 列表 -->
     <scroll-view
         scroll-y
@@ -57,6 +58,17 @@
                 />
             </view>
         </view>
+
+        <!-- 暂无更多 -->
+        <view
+            class="ps-nomore"
+            wx:if="{{ !canLoadMore }}"
+        >
+            No More
+        </view>
+
     </scroll-view>
+
+
 
 </view>

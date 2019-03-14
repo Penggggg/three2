@@ -62,3 +62,35 @@
     break-inside: avoid;
     margin-bottom: 25rpx;
 }
+
+.ps-nomore {
+    margin-top: 100rpx;
+    margin-bottom: 50rpx;
+    color: #999;
+    font-size: 22rpx;
+    text-align: center;
+    letter-spacing: 0.05em;
+    position: relative;
+}
+
+.ps-nomore:after {
+    top: 50%;
+    right: 10%;
+    width: 30%;
+    height: 1px;
+    position: absolute;
+    content: '';
+    background: rgba( 0, 0, 0, 0.15 );
+    transform: translate( 0, -50% ) scaleY( 0.5 );
+}
+
+.ps-nomore:before {
+    top: 50%;
+    left: 10%;
+    width: 30%;
+    height: 1px;
+    position: absolute;
+    content: '';
+    background: rgba( 0, 0, 0, 0.15 );
+    transform: translate( 0, -50% ) scaleY( 0.5 );
+}
