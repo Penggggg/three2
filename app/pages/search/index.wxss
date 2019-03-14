@@ -59,6 +59,6 @@
 .ps-result-item {
     width: 46vw;
     box-sizing: border-box;
-    margin: 0 0.125em 1em;
     break-inside: avoid;
+    margin-bottom: 25rpx;
 }

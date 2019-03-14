@@ -1,11 +1,11 @@
-// container/good-item-2/index.js
 /**
  * @description
- * 沾满一行两格的商品框，普通商品列表
+ * 沾满一行两格的商品框，搜索列表、普通商品列表（会展示详情2行）
  */
 Component({
 
     behaviors: [require('../../behaviores/computed/index.js')],
+    
     /**
      * 组件的属性列表
      */
@@ -27,12 +27,7 @@ Component({
      */
     data: {
         // 标签名
-        tag: '',
-        /** 头像列表 */
-        imgList: [
-          'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-1.png',
-          'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-2.png'
-      ]
+        tag: ''
     },
   
     computed: {

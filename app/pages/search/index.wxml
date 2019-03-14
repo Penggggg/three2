@@ -49,9 +49,9 @@
             <view
                 wx:key="{{ index }}"
                 wx:for="{{ result }}"
-                class="rs-result-item"
+                class="ps-result-item"
             >
-                <my-good-item-3
+                <my-good-item-6
                     good="{{ item }}"
                     tid="123"
                 />
