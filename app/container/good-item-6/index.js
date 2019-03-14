@@ -40,8 +40,8 @@ Component({
     methods: {
   
         // 处理商品
-        dealDetail: function( ) {
-            
+        dealDetail: function( val ) {
+
             const { good } = this.data;
             this.setData({
                 tag: good ? good.tag.map( x => `#${x}`).join(' ') : ''

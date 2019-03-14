@@ -17,23 +17,20 @@
         {{ good.title }}
     </view>
 
+    <!-- 详情 -->
+    <view class="gi6-detail">
+        {{ good.detail }}
+    </view>
+
     <!-- 原价 -->
-    <view class="gi6-fadeprice">
+    <view
+        class="gi6-fadeprice"
+        wx:if="{{ !good.hasActivity }}"
+    >
         市场售价:¥{{ good.fadePrice }}
     </view>
 
-    <!-- 最低价 -->
-    <view class="gi6-price-block">
-        超值¥<view class="gi6-price">{{ good.lowest_price$ }}</view>
-    </view>
-
-    <!-- 标签 -->
-    <view class="gi6-label">
-        {{ tag }}
-    </view>
-
     <!-- 活动标签 -->
-    
     <view
         class="gi6-tag-block"
         wx:if="{{ good.hasActivity }}"
@@ -44,8 +41,26 @@
             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
         />
         <view class="gi6-tag-text">
-            活动
+            限时活动
         </view>
     </view>
+
+    <!-- 最低价 -->
+    <view class="gi6-price-block">
+        超值
+        <wxc-price
+            icon="sub"
+            decimal="small"
+            class="gi6-price"
+        > 
+            {{ good.price$ }}
+        </wxc-price>
+    </view>
+
+    <!-- 标签 -->
+    <view class="gi6-label">
+        {{ tag }}
+    </view>
+
 
 </view>

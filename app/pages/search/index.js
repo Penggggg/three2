@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { delayeringGood } = require('../../util/goods.js');
 
 const storageKey = 'client-search';
 
@@ -27,7 +28,9 @@ Page({
     },
 
     fetchList( ) {
-        const { page, result, search } = this.data;
+        const { page, result, search, canLoadMore } = this.data;
+
+        if ( !canLoadMore ) { return; }
 
         // 搜索
         http({
@@ -44,8 +47,10 @@ Page({
                 this.setData({
                     page,
                     canLoadMore: totalPage > page,
-                    result: page === 1 ? data.data : [ ...result, ...data.data ]
-                })
+                    result: page === 1 ?
+                        data.data.map( delayeringGood ) :
+                        [ ...result, ...data.data ].map( delayeringGood )
+                });
             }
         })
     },
@@ -55,9 +60,11 @@ Page({
 
         const search = detail;
         this.addHistory( search );
-
+      
         this.setData({
-            page: 0
+            page: 0,
+            search,
+            canLoadMore: true
         })
 
         this.fetchList( )

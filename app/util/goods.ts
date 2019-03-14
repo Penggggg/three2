@@ -46,7 +46,7 @@ const delayeringGood = x => {
     decorateItem2( x.activities );
 
     // 没有型号
-    if ( x.standards.length === 0 ) {
+    if ( !x.standards || x.standards.length === 0 ) {
         decorateItem( x );
     
     // 有型号
@@ -67,7 +67,9 @@ const delayeringGood = x => {
         // 价格区间
         price$: allPriceArr.length === 0 ?
             allPriceArr[ 0 ] :
-            `${allPriceArr[ 0 ]} ~ ${allPriceArr[ allPriceArr.length - 1 ]}`,
+                allPriceArr[ 0 ] === allPriceArr[ allPriceArr.length - 1 ] ? 
+                    allPriceArr[ 0 ] :
+                    `${allPriceArr[ 0 ]} ~ ${allPriceArr[ allPriceArr.length - 1 ]}`,
         // 最大幅度差价
         priceGap: allPriceArr.length === 0 ?
             0 :
@@ -75,7 +77,7 @@ const delayeringGood = x => {
         // 最低价格（含团购价）
         lowest_price$: allPriceArr[ 0 ],
         /** 是否有活动 */
-        hasActivity: Array.isArray( x.activities ) && x.activities.length > 0,
+        hasActivity: !!x.activity || (Array.isArray( x.activities ) && x.activities.length > 0),
         /** 拼团信息 */
         goodPins: dealGoodPin( x )
     })
@@ -87,7 +89,7 @@ const dealGoodPin = good => {
     const { activities, standards, price, groupPrice } = good;
 
     // 单品 
-    if ( standards.length === 0 ) {
+    if ( !standards || standards.length === 0 ) {
         return {
             list: [{
                 price,
