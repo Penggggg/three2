@@ -1,7 +1,56 @@
 <view class='p-index'>
 
-    <view class="pi-content-block"></view>
+    <view class="pi-content-block">
 
+        <!-- 搜索框 -->
+        <view
+            class="pi-search-block"
+            bindtap="goSearch"
+        >
+
+            <view class="pi-icon">
+                <wxc-icon
+                    size="35"
+                    type="search"
+                    color="#bfbfbf"
+                />
+            </view>
+
+            <view class="pi-search-text">
+                搜索商品
+            </view>
+            
+        </view>
+
+        <!-- 加载中 -->
+        <view
+            wx:if="{{ loading }}"
+            class="pi-loading-tips"
+        >
+            加载中...
+        </view>
+
+        <!-- 分类选择 -->
+        <view
+            class="pi-classify-contaienr"
+            wx:if="{{ classify.length > 0 }}"
+        >
+            <view class="pi-classify-block">
+                <view
+                    wx:for="{{ classify }}"
+                    wx:key="{{ index }}"
+                    data-value="{{ item.value }}"
+                    class="pi-classify-item {{ active === item.value ? 'active' : ''  }}"
+                    bindtap="onChoiceClassify"
+                >
+                    {{ item.label }}
+                </view>
+            </view>
+        </view>
+
+    </view>
+
+    <!-- 导航按钮 -->
     <view class="pi-btn-block">
         <my-manager-entry-btn />
         <my-nav />

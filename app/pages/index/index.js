@@ -1,9 +1,67 @@
-"use strict";
-var app = getApp();
+const { http } = require('../../util/http.js');
+const { computed } = require('../../lib/vuefy/index.js');
+
+const app = getApp( );
+
 Page({
-    goManager: function (event) {
+
+    data: {
+
+        // 数据字典
+        dic: { },
+
+        // 目录分类
+        classify: [ ],
+
+        // 加载中
+        loading: true,
+
+        // 当前选中的分类
+        active: 'recommand'
+
     },
-    onLoad: function () {
+
+    /** 去搜索 */
+    goSearch( ) {
+        wx.navigateTo({
+            url: '/pages/search/index'
+        });
+    },
+
+    /** 拉取数据字典 */
+    fetchDic( ) {
+        const { dic } = this.data;
+        if ( Object.keys( dic ).length > 0 ) { return;}
+
+        http({
+            data: {
+                dicName: 'goods_category',
+            },
+            errMsg: '加载失败，请重试',
+            url: `common_dic`,
+            success: res => {
+                if ( res.status !== 200 ) { return; }
+                this.setData({
+                    loading: false,
+                    dic: res.data,
+                    classify: [{
+                        label: '推荐',
+                        value: 'recommand'
+                    }, ...res.data.goods_category ]
+                });
+            }
+        });
+    },
+
+    /** 选择分类 */
+    onChoiceClassify({ currentTarget }) {
+        const { value } = currentTarget.dataset;
+        this.setData({
+            active: value
+        })
+    },
+
+    onLoad( options ) {
+        this.fetchDic( );
     }
 });
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJpbmRleC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUEsSUFBTSxHQUFHLEdBQUcsTUFBTSxFQUFHLENBQUM7QUFFdEIsSUFBSSxDQUFDO0lBR0QsU0FBUyxFQUFFLFVBQVUsS0FBSztJQUkxQixDQUFDO0lBRUQsTUFBTSxFQUFFO0lBRVIsQ0FBQztDQUVKLENBQUMsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbImNvbnN0IGFwcCA9IGdldEFwcCggKTtcblxuUGFnZSh7XG5cbiAgICAvKiog5Y6755u45bqU55qE566h55CG6aG16Z2iICovXG4gICAgZ29NYW5hZ2VyOiBmdW5jdGlvbiggZXZlbnQgKSB7XG4gICAgICAvLyB3eC5uYXZpZ2F0ZVRvKHtcbiAgICAgIC8vICAgdXJsOiBldmVudC5jdXJyZW50VGFyZ2V0LmRhdGFzZXQucm91dGV0byxcbiAgICAgIC8vIH0pXG4gICAgfSxcblxuICAgIG9uTG9hZDogZnVuY3Rpb24oICkge1xuXG4gICAgfVxuXG59KTsiXX0=
