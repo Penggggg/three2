@@ -50,7 +50,7 @@ export const main = async ( event, context ) => {
             let result = { };
             dbRes.data.map( dic => {
                 result = Object.assign({ }, result, {
-                    [ dic.belong ]: dic[ dic.belong ]
+                    [ dic.belong ]: dic[ dic.belong ].filter( x => !!x )
                 });
             });
 
