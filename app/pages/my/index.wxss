@@ -2,7 +2,7 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background: #fafafa;
+    background: #fff;
     box-sizing: border-box;
 }
 
@@ -17,7 +17,7 @@
     margin-bottom: 30rpx;
     box-sizing: border-box;
     border-radius: 0 0 80px 80px;
-    background: linear-gradient(to bottom, #ff5777, #ffe8ee );
+    /* background: linear-gradient(to bottom, #ff5777, #ffe8ee ); */
 }
 
 .pm-userInfo-block {
@@ -34,14 +34,15 @@
     height: 120rpx;  
     border-radius: 50%;  
     border: 2px solid #fff;  
-    box-shadow: 3px 3px 13px rgba(0, 0, 0, 0.2);
+    box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.05 );
 }
 
 .pm-userInfo-nick {
-    color: #fff;
-    font-size: 28rpx;
+    color: #4d4d4d;
+    font-size: 32rpx;
     margin-left: 30rpx;
-    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    letter-spacing: 0.05em;
+    /* text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 ); */
 }
 
 .pm-header-bar {
@@ -49,7 +50,7 @@
     margin-top: 20rpx;
     border-radius: 8px;
     background: #fff;
-    box-shadow: 3px 3px 13px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 0px 15px rgba( 0, 0, 0, 0.05 );
 }
 
 .pm-header-bar-item {
@@ -99,7 +100,7 @@
     height: 300rpx;
     width: 100%;
     border-radius: 8px;
-    box-shadow: 3px 3px 13px rgba( 0, 0, 0, 0.1 );
+    box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.05 );
 }
 
 .pm-other-block {
@@ -111,7 +112,7 @@
 
 .pm-other-container {
     border-radius: 8px;
-    /* boxx-shadow: 3px 3px 13px rgba( 0, 0, 0, 0.1 ); */
+    /* box-shadow: 3px 3px 13px rgba( 0, 0, 0, 0.1 ); */
 }
 
 .pm-other-item {
@@ -120,6 +121,7 @@
     background: #fff;
     padding: 35rpx 30rpx;
     position: relative;
+    box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.05 );
 }
 
 .pm-other-item:first-child {
