@@ -53,12 +53,94 @@
             class="pi-classify-content"
             wx:if="{{ !loading }}"
         >
+            <!-- 推荐分类页面 -->
             <view
                 wx:if="{{ active === 'recommand' }}"
             >
 
+                <!-- 新品上市 标题 -->
+                <view
+                    class="pi-new-block"
+                    wx:if="{{ newList.length > 0 }}"
+                >
+                    <view class="pi-new-title-img-block">
+                        <view class="pi-new-title-img-icon"></view>
+                        <view class="pi-new-title-img-con">
+                            <image 
+                                mode="aspectFit"
+                                lazy-load="{{ true }}"
+                                class="pi-new-title-img"
+                                src="{{ newList[ 0 ].img[ 0 ]}}"
+                            />
+                        </view>
+                    </view>
+
+                    <view class="pi-new-title-info-block">
+                        <view class="pi-new-title">
+                            New
+                        </view>
+                    </view>
+
+                </view>
+
+                <!-- 新品上市 列表 -->
+                <view
+                    class="pi-new-list-block-con"
+                     wx:if="{{ newList.length > 0 }}"
+                >
+
+                    <view class="pi-new-list-block-decorate"></view>
+
+                    <view class="pi-new-decorate-text ab">
+                        新品上市
+                    </view>
+
+                    <view
+                        class="pi-new-list-block"
+                    >
+                        
+                        <view class="pi-new-decorate-text ">
+                            新品上市
+                        </view>
+
+                        <scroll-view
+                            scroll-x
+                            class="pi-new-list-con"
+                            lower-threshold="100"
+                        
+                        >
+                            <view class="pi-new-list">
+                                <view
+                                    wx:for="{{ newList }}"
+                                    wx:key="{{ index }}"
+                                    class="pi-new-item"
+                                >
+                                    <view
+                                        class="pi-new-item-img-con"
+                                    >
+                                        <image 
+                                            mode="widthFix"
+                                            lazy-load="{{ true }}"
+                                            class="pi-new-item-img"
+                                            src="{{ item.img[ 0 ]}}"
+                                        />
+                                    </view>
+                                    <view class="pi-new-item-title">
+                                        {{ item.title }}
+                                    </view>
+                                    <view class="pi-new-item-tag">
+                                        {{ item.tagText }}
+                                    </view>
+                                </view>
+                            </view>
+                        </scroll-view>
+                    </view>
+                </view>
+                
+
             </view>
 
+            <!-- 分类列表 -->
             <my-good-classify-list
                 tid="{{ tid }}"
                 classify="{{ active }}"

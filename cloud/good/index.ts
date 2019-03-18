@@ -109,6 +109,8 @@ export const main = async ( event, context ) => {
      * @description 商品销量排行榜列表
      * -------- 请求 ----------
      * {
+     *      limit
+     *      sort: 排序
      *      page: 页数
      *      search: 搜索
      *      category: 商品类目
@@ -126,8 +128,8 @@ export const main = async ( event, context ) => {
         try {
 
             // 查询条数
-            const limit = 20;
-            const { category } = event.data;
+            const limit = event.data.limit || 20;
+            const { category, sort } = event.data;
             const search$ = event.data.search || '';
             const search = new RegExp( search$.replace(/\s+/g, ""), 'i');
 
@@ -147,7 +149,7 @@ export const main = async ( event, context ) => {
                 })
                 .limit( limit )
                 .skip(( event.data.page - 1 ) * limit )
-                .orderBy('saled', 'desc')
+                .orderBy( sort || 'saled', 'desc')
                 .get( );
 
             // 获取型号数据
@@ -237,8 +239,6 @@ export const main = async ( event, context ) => {
                 .skip(( event.data.page - 1 ) * limit )
                 .orderBy('updateTime', 'desc')
                 .get( );
-
- 
 
             const metaList = data$.data;
             const standards = await Promise.all( metaList.map( x => {

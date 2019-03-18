@@ -79,7 +79,9 @@ const delayeringGood = x => {
         /** 是否有活动 */
         hasActivity: !!x.activity || (Array.isArray( x.activities ) && x.activities.length > 0),
         /** 拼团信息 */
-        goodPins: dealGoodPin( x )
+        goodPins: dealGoodPin( x ),
+        /** 标签 */
+        tagText: x.tag.join('、')
     })
 
 };

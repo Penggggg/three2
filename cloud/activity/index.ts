@@ -162,7 +162,8 @@ export const main = async ( event, context ) => {
      * 分页查询“一口价”活动商品列表
      * {
      *     page:(必填)
-     *     limit:
+     *     limit
+     *     filterPass: boolean (是否过滤掉已过期 - 客户端要过滤掉)
      *     isClosed: undefined | true | false
      * }
      */
@@ -171,16 +172,23 @@ export const main = async ( event, context ) => {
 
             // 查询条数
             const limit = event.data.limit || 20;
-            const { isClosed } = event.data;
+            const { isClosed, filterPass } = event.data;
 
             // 查询条件            
             let where$ = {
                 isDeleted: false,
                 type: 'good_discount'
             };
+
             if ( isClosed !== undefined ) {
                 where$ = Object.assign({ }, where$, {
                     isClosed
+                });
+            }
+
+            if ( !!filterPass ) {
+                where$ = Object.assign({ }, where$, {
+                    endTime: _.gt( new Date( ).getTime( ))
                 });
             }
 
