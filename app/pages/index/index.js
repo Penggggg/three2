@@ -60,7 +60,9 @@ Page({
                                 ac_groupPrice
                             }]
                         }));
-                        return Object.assign({ }, meta, x );
+                        return Object.assign({ }, meta, x, {
+                            _id: x.pid
+                        });
                     })
                     .map(( x, k ) => Object.assign({ }, x, {
                         // 排在右边
@@ -200,6 +202,15 @@ Page({
         const { value } = currentTarget.dataset;
         this.setData({
             active: value
+        })
+    },
+
+    /** 跳到行程详情 */
+    goTripDetail( ) {
+        const { tid } = this.data;
+        if ( !tid ) { return; } 
+        wx.navigateTo({
+            url: `/pages/trip-detail/index?id=${tid}`
         })
     },
 

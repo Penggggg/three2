@@ -122,7 +122,10 @@
                         <view class="te-fairy-simple-title te-block-title">
                             越拼·越省
                         </view>
-                        <view class="te-fairy-simple-entry">
+                        <view
+                            bindtap="goTripDetail"
+                            class="te-fairy-simple-entry"
+                        >
                             View all
                         </view>
                     </view>

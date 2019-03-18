@@ -130,7 +130,6 @@
 .pi-new-list-block-con {
     height: 280rpx;
     position: relative;
-    margin-bottom: 15rpx;
 }
 
 .pi-new-list-block-decorate {
@@ -266,6 +265,7 @@
     align-items: center;
     padding: 15rpx 35rpx 25rpx;
     box-sizing: border-box;
+    margin-bottom: 15rpx;
     justify-content: space-between;
 }
 
@@ -286,6 +286,13 @@
     position: absolute;
     border-radius: 30rpx;
     background: rgba( 255,107,149, 0.20 );
+}
+
+.te-entry {
+    color: #eb2f96;
+    font-size: 20rpx;
+    font-weight: bold;
+    letter-spacing: 0.02em;
 }
 
 .pi-activities-block {
