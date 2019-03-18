@@ -52,15 +52,41 @@
                     </view>
 
                     <!-- 顶部logo -->
-                    <view class="te-header">
+                    <view
+                        class="te-header"
+                        bindtap="goTripDetail"
+                    >
 
                         <image
                             mode="widthFix"
                             class="te-header-img"
-                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner-1.png"
+                            src="{{ pinest ? 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner-2.png' : 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner-1.png' }}"
                         />
 
+                        <!-- 本期拼团王 -->
                         <view
+                            class="te-pinest-block"
+                            wx:if="{{ pinest }}"
+                        >
+                            <view class="te-pinest-img-con">
+                                <image
+                                    mode="widthFix"
+                                    class="te-pinest-img"
+                                    src="{{ pinest.detail.good.img[ 0 ]}}"
+                                />
+                            </view>
+                            <view class="te-pinest-text-block">
+                                <view class="te-pinest-text">拼团之</view>
+                                <image
+                                    mode="widthFix"
+                                    class="te-pinest-icon"
+                                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-star-3.png"
+                                />
+                            </view>
+                        </view>
+
+                        <view
+                            wx:if="{{ pinest }}"
                             class="te-tips-btn-block"
                         >
                             <view class="te-tips-btn">
@@ -89,17 +115,19 @@
  
                     <!-- 仙女购物单版本2 -->
                     <view
-                        class="te-fairy-simple-title-block te-block"
                         wx:if="{{ fairyList$.length > 1 }}"
+                        bindtap="goTripDetail"
+                        class="te-fairy-simple-title-block te-block"
                     >
                         <view class="te-fairy-simple-title te-block-title">
-                            仙女购物单
+                            越拼·越省
                         </view>
                         <view class="te-fairy-simple-entry">
                             View all
                         </view>
                     </view>
                     <view
+                        bindtap="goTripDetail"
                         wx:if="{{ fairyList$.length > 1 }}"
                         scroll-x class="te-fairy-simple-list-contanier"
                     >

@@ -136,13 +136,6 @@ Page({
             });
             this.fetchAllPin( tid )
         }
-        /**
-         * !请记得去掉这段代码
-         */
-        this.setData({
-            tid: 'XDGzG97E7L4wLIdu'
-        });
-        this.fetchAllPin( 'XDGzG97E7L4wLIdu' )
     },
 
     /**

@@ -2,24 +2,6 @@
     class="good-item-5"
     bindtap="goDetail"
 >
-    <view class="gi5-info">
-        
-        <view class="gi5-title-block">
-            
-            <view class="gi5-icon">
-                推荐
-            </view>
-            <view class="gi5-title">
-                {{ good.title }}
-            </view>
-        </view>
-
-        <view class="git-tag">
-            {{ tag }}
-        </view>
-
-    </view>
-
     <view class="gi5-img-block">
         <image
             class="gi5-img"
@@ -40,4 +22,23 @@
             </view>
         </view>
     </view>
+
+    <view class="gi5-info">
+        
+        <view class="gi5-title-block">
+            
+            <view class="gi5-icon">
+                推荐
+            </view>
+            <view class="gi5-title">
+                {{ good.title }}
+            </view>
+        </view>
+
+        <view class="git-tag">
+            {{ tag }}
+        </view>
+
+    </view>
+    
 </view>

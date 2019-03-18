@@ -604,3 +604,46 @@
     transform: scaleY( 0.5 );
     background: rgba( 0, 0, 0, 0.06 );
 }
+
+.te-pinest-block {
+    top:35rpx;
+    left: 105rpx;
+    position: absolute;
+    border-radius: 2px;
+    border: 3px solid #fff;
+    box-shadow: 0px 0px 15px rgba( 0, 0, 0, 0.15 );
+}
+
+.te-pinest-img-con {
+    width:190rpx;
+    height:225rpx;
+    overflow: hidden;
+}
+
+.te-pinest-img {
+    width: 100%;
+    border-radius: 2px;
+    min-height: 300rpx;
+}
+
+.te-pinest-text-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 2rpx 0;
+    background: rgba( 255, 255, 255, 0.85 );
+}
+
+.te-pinest-text {
+    color: #333;
+    font-size: 24rpx;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+}
+
+.te-pinest-icon {
+    width: 30rpx;
+    max-height: 30rpx;
+    margin-left: 10rpx;
+}

@@ -648,6 +648,7 @@ export const main = async ( event, context ) => {
      * {
      *    tid,
      *    pid,
+     *    limit
      *    detail: boolean 是否带回商品详情（默认带回）
      *    showUser: boolean 是否需要用户头像等信息（默认不带回）
      *    type: undefined | 'wait' | 'pin' // 等待拼团，已拼团，均有
@@ -656,9 +657,8 @@ export const main = async ( event, context ) => {
     app.router('pin', async( ctx, next ) => {
         try {
 
-            const type = event.data.type;
             const openid = event.userInfo.openId;
-            const { tid, detail, pid } = event.data;
+            const { tid, detail, pid, type, limit } = event.data;
             const showUser = event.data.showUser || false;
 
             const query = pid ? {
@@ -668,14 +668,23 @@ export const main = async ( event, context ) => {
                 tid
             };
 
-            const shopping$ = await db.collection('shopping-list')
-                .where( query )
-                .get( );
+            let shopping$;
+            if ( limit ) {
+                shopping$ = await db.collection('shopping-list')
+                    .where( query )
+                    .limit( limit )
+                    .get( );
+            } else {
+                shopping$ = await db.collection('shopping-list')
+                    .where( query )
+                    .get( );
+            }
+            
 
             // uids长度为1，为待拼列表 ( 查询待拼列表时，可以有自己，让客户知道系统会列出来 )
             // uids长度为2，为可以拼团列表
             let data: any = [ ];
-            const data$ = shopping$.data.filter( s => {
+            let data$ = shopping$.data.filter( s => {
                 if ( type === 'pin' ) {
                     return !!s.adjustGroupPrice && s.uids.length > 1;
 
@@ -690,6 +699,7 @@ export const main = async ( event, context ) => {
                 }
             });
 
+            data$ = data$.sort(( x, y ) => x.uids.length - y.uids.length );
             data = data$;
 
             // 查询每条清单底下每个商品的详情
@@ -708,9 +718,7 @@ export const main = async ( event, context ) => {
                         list.sid
                     ))
                 ).filter( x => !!x );
-
                 
-
                 // 商品
                 let allGoods$: any = await Promise.all( goodIds.map( goodId => {
                     return db.collection('goods')
@@ -796,12 +804,12 @@ export const main = async ( event, context ) => {
             }
 
         } catch ( e ) {
-            console.log('...', e );
             return ctx.body = { status: 500 };
         }
     });
 
-    /** @description
+    /** 
+     * @description
      * 仙女购物清单 ( 买了多少、卡券多少、省了多少 )
      */
     app.router('fairy-shoppinglist', async( ctx, next ) => {
@@ -940,8 +948,6 @@ export const main = async ( event, context ) => {
             return ctx.body = { status: 500 };
         }
     })
-
-
 
     return app.serve( );
 

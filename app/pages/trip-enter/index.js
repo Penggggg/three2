@@ -39,7 +39,9 @@ Page({
         /** 一口价商品列表 */
         goodDiscounts: [ ],
         /** 是否展示社交弹幕 */
-        showMember: false
+        showMember: false,
+        /** 本期拼团王产品 */
+        pinest: null
     },
 
     /** 设置computed */
@@ -161,7 +163,7 @@ Page({
 
                     this.fetchCoupon( current._id );
                     this.fetchFairy( current._id )
-                    
+                    this.fetchPin( current._id )
 
                 } else if ( !next ) {
                     this.setData({
@@ -249,6 +251,25 @@ Page({
                 });
             }
         })
+    },
+
+    /** 拉取本期拼图 */
+    fetchPin( tid ) {
+        http({
+            data: {
+                tid,
+                limit: 1,
+                type: 'pin',
+                showUser: false
+            },
+            url: 'shopping-list_pin',
+            success: res => {
+                const { status, data } = res;
+                this.setData({
+                    pinest: data[ 0 ]
+                })
+            }
+        });
     },
 
     /** 系统自动领取立减到券 */
@@ -341,6 +362,15 @@ Page({
         if ( showMember ) { return; }
         this.setData({
             showMember: scrollTop > 100
+        })
+    },
+
+    /** 跳到行程详情 */
+    goTripDetail( ) {
+        const { current } = this.data;
+        if ( !current ) { return; } 
+        wx.navigateTo({
+            url: `/pages/trip-detail/index?id=${current._id}`
         })
     },
 

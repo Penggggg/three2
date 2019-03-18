@@ -67,7 +67,7 @@
     width: 100rpx;
     height: 100rpx;
     border-radius: 5px;
-    margin-left: 20rpx;
+    margin-right: 20rpx;
     border: 2px solid #fff;
     box-shadow: 0 0 10px rgba( 0, 0, 0, 0.2 );
 }

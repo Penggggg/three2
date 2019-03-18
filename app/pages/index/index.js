@@ -17,7 +17,7 @@ Page({
         loading: true,
 
         // 当前选中的分类
-        active: '0',
+        active: 'recommand',
 
         tid: ''
 
