@@ -179,6 +179,7 @@
     overflow: hidden;
     border-radius: 3px;
     border: 2px solid #fff;
+    position: relative;
     box-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.12 );
 }
 
@@ -232,4 +233,30 @@
     word-break: break-all;
     text-overflow: ellipsis;
     -webkit-box-orient: vertical;
+}
+
+.pi-new-item-tag-block {
+    top: 0rpx;
+    left: 0rpx;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    border-radius: 3px;
+    padding: 3rpx 10rpx;
+    background: #ff8787; 
+    background: -webkit-linear-gradient(to right, #ff61ab, #ff8787); 
+    background: linear-gradient(to right, #ff61ab, #ff8787); 
+}
+
+.pi-new-item-activity-icon {
+    width: 20rpx;
+    margin-right: 2rpx;
+    display: inline-block;
+}
+
+.pi-new-item-tag-text {
+    color: #fff;
+    font-size: 19rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+
 }

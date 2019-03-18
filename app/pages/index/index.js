@@ -125,6 +125,15 @@ Page({
         });
     },
 
+    /** 跳到商品详情 */
+    goGoodDetail({ currentTarget }) {
+        const { tid } = this.data;
+        const { good } = currentTarget.dataset;
+        wx.navigateTo({
+            url: `/pages/goods-detail/index?id=${good._id}&tid=${tid}`
+        });
+    },
+
     /** 去搜索 */
     goSearch( ) {
         wx.navigateTo({

@@ -114,6 +114,8 @@
                                     wx:for="{{ newList }}"
                                     wx:key="{{ index }}"
                                     class="pi-new-item"
+                                    data-good="{{ item }}"
+                                    bindtap="goGoodDetail"
                                 >
                                     <view
                                         class="pi-new-item-img-con"
@@ -124,6 +126,19 @@
                                             class="pi-new-item-img"
                                             src="{{ item.img[ 0 ]}}"
                                         />
+                                        <view
+                                            wx:if="{{ item.hasActivity }}"
+                                            class="pi-new-item-tag-block"
+                                        >
+                                            <image
+                                                mode="widthFix"
+                                                class="pi-new-item-activity-icon"
+                                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                                            />
+                                            <view class="pi-new-item-tag-text">
+                                                活动
+                                            </view>
+                                        </view>
                                     </view>
                                     <view class="pi-new-item-title">
                                         {{ item.title }}
