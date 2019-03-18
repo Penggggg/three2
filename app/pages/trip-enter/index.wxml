@@ -247,7 +247,7 @@
                             tid="{{ current._id }}"
                             wx:if="{{ rankGoods[ 1 ]}}"
                         />
-                        <my-good-item-4]
+                        <my-good-item-4
                             good="{{ rankGoods[ 2 ]}}"
                             tid="{{ current._id }}"
                             wx:if="{{ rankGoods[ 2 ]}}"

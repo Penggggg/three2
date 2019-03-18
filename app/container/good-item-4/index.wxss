@@ -1,5 +1,5 @@
 .good-item-4 {
-    width: 100vw;
+    width: 100%;
     margin-bottom: 30rpx;
     padding: 10rpx 25rpx;
     box-sizing: border-box;
@@ -121,6 +121,7 @@
     position: absolute;
     border-radius: 3px;
     padding: 3rpx 5rpx;
+    min-height: 26rpx;
     background: #ff8787; 
     background: -webkit-linear-gradient(to right, #ff61ab, #ff8787); 
     background: linear-gradient(to right, #ff61ab, #ff8787); 

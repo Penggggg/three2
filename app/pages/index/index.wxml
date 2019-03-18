@@ -151,7 +151,29 @@
                         </scroll-view>
                     </view>
                 </view>
+
+                <!-- 特价活动 -->
+                <view
+                    wx:if="{{ activities.length > 0 }}"
+                    class="te-block"
+                >
+                    <view class="te-block-title">
+                        特价·购
+                    </view>
+                </view>
                 
+                <!-- 特价活动 -->
+                <view
+                    class="pi-activities-block"
+                >
+                    <my-good-item-4
+                        tid="{{ tid }}"
+                        good="{{ item }}"
+                        wx:key="{{ index }}"
+                        wx:for="{{ activities$ }}"
+                        direction="{{ item.right ? 'right' : '' }}"
+                    />
+                </view>
 
             </view>
 

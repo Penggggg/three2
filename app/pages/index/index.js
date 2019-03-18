@@ -41,9 +41,31 @@ Page({
 
     runComputed( ) {
         computed( this, {
+
+            // 新品产品
             newList$( ) {
                 const { newList } = this.data;
                 return newList.map( x => delayeringGood( x ));
+            },
+
+            // 特价活动
+            activities$( ) {
+                const { activities } = this.data;
+                return activities
+                    .map( x => {
+                        const { ac_groupPrice, ac_price } = x;
+                        const meta = delayeringGood( Object.assign({ }, x.detail, {
+                            activities: [{
+                                ac_price,
+                                ac_groupPrice
+                            }]
+                        }));
+                        return Object.assign({ }, meta, x );
+                    })
+                    .map(( x, k ) => Object.assign({ }, x, {
+                        // 排在右边
+                        right: k % 2 !== 0
+                    }));
             }
         });
     },
