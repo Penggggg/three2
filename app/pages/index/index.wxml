@@ -61,7 +61,7 @@
                 <!-- 新品上市 标题 -->
                 <view
                     class="pi-new-block"
-                    wx:if="{{ newList.length > 0 }}"
+                    wx:if="{{ newList$.length > 0 }}"
                 >
                     <view class="pi-new-title-img-block">
                         <view class="pi-new-title-img-icon"></view>
@@ -70,7 +70,7 @@
                                 mode="aspectFit"
                                 lazy-load="{{ true }}"
                                 class="pi-new-title-img"
-                                src="{{ newList[ 0 ].img[ 0 ]}}"
+                                src="{{ newList$[ 0 ].img[ 0 ]}}"
                             />
                         </view>
                     </view>
@@ -86,7 +86,7 @@
                 <!-- 新品上市 列表 -->
                 <view
                     class="pi-new-list-block-con"
-                     wx:if="{{ newList.length > 0 }}"
+                     wx:if="{{ newList$.length > 0 }}"
                 >
 
                     <view class="pi-new-list-block-decorate"></view>
@@ -107,11 +107,11 @@
                             scroll-x
                             class="pi-new-list-con"
                             lower-threshold="100"
-                        
+                            bindscrolltolower="fetchNew"
                         >
                             <view class="pi-new-list">
                                 <view
-                                    wx:for="{{ newList }}"
+                                    wx:for="{{ newList$ }}"
                                     wx:key="{{ index }}"
                                     class="pi-new-item"
                                     data-good="{{ item }}"

@@ -26,8 +26,26 @@ Page({
         // 活动
         activities: [ ],
 
+        // 新品分页
+        newPage: 0,
+
         // 新品
-        newList: [ ]
+        newList: [ ],
+
+        // 加载新品
+        canLoadNewMore: true,
+
+        // 加载新品
+        loadingNewMore: false
+    },
+
+    runComputed( ) {
+        computed( this, {
+            newList$( ) {
+                const { newList } = this.data;
+                return newList.map( x => delayeringGood( x ));
+            }
+        });
     },
 
     /** 拉取一口价列表 */
@@ -56,10 +74,18 @@ Page({
 
     /** 拉取新品列表 */
     fetchNew( ) {
+        const { canLoadNewMore, loadingNewMore, newPage, newList } = this.data;
+
+        if ( !canLoadNewMore || !!loadingNewMore ) { return; }
+
+        this.setData({
+            loadingNewMore: true
+        });
+
         http({
             data: {
-                page: 1,
                 limit: 5,
+                page: newPage + 1,
                 sort: 'updateTime'
             },
             url: `good_rank`,
@@ -69,11 +95,17 @@ Page({
 
                 const list = data.data;
                 const { pagenation } = data;
+                const { page, totalPage } = pagenation;
+
+                const meta = page === 1 ? list : [ ...newList, ...list ] 
+
                 this.setData({
-                    newList: list.map( x => delayeringGood( x ))
+                    newPage: page,
+                    newList: meta,
+                    loadingNewMore: false,
+                    canLoadNewMore: page < totalPage,
                 });
 
-                console.log( list.map( x => delayeringGood( x )))
             }
         })
     },
@@ -150,6 +182,9 @@ Page({
     },
 
     onLoad( options ) {
+
+        this.runComputed( );
+
         this.fetchNew( );
         this.fetchDic( );
         this.fetchDiscount( );

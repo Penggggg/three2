@@ -188,12 +188,14 @@ export const main = async ( event, context ) => {
             return ctx.body = {
                 status: 200,
                 data: {
-                    search: search$.replace(/\s+/g, ''),
-                    pageSize: limit,
-                    page: event.data.page,
                     data: insertActivity,
-                    total: total$.total,
-                    totalPage: Math.ceil( total$.total / limit )
+                    search: search$.replace(/\s+/g, ''),
+                    pagenation: {
+                        pageSize: limit,
+                        page: event.data.page,
+                        total: total$.total,
+                        totalPage: Math.ceil( total$.total / limit )
+                    }
                 }
             };
             
