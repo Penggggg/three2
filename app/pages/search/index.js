@@ -37,7 +37,6 @@ Page({
             // 列表
             result$( ) {
                 const { result } = this.data;
-                console.log('???', result );
                 const changeSort = arr => {
                     const arr1 = arr.filter(( x, k ) => k % 2 === 0 );
                     const arr2 = arr.filter(( x, k ) => k % 2 === 1 )

@@ -310,6 +310,10 @@
     box-shadow: 0px 0px 10px rgba( 0, 0, 0, 0.1 );
 }
 
+.pi-pin-item.nmb {
+    margin-bottom: 0;
+}
+
 .pi-pin-img-block {
     position: relative;
 }
@@ -472,4 +476,15 @@
     height: 40rpx;
     font-size: 40rpx;
     text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.pi-result-waterfall {
+    column-count: 2;
+}
+
+.pi-result-item {
+    width: 46vw;
+    box-sizing: border-box;
+    break-inside: avoid;
+    margin-bottom: 25rpx;
 }

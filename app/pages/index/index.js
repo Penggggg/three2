@@ -39,7 +39,19 @@ Page({
         loadingNewMore: false,
 
         // 拼团列表
-        pingList: [ ]
+        pingList: [ ],
+
+        // 滚动加载排行榜
+        canLoadMore: true,
+
+        // 排行榜
+        page: 0,
+
+        // 排行榜
+        rank: [ ],
+
+        // 排行榜
+        loadingRank: false
     },
 
     runComputed( ) {
@@ -79,6 +91,17 @@ Page({
                 return pingList.sort(( x, y ) => {
                     return x.detail.saled - y.detail.saled;
                 });
+            },
+
+            /** 排行榜 */
+            rank$: function( ) {
+                const { rank } = this.data;
+                const changeSort = arr => {
+                    const arr1 = arr.filter(( x, k ) => k % 2 === 0 );
+                    const arr2 = arr.filter(( x, k ) => k % 2 === 1 )
+                    return [ ...arr1, ...arr2 ]
+                };
+                return changeSort( rank )
             }
         });
     },
@@ -213,6 +236,42 @@ Page({
         });
     },
 
+    /** 拉取热门榜列表 */
+    fetchRank( ) {
+        const { page, canLoadMore, loadingRank, rank } = this.data;
+
+        if ( !canLoadMore || !!loadingRank ) { return; }
+
+        this.setData({
+            loadingRank: true
+        })
+
+        // 搜索
+        http({
+            data: {
+                limit: 10,
+                page: page + 1
+            },
+            url: `good_rank`,
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                const { pagenation } = data;
+                const { page, totalPage } = pagenation;
+                const list = data.data.map( delayeringGood );
+                const meta = page === 1 ? list : [ ...rank, ...list ];
+
+                this.setData({
+                    page,
+                    rank: meta,
+                    loadingRank: false,
+                    canLoadMore: page < totalPage
+                });
+            }
+        })
+    },
+
     /** 预览图片 */
     priviewSingle({ currentTarget }) {
         const { img, imgs } = currentTarget.dataset;
@@ -258,7 +317,7 @@ Page({
     onLoad( options ) {
 
         this.runComputed( );
-
+        this.fetchRank( );
         this.fetchNew( );
         this.fetchDic( );
         this.fetchDiscount( );

@@ -180,11 +180,10 @@ Page({
             data: {
                 page: 1
             },
-            errMsg: '加载排行榜错误，请重试',
             url: `good_rank`,
             success: res => {
                 const { status, data } = res;
-            
+                if ( status !== 200 ) { return; }
                 this.setData({
                     rankGoods: data.data.map( delayeringGood ),
                     otherGoods: data.data.map( delayeringGood ).slice( 3 )

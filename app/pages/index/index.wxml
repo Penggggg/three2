@@ -49,9 +49,12 @@
         </view>
 
         <!-- 内容层 -->
-        <view
-            class="pi-classify-content"
+        <scroll-view
+            scroll-y
             wx:if="{{ !loading }}"
+            lower-threshold="100"
+            class="pi-classify-content"
+            bindscrolltolower="fetchRank"
         >
             <!-- 推荐分类页面 -->
             <view
@@ -177,8 +180,8 @@
 
                 <!-- 拼团 -->
                 <view
-                    wx:if="{{ activities.length > 0 }}"
                     class="te-block"
+                    wx:if="{{ activities.length > 0 }}"
                 >
                     <view class="te-block-title">
                         省钱·拼
@@ -197,7 +200,7 @@
                     wx:if="{{ pingList$.length > 0 }}"
                 >
                     <view
-                        class="pi-pin-item"
+                        class="pi-pin-item {{ index === pingList$.length - 1 ? 'nmb' : '' }}"
                         wx:key="{{ index }}"
                         wx:for="{{ pingList$ }}"
                     >
@@ -320,6 +323,30 @@
                     </view>
                 </view>
 
+                <!-- 排行榜列表 -->
+                <view
+                    class="te-block"
+                    wx:if="{{ rank$.length > 0 }}"
+                >
+                    <view class="te-block-title">
+                        热销·宝贝
+                    </view>
+                </view>
+
+                <!-- 排行榜列表 -->
+                <view class="pi-result-waterfall">
+                    <view
+                        wx:key="{{ index }}"
+                        wx:for="{{ rank$ }}"
+                        class="pi-result-item"
+                    >
+                        <my-good-item-6
+                            good="{{ item }}"
+                            tid="{{ tid }}"
+                        />
+                    </view>
+                </view>
+
             </view>
 
             <!-- 分类列表 -->
@@ -328,7 +355,7 @@
                 classify="{{ active }}"
                 wx:if="{{ active !== 'recommand' }}"
             />
-        </view>
+        </scroll-view>
 
     </view>
 
