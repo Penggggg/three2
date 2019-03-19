@@ -191,6 +191,135 @@
                     </view>
                 </view>
 
+                <!-- 热门拼团 -->
+                <view
+                    class="pi-pin-list"
+                    wx:if="{{ pingList$.length > 0 }}"
+                >
+                    <view
+                        class="pi-pin-item"
+                        wx:key="{{ index }}"
+                        wx:for="{{ pingList$ }}"
+                    >
+                        <!-- 主图：只有主体商品 -->
+                        <view
+                            wx:if="{{ !item.sid }}"
+                            class="pi-pin-img-block only-p"
+                        >
+                            <image 
+                                mode="widthFix"
+                                lazy-load="{{ true }}"
+                                class="pi-pin-img-only-p"
+                                src="{{ item.detail.img }}"
+                                data-img="{{ item.detail.img }}"
+                                bindtap="priviewSingle"
+                            />
+                            <view class="pi-pin-title-only-p-block">
+                                <view class="pi-pin-title-only-p">
+                                    {{ item.detail.title }}
+                                </view>
+                            </view>
+                        </view>
+
+                        <!-- 主图：型号 -->
+                        <view
+                            wx:else
+                            class="pi-pin-img-block with-standar"
+                        >
+                            <image 
+                                mode="widthFix"
+                                lazy-load="{{ true }}"
+                                class="pi-pin-img-standar"
+                                src="{{ item.detail.img }}"
+                                data-img="{{ item.detail.img }}"
+                                bindtap="priviewSingle"
+                            />
+                            <view class="pi-pin-img-small-con">
+                                <image
+                                    mode="widthFix"
+                                    lazy-load="{{ true }}"
+                                    class="pi-pin-img-small"
+                                    src="{{ item.detail.good.img[ 0 ]}}"
+                                    data-img="{{ item.detail.good.img[ 0 ] }}"
+                                    bindtap="priviewSingle"
+                                />
+                            </view>
+                        </view>
+
+                        <!-- 商品详情 -->
+                        <view class="pi-pin-item-info-block">
+
+                            <!-- 显示参团人数 -->
+                            <view class="pi-pin-item-member-block">
+                                <view class="pi-pin-item-member-title">
+                                    {{ item.users.length }}人已拼团
+                                </view>
+                                <view class="pi-pin-item-member-list">
+                                    <image
+                                        mode="scaleToFill"
+                                        lazy-load="{{ true }}"
+                                        wx:key="{{ k }}"
+                                        wx:for-index="k"
+                                        wx:for-item="user"
+                                        wx:for="{{ item.users }}"
+                                        src="{{ user.avatarUrl }}"
+                                        class="pi-pin-item-member-img"
+                                    />
+                                </view>
+                            </view>
+
+                            <!-- 商品名称 -->
+                            <view
+                                wx:if="{{ item.sid }}"
+                                class="pi-pin-good-title"
+                            >
+                                {{ item.detail.title }}
+                            </view>
+
+                            <!-- 商品介绍 -->
+                            <view class="pi-pin-item-info">
+                                {{ item.detail.good.detail }}
+                            </view>
+
+                            <!-- 商品图片、价格按钮 -->
+                            <view class="pi-pin-item-action-block">
+                                <view class="pi-pin-item-good-imgs">
+                                    <image
+                                        mode="scaleToFill"
+                                        lazy-load="{{ true }}"
+                                        src="{{ img }}"
+                                        wx:for-index="k"
+                                        wx:for-item="img"
+                                        wx:key="{{ k }}"
+                                        class="pi-pin-item-good-img-item"
+                                        wx:for="{{ item.detail.good.img }}"
+                                        data-img="{{ img }}"
+                                        data-imgs="{{ item.detail.good.img }}"
+                                        bindtap="priviewSingle"
+                                    />
+                                </view>
+                                <view>
+                                    <view
+                                        class="pi-pin-btn"
+                                        data-good="{{ item }}"
+                                        bindtap="goGoodDetail"
+                                    >
+                                        <view class="pi-pin-btn-text">拼团价</view>
+                                        <wxc-price
+                                            icon="sub"
+                                            decimal="small"
+                                            class="pi-pin-btn-price"
+                                        > 
+                                            {{ item.adjustGroupPrice }}
+                                        </wxc-price>
+                                    </view>
+                                </view>
+                            </view>
+
+                        </view>
+                    </view>
+                </view>
+
             </view>
 
             <!-- 分类列表 -->

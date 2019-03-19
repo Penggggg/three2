@@ -299,3 +299,177 @@
     /* padding: 0 25rpx; */
     box-sizing: border-box;
 }
+
+.pi-pin-list {
+    padding: 0rpx 25rpx 20rpx 25rpx;
+}
+
+.pi-pin-item {
+    border-radius: 10px;
+    margin-bottom: 65rpx;
+    box-shadow: 0px 0px 10px rgba( 0, 0, 0, 0.1 );
+}
+
+.pi-pin-img-block {
+    position: relative;
+}
+
+.pi-pin-img-block.with-standar {
+    height: 350rpx;
+    overflow: hidden;
+    display: flex;
+    /* align-items: center; */
+}
+
+.pi-pin-img-only-p {
+    width: 100%;
+    display: block;
+    border-radius: 10px 10px 0 0 ;
+}
+
+.pi-pin-img-standar {
+    width: 60%;
+    display: block;
+    border-radius: 10px 0 0 0 ;
+}
+
+.pi-pin-img-small {
+    
+    width: 100%;
+    
+}
+
+.pi-pin-img-small-con {
+    top: 50%;
+    right: 40rpx;
+    width: 28%;
+    height: 200rpx;
+    overflow: hidden;
+    position: absolute;
+    transform: translate( 0, -50% );
+    border-radius: 3px;
+    border: 2px solid #fff;
+    box-shadow: 3px 3px 25px rgba( 0, 0, 0, 0.1 );
+}
+
+.pi-pin-title-only-p-block {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    position: absolute;
+}
+
+.pi-pin-title-only-p {
+    color: #fff;
+    font-size: 30rpx;
+    padding: 5rpx 25rpx;
+    letter-spacing: 0.03em;
+    box-sizing: border-box;
+    overflow: hidden; 
+    display: -webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    background: rgba( 0, 0, 0, 0.18 );
+}
+
+.pi-pin-item-info-block {
+    padding: 25rpx 25rpx 35rpx;
+    box-sizing: border-box;
+    border-radius: 0 0 10px 10px;
+}
+
+.pi-pin-item-member-block {
+    display: flex;
+    align-items: center;
+}
+
+.pi-pin-item-member-title {
+    color: #4d4d4d;
+    font-size: 24rpx;
+    font-weight: bold;
+    position: relative;
+    letter-spacing: 0.02em;
+    margin-right: 30rpx;
+}
+
+.pi-pin-item-member-list {
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+.pi-pin-item-member-img {
+    width: 50rpx;
+    height: 50rpx;
+    border-radius: 50%;
+    margin-left: -8rpx;
+    border: 2px solid #fff;
+    box-shadow: -3px -1px 5px rgba( 0, 0, 0, 0.2 );    
+}
+
+.pi-pin-item-info {
+    color: #333;
+    font-size: 22rpx;
+    letter-spacing: 0.02em;
+    line-height: 32rpx;
+}
+
+.pi-pin-good-title {
+    color: #333;
+    font-size: 30rpx;
+    margin: 20rpx;
+    letter-spacing: 0.03em;
+    margin: 20rpx 0 30rpx;
+    padding-left: 20rpx;
+}
+
+.pi-pin-item-action-block {
+    display: flex;
+    margin-top: 35rpx;
+    align-items: flex-end;
+}
+
+.pi-pin-item-good-imgs {
+    flex: 1;
+    white-space: nowrap;
+    overflow-y: scroll;
+    margin-right: 15rpx;
+}
+
+.pi-pin-item-good-img-item {
+    width: 100rpx;
+    height: 100rpx;
+    border-radius: 3px;
+    margin-right: 22rpx;
+}
+
+.pi-pin-btn {
+    display: flex;
+    align-items: flex-end;
+    padding: 7rpx 18rpx;
+    border-radius: 3px;
+    /* background: #ff8787; 
+    background: -webkit-linear-gradient(to right, #ff61ab, #ff8787); 
+    background: linear-gradient(to right, #ff61ab, #ff8787);  */
+    background: #bc4e9c;  
+    background: -webkit-linear-gradient(to left, #f80759, #bc4e9c);  
+    background: linear-gradient(to left, #f80759, #bc4e9c); 
+
+}
+
+.pi-pin-btn-text {
+    color: #fff;
+    margin-right: 10rpx;
+    font-size: 20rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.pi-pin-btn-price {
+    color: #fff;
+    display: block;
+    line-height: 40rpx;
+    height: 40rpx;
+    font-size: 40rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}

@@ -36,7 +36,10 @@ Page({
         canLoadNewMore: true,
 
         // 加载新品
-        loadingNewMore: false
+        loadingNewMore: false,
+
+        // 拼团列表
+        pingList: [ ]
     },
 
     runComputed( ) {
@@ -68,6 +71,14 @@ Page({
                         // 排在右边
                         right: k % 2 !== 0
                     }));
+            },
+
+            /** 等待拼团列表 */
+            pingList$: function( ) {
+                const { pingList } = this.data;
+                return pingList.sort(( x, y ) => {
+                    return x.detail.saled - y.detail.saled;
+                });
             }
         });
     },
@@ -172,13 +183,43 @@ Page({
             success: res => {
                 const { status, data } = res;
                 if ( status === 200 && !!data[ 0 ]) {
-                    !!cb && cb( data[ 0 ]._id );
+                    const tid = data[ 0 ]._id;
+                    !!cb && cb( tid );
                     this.setData({
-                        tid: data[ 0 ]._id
+                        tid
                     });
+                    this.fetchPin( tid )
                 }
             }
         });
+    },
+
+    /** 拉取已经拼团成功的商品列表 */
+    fetchPin( tid ) {
+        http({
+            data: {
+                tid,
+                type: 'pin',
+                showUser: true
+            },
+            url: 'shopping-list_pin',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setData({ 
+                    pingList: data
+                });
+            }
+        });
+    },
+
+    /** 预览图片 */
+    priviewSingle({ currentTarget }) {
+        const { img, imgs } = currentTarget.dataset;
+        wx.previewImage({
+            current: img,
+            urls: imgs || [ img ],
+        })
     },
 
     /** 跳到商品详情 */
@@ -186,7 +227,7 @@ Page({
         const { tid } = this.data;
         const { good } = currentTarget.dataset;
         wx.navigateTo({
-            url: `/pages/goods-detail/index?id=${good._id}&tid=${tid}`
+            url: `/pages/goods-detail/index?id=${good.pid || good._id}&tid=${tid}`
         });
     },
 
