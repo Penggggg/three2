@@ -68,7 +68,7 @@
                         <my-switch-text
                             color="#c5c5c5"
                             sign="{{ item.pid }}"
-                            activecolor="#19b391"
+                            activecolor="#c5c5c5"
                             color="#d92a22"
                             bindchange="onSwitch"
                             options="{{ closeOpts }}"

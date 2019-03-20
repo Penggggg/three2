@@ -44,7 +44,6 @@ Page({
             list$( ) {
                 const { list } = this.data;
                 const meta  = list.map( delayeringGood );
-                console.log('...', meta );
                 return meta;
             }
         })
@@ -110,29 +109,29 @@ Page({
             content: `确定要${ value ? '上架' : '下架' }此商品吗？`,
             success: res => {
                 if ( res.confirm ) {
-                    // http({
-                    //     data: {
-                    //         acid: sign,
-                    //         isClosed: value
-                    //     },
-                    //     loadingMsg: value ? '上架中...' : '下架中...',
-                    //     url: 'activity_update-good-discount',
-                    //     success: res => {
-                    //         if ( res.status === 200 ) {
-                    //             wx.showToast({
-                    //                 title: value ? '上架成功！' : '下架成功！'
-                    //             });
-                    //             const target = list.find( x => x._id === sign );
-                    //             const existedIndex = list.findIndex( x => x._id === sign );
-                    //             list.splice( existedIndex, 1, Object.assign({ }, target, {
-                    //                 visiable: value
-                    //             }));
-                    //             this.setData({
-                    //                 list
-                    //             });
-                    //         }
-                    //     }
-                    // })
+                    http({
+                        data: {
+                            pid: sign,
+                            visiable: value
+                        },
+                        loadingMsg: value ? '上架中...' : '下架中...',
+                        url: 'good_set-visiable',
+                        success: res => {
+                            if ( res.status === 200 ) {
+                                wx.showToast({
+                                    title: value ? '上架成功！' : '下架成功！'
+                                });
+                                const target = list.find(( x: any ) => x._id === sign );
+                                const existedIndex = list.findIndex(( x: any ) => x._id === sign );
+                                (list as any ).splice( existedIndex, 1, Object.assign({ }, target, {
+                                    visiable: value
+                                }));
+                                this.setData!({
+                                    list
+                                });
+                            }
+                        }
+                    })
                 }
             }
         });

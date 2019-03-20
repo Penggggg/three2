@@ -25,6 +25,7 @@ const _ = db.command;
  *      limit!: 限购数量 Number
  *      visiable: 是否上架 Boolean
  *      saled: 销量 Number
+ *      updateTime
  *!      standards!: 型号规格 Array<{ 
  *          name: String,
  *          price: Number,
@@ -480,7 +481,8 @@ export const main = async ( event, context ) => {
         }
     })
 
-    /** @description
+    /**
+     * @description
      * 客户端搜索商品列表（ 分类搜搜、或文字搜搜 ）
      * ! search 不会是空字符串
      * {
@@ -585,6 +587,33 @@ export const main = async ( event, context ) => {
                 }
             };
 
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    });
+
+    /**
+     * @description
+     * 管理端 上下架商品
+     * {
+     *    pid,
+     *    visiable
+     * }
+     */
+    app.router('set-visiable', async( ctx, next ) => {
+        try {
+            const { pid, visiable } = event.data;
+            await db.collection('goods')
+                .doc( pid )
+                .update({
+                    data: {
+                        visiable,
+                        updateTime: new Date( ).getTime( )
+                    }
+                });
+
+            return ctx.body = { status: 200 };
+            
         } catch ( e ) {
             return ctx.body = { status: 500 };
         }
