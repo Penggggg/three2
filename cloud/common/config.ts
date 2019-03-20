@@ -37,5 +37,11 @@ export const collections = [
     'shopping-list',
     'trip',
     'standards',
-    'deliver'
+    'deliver',
+    'authpsw'
 ];
+
+/** 权限模块 */
+export const auth = {
+    salt: 'hzpisbest'
+}

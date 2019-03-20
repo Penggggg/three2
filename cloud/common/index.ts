@@ -18,15 +18,16 @@ export const main = async ( event, context ) => {
 
     const app = new TcbRouter({ event });
 
-    /** 初始化各个数据库 */
+    /**
+     * @description
+     * 初始化各个数据库
+     */
     app.router('init', async( ctx, next ) => {
         try {
             const collections = CONFIG.collections;
-            try {
-                collections.map( collectionName => {
-                    (db as any).createCollection( collectionName );
-                });
-            } catch ( e ) { }
+            await Promise.all([
+                collections.map( collectionName => (db as any).createCollection( collectionName ))
+            ])
 
             return ctx.body = { status: 200 }
         } catch ( e ) {
@@ -34,7 +35,10 @@ export const main = async ( event, context ) => {
         }
     })
 
-    /** 数据字典 */
+    /**
+     * @description 
+     * 数据字典
+     */
     app.router('dic', async( ctx, next ) => {
         try {
 
@@ -67,7 +71,10 @@ export const main = async ( event, context ) => {
         }
     });
 
-    /** 微信用户信息存储 */
+    /**
+     * @description
+     * 微信用户信息存储
+     */
     app.router('userEdit', async( ctx, next ) => {
         try {
 
@@ -137,7 +144,7 @@ export const main = async ( event, context ) => {
 
         } catch ( e ) {
             return ctx.body = {
-                status: 500,
+                status: 200,
                 data: true
             }
         }
@@ -290,7 +297,10 @@ export const main = async ( event, context ) => {
         }
     });
 
-    /** 查询代购个人二维码信息 */
+    /**
+     * @description
+     * 查询代购个人二维码信息
+     */
     app.router('wxinfo', async( ctx, next ) => {
         try {
 
@@ -320,7 +330,10 @@ export const main = async ( event, context ) => {
         }
     });
 
-    /** 获取“我的页面”的基本信息，诸如订单、卡券数量 */
+    /** 
+     * @description
+     * 获取“我的页面”的基本信息，诸如订单、卡券数量
+     */
     app.router('mypage-info', async( ctx, next ) => {
         try {
             
@@ -349,7 +362,9 @@ export const main = async ( event, context ) => {
         } catch ( e ) { return ctx.body = { status: 500 };}
     });
 
-    /** 行程下，参加了购买的客户（订单）
+    /** 
+     * @description
+     * 行程下，参加了购买的客户（订单）
      * { 
      *    tid
      * }
@@ -459,6 +474,134 @@ export const main = async ( event, context ) => {
 
         } catch ( e ) {
             return ctx.body = { message: e, status: 500 }
+        }
+    });
+
+    /**
+     * @description
+     * 通过加解密客服给的密码，来增加权限、初始化数据库
+     */
+    app.router('add-auth-by-psw', async( ctx, next ) => {
+        try {
+
+            try {
+                await (db as any).createCollection('authpsw');
+            } catch ( e ) { }
+
+            let result = '';
+            const { salt } = CONFIG.auth;
+            const openid = event.userInfo.openId;
+            const { psw, content } = event.data;
+
+            const getErr = message => ({
+                message,
+                status: 500,
+            });
+
+            try {
+                const decipher = crypto.createDecipher('aes192', salt );
+                const decrypted = decipher.update( psw, 'hex', 'utf8' );
+                result = decrypted + decipher.final('utf8');
+            } catch ( e ) {
+                return ctx.body = getErr('密钥错误，请核对');
+            }
+            
+            const [ c_timestamp, c_appid, c_content, c_max ] = result.split('-');
+
+            if ( new Date( ).getTime( ) - Number( c_timestamp ) > 30 * 60 * 1000 ) {
+                return ctx.body = getErr('密钥已过期，请联系客服');
+            }
+
+            if ( c_appid !== CONFIG.app.id ) {
+                return ctx.body = getErr('密钥与小程序不关联');
+            }
+
+            if ( c_content.replace(/\s+/g, '') !== content.replace(/\s+/g, '')) {
+                return ctx.body = getErr('提示词错误，请联系客服');
+            }
+
+            /**
+             * authpsw 表
+             * 
+             * {
+             *    appId,
+             *    timestamp,
+             *    count
+             * }
+             */
+            const check$ = await db.collection('authpsw') 
+                .where({
+                    appId: c_appid,
+                    timestamp: c_timestamp
+                })
+                .get( );
+            const target = check$.data[ 0 ];
+
+            // 密钥已被使用
+            if ( !!target ) {
+                
+                // 次数不能多于2
+                if ( target.count >= 2 ) {
+                    return ctx.body = getErr('密钥已被使用，请联系客服');
+
+                // 更新密钥信息
+                } else {
+                    await db.collection('authpsw')
+                        .doc( String( target._id ))
+                        .update({
+                            data: {
+                                count: _.inc( 1 )
+                            }
+                        });
+                }
+            // 创建密钥信息
+            } else {
+                await db.collection('authpsw')
+                    .add({
+                        data: {
+                            count: 1,
+                            appId: c_appid,
+                            timestamp: c_timestamp
+                        }
+                    })
+            }
+
+            // 把当前人，加入到管理员
+            const checkManager$ = await db.collection('manager-member')
+                .where({
+                    openid
+                })
+                .get( );
+            const targetManager = checkManager$.data[ 0 ];
+
+            if ( !targetManager ) {
+                await db.collection('manager-member')
+                    .add({
+                        data: {
+                            openid,
+                            content: c_content,
+                            createTime: new Date( ).getTime( )
+                        }
+                    })
+            }
+
+            // 初始化各个表
+            try {
+                const collections = CONFIG.collections;
+                await Promise.all([
+                    collections.map( collectionName => (db as any).createCollection( collectionName ))
+                ]);
+            } catch ( e ) { }
+
+            return ctx.body = {
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500,
+                message: '密钥检查发生错误'
+            }
         }
     });
 

@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/manager-auth-init/index",
     "pages/manager-goods-list/index",
     "pages/manager-goods-active/index",
     "pages/index/index",
