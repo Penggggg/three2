@@ -1,3 +1,41 @@
-<view>
-    ?
+<view class="p-manager-auth-init">
+
+    <!-- 顶部公告 -->
+    <wxc-notice
+        scroll="{{ true }}"
+        show-icon="{{ true }}"
+        color="#333"
+        icon-color="#333"
+        bgColor="transparent"
+        notice="请输入客服提供的密钥、提示词～"
+    />
+
+    <!-- 标题 -->
+    <view
+        class="pmai-block"
+    >
+        <view class="pmai-block-title">
+            Account
+        </view>
+        <view class="pmai-block-tips">
+            创建管理员
+        </view>
+    </view>
+
+    <!-- 表单 -->
+    <view class="pmai-form-block">
+        <my-active-form
+            id="form"
+            meta="{{ meta }}"
+        />
+    </view>
+
+    <!-- 按钮 -->
+    <view
+        class="pmal-btn"
+        bindtap="submit"
+    >
+        确认
+    </view>
+    
 </view>

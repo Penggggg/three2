@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { computed } = require('../../lib/vuefy/index.js');
 
 Page({
 
@@ -9,17 +10,69 @@ Page({
 
     },
 
+    runComputed( ) {
+        computed( this, {
+            // 表单
+            meta( ) {
+                return [
+                    {
+                        key: 'psw',
+                        label: '密钥',
+                        type: 'input',
+                        placeholder: '复制密钥到此处',
+                        value: undefined,
+                        rules: [{
+                          validate: val => !!val,
+                          message: '密钥不能为空'
+                        }]
+                    }, {
+                        key: 'content',
+                        label: '提示词',
+                        type: 'input',
+                        placeholder: '填写自己设置的提示词',
+                        value: undefined,
+                        rules: [{
+                          validate: val => !!val,
+                          message: '提示词不能为空'
+                        }]
+                    }
+                ]
+            }
+        })
+    },
+    
+    // 提交
+    submit( ) {
+        const form = this.selectComponent('#form');
+        const r = form.getData();
+
+        if ( !r.result ) {
+            return wx.showToast({
+              icon: 'none',
+              title: '请完善以上信息',
+            })
+        }
+
+        http({
+            data: r.data,
+            url: 'common_add-auth-by-psw',
+            success: res => {
+                if ( res.status === 200 ) {
+                    return wx.showToast({
+                        icon: 'none',
+                        title: '创建成功！请重启小程序',
+                      })
+                }
+            }
+        })
+
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        // http({
-        //     url: 'common_add-auth-by-psw',
-        //     data: {
-        //         psw: '45b5f6fe69c06ad36719d3d04dd73e529792ee9eeaf6d5bd534d11332cbe05a8084c4215250c3e5b53846f0e27fe86f6',
-        //         content: '15626469784'
-        //     }
-        // })
+        this.runComputed( );
     },
 
     /**

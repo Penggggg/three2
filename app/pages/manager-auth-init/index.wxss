@@ -1,1 +1,63 @@
-/* app/pages/manager-auth-init/index.wxss */
+.p-manager-auth-init {
+
+    min-height: 100vh;
+    padding:  0 10rpx;
+    box-sizing: border-box;
+}
+
+.pmai-block {
+    display: flex;
+    align-items: flex-end;
+    padding: 15rpx 35rpx 25rpx;
+    box-sizing: border-box;
+}
+
+.pmai-block-title {
+    color: #333;
+    font-size: 30rpx;
+    font-weight: bold;
+    position: relative;
+    letter-spacing: 0.02em;
+}
+
+.pmai-block-title:after {
+    left: -10%;
+    width: 110%;
+    height: 15rpx;
+    content: '';
+    bottom: 5rpx;
+    position: absolute;
+    border-radius: 30rpx;
+    background: rgba( 255,107,149, 0.20 );
+}
+
+.pmai-block-tips {
+    color: #333;
+    font-size: 24rpx;
+    font-weight: bold;
+    margin-left: 20rpx;
+    letter-spacing: 0.02em;
+}
+
+.pmai-form-block {
+    box-sizing: border-box;
+    padding: 0 20rpx;
+}
+
+.pmal-btn {
+    width: 90vw;
+    padding: 20rpx;
+    position: fixed;
+    text-align: center;
+    left: 5vw;
+    bottom: 50rpx;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 28rpx;
+    box-sizing: border-box;
+    letter-spacing: 0.05em;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    background: #ff8787; 
+    background: -webkit-linear-gradient(to right, #ff61ab, #ff8787); 
+    background: linear-gradient(to right, #ff61ab, #ff8787);   
+}
