@@ -88,10 +88,19 @@ export const main = async ( event, context ) => {
 
             // 新建
             const create$ = await Promise.all( dataMeta.map( meta => {
-                return db.collection('activity')
-                    .add({
-                        data: meta
-                    })
+                return Promise.all([
+                    db.collection('activity')
+                        .add({
+                            data: meta
+                        }),
+                    db.collection('goods')
+                        .doc( meta.pid )
+                        .update({
+                            data: {
+                                updateTime: new Date( ).getTime( )
+                            }
+                        })
+                ])
             }));
 
             return ctx.body = { 
@@ -299,7 +308,7 @@ export const main = async ( event, context ) => {
      */
     app.router('update-good-discount', async( ctx, next ) => {
         try {
-            const { acid } = event.data;
+            const { acid, pid } = event.data;
             const updateBody = event.data;
             delete updateBody.acid;
 
@@ -309,6 +318,14 @@ export const main = async ( event, context ) => {
                     data: Object.assign({ }, updateBody, {
                         updatedTime: new Date( ).getTime( )
                     })
+                });
+
+            await db.collection('goods')
+                .doc( pid )
+                .update({
+                    data: {
+                        updateTime: new Date( ).getTime( )
+                    }
                 });
 
             return ctx.body = {

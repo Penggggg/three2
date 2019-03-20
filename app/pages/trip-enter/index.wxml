@@ -102,6 +102,7 @@
                         <!-- 社交 - 参加人数，点击跳到拼团页面 -->
                         <view
                             wx:if="{{ current }}"
+                            bindtap="goTripDetail"
                             class="te-header-members {{ notice !== '暂无下一趟行程 T.T' ? 'topper' : '' }}"
                         >
                             <my-social-trip-member

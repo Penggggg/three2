@@ -144,7 +144,7 @@ Page({
             data: {
                 limit: 5,
                 page: newPage + 1,
-                sort: 'updateTime'
+                sort: 'createTime'
             },
             url: `good_rank`,
             success: res => {
