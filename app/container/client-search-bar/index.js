@@ -9,6 +9,10 @@ Component({
                   type: String,
                   value: '',
                   observer: 'onValue'
+            },
+            initfocus: {
+                  type: Boolean,
+                  value: true
             }
       },
 
@@ -78,5 +82,11 @@ Component({
                   });
             }
             
+      },
+
+      attached: function( ) {
+            this.setData({
+                  focus: this.data.initfocus
+            })
       }
 })

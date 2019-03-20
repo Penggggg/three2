@@ -58,30 +58,44 @@ const delayeringGood = x => {
     allPriceArr = allPriceArr.sort(( x, y ) => x - y );
     allStockArr = allStockArr.sort(( x, y ) => x - y );
 
+
     return Object.assign({ }, x, {
+
         pid: x._id,
+
         // 库存区间
         stock$: allStockArr.length === 0 ?
             allStockArr[ 0 ] :
-            `${allStockArr[ 0 ]} ~ ${allStockArr[ allStockArr.length - 1 ]}`,
+            allStockArr[ 0 ] === allStockArr[ allStockArr.length - 1 ] ?
+                allStockArr[ 0 ] :
+                `${allStockArr[ 0 ]} ~ ${allStockArr[ allStockArr.length - 1 ]}`,
+
         // 价格区间
         price$: allPriceArr.length === 0 ?
             allPriceArr[ 0 ] :
                 allPriceArr[ 0 ] === allPriceArr[ allPriceArr.length - 1 ] ? 
                     allPriceArr[ 0 ] :
                     `${allPriceArr[ 0 ]} ~ ${allPriceArr[ allPriceArr.length - 1 ]}`,
+
         // 最大幅度差价
         priceGap: allPriceArr.length === 0 ?
             0 :
             `${allPriceArr[ allPriceArr.length - 1 ] - allPriceArr[ 0 ]}`,
+
         // 最低价格（含团购价）
         lowest_price$: allPriceArr[ 0 ],
+
         /** 是否有活动 */
         hasActivity: !!x.activity || (Array.isArray( x.activities ) && x.activities.length > 0),
+
         /** 拼团信息 */
         goodPins: dealGoodPin( x ),
+
         /** 标签 */
-        tagText: x.tag.join('、')
+        tagText: x.tag.join('、'),
+
+        /** 是否存在库存告急 */
+        outStock: allStockArr.some( x => x < 10 )
     })
 
 };
@@ -102,7 +116,9 @@ const dealGoodPin = good => {
     } else {
 
         const meta = standards.map( standard => {
-            const acTarget = activities.find( ac => ac.pid === standard.pid && ac.sid === standard._id );
+            const acTarget = !activities ?
+                null : 
+                activities.find( ac => ac.pid === standard.pid && ac.sid === standard._id );
             if (( !!acTarget && !!acTarget.ac_groupPrice ) || standard.groupPrice ) {
                 if ( acTarget ) {
                     return {

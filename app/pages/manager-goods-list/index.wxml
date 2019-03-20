@@ -1,85 +1,95 @@
-<!--app/pages/manager-goods-list/index.wxml-->
+
 <view class="p-manager-goods-list">
 
-  <!-- 头部搜索栏 -->
-  <view class='pmgl-header'>
-    <view
-      class='my-icon'
-      bindtap='fetchData'
+    <!-- 头部搜索栏 -->
+    <view class="pmgl-search-block">
+        <my-client-search-bar
+            value="{{ search }}"
+            bindconfirm="onConfirm"
+            initfocus="{{ false }}"
+        />
+    </view>
+
+    <!-- 滑动列表 -->
+    <scroll-view
+        scroll-y
+        lower-threshold="100"
+        class='pmgl-list-container'
+        bindscrolltolower="fetchData"
     >
-      <wxc-icon
-        size="34"
-        type="search"
-        color='#999'
-      />
-    </view>
-    <input
-      class='my-input text'
-      value="{{ search }}"
-      placeholder="搜索商品"
-      bindinput='onInput'
-      bindconfirm="fetchData"
-    />
-  </view>
+        <view
+            wx:for="{{ list$ }}"
+            wx:key="{{ index }}"
+            class="pmgl-list-item-con"
+            bindtap="onTab"
+            data-pid="{{ item.pid }}"
+        >
+            <view
+                class="pmgl-item-img-con"
+            >
+                <image
+                    mode="widthFix"
+                    class="pmgl-item-img"
+                    src="{{ item.img[ 0 ]}}"
+                    lazy-load="{{ true }}"
+                />
+            </view>
+            <view class="pmgl-item-info-block">
+                <view class="pmgl-item-info">
+                    <view class="pmgl-item-title">
+                        {{ item.title }}
+                    </view>
+                    <view
+                        class="pmgl-item-stock"
+                        wx:if="{{ item.standards.length > 0 }}"
+                    >
+                        {{ item.standards.length }}款型号
+                    </view>
+                    <view class="pmgl-item-stock {{ item.outStock ? 'active' : '' }}"> 
+                        {{ item.outStock ? '库存不足 ' + item.stock$ : item.stock$ ? '库存 ' + item.stock$ : '' }}
+                    </view>
+                </view>
+                <view class="pmgl-item-action">
+                    <view class="">
+                        <wxc-price
+                            icon="sub"
+                            decimal="small"
+                            class="pmgl-price"
+                        > 
+                            {{ item.price$ }}
+                        </wxc-price>
+                        <view
+                            class="pmgl-small-label"
+                        >
+                            已售{{ item.saled }}
+                        </view>
+                    </view>
+                    <view class="">
+                        <my-switch-text
+                            color="#c5c5c5"
+                            sign="{{ item.pid }}"
+                            activecolor="#19b391"
+                            color="#d92a22"
+                            bindchange="onSwitch"
+                            options="{{ closeOpts }}"
+                            value="{{ item.visiable }}"
+                        />
+                    </view>
+                </view>
+            </view>
+        </view>
+    </scroll-view>
 
-  <view class='pmgl-list-container fixed'>
-    <view class='pmgl-list-header pmgl-list-item'>
-      <view class="text pmgl-list-item-meta bold">商品名称</view>
-      <view class="text pmgl-list-item-meta bold">单价</view>
-      <view class="text pmgl-list-item-meta bold">销量</view>
-      <view class="text pmgl-list-item-meta bold">加购</view>
-      <view class="text pmgl-list-item-meta bold">库存</view>
-      <view class="text pmgl-list-item-meta bold">上下架</view>
-    </view>
-  </view>
-
-  <!-- 中间列表 -->
-  <scroll-view
-    scroll-y
-    lower-threshold="100"
-    bindscrolltolower="fetchData"
-    class='pmgl-list-container'
-  >
-
+    <!-- 按钮 -->
     <view
-      wx:for="{{ list }}"
-      wx:key="{{ index }}"
-      data-pid="{{ item._id }}"
-      class='pmgl-list-item'
-      bindtap="onTab"
+       class='pmgl-entry-btn-container'
     >
-      <view class="text pmgl-list-item-meta">{{ item.title }}</view>
-      <view class="text pmgl-list-item-meta">
-        <wxc-price
-          decimal="none"
-          class="red"
-        > 
-          {{ item.price }}
-        </wxc-price>
-      </view>
-      <view class="text pmgl-list-item-meta">{{ item.saled }}</view>
-      <view class="text pmgl-list-item-meta">{{ item.carts }}</view>
-      <view class="text pmgl-list-item-meta {{ stockNeed[ index ] ? 'red' : '' }}">
-        {{ item.stock ? item.stock : '无限' }}
-      </view>
-      <view
-        class="text pmgl-list-item-meta {{ !item.visiable ? 'red' : '' }}"
-      >
-        {{ item.visiable ? '上架中' : '已下架' }}
-      </view>
+        <view 
+            bindtap='navigate'
+            class="pmgl-entry-btn"
+        >
+            <wxc-icon color="#fff" size="45" type="add" /> 
+        </view>
     </view>
-
-  </scroll-view>
-
-  <!-- 按钮 -->
-  <view class='pmgl-btn-container'>
-      <wxc-button
-        size="large"
-        type="beauty"
-        bind:click="navigate"
-      >
-        添加商品
-      </wxc-button>
-  </view>
 
 </view>

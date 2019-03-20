@@ -1,4 +1,6 @@
 import { http } from '../../util/http.js';
+import { delayeringGood } from '../../util/goods.js';
+import { computed } from '../../lib/vuefy/index.js';
 
 // app/pages/manager-goods-list/index.js
 Page({
@@ -7,45 +9,55 @@ Page({
      * 页面的初始数据
      */
     data: {
+
         // 当前页码
         page: 0,
-        // 总页数
-        totalPage: 1,
+
         // 搜索
         search: '',
+
         // 商品列表
         list: [ ],
-        // 库存紧急列表
-        stockNeed: [ ],
+
         // 加载列表ing
         loadingList: false,
+
         // 能否继续加载
         canLoadMore: true,
-        // 上次搜索的文本
-        lastSearch: ''
+
+        /** 上下架选项 */
+        closeOpts: [
+            {
+                label: '上架中',
+                value: true
+            }, {
+                label: '已下架',
+                value: false
+            }
+        ]
+    },
+
+    runComputed( ) {
+        computed( this, {
+
+            // 列表
+            list$( ) {
+                const { list } = this.data;
+                const meta  = list.map( delayeringGood );
+                console.log('...', meta );
+                return meta;
+            }
+        })
     },
   
-    /** 跳页 */
-    navigate( e ) {
-        wx.navigateTo({
-            url: e.currentTarget.dataset.url || '/pages/manager-goods-detail/index',
-        });
-    },
   
     /** 拉取列表 */
     fetchData( ) {
         const that = this;
-        const { canLoadMore, loadingList, lastSearch, search } = this.data;
+        const { canLoadMore, loadingList, page, search } = this.data;
 
         if ( loadingList || !canLoadMore ) {
             return;
-        }
-
-        if ( search.replace(/\s+/g, "") !== lastSearch ) {
-            this.setData!({
-                page: 0,
-                totalPage: 1
-            });
         }
 
         this.setData!({
@@ -54,31 +66,28 @@ Page({
 
         http({
             data: {
-                page: this.data.page + 1,
-                title: this.data.search
+                limit: 10,
+                title: search,
+                page: page + 1,
             },
             url: `good_list`,
             success: res => {
                 const { status, data } = res;
          
                 if ( status === 200 ) {
-                    const { page, totalPage, search } = data;
+                    const { page, totalPage } = data;
 
                     that.setData!({
                         page,
-                        totalPage,
                         loadingList: false,
-                        lastSearch: search || '',
                         canLoadMore: totalPage > page
                     });
                     
                     if ( data.data && data.data.length > 0 ) {
-                        const meta = page === 1 ?
-                            that.dealListText( data.data ) :
-                            [ ...that.data.list, ...that.dealListText( data.data )];
-
                         that.setData!({
-                            list: meta
+                            list: page === 1 ?
+                                data.data :
+                                [ ...that.data.list, ...data.data]
                         });
                     } else {
                         that.setData!({
@@ -91,92 +100,71 @@ Page({
 
         });
     },
-  
-    /** 搜索输入 */
-    onInput({ detail }) {
-        this.setData!({
-            search: detail.value,
-            canLoadMore: detail.value.replace(/\s+/g, "") !== this.data.lastSearch
+
+    /** 文字选项 ，开启关闭上下架*/
+    onSwitch( e ) {
+        const { value, sign } = e.detail;
+        const list = [ ...this.data.list ];
+        wx.showModal({
+            title: '提示',
+            content: `确定要${ value ? '上架' : '下架' }此商品吗？`,
+            success: res => {
+                if ( res.confirm ) {
+                    // http({
+                    //     data: {
+                    //         acid: sign,
+                    //         isClosed: value
+                    //     },
+                    //     loadingMsg: value ? '上架中...' : '下架中...',
+                    //     url: 'activity_update-good-discount',
+                    //     success: res => {
+                    //         if ( res.status === 200 ) {
+                    //             wx.showToast({
+                    //                 title: value ? '上架成功！' : '下架成功！'
+                    //             });
+                    //             const target = list.find( x => x._id === sign );
+                    //             const existedIndex = list.findIndex( x => x._id === sign );
+                    //             list.splice( existedIndex, 1, Object.assign({ }, target, {
+                    //                 visiable: value
+                    //             }));
+                    //             this.setData({
+                    //                 list
+                    //             });
+                    //         }
+                    //     }
+                    // })
+                }
+            }
         });
     },
-
-    /** 处理数据到列表的文字显示 */
-    dealListText( list ) {
-        const that = this;
-
-        return list.map( x => {
-         
-            // 设置型号、库存的价格
-            let stock = x.stock;
-            let price = x.price;
-
-            // 是否需要显示红色字体的货存
-            const origin: any = [ ...that.data.stockNeed ];
-
-            // 没有型号
-            if ( x.standards.length === 0 ) {
-                stock = x.stock;
-                price = x.price;
-                origin.push( stock !== undefined && stock < 10 );
-                
-            } else if ( x.standards.length === 1 ) {
-                stock = x.standards[0].stock;
-                price = x.standards[ 0 ].price;
-                origin.push( stock !== undefined && stock < 10 );
-            
-            // 型号大于1种
-            } else if ( x.standards.length > 1 ) {
-
-                // 处理价格
-                const sortedPrice = x.standards.sort(( x, y ) => x.price - y.price );
-                if ( sortedPrice[0].price === sortedPrice[sortedPrice.length - 1 ].price ) {
-                    price = sortedPrice[0].price;
-                } else {
-                    price = `${sortedPrice[0].price}~${sortedPrice[sortedPrice.length - 1 ].price}`;
-                }
-                
-                // 处理货存
-                const sortedStock = x.standards.filter(i => i.stock !== undefined && i.stock !== null).sort((x, y) => x.stock - y.stock);
-                // 有库存型号
-                if ( sortedStock.length === 1 ) {
-                    stock = `${sortedStock[0].stock}`;
-                } else if ( sortedStock.length > 1 ) {
-                  if ( sortedStock[0].stock === sortedStock[sortedStock.length - 1].stock ) {
-                      stock = `${sortedStock[0].stock}`;
-                  } else {
-                      stock = `${sortedStock[0].stock}~${sortedStock[sortedStock.length - 1].stock}`;
-                  }
-                }
-
-                origin.push(((stock !== undefined) && (Number(String(stock).split('~')[0]) < 10)));
-
-            }
-          
-            that.setData!({
-                stockNeed: origin
-            });
-
-            return Object.assign({ }, x, {
-                stock,
-                price
-            });
-        })
-    },
-
+  
     /** 点击详情 */
     onTab({ currentTarget }) {
         const { pid } = currentTarget.dataset;
         wx.navigateTo({
-            // url: `/pages/goods-detail/index?id=${pid}`
             url: `/pages/manager-goods-detail/index?id=${pid}`
         });
+    },
+
+    /** 确认输入 */
+    onConfirm({ detail }) {
+
+        const search = detail;
+      
+        this.setData!({
+            page: 0,
+            search,
+            canLoadMore: true
+        })
+
+        this.fetchData( );
     },
   
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-      
+      this.runComputed( );
     },
   
     /**

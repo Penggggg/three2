@@ -209,12 +209,17 @@ export const main = async ( event, context ) => {
 
     /**
      * 商品列表（ 含standards、activities子表）
+     * {
+     *    title
+     *    search 
+     *    page
+     * }
      */
     app.router('list', async( ctx, next ) => {
         try {
      
             // 查询条数
-            const limit = 20;
+            const limit = event.data.limit || 20;
 
             // 查询条件
             const searchReq = {

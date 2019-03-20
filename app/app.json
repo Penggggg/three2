@@ -1,12 +1,12 @@
 {
   "pages": [
+    "pages/manager-goods-list/index",
+    "pages/manager-goods-active/index",
     "pages/index/index",
     "pages/trip-enter/index",
     "pages/trip-detail/index",
     "pages/my/index",
     "pages/search/index",
-    "pages/manager-goods-list/index",
-    "pages/manager-goods-active/index",
     "pages/trip-deliver/index",
     "pages/order-list/index",
     "pages/manager-trip-order/index",
