@@ -7,31 +7,22 @@
         scroll="{{ true }}"
         show-icon="{{ true }}"
         wx:if="{{ isNotAvailableTrip }}"
+        color="#333"
+        icon-color="#333"
+        bgColor="transparent"
         notice="没有下一个【即将开始】的行程，请尽快创建！"
     />
 
     <!-- 头部搜索栏 -->
-    <view class="pmgl-header {{ isNotAvailableTrip ? 'has-notification' : '' }}">
-        <view
-            class='my-icon'
-            bindtap='fetchData'
-        >
-            <wxc-icon
-                size="34"
-                type="search"
-                color='#999'
-            />
-        </view>
-        <input
-            class='my-input text'
+    <view class="pmgl-search-block">
+        <my-client-search-bar
             value="{{ search }}"
-            placeholder="搜索行程"
-            bindinput='onInput'
-            bindconfirm="fetchData"
+            initfocus="{{ false }}"
+            bindconfirm="onConformSearch"
         />
     </view>
 
-    <view class="pmgl-list-container fixed {{ isNotAvailableTrip ? 'has-notification' : '' }}">
+    <view class="pmgl-list-title-block">
         <view class='pmgl-list-header pmgl-list-item'>
             <view class="text pmgl-list-item-meta bold">行程名称</view>
             <view class="text pmgl-list-item-meta bold">销售额</view>
@@ -46,7 +37,7 @@
         scroll-y
         lower-threshold="100"
         bindscrolltolower="fetchData"
-        class="pmgl-list-container {{ isNotAvailableTrip ? 'has-notification' : '' }}" 
+        class="pmgl-list-container" 
     >
 
         <view
@@ -80,15 +71,16 @@
         </view>
     </scroll-view>
 
-    <!-- 按钮 -->
-    <view class='pmgl-btn-container'>
-        <wxc-button
-            size="large"
-            type="beauty"
-            bindtap="navigate"
+    <!-- 可视按钮 -->
+    <view
+        class='pmgl-entry-btn-container'
+    >
+        <view 
+            class="pmgl-entry-btn"
+            bindtap='navigate'
         >
-            创建行程
-        </wxc-button>
+            <wxc-icon color="#fff" size="45" type="add" /> 
+        </view>
     </view>
 
 </view>

@@ -34,6 +34,15 @@ Page({
         });
     },
 
+    /** 输入框确认 */
+    onConformSearch({ detail }) {
+        this.setData!({
+            search: detail,
+            canLoadMore: true
+        });
+        this.fetchData( );
+    },
+
     /** 拉取列表 */
     fetchData( ) {
 
@@ -100,6 +109,12 @@ Page({
 
     /** 编辑行程列表文字 */
     dealListText( list ) {
+
+        const simpleTime = (ts: number) => {
+            const time = new Date( Number( ts ));
+            return `${time.getMonth( )+1}月${time.getDate( )}日`
+        };
+
         /**
          * ! 注意，时间对比。开始时间是 指定日期的早上8点；结束日期是 指定日期的晚上24:00
          */
@@ -110,7 +125,8 @@ Page({
                 title,
                 sales_volume,
                 orders,
-                startDate: new Date( start_date ).toLocaleDateString( ),
+                endData: simpleTime( end_date ),
+                startDate: simpleTime( start_date ),
                 state: !published ?
                             '未发布' :
                             new Date( ).getTime( ) >= end_date ?
