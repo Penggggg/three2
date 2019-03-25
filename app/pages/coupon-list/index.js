@@ -154,6 +154,9 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function () {
-
+        return {
+            title: '这有优惠券！跟我一起来拔草～',
+            path: '/pages/trip-enter/index'
+        }
     }
 })

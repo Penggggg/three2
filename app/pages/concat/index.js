@@ -83,6 +83,10 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function () {
-
+        return {
+            title: '[有人@你]跟我一起来拔草～',
+            path: '/pages/trip-enter/index',
+            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+        }
     }
 })

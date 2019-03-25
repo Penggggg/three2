@@ -184,6 +184,10 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function () {
-
+        const { tid } = this.data;
+        return {
+            title: '买到就赚到！拼着买，更便宜！',
+            path: `/pages/trip-detail/index?id=${tid}`
+        }
     }
 })

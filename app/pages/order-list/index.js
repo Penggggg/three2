@@ -989,7 +989,6 @@ Page({
     onLoad: function (options) {
         this.watchRole( );
         this.runComputed( );
-        wx.hideShareMenu( );
 
         const { tid, fromDetail } = options;
         if ( tid ) { 

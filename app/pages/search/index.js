@@ -72,7 +72,7 @@ Page({
     fetchList( ) {
         const { page, result, search, canLoadMore } = this.data;
 
-        if ( !canLoadMore ) { return; }
+        if ( !canLoadMore || !search ) { return; }
 
         // 搜索
         http({
@@ -158,6 +158,13 @@ Page({
         this.runComputed( );
         this.initHistory( );
         this.fetchCurrentTrip( );
+        const search = options.search;
+        if ( search ) { 
+            this.setData({
+                search
+            });
+            this.fetchList( );
+        }
     },
 
     /**
@@ -206,6 +213,10 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function () {
-
+        const { search } = this.data;
+        return {
+            title: '给你推荐这宝贝！',
+            path: `/pages/search/index?search=${search}`,
+        }
     }
 })

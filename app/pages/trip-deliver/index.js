@@ -155,6 +155,10 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function () {
-
+        const { id, tid } = this.data;
+        return {
+            title: '[拔草排行榜]看看大家买了啥～',
+            path: `/pages/trip-deliver/index?id=${id ||tidParam }&fromDetail=false`
+        }
     }
 })
