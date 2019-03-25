@@ -37,6 +37,8 @@ Page({
     /** 输入框确认 */
     onConformSearch({ detail }) {
         this.setData!({
+            page: 0,
+            totalPage: 0,
             search: detail,
             canLoadMore: true
         });

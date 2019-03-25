@@ -105,7 +105,7 @@ export const main = async ( event, context ) => {
 
             // 查询条数
             const limit = 20;
-            const search$ = event.data.search || '';
+            const search$ = event.data.title || '';
             const search = new RegExp( search$.replace(/\s+/g, ""), 'i');
 
             // 获取总数
