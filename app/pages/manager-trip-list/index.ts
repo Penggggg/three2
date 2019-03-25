@@ -24,7 +24,17 @@ Page({
         // 上次搜索的文本
         lastSearch: '',
         // 是否已经没有下一个可用行程
-        isNotAvailableTrip: false
+        isNotAvailableTrip: false,
+        // 背景样式
+        bgs: [
+            'background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);',
+            'background-image: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);',
+            'background-image: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);',
+            'background-image: linear-gradient(to top, #37ecba 0%, #72afd3 100%);',
+            'background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);',
+            'background-image: linear-gradient(-225deg, #20E2D7 0%, #F9FEA5 100%);',
+            'background-image: linear-gradient(-225deg, #9EFBD3 0%, #57E9F2 48%, #45D4FB 100%);',
+        ]
     },
 
     /** 跳页 */
@@ -117,27 +127,43 @@ Page({
             return `${time.getMonth( )+1}月${time.getDate( )}日`
         };
 
+        const simpleTime2 = (ts: number) => {
+            const time = new Date( Number( ts ));
+            return `${time.getMonth( )+1}.${time.getDate( )}`
+        };
+
         /**
          * ! 注意，时间对比。开始时间是 指定日期的早上8点；结束日期是 指定日期的晚上24:00
          */
-        return list.map( x => {
-            const { _id, title, sales_volume, start_date, published, end_date, orders } = x;
+        const meta = list.map(( x, k ) => {
+            const { _id, title, sales_volume, start_date, published, end_date, orders, isClosed } = x;
+
+            const state$ = !published ?
+                '未发布' :
+                isClosed ?
+                    '已关闭' :
+                    new Date( ).getTime( ) >= end_date ?
+                        '已结束' :
+                        new Date( ).getTime( ) >= start_date ?
+                            '进行中' :
+                            '即将开始';
+
             return {
                 _id,
                 title,
-                sales_volume,
                 orders,
-                endData: simpleTime( end_date ),
+                bg: k % 7,
+                sales_volume,
+                state: state$,
+                ing: state$ === '进行中',
+                endDate: simpleTime( end_date ),
                 startDate: simpleTime( start_date ),
-                state: !published ?
-                            '未发布' :
-                            new Date( ).getTime( ) >= end_date ?
-                                '已结束' :
-                                new Date( ).getTime( ) >= start_date ?
-                                    '进行中' :
-                                    '即将开始'
+                endDate2: simpleTime2( end_date ),
+                startDate2: simpleTime2( start_date ),
+                red: state$ === '未发布' || state$ === '进行中' || state$ === '即将开始',
             }
-        })
+        });
+        return meta;
     },
 
     /** 搜索输入 */
@@ -152,7 +178,6 @@ Page({
     onTab({ currentTarget }) {
         const { tid } = currentTarget.dataset;
         wx.navigateTo({
-            // url: `/pages/trip-detail/index?id=${tid}`
             url: `/pages/manager-trip-detail/index?id=${tid}`
         });
     },

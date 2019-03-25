@@ -13,25 +13,6 @@
         notice="没有下一个【即将开始】的行程，请尽快创建！"
     />
 
-    <!-- 头部搜索栏 -->
-    <view class="pmgl-search-block">
-        <my-client-search-bar
-            value="{{ search }}"
-            initfocus="{{ false }}"
-            bindconfirm="onConformSearch"
-        />
-    </view>
-
-    <view class="pmgl-list-title-block">
-        <view class='pmgl-list-header pmgl-list-item'>
-            <view class="text pmgl-list-item-meta bold">行程名称</view>
-            <view class="text pmgl-list-item-meta bold">销售额</view>
-            <view class="text pmgl-list-item-meta bold">订单数</view>
-            <view class="text pmgl-list-item-meta bold">状态</view>
-            <view class="text pmgl-list-item-meta bold">开始时间</view>
-        </view>
-    </view>
-
     <!-- 中间列表 -->
     <scroll-view
         scroll-y
@@ -47,26 +28,60 @@
             class='pmgl-list-item'
             bindtap="onTab"
         >
-            <view class="text pmgl-list-item-meta">{{ item.title }}</view>
-            <view class="text pmgl-list-item-meta">
-                <wxc-price
-                    decimal="none"
-                > 
-                    {{ item.sales_volume }}
-                </wxc-price>
-            </view>
-            <view class="text pmgl-list-item-meta">
-                {{ item.orders }}
-            </view>
             <view
-                class="text pmgl-list-item-meta {{ item.state === '未发布' ? 'red' : '' }}"
+                class="pmgl-img"
+                style="{{ bgs[ item.bg ]}}"
             >
-                {{ item.state }}
             </view>
-            <view
-                class="text pmgl-list-item-meta"
-            >
-                {{ item.startDate }}
+            <view class="pmgl-info">
+
+                <view class="pmgl-base">
+
+                    <view class="pmgl-item-title">{{ item.title }}</view>
+                    <view
+                        class="pmgl-item-time {{ item.red ? 'red' : '' }}"
+                    >
+                        {{ 
+                            item.ing ?
+                                item.endDate + '结束' :
+                                item.state
+                        }}
+                    </view>
+
+                </view>
+
+                <view class="pmgl-action">
+                    <view class="pmgl-important">
+                        <wxc-price
+                            icon="sub"
+                            decimal="small"
+                            class="pmgl-red-price"
+                        > 
+                            {{ item.sales_volume }}
+                        </wxc-price>
+                        <view
+                            class="pmgl-small-label"
+                        >
+                            {{ item.orders ? '订单：' + item.orders : '暂无订单' }}
+                        </view>
+                    </view>
+
+                    <view
+                        class=""
+                    >
+                        <view class="pmgl-small-label {{ item.ing ? 'mr' : '' }}">
+                            {{ item.startDate2 }}~{{ item.endDate2 }}
+                        </view>
+                        <view
+                            class="pmgl-ing"
+                            wx:if="{{ item.ing }}"
+                        >
+                            进行中
+                        </view>
+                    </view>
+                </view>
+                
+                
             </view>
         </view>
     </scroll-view>
