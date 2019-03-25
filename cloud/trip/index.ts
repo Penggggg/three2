@@ -56,7 +56,7 @@ export const main = async ( event, context ) => {
         try {
             const shouldGetGoods = event.data ? event.data.shouldGetGoods : undefined;
 
-            // 按开始日期正序，获取最多2条已发布，未结束的行程
+            // 按开始日期正序，获取最多2条 已发布、未结束的行程
             const data$ = await db.collection('trip')
                 .where({
                     isClosed: false,
@@ -229,6 +229,7 @@ export const main = async ( event, context ) => {
             // 校验1：如果是想要发布当前行程，则检查是否有“已发布行程的结束时间大于等于当前新建行程的开始时间要”
             if ( event.data.published && !_id ) {
                 const rule1$ = await db.collection('trip').where({
+                    isClosed: false,
                     end_date: _.gte( event.data.start_date )
                 })
                 .count( );
