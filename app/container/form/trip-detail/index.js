@@ -57,7 +57,9 @@ Component({
         // 是否已过了开始时间
         hasBeenPassStart: false,
         // 是否可以显示结束行程、首款按钮
-        canBeEnd: false
+        canBeEnd: false,
+        // 是否有下一趟行程
+        hasNextTrip: false
     },
 
     computed: {
@@ -227,6 +229,23 @@ Component({
      * 组件的方法列表
      */
     methods: {
+
+        /** 拉取最新的两个行程 */
+        fetchLastTrip( ) {
+            http({
+                data: { },
+                errMsg: '加载失败，请重试',
+                loadingMsg: '加载中...',
+                url: `trip_enter`,
+                success: res => {
+                    const { status, data } = res;
+                    if ( status !== 200 ) { return; }
+                    this.setData({
+                        hasNextTrip: !!data[ 1 ]
+                    })
+                }
+            })
+        },
 
         /** 拉取行程详情 */
         fetchDetail( id ) {
@@ -559,15 +578,48 @@ Component({
                         wx.showToast({
                             title: tid ? '更新成功' : '创建成功！'
                         });
-                        if ( !tid ) {
-                            wx.navigateTo({
+                        setTimeout(( ) => {
+                            wx.redirectTo({
                                 url: '/pages/manager-trip-list/index'
                             });
-                        }
+                        }, 200 );
                     }
                 }
             });
 
+        },
+
+        /** 关闭行程 */
+        closeTrip( ) {
+            const { tid, hasNextTrip } = this.data;
+            if ( !tid ) { return; }
+            wx.showModal({
+                title: 'Tips',
+                confirmText: '确认关闭',
+                content: `1. 关闭行程后无法撤销${ !hasNextTrip ? '。2. 关闭后无下趟行程计划, 请尽快创建' : ''} `,
+                success: res => {
+                    if ( res.cancel ) { return; }
+                    http({
+                        data: {
+                            tid
+                        },
+                        url: 'trip_close',
+                        success: res => {
+                            const { status } = res;
+                            if ( status === 200 ) {
+                                wx.showToast({
+                                    title: '关闭成功'
+                                });
+                                setTimeout(( ) => {
+                                    wx.navigateBack({
+                                        delta: 1
+                                    })
+                                }, 200 );
+                            }
+                        }
+                    })
+                }
+            })
         },
 
         /** 进行行程订单管理页面 */
@@ -579,7 +631,8 @@ Component({
 
     },
 
-    attached: function () {
+    attached: function ( ) {
         this.fetchDic( );
+        this.fetchLastTrip( );
     }
 })

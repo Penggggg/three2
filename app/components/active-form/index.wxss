@@ -12,13 +12,15 @@
 }
 
 .caf-title-big {
-  color: #666;
-  font-size: 32rpx;
+  color: #4d4d4d;
+  font-size: 29rpx;
+  font-weight: bold;
+  letter-spacing: 0.02em;
   margin-right: 20rpx;
 }
 
 .caf-title-desc {
-  color: #999;
+  color: #bfbfbf;
   font-size: 24rpx;
 }
 

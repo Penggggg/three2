@@ -70,7 +70,7 @@ Page({
                 totalPage: 1
             });
         }
-
+        console.log('=====')
         this.setData!({
             loadingList: true
         });
@@ -200,6 +200,10 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function ( ) {
+        this.setData!({
+            page: 0,
+            canLoadMore: true
+        });
         this.fetchData( );
     },
   

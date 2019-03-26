@@ -424,6 +424,51 @@ export const main = async ( event, context ) => {
         }
     });
 
+    /**
+     * @description
+     * 手动关闭当前行程
+     * {
+     *    tid
+     * }
+     */
+    app.router('close', async( ctx, next ) => {
+        try {
+            const { tid } = event.data;
+
+            // 更新行程close字段
+            await db.collection('trip')
+                .doc( String( tid ))
+                .update({
+                    data: {
+                        isClosed: true
+                    }
+                });
+            
+            // 手动取消行程时，把待支付订单设为取消
+            const orders$ = await db.collection('order')
+                .where({
+                    tid,
+                    pay_status: '0',
+                })
+                .get( );
+            
+            await Promise.all( orders$.data.map( order$ => {
+                return db.collection('order')
+                    .doc( String( order$._id ))
+                    .update({
+                        data: {
+                            base_status: '5'
+                        }
+                    })
+            }));
+
+            return ctx.body = { status: 200 };
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
+
     return app.serve( );
 
 }

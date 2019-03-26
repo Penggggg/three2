@@ -4,10 +4,13 @@
 
     <!-- 顶部公告 -->
     <wxc-notice
+        color="#4d4d4d"
+        bg-color="#fff"
+        icon-color="#4d4d4d"
         scroll="{{ true }}"
         close="{{ true }}"
         show-icon="{{ true }}"
-        notice="{{ !!tid ? '已发布行程仅能修改基本信息，已开始行程将无法修改任何信息！' : '【通知】奶粉等特殊限购类目，请让顾客通过个性化加单进行处理！' }}"
+        notice="已发布行程仅能修改基本信息，已开始行程将无法修改任何信息！"
     />
 
     <!-- 表单：基本信息 -->
@@ -109,29 +112,22 @@
         bind:change="onPostageChange"
     />
 
-    <!-- 按钮 -->
-    <view class="btn-blockk {{ canBeEnd ? '' : 'bottom' }}">
-        <wxc-button
-            size="large"
-            type="beauty"
-            bindtap="submit"
-        >
-            确定
-        </wxc-button>
-    </view>
-
-    <!-- 结束行程 -->
     <view
-        class='btn-blockk2'
-        wx:if="{{ canBeEnd }}"
+        class="ptd-btn-block"
     >
-        <wxc-button
-            size="large"
-            type="beauty"
-            bindtap="submit"
+        <view
+            class="ptd-btn"
+            bindtap="closeTrip"
+            wx:if="{{ canBeEnd }}"
         >
             结束行程( 收尾款 )
-        </wxc-button>
+        </view>
+        <view
+            class="ptd-btn invert"
+            bindtap="submit"
+        >
+            {{ !!tid ? '更新' : '创建' }}
+        </view>
     </view>
 
     <!-- 商品选择 -->
