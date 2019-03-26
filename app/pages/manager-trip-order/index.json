@@ -1,4 +1,6 @@
 {
   "usingComponents": {},
-  "navigationBarBackgroundColor": "#f80759"
+  "navigationBarTextStyle": "white",
+  "navigationBarBackgroundColor": "#f80759",
+  "navigationBarTitleText": "订单管理"
 }

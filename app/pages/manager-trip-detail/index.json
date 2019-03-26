@@ -1,5 +1,8 @@
 {
     "usingComponents": {
       "my-form-trip-details": "../../container/form/trip-detail/index"
-    }
+    },
+    "navigationBarTitleText": "行程管理",
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#fff"
   }

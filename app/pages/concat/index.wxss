@@ -8,11 +8,11 @@
     width: 120%;
     height: 380rpx;
     position: fixed;
-    background: linear-gradient(to bottom, #ff5777, #ffe8ee );
-    -webkit-filter: blur(10px); /* Chrome, Opera */
+    /* background: linear-gradient(to bottom, #ff5777, #ffe8ee );
+    -webkit-filter: blur(10px); 
 		       -moz-filter: blur(10px);
 		        -ms-filter: blur(10px);    
-		            filter: blur(10px);
+		            filter: blur(10px); */
 }
 
 .pc-content-block {
@@ -30,7 +30,7 @@
 .pc-img-item {
     border-radius: 12px;
     margin-bottom: 35rpx;
-    box-shadow: 3px 3px 13px rgba( 0, 0, 0, 0.1 );
+    box-shadow: 0px 0px 20px rgba( 0, 0, 0, 0.08 );
 }
 
 .pc-item-img {
