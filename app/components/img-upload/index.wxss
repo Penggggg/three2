@@ -17,6 +17,10 @@
   box-shadow: 3px 3px 10px rgba(0,0,0,0.20);
 }
 
+.ciu-img-container.big {
+  height: 140rpx;
+}
+
 .ciu-img {
   width: 110rpx;
   height: 110rpx;
@@ -33,6 +37,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 8px;
+  margin-right: 33rpx;
   border: 1px dotted #ff5777;
 }
 
@@ -43,16 +48,13 @@
 }
 
 .ciu-upload-tips {
-  color: #999;
+  color: #bfbfbf;
   font-weight: 200;
   font-size: 22rpx;
 }
 
-.ciu-img-icon {
-  
+.ciu-icon {
   color: #fff;
-  top: -10rpx;
-  right: -10px;
   width: 35rpx;
   height: 35rpx;
   display: flex;
@@ -60,7 +62,46 @@
   justify-content: center;
   position: absolute;
   border-radius: 50%;
-  font-size:30rpx;
-  font-weight:100;
-  background: rgba(0,0,0,0.45);
+  font-size: 24rpx;
+  font-weight: 100;
+  line-height: 35rpx;
+  background: rgba( 0, 0, 0, 0.25 );
+}
+
+.ciu-img-icon {
+  
+  top: -10rpx;
+  right: -10px;
+  
+}
+
+.ciu-img-icon-right {
+  right: -10px;
+  bottom: 0px;
+}
+
+.ciu-img-icon-left {
+  left: -10px;
+  bottom: 0px;
+}
+
+.ciu-img-adjust {
+  left: 2.5%;
+  bottom: 0;
+  width: 95%;
+  display: flex;
+  height: 30rpx;
+  border-radius: 8px;
+  padding: 0 10rpx;
+  align-items: center;
+  position: absolute;
+  box-sizing: border-box;
+  justify-content: space-between;
+  background: rgba( 0, 0, 0, 0.25 );
+}
+
+.ciu-adjust-icon {
+  display: flex;
+  height: 30rpx;
+  align-items: center;
 }

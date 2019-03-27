@@ -9,7 +9,8 @@
         <view class="tod-img-upload">
             <my-img-upload
                 data-key="img"
-                max="{{ 10 }}"
+                max="{{ 99 }}"
+                canAdjust="{{ true }}"
                 bindchange="onImgChange"
                 hasBeenUploaded="{{ hasBeenUploaded }}"
             />

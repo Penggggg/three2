@@ -18,14 +18,21 @@ Component({
       value: [ ],
       observer: function( val ) {
         this.setData({
-          has: [ ...val ]
+          // has: [ ...val ]
+          list: [ ...val ]
         });
         this.judgeIcon( );
         // 发送事件
         setTimeout(( ) => {
-          this.triggerEvent('change', [ ...this.data.has, ...this.data.list ]);
+          // this.triggerEvent('change', [ ...this.data.has, ...this.data.list ]);
+          this.triggerEvent('change', this.data.list );
         }, 0 );
       }
+    },
+    /** 是否允许调整图片位置 */
+    canAdjust: {
+      type: Boolean,
+      value: false,
     }
   },
 
@@ -50,7 +57,9 @@ Component({
         });
         callback(authorization);
       }
-    })
+    }),
+    /** 是否处于位置调整的状态 */
+    // isAdjusting: false
   },
 
   /**
@@ -62,7 +71,8 @@ Component({
     upload: function( ) {
       const that = this;
       wx.chooseImage({
-        count: that.data.max - that.data.has.length - that.data.list.length,
+        // count: that.data.max - that.data.has.length - that.data.list.length,
+        count: that.data.max - that.data.list.length,
         sizeType: ['original'],
         success: function( res ) {
           const filePaths = res.tempFilePaths;
@@ -114,7 +124,8 @@ Component({
         wx.showToast({ title: '上传成功', icon: 'success', duration: 1500 });
         // 发送事件
         setTimeout(( ) => {
-          that.triggerEvent('change', [ ...this.data.has, ...this.data.list ]);
+          // that.triggerEvent('change', [ ...this.data.has, ...this.data.list ]);
+          that.triggerEvent('change', [ ...this.data.list ]);
         }, 0 );
       }
     },
@@ -133,9 +144,10 @@ Component({
         temp.splice( index, 1);
         this.setData({ list: temp });
       }
-      setTimeout(() => {
+      setTimeout(( ) => {
         this.judgeIcon( );
-        that.triggerEvent('change', [ ...this.data.has, ...this.data.list ]);
+        // that.triggerEvent('change', [ ...this.data.has, ...this.data.list ]);
+        that.triggerEvent('change', [ ...this.data.list ]);
       }, 0);
     },
 
@@ -143,14 +155,16 @@ Component({
     preview( event ) {
       wx.previewImage({
         current: event.currentTarget.dataset.url,
-        urls: [ ...this.data.has, ...this.data.list ],
+        // urls: [ ...this.data.has, ...this.data.list ],
+        urls: [ ...this.data.list ],
       })
     },
 
     /** 判断图标 */
     judgeIcon( ) {
       this.setData({
-        showIcon: (this.data.max - this.data.has.length - this.data.list.length) > 0
+        // showIcon: (this.data.max - this.data.has.length - this.data.list.length) > 0
+        showIcon: (this.data.max - this.data.list.length) > 0
       })
     },
 
@@ -160,13 +174,34 @@ Component({
         list: [ ],
       });
       this.judgeIcon( );
+    },
+
+    /** 调整图片位置 */
+    adjustPosition({ currentTarget }) {
+      const { list } = this.data;
+      const { index, direction } = currentTarget.dataset;
+
+      const currentValue = list[ index ];
+      const targetIndex = direction === 'right' ? index + 1 : index - 1;
+      const targetValue = list[ targetIndex ];
+
+      const temp = [ ...list ];
+      temp.splice( index, 1, targetValue );
+      temp.splice( targetIndex, 1, currentValue );
+
+      this.setData({
+        list: temp
+      });
+
+      this.triggerEvent('change', temp );
     }
 
   },
 
-  attached: function () {
+  attached: function ( ) {
     this.setData({
-      has: [ ...this.data.hasBeenUploaded ]
+      // has: [ ...this.data.hasBeenUploaded ]
+      list: [ ...this.data.hasBeenUploaded ]
     });
     this.judgeIcon();
   }

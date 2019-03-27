@@ -1,64 +1,76 @@
-<!--components/img-upload/index.wxml-->
 <view class='c-img-upload'>
-  <!-- 已有照片 -->
-  <view
-    wx:key="{{ index }}"
-    wx:for="{{ has }}"
-    class='ciu-img-container'
-  >
-      <image
-        src="{{ item }}"
-        class='ciu-img'
-        mode="aspectFill"
-        bindtap='preview'
-        data-url="{{ item }}"
-      >
-      </image>
-      <view
-        class='ciu-img-icon'
-        data-index="{{ index }}"
-        data-typee="hasBeenUploaded"
-        bindtap='deleteImg'
-      >
-        x
-      </view>
-  </view>
 
-  <!-- 本次上传的照片 -->
-  <view
-    wx:for="{{ list }}"
-    wx:key="{{ index }}"
-    class='ciu-img-container'
-  >
-    <image
-      src="{{ item }}"
-      class='ciu-img'
-      mode="aspectFill"
-      bindtap='preview'
-      data-url="{{ item }}"
-    >
-    </image>
+    <!-- 本次上传的照片 -->
     <view
-      class='ciu-img-icon'
-      data-index="{{ index }}"
-      data-typee="newUploaded"
-      bindtap='deleteImg'
+        wx:for="{{ list }}"
+        wx:key="{{ index }}"
+        class="ciu-img-container {{ canAdjust ? 'big' : '' }}"
     >
-      x
-    </view>
-  </view>
-  
 
-  <view
-    bindtap='upload'
-    class='ciu-upload-btn-container'
-    wx:if="{{ showIcon }}"
-  >
-    <image  
-      class='ciu-upload-btn'
-      mode="aspectFit"
-      src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/upload.png"
-    />
-    <text class='ciu-upload-tips'>上传图片</text>
-  </view>
+        <image
+            src="{{ item }}"
+            class='ciu-img'
+            mode="aspectFill"
+            bindtap='preview'
+            data-url="{{ item }}"
+        />
+
+        <view
+            class='ciu-img-icon ciu-icon'
+            data-index="{{ index }}"
+            data-typee="newUploaded"
+            bindtap='deleteImg'
+        >
+            <wxc-icon
+                size="18"
+                type="close"
+                color="#fff"
+            />
+        </view>
+
+        <view
+            wx:if="{{ canAdjust }}"
+            class="ciu-img-adjust"
+        >
+            <view>
+                <wxc-icon
+                    size="18"
+                    color="#fff"
+                    type="arrow-left"
+                    wx:if="{{ index !== 0 }}"
+                    class="ciu-adjust-icon"
+                    data-direction="left"
+                    data-index="{{ index }}"
+                    bindtap="adjustPosition"
+                />
+            </view>
+            <view>
+                <wxc-icon
+                    size="18"
+                    color="#fff"
+                    type="arrow-right"
+                    class="ciu-adjust-icon"
+                    data-direction="right"
+                    data-index="{{ index }}"
+                    wx:if="{{ index !== list.length - 1 }}"
+                    bindtap="adjustPosition"
+                />
+            </view>
+        </view>
+
+    </view>
+    
+    <view
+        bindtap='upload'
+        class='ciu-upload-btn-container'
+        wx:if="{{ showIcon }}"
+    >
+      <image  
+          class='ciu-upload-btn'
+          mode="aspectFit"
+          src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/upload.png"
+      />
+      <text class='ciu-upload-tips'>上传图片</text>
+    </view>
+
 </view>

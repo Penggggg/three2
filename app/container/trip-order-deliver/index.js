@@ -69,7 +69,7 @@ Component({
         onImgChange( e ) {
             const imgs = e.detail;
             if ( !this.data.inited ) { return; }
-            if ( imgs.every(( img, key ) => this.data.hasBeenUploaded[ key ] === img )) { return; }
+            if ( imgs.length !== 0 && imgs.every(( img, key ) => this.data.hasBeenUploaded[ key ] === img )) { return; }
             http({
                 url: 'trip_update-deliver',
                 data: {
