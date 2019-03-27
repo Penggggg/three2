@@ -1,5 +1,6 @@
 const { http } = require('../../../util/http.js');
-// container/form/goods-detail/index.js
+const { computed } = require('../../../lib/vuefy/index.js');
+
 /**
  * ! 数值之间的关系校验，如：团购价必须大于原价
  */
@@ -42,166 +43,174 @@ Component({
     // 详情 - 已上传的图片列表
     hasBeenUploaded: [ ],
     // 详情 - 商品类目
-    category: '0'
+    category: '0',
   },
 
   /** 计算属性 */
-  computed: {
-    
-    // 表单数据
-    meta( ) {
-      const meta = [
-        {
-          title: '基本信息',
-          desc: ''
-        }, {
-          key: 'title',
-          label: '商品名称',
-          type: 'input',
-          max: 50,
-          placeholder: '如：YSL莹亮纯魅唇膏多色可选',
-          value: undefined,
-          rules: [{
-            validate: val => !!val,
-            message: '商品名称不能为空'
-          }]
-        }, {
-          key: 'detail',
-          label: '商品描述',
-          type: 'textarea',
-          placeholder: `可长可短的一段介绍(回车可换行)`,
-          value: undefined,
-          rules: [ ]
-        }, {
-          key: 'tag',
-          label: '商品标签',
-          type: 'tag',
-          max: 2,
-          placeholder: `如：补水`,
-          value: [ ],
-          rules: [{
-            validate: val => val.length >= 1,
-            message: '至少有一个商品标签'
-          }]
-        }, {
-          key: 'category',
-          label: '商品类目',
-          type: 'select',
-          placeholder: '请设置商品类目',
-          value: this.data.category,
-          options: this.data.dic['goods_category'] || [ ]
-        }, {
-          key: 'img',
-          label: '商品图片',
-          type: 'img',
-          max: 6,
-          value: this.data.hasBeenUploaded,
-          rules: [{
-            validate: val => val.length >= 1,
-            message: '至少上传一张商品图片'
-          }]
-        }, {
-          title: '价格信息',
-          desc: ''
-        }, {
-          key: 'fadePrice',
-          label: '划线价',
-          type: 'number',
-          placeholder: '建议输入比原价格稍高的价位',
-          value: undefined,
-          rules: [{
-            validate: val => !!val,
-            message: '请设置商品划线价'
-          }]
-        }, {
-          title: '规格型号',
-          desc: ''
-        }
-      ];
+  // computed: ,
 
-      if ( this.data.standards.length === 0 ) {
-        meta.splice( 7, 0, {
-          key: 'price',
-          label: '价格',
-          type: 'number',
-          placeholder: '商品单价',
-          value: undefined,
-          rules: [{
-            validate: val => !!val,
-            message: '请设置商品单价'
-          }]
-        });
-        meta.splice( 9, 0, {
-          key: 'groupPrice',
-          label: '团购价',
-          type: 'number',
-          placeholder: '鼓励多个客户在一趟团购行程中同时下单',
-          value: undefined
-        });
-        meta.splice( 10, 0, {
-          key: 'stock',
-          label: '库存',
-          type: 'number',
-          placeholder: '不填写，则无限库存',
-          value: undefined
-        })
-      }
-
-      return meta;
-    },
-
-    // 表单数据2
-    meta2( ) {
-      return [
-        {
-          title: '其他信息',
-          desc: ''
-        }, {
-          key: 'depositPrice',
-          label: '商品订金',
-          type: 'number',
-          placeholder: '在行程出发前，客户将收到订金收款推送',
-          value: undefined
-        }, {
-          key: 'limit',
-          label: '限购数量',
-          type: 'number',
-          placeholder: '不填或为0，则表示不限购',
-          value: undefined
-        }, {
-          key: 'visiable',
-          label: '立即上架',
-          type: 'switch',
-          value: false
-        }
-      ]
-    },
-
-    // modal按钮
-    actions( ) {
-
-      return this.data.selectingStandarIndex !== null ? [{
-        name: '取消',
-      }, {
-        name: '删除',
-        color: 'red'
-      }, {
-        name: '确认',
-        color: '#2d8cf0',
-      }
-      ] : [{
-        name: '取消',
-      }, {
-        name: '确认',
-        color: '#2d8cf0',
-      }]
-    }
-  },
 
   /**
    * 组件的方法列表
    */
   methods: {
+
+    runComputed( ) {
+         computed( this, {
+    
+            // 表单数据
+            meta( ) {
+              
+              const meta = [
+                {
+                  title: '基本信息',
+                  desc: ''
+                }, {
+                  key: 'title',
+                  label: '商品名称',
+                  type: 'input',
+                  max: 50,
+                  placeholder: '如：YSL莹亮纯魅唇膏多色可选',
+                  value: undefined,
+                  rules: [{
+                    validate: val => !!val,
+                    message: '商品名称不能为空'
+                  }]
+                }, {
+                  key: 'detail',
+                  label: '商品描述',
+                  type: 'textarea',
+                  placeholder: `可长可短的一段介绍(回车可换行)`,
+                  value: undefined,
+                  rules: [ ]
+                }, {
+                  key: 'tag',
+                  label: '商品标签',
+                  type: 'tag',
+                  max: 2,
+                  placeholder: `如：补水`,
+                  value: [ ],
+                  rules: [{
+                    validate: val => val.length >= 1,
+                    message: '至少有一个商品标签'
+                  }]
+                }, {
+                  key: 'category',
+                  label: '商品类目',
+                  type: 'select',
+                  placeholder: '请设置商品类目',
+                  value: this.data.category,
+                  options: this.data.dic['goods_category'] || [ ]
+                }, {
+                  key: 'img',
+                  label: '商品图片',
+                  type: 'img',
+                  max: 6,
+                  value: this.data.hasBeenUploaded,
+                  rules: [{
+                    validate: val => val.length >= 1,
+                    message: '至少上传一张商品图片'
+                  }]
+                }, {
+                  title: '价格信息',
+                  desc: ''
+                }, {
+                  key: 'fadePrice',
+                  label: '划线价',
+                  type: 'number',
+                  placeholder: '建议输入比原价格稍高的价位',
+                  value: undefined,
+                  rules: [{
+                    validate: val => !!val,
+                    message: '请设置商品划线价'
+                  }]
+                }, {
+                  title: '规格型号',
+                  desc: ''
+                }
+              ];
+        
+              if ( this.data.standards.length === 0 ) {
+                meta.splice( 7, 0, {
+                  key: 'price',
+                  label: '价格',
+                  type: 'number',
+                  placeholder: '商品单价',
+                  value: undefined,
+                  rules: [{
+                    validate: val => !!val,
+                    message: '请设置商品单价'
+                  }]
+                });
+                meta.splice( 9, 0, {
+                  key: 'groupPrice',
+                  label: '团购价',
+                  type: 'number',
+                  placeholder: '鼓励多个客户在一趟团购行程中同时下单',
+                  value: undefined
+                });
+                meta.splice( 10, 0, {
+                  key: 'stock',
+                  label: '库存',
+                  type: 'number',
+                  placeholder: '不填写，则无限库存',
+                  value: undefined
+                })
+              }
+        
+              return meta;
+            },
+        
+            // 表单数据2
+            meta2( ) {
+              
+              return [
+                {
+                  title: '其他信息',
+                  desc: ''
+                }, {
+                  key: 'depositPrice',
+                  label: '商品订金',
+                  type: 'number',
+                  placeholder: '在行程出发前，客户将收到订金收款推送',
+                  value: undefined
+                }, {
+                  key: 'limit',
+                  label: '限购数量',
+                  type: 'number',
+                  placeholder: '不填或为0，则表示不限购',
+                  value: undefined
+                }, {
+                  key: 'visiable',
+                  label: '立即上架',
+                  type: 'switch',
+                  value: false
+                }
+              ]
+            },
+        
+            // modal按钮
+            actions( ) {
+              
+              const { selectingStandarIndex } = this.data;
+              const meta = selectingStandarIndex !== null ? [{
+                name: '取消',
+                }, {
+                  name: '删除',
+                  color: 'red'
+                }, {
+                  name: '确认',
+                  color: '#2d8cf0',
+                }] : [{
+                  name: '取消',
+                }, {
+                  name: '确认',
+                  color: '#2d8cf0',
+                }];
+                return meta;
+            }
+        })
+    },
 
     /** 拉取数据字典 */
     fetchDic( ) {
@@ -240,7 +249,6 @@ Component({
 
     /** 增加编辑型号/规格 */
     addStandard( ) {
-
       const errMsg = title => {
         return wx.showToast({
           title,
@@ -294,10 +302,14 @@ Component({
 
     /** 型号的图片 */
     onImgChange( e ) {
+      const { standarForm } = this.data;
       const { currentTarget, detail } = e;
+
+      if ( detail[ 0 ] === standarForm.img ) { return; }
+
       this.setData({
-        standarForm: Object.assign({}, this.data.standarForm, {
-          [currentTarget.dataset.key]: detail[ 0 ]
+        standarForm: Object.assign({ }, standarForm, {
+          img: detail[ 0 ]
         })
       });
     },
@@ -317,6 +329,21 @@ Component({
       }
     },
 
+    /** 点击modal */
+    modalClick2({ detail }) {
+      const index = detail.index;
+      const { selectingStandarIndex } = this.data;
+      if ( index === 0 ) {
+        this.toogleStandard2( );
+      } else if ( index === 1 && selectingStandarIndex !== null) {
+        this.deleteStandar( );
+      } else if ( index === 2 && selectingStandarIndex !== null) {
+        this.addStandard();
+      } else if ( index === 1 && selectingStandarIndex === null ) {
+        this.addStandard();
+      }
+    },
+
     /** 点击规格 */
     standarClick({ currentTarget }) {
       const { index } = currentTarget.dataset;
@@ -325,6 +352,7 @@ Component({
         selectingStandarIndex: index,
         standarForm: this.data.standards[ index ]
       });
+      
       const imgEle = this.selectComponent('.img-upload');
       imgEle && imgEle.reset( );
     },
@@ -344,7 +372,6 @@ Component({
 
     /** 拉取商品详情 */
     fetchDetail( id ) {
-
       const that = this;
       if ( !id ) { return; }
 
@@ -453,6 +480,8 @@ Component({
 
   attached: function () {
     this.fetchDic( );
+    this.fetchDetail(  );
+    this.runComputed( )
   }
 
 })

@@ -56,7 +56,7 @@
 
   <!-- 增加/编辑规格 -->
   <i-modal
-    title="规则信息"
+    title="型号信息"
     visible="{{ standarding }}"
     actions="{{ actions }}"
     bind:click="modalClick"
@@ -106,14 +106,15 @@
   </i-modal>
 
   <!-- 按钮 -->
-  <view class='btn-blockk'>
-    <wxc-button
-      size="large"
-      type="beauty"
-      bindtap='submit'
-    >
-      确定
-    </wxc-button>
+  <view
+      class="ptd-btn-block"
+  >
+      <view
+          class="ptd-btn invert"
+          bindtap="submit"
+      >
+          {{ !!pid ? '更新' : '创建' }}
+      </view>
   </view>
 
 </view>
