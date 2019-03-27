@@ -50,7 +50,7 @@
                         <image
                             mode="aspectFit"
                             class="pcl-cart-img"
-                            src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/bg-cart.png"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/bg-cart.png"
                         />
                     </view>
 

@@ -48,7 +48,7 @@
             <image
                 mode="scaleToFill"
                 class="pm-img-banner"
-                src="cloud://dev-0822cd.6465-dev-0822cd/icon-img/my-banner.png"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/my-banner.png"
             />
         </view>
 

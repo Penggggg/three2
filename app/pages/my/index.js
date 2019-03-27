@@ -11,7 +11,7 @@ Page({
                 title: '联系客服',
                 url: '/pages/concat/index',
                 handler: '',
-                iconImg: 'cloud://dev-0822cd.6465-dev-0822cd/icon-img/icon-kefu2.png'
+                iconImg: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-kefu2.png'
             }
         ],
         baseInfo: {

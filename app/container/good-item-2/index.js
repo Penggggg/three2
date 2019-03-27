@@ -37,13 +37,7 @@ Component({
      */
     data: {
         // 标签名
-        tag: '',
-        /** 头像列表 */
-        imgList: [
-            'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-1.png',
-            'cloud://dev-0822cd.6465-dev-0822cd/icon-img/entry-icon-2.png'
-        ]
-        
+        tag: ''
     },
 
     computed: {
