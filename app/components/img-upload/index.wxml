@@ -4,7 +4,7 @@
     <view
         wx:for="{{ list }}"
         wx:key="{{ index }}"
-        class="ciu-img-container {{ canAdjust ? 'big' : '' }}"
+        class="ciu-img-container {{ canAdjust && list.length > 1 ? 'big' : '' }}"
     >
 
         <image
@@ -29,7 +29,7 @@
         </view>
 
         <view
-            wx:if="{{ canAdjust }}"
+            wx:if="{{ canAdjust && list.length > 1 }}"
             class="ciu-img-adjust"
         >
             <view>

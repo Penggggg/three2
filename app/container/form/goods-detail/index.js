@@ -106,6 +106,7 @@ Component({
                   label: '商品图片',
                   type: 'img',
                   max: 6,
+                  canAdjust: true,
                   value: this.data.hasBeenUploaded,
                   rules: [{
                     validate: val => val.length >= 1,

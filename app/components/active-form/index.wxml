@@ -156,6 +156,7 @@
           max="{{ item.max || 9 }}"
           hasBeenUploaded="{{ item.value }}"
           bindchange="onImgChange"
+          canAdjust="{{ item.canAdjust }}"
         />
       </view>
 
