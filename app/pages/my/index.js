@@ -53,6 +53,9 @@ Page({
 
     /** 跳到订单列表 */
     goOrderList( ) {
+        var pages = getCurrentPages();
+        console.log( pages );
+        return;
         wx.navigateTo({
             url: "/pages/order-list/index"
         })
