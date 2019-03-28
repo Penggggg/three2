@@ -111,6 +111,7 @@ Page({
     fetchDiscount( ) {
         const { activities } = this.data;
         if ( activities.length > 0 ) { return; }
+
         http({
             data: {
                 page: 1,
@@ -197,7 +198,8 @@ Page({
     /** 获取当前行程 */
     fetchCurrentTrip( cb ) {
         const { tid } = this.data;
-        if ( !!tid ) { return; }
+        if ( !!tid ) { return !!cb && cb( tid ); }
+
         http({
             url: 'trip_enter',
             data: {

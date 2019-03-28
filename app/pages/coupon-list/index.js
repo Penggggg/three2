@@ -38,6 +38,10 @@ Page({
 
     /** 拉取卡券列表 */
     fetchList( ) {
+
+        const { coupons } = this.data;
+        if ( coupons.length > 0 ) { return; }
+
         http({
             data: { },
             url: 'coupon_list',
@@ -53,6 +57,10 @@ Page({
 
     /** 获取当前行程 */
     fetchCurrentTrip( cb ) {
+        const { tid } = this.data;
+        if ( tid ) {
+            return !!cb && cb( tid );
+        }
         http({
             url: 'trip_enter',
             data: {

@@ -50,6 +50,10 @@ Page({
 
     /** 获取当前行程 */
     fetchCurrentTrip( cb ) {
+        const { tid } = this.data;
+        if ( tid ) {
+            return !!cb && cb( tid );
+        }
         http({
             url: 'trip_enter',
             data: {

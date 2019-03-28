@@ -177,6 +177,9 @@ Page({
     /** 拉取商品销量排行榜(前20) */
     fetchRank( ) {
      
+        const { rankGoods } = this.data;
+        if ( rankGoods.length > 0 ) { return; }
+
         http({
             data: {
                 page: 1

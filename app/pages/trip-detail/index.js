@@ -48,6 +48,10 @@ Page({
     /** 拉取等待拼团 */
     fetchWaitPin( tid ) {
         return new Promise(( resolve, reject ) => {
+
+            const { waitPin } = this.data;
+            if ( waitPin.length > 0 ) { return resolve( );}
+
             http({
                 data: {
                     tid,
@@ -72,6 +76,10 @@ Page({
     /** 拉取已经拼团成功的商品列表 */
     fetchPin( tid ) {
         return new Promise(( resolve, reject ) => {
+
+            const { pingList } = this.data;
+            if ( pingList.length > 0 ) { return resolve( );}
+
             http({
                 data: {
                     tid,

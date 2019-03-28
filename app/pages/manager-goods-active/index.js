@@ -162,6 +162,10 @@ Page({
 
     /** 获取当前行程 */
     fetchCurrentTrip( ) {
+
+        const { tid } = this.data;
+        if ( tid ) { return; }
+
         http({
             url: 'trip_enter',
             data: {
