@@ -218,7 +218,11 @@
                             />
                         </view>
                         <view>
-                            <view class="ptd-pin-btn">
+                            <view
+                                class="ptd-pin-btn"
+                                data-data="{{ item }}"
+                                bindtap="goDetail"
+                            >
                                 <view class="ptd-pin-btn-text">拼团价</view>
                                 <wxc-price
                                     icon="sub"

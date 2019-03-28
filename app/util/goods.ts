@@ -106,15 +106,23 @@ const dealGoodPin = good => {
 
     // 单品 
     if ( !standards || standards.length === 0 ) {
+        const acTarget = !activities ?
+                null : 
+                activities.find( ac => ac.pid === good.pid );
+        const p = acTarget ? acTarget.ac_price : price;
+        const gp = acTarget ? acTarget.ac_groupPrice : groupPrice;
         return {
+            // 拼团列表
             list: [{
-                price,
-                groupPrice
+                price: p,
+                groupPrice: gp
             }],
-            maxDelta: price - groupPrice
+            // 每对可拼团型号，可优惠的价格区间
+            eachPriceRound: gp ? p - gp : 0
         }
     } else {
 
+        /** 型号 + 特价 */
         const meta = standards.map( standard => {
             const acTarget = !activities ?
                 null : 
@@ -136,13 +144,13 @@ const dealGoodPin = good => {
         }).filter( x => !!x );
 
         const deltas = meta.map( x => 
-            x.price - x.groupPrice
+            x.price - ( x.groupPrice || 0 )
         ).sort(( x, y ) => y - x );
 
         return {
             list: meta,
-            maxDelta: deltas[ 0 ],
-            maxGap: `${deltas[ deltas.length - 1 ]} ~ ${deltas[ 0 ]}`
+            // 每对可拼团型号，可优惠的价格区间
+            eachPriceRound: `${deltas[ deltas.length - 1 ]} ~ ${deltas[ 0 ]}`
         };
     }
 }

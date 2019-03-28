@@ -143,9 +143,9 @@
                         pinCount$ === 0 ?
                             '行程中有Ta人购买，' :
                             hasStanders$ ?
-                                '本行程有' + pinCount$ + '个型号可拼团，' :
+                                '有' + pinCount$ + '个型号可拼团，' :
                                 '本行程此商品可以拼团'
-                    }}<text class="red" bindtap="toggleTips">自动减{{ priceGap }}元【详情】</text>
+                    }}<text wx:if="priceGap" class="red bigger nobold" bindtap="toggleTips">拼团省{{ priceGap }}元【详情】</text>
                 </view>
 
             </view>
@@ -316,7 +316,7 @@
             </view>
 
             <view class="gd-pin-tips-title">
-                如何省钱
+                拼团省钱
             </view>
 
             <view class="gd-pin-tips-content">

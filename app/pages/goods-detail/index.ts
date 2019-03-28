@@ -74,7 +74,8 @@ Page({
                     return ''
                 } else {
                     const result = delayeringGood( detail );
-                    return result ? result.goodPins.maxGap ? result.goodPins.maxGap : '' : '';
+                    console.log('.....', result );
+                    return result ? result.goodPins.eachPriceRound : '';
                 }
             },
 
@@ -374,10 +375,11 @@ Page({
         this.watchRole( );
         this.runComputed( );
         
-        // this.setData!({
-        //     id: 'XH6O55T75u22YLcn',
-        //     tid: 'XDGzG97E7L4wLIdu'
-        // });
+        // id=W_o__NWuZ2FdFeZK&tid=XDGzG97E7L4wLIdu
+        this.setData!({
+            id: 'W_o__NWuZ2FdFeZK',
+            tid: 'XDGzG97E7L4wLIdu'
+        });
 
         if ( !options!.id ) { return; }
         this.setData!({

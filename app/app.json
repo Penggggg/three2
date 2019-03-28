@@ -1,5 +1,7 @@
 {
   "pages": [
+    "pages/goods-detail/index",
+    "pages/trip-detail/index",
     "pages/trip-enter/index",
     "pages/my/index",
     "pages/cart-list/index",
@@ -10,14 +12,12 @@
     "pages/manager-goods-list/index",
     "pages/manager-trip-list/index",
     "pages/order-list/index",
-    "pages/trip-detail/index",
     "pages/coupon-list/index",
     "pages/concat/index",
     "pages/manager-goods-active/index",
     "pages/search/index",
     "pages/trip-deliver/index",
     "pages/manager-auth-init/index",
-    "pages/goods-detail/index",
     "pages/manager-person-info/index"
   ],
   "usingComponents": {
