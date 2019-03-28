@@ -51,17 +51,15 @@ Page({
      */
     onLoad: function (options) {
         wx.hideShareMenu( );
-        // if ( options.id ) { 
-        //     this.setData({
-        //         id: options.id
-        //     });
-        // }
-        /**
-         * !请记得去掉这段代码
-         */
-        this.setData({
-            id: 'XDGzG97E7L4wLIdu'
-        });
+        if ( options.id ) { 
+            this.setData({
+                id: options.id
+            });
+        }
+
+        // this.setData({
+        //     id: 'XDGzG97E7L4wLIdu'
+        // });
     },
 
     /**
