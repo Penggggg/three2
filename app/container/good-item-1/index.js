@@ -18,6 +18,11 @@ Component({
         thin: {
             type: Boolean,
             value: false
+        },
+        // 当前行程
+        tid: {
+            type: String,
+            value: ''
         }
     },
 
@@ -43,7 +48,7 @@ Component({
         // 详情
         goDetail( ) {
             const { _id } = this.data.good;
-            navTo(`/pages/goods-detail/index?id=${_id}`);
+            navTo(`/pages/goods-detail/index?id=${_id}&tid=${this.data.tid}`);
         }
     }
 })

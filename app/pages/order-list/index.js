@@ -256,7 +256,7 @@ Page({
     /** 去商品详情 */
     goGoodDetail({ currentTarget }) {
         const { pid } = currentTarget.dataset.data;
-        navTo(`/pages/goods-detail/index?id=${pid}`)
+        navTo(`/pages/goods-detail/index?id=${pid}&tid=${this.data.tid}`)
     },
 
     /** 跳到行程入口 */
@@ -708,7 +708,7 @@ Page({
                             title: `省${order.allocatedGroupPrice ?
                                 order.allocatedPrice - order.allocatedGroupPrice :
                                 order.price - order.groupPrice}元！${order.name}`,
-                            path: `/pages/goods-detail/index?id=${order.pid}`,
+                            path: `/pages/goods-detail/index?id=${order.pid}&tid=${this.data.tid}`,
                             imageUrl: order.img[ 0 ]
                         },
 

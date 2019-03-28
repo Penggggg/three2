@@ -85,7 +85,7 @@ Component({
         /** 跳到商品详情 */
         goGoodDetail({ currentTarget }) {
             const { pid } = currentTarget.dataset;
-            navTo(`/pages/goods-detail/index?id=${pid}`)
+            navTo(`/pages/goods-detail/index?id=${pid}&tid=${this.data.tid}`)
         }
 
     }

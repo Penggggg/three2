@@ -8,6 +8,8 @@ Page({
      * 页面的初始数据
      */
     data: {
+        /** tid */
+        tid: '',
         /** 展示商品选择 */
         showProduct: false,
         /** 当前的商品及其型号列表 */
@@ -156,6 +158,25 @@ Page({
                 });
             }
         })
+    },
+
+    /** 获取当前行程 */
+    fetchCurrentTrip( ) {
+        http({
+            url: 'trip_enter',
+            data: {
+                shouldGetGoods: false
+            },
+            loadingMsg: 'none',
+            success: res => {
+                const { status, data } = res;
+                if ( status === 200 && !!data[ 0 ]) {
+                    this.setData({
+                        tid: data[ 0 ]._id
+                    });
+                }
+            }
+        });
     },
 
     /** 拉取列表 */
@@ -401,7 +422,7 @@ Page({
     /** 去商品详情 */
     goDetail({ currentTarget }) {
         const { pid } = currentTarget.dataset;
-        navTo(`/pages/goods-detail/index?id=${pid}`);
+        navTo(`/pages/goods-detail/index?id=${pid}&tid=${this.data.tid}`);
     },
 
     /** 点击准备编辑 */
@@ -511,6 +532,7 @@ Page({
         wx.hideShareMenu( );
         this.runComputed( );
         this.fetchList( );
+        this.fetchCurrentTrip( );
     },
 
     /**
