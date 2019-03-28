@@ -67,9 +67,9 @@ Component({
         /** 跳到行程入口 */
         goTrip( ) {
             const { showNext } = this.data
-            wx.navigateTo({
-                url: showNext ? `/pages/coupon-list/index` : `/pages/trip-enter/index`
-            })
+            wx.redirectTo({
+                url: `/pages/trip-enter/index`
+            });
         }
 
     }
