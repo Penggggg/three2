@@ -1,5 +1,6 @@
 const { computed } = require('../../lib/vuefy/index.js');
 const { http } = require('../../util/http.js');
+const { navTo } = require('../../util/route.js');
 
 Page({
 
@@ -69,9 +70,7 @@ Page({
 
     /** 跳往行程 */
     goTrip( ) {
-        wx.navigateTo({
-            url: '/pages/trip-enter/index'
-        });
+        navTo('/pages/trip-enter/index');
     },
 
     onIsBuyer({ detail }) {

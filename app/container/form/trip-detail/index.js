@@ -1,4 +1,5 @@
 const { http } = require('../../../util/http.js');
+const { navTo } = require('../../../util/route.js');
 
 // container/form/trip-detail/index.js
 Component({
@@ -579,9 +580,7 @@ Component({
                             title: tid ? '更新成功' : '创建成功！'
                         });
                         setTimeout(( ) => {
-                            wx.redirectTo({
-                                url: '/pages/manager-trip-list/index'
-                            });
+                            navTo(`/pages/manager-trip-list/index`);
                         }, 200 );
                     }
                 }
@@ -624,9 +623,7 @@ Component({
 
         /** 进行行程订单管理页面 */
         goOrderManger( ) {
-            wx.navigateTo({
-                url: `/pages/manager-trip-order/index?id=${this.data.tid}`
-            })
+            navTo(`/pages/manager-trip-order/index?id=${this.data.tid}`)
         }
 
     },

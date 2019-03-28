@@ -1,3 +1,4 @@
+const { navTo } = require('../../util/route.js');
 /**
  * @description
  * 有3中颜色
@@ -61,9 +62,7 @@ Component({
         // 详情
         goDetail( ) {
             const { _id } = this.data.good;
-            wx.navigateTo({
-                url: `/pages/goods-detail/index?id=${_id}&tid=${this.data.tid}`
-            });
+            navTo(`/pages/goods-detail/index?id=${_id}&tid=${this.data.tid}`);
         }
 
     }

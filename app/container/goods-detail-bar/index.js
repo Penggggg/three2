@@ -1,6 +1,7 @@
 const app = getApp( );
 const { http } = require('../../util/http.js');
 const { wxPay } = require('../../util/pay.js');
+const { navTo } = require('../../util/route.js');
 const { createOrders } = require('../../util/order.js');
 
 Component({
@@ -31,7 +32,7 @@ Component({
         btnList: [
             {
                 label: '商城',
-                url: '/pages/index/index',
+                url: '/pages/trip-enter/index',
                 src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-home4.png'
             }, {
                 label: '行程',
@@ -297,9 +298,7 @@ Component({
                             pay( );
                         }, ( ) => {
                             // 失败/成功-订单列表
-                            wx.redirectTo({
-                                url: '/pages/order-list/index'
-                            });
+                            navTo('/pages/order-list/index');
                         });
 
                     }, ( ) => {
@@ -328,9 +327,7 @@ Component({
         },
         /** 地址跳转 */
         navigate( e ) {
-            wx.navigateTo({
-                url: e.currentTarget.dataset.url
-            });
+            navTo( e.currentTarget.dataset.url );
         },
         /** 监听用户授权情况 */
         checkAuth( ) {

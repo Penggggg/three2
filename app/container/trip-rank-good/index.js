@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { navTo } = require('../../util/route.js');
 /**
  * 快递页面底下的商品排行榜
  */
@@ -84,9 +85,7 @@ Component({
         /** 跳到商品详情 */
         goGoodDetail({ currentTarget }) {
             const { pid } = currentTarget.dataset;
-            wx.navigateTo({
-                url: `/pages/goods-detail/index?id=${pid}`
-            })
+            navTo(`/pages/goods-detail/index?id=${pid}`)
         }
 
     }

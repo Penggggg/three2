@@ -1,4 +1,4 @@
-// container/good-item-2/index.js
+const { navTo } = require('../../util/route.js');
 /**
  * @description
  * 沾满一行两格的商品框，普通商品列表
@@ -51,9 +51,7 @@ Component({
       // 详情
       goDetail( ) {
           const { _id } = this.data.good;
-          wx.navigateTo({
-              url: `/pages/goods-detail/index?id=${_id}&tid=${this.data.tid}`
-          });
+          navTo(`/pages/goods-detail/index?id=${_id}&tid=${this.data.tid}`);
       }
 
   }

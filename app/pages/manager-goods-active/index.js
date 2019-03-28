@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { navTo } = require('../../util/route.js');
 const { computed } = require('../../lib/vuefy/index.js');
 
 Page({
@@ -400,9 +401,7 @@ Page({
     /** 去商品详情 */
     goDetail({ currentTarget }) {
         const { pid } = currentTarget.dataset;
-        wx.navigateTo({
-            url: `/pages/goods-detail/index?id=${pid}`
-        });
+        navTo(`/pages/goods-detail/index?id=${pid}`);
     },
 
     /** 点击准备编辑 */

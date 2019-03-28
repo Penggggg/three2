@@ -1,5 +1,6 @@
 
 import { http } from '../../util/http';
+import { navTo } from '../../util/route.js';
 
 // app/pages/manager-goods-detail/index.js
 Page({
@@ -39,9 +40,7 @@ Page({
 
     /** 跳页 */
     navigate( e ) {
-        wx.navigateTo({
-            url: '/pages/manager-trip-detail/index',
-        });
+        navTo('/pages/manager-trip-detail/index');
     },
 
     /** 输入框确认 */
@@ -177,9 +176,7 @@ Page({
     /** 点击详情 */
     onTab({ currentTarget }) {
         const { tid } = currentTarget.dataset;
-        wx.navigateTo({
-            url: `/pages/manager-trip-detail/index?id=${tid}`
-        });
+        navTo(`/pages/manager-trip-detail/index?id=${tid}`);
     },
   
     /**

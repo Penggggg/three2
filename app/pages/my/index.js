@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { navTo } = require('../../util/route.js');
 
 Page({
 
@@ -24,9 +25,7 @@ Page({
     onTabIcon({ currentTarget }) {
         const { data } = currentTarget.dataset;
         if ( data.url ) {
-            wx.navigateTo({
-                url: data.url
-            });
+            navTo( data.url );
         } else {
             !!this[ data.handler ] && !!this[ data.handler ]( );
         }
@@ -53,19 +52,12 @@ Page({
 
     /** 跳到订单列表 */
     goOrderList( ) {
-        var pages = getCurrentPages();
-        console.log( pages );
-        return;
-        wx.navigateTo({
-            url: "/pages/order-list/index"
-        })
+        navTo('/pages/order-list/index');
     },
 
     /** 跳到优惠券列表 */
     goCouponList( ) {
-        wx.navigateTo({
-            url: "/pages/coupon-list/index"
-        })
+        navTo('/pages/coupon-list/index');
     },
 
     /**

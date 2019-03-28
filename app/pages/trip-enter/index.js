@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { navTo } = require('../../util/route.js');
 const { computed } = require('../../lib/vuefy/index.js');
 const { delayeringGood } = require('../../util/goods.js');
 
@@ -347,9 +348,7 @@ Page({
     goTripDetail( ) {
         const { current } = this.data;
         if ( !current ) { return; } 
-        wx.navigateTo({
-            url: `/pages/trip-detail/index?id=${current._id}`
-        })
+        navTo(`/pages/trip-detail/index?id=${current._id}`)
     },
 
     /**

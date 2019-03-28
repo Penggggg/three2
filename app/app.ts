@@ -45,7 +45,6 @@ App<MyApp>({
                 configurable: true,
                 enumerable: true,
                 set: function( val ) {
-                    // console.log(`${key}被set`, val );
                     const old = that.globalData$[ key ];
                     that.globalData$[ key ] = val;
                     if ( Array.isArray( that.watchCallBack[ key ])) {
@@ -113,7 +112,6 @@ App<MyApp>({
     getWxUserInfo( cb ) {
         wx.getUserInfo({
             success: res => {
-                console.log('333');
                 http({
                     data: res.userInfo,
                     url: 'common_userEdit',
@@ -154,7 +152,6 @@ App<MyApp>({
             [ key ]: this.watchCallBack[ key ] || [ ]
         });
         this.watchCallBack[ key ].push( cb );
-        console.log( 'watch$....', key );
         // 立马执行一下cb
         setTimeout(( ) => {
             const val = this.globalData$[ key ];

@@ -1,6 +1,7 @@
 import { http } from '../../util/http.js';
 import { delayeringGood } from '../../util/goods.js';
 import { computed } from '../../lib/vuefy/index.js';
+import { navTo } from '../../util/route.js';
 
 // app/pages/manager-goods-list/index.js
 Page({
@@ -140,9 +141,7 @@ Page({
     /** 点击详情 */
     onTab({ currentTarget }) {
         const { pid } = currentTarget.dataset;
-        wx.navigateTo({
-            url: `/pages/manager-goods-detail/index?id=${pid}`
-        });
+        navTo( `/pages/manager-goods-detail/index?id=${pid}`);
     },
 
     /** 确认输入 */

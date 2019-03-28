@@ -1,6 +1,7 @@
 const { http } = require('../../util/http.js');
 const { computed } = require('../../lib/vuefy/index.js');
 const { delayeringGood } = require('../../util/goods.js');
+const { navTo } = require('../../util/route.js');
 
 const app = getApp( );
 
@@ -285,16 +286,12 @@ Page({
     goGoodDetail({ currentTarget }) {
         const { tid } = this.data;
         const { good } = currentTarget.dataset;
-        wx.navigateTo({
-            url: `/pages/goods-detail/index?id=${good.pid || good._id}&tid=${tid}`
-        });
+        navTo(`/pages/goods-detail/index?id=${good.pid || good._id}&tid=${tid}`);
     },
 
     /** 去搜索 */
     goSearch( ) {
-        wx.navigateTo({
-            url: '/pages/search/index'
-        });
+        navTo('/pages/search/index')
     },
 
     /** 选择分类 */
@@ -309,9 +306,7 @@ Page({
     goTripDetail( ) {
         const { tid } = this.data;
         if ( !tid ) { return; } 
-        wx.navigateTo({
-            url: `/pages/trip-detail/index?id=${tid}`
-        })
+        navTo(`/pages/trip-detail/index?id=${tid}`);
     },
 
     onLoad( options ) {

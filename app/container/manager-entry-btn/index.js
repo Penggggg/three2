@@ -1,4 +1,5 @@
 const app = getApp( );
+const { navTo } = require('../../util/route.js');
 
 // container/manager-entry-btn/index.js
 Component({
@@ -71,9 +72,7 @@ Component({
 
         /** 地址跳转 */
         navigate( e ) {
-            wx.navigateTo({
-                url: e.currentTarget.dataset.url
-            });
+            navTo(e.currentTarget.dataset.url);
         }
         
     },

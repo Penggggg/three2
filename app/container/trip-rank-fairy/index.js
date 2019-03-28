@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { navTo } = require('../../util/route.js');
 const app = getApp( );
 
 /**
@@ -173,9 +174,7 @@ Component({
         /** 跳到商品详情 */
         goGoodDetail({ currentTarget }) {
             const { pid } = currentTarget.dataset;
-            wx.navigateTo({
-                url: `/pages/goods-detail/index?id=${pid}`
-            })
+            navTo(`/pages/goods-detail/index?id=${pid}`)
         },
 
         /** 检查openid以及是否能展示按钮 */

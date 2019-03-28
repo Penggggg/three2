@@ -2,6 +2,7 @@
 import { http } from '../../util/http.js';
 import { computed } from '../../lib/vuefy/index.js';
 import { delayeringGood } from '../../util/goods.js';
+import { navTo } from '../../util/route.js';
 
 const app = getApp( );
 
@@ -74,7 +75,6 @@ Page({
                     return ''
                 } else {
                     const result = delayeringGood( detail );
-                    console.log('.....', result );
                     return result ? result.goodPins.eachPriceRound : '';
                 }
             },
@@ -280,9 +280,7 @@ Page({
 
     // 进入商品管理
     goManager( ) {
-        wx.navigateTo({
-            url: `/pages/manager-goods-detail/index?id=${this.data.id}`
-        })
+        navTo(`/pages/manager-goods-detail/index?id=${this.data.id}`)
     },
 
     /** 监听全局管理员权限 */

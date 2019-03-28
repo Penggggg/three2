@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { navTo } = require('../../util/route.js');
 
 Component({
 
@@ -470,9 +471,7 @@ Component({
 
         /** 跳往行程列表 */
         goTrip( ) {
-            wx.navigateTo({
-                url: `/pages/manager-trip-list/index`
-            })
+            navTo(`/pages/manager-trip-list/index`)
         },
 
         /** 批量催款 */

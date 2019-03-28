@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { navTo } = require('../../util/route.js');
 
 Component({
     /**
@@ -122,9 +123,7 @@ Component({
         // 跳到商品详情
         goGoodDetail({ currentTarget }) {
             const { pid } = currentTarget.dataset.data;
-            wx.navigateTo({
-                url: `/pages/goods-detail/index?id=${pid}`
-            });
+            navTo(`/pages/goods-detail/index?id=${pid}`);
 
         },
 

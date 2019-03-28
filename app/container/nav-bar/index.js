@@ -1,4 +1,5 @@
-// container/nav-bar/index.js
+const { navTo } = require('../../util/route.js');
+
 Component({
     /**
      * 组件的属性列表
@@ -73,9 +74,7 @@ Component({
             // })
 
             if ( currentTarget.dataset.url.indexOf( url ) === -1 ) {
-                wx.redirectTo({
-                    url: currentTarget.dataset.url
-                });
+                navTo( currentTarget.dataset.url )
             }
         },
         /** 判断当前路由 */

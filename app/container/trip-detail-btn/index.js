@@ -1,3 +1,4 @@
+const { navTo } = require('../../util/route.js');
 
 Component({
 
@@ -78,9 +79,7 @@ Component({
             const url = current.route;
 
             if ( currentTarget.dataset.url.indexOf( url ) === -1 ) {
-                wx.redirectTo({
-                    url: currentTarget.dataset.url
-                });
+                navTo(  currentTarget.dataset.url )
             }
         },
         /** 初始化tid */

@@ -1,3 +1,5 @@
+const { navTo } = require('../../util/route.js');
+
 Component({
     /**
      * 组件的属性列表
@@ -67,9 +69,7 @@ Component({
         /** 跳到行程入口 */
         goTrip( ) {
             const { showNext } = this.data
-            wx.redirectTo({
-                url: `/pages/trip-enter/index`
-            });
+            navTo(`/pages/trip-enter/index`)
         }
 
     }

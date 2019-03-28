@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { navTo } = require('../../util/route.js');
 
 Component({
     /**
@@ -40,9 +41,7 @@ Component({
         go( ) {
             const { url } = this.data;
             if ( !!url ) {
-                wx.navigateTo({
-                    url
-                });
+                navTo( url );
             }
         },
 

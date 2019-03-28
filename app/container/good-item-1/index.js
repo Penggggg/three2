@@ -1,3 +1,5 @@
+const { navTo } = require('../../util/route.js');
+
 /**
  * @description
  * 一行占两格或者2.5格的，单个商品框，用在行程入口的热门推荐、普通商品列表
@@ -41,9 +43,7 @@ Component({
         // 详情
         goDetail( ) {
             const { _id } = this.data.good;
-            wx.navigateTo({
-                url: `/pages/goods-detail/index?id=${_id}`
-            });
+            navTo(`/pages/goods-detail/index?id=${_id}`);
         }
     }
 })

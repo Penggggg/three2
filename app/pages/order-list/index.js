@@ -1,6 +1,8 @@
 const { http } = require('../../util/http.js');
 const { wxPay } = require('../../util/pay.js');
+const { navTo } = require('../../util/route.js');
 const { computed } = require('../../lib/vuefy/index.js');
+
 const app = getApp( );
 
 Page({
@@ -248,25 +250,19 @@ Page({
 
     /** 跳到快递排行榜页面 */
     goDeliver({ currentTarget }) {
-        wx.navigateTo({
-            url: `/pages/trip-deliver/index?id=${currentTarget.dataset.tid}`
-        });
+        navTo(`/pages/trip-deliver/index?id=${currentTarget.dataset.tid}`);
     },
 
     /** 去商品详情 */
     goGoodDetail({ currentTarget }) {
         const { pid } = currentTarget.dataset.data;
-        wx.navigateTo({
-            url: `/pages/goods-detail/index?id=${pid}`
-        })
+        navTo(`/pages/goods-detail/index?id=${pid}`)
     },
 
     /** 跳到行程入口 */
     goTripEntry({ currentTarget }) {
         if ( !currentTarget || (!!currentTarget && !currentTarget.dataset.isClosed )) {
-            wx.navigateTo({
-                url: `/pages/trip-enter/index`
-            });
+            navTo(`/pages/trip-enter/index`);
         }
     },
 
@@ -841,9 +837,7 @@ Page({
 
     /** 去联系代购 */
     concact( ) {
-        wx.navigateTo({
-            url: '/pages/concat/index'
-        });
+        navTo('/pages/concat/index');
     },
 
     /** 付剩余订金 */

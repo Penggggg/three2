@@ -4,6 +4,7 @@ const { http } = require('../../util/http.js');
 const { wxPay } = require('../../util/pay.js');
 const { createOrders } = require('../../util/order.js');
 const { computed } = require('../../lib/vuefy/index.js');
+const { navTo } = require('../../util/route.js');
 
 const app = getApp( );
 
@@ -343,18 +344,14 @@ Page({
     goDetail({ currentTarget }) {
         const { tid } = this.data;
         const pid = currentTarget.dataset.cart.detail._id;
-        wx.navigateTo({
-            url: `/pages/goods-detail/index?id=${pid}&tid=${tid}`
-        });
+        navTo(`/pages/goods-detail/index?id=${pid}&tid=${tid}`);
     },
 
     /** 跳往商品详情(拼团) */
     goGoodDetail({ currentTarget }) {
         const { tid } = this.data;
         const { pid } = currentTarget.dataset.data;
-        wx.navigateTo({
-            url: `/pages/goods-detail/index?id=${pid}&tid=${tid}`
-        });
+        navTo(`/pages/goods-detail/index?id=${pid}&tid=${tid}`);
     },
 
     /** 计算选中购物车总金额 */
@@ -623,9 +620,7 @@ Page({
 
                     // 去往订单列表
                     const goOrders = ( ) => {
-                        wx.redirectTo({
-                            url: '/pages/order-list/index'
-                        });
+                        navTo('/pages/order-list/index');
                     }
 
                     // 支付里面

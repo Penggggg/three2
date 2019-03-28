@@ -1,5 +1,6 @@
 const { http } = require('../../util/http.js');
 const { computed } = require('../../lib/vuefy/index.js');
+const { navTo } = require('../../util/route.js');
 
 Page({
 
@@ -94,9 +95,7 @@ Page({
     goGoodDetail({ currentTarget }) {
         const { tid } = this.data;
         const { pid } = currentTarget.dataset.data;
-        wx.navigateTo({
-            url: `/pages/goods-detail/index?id=${pid}&tid=${tid}`
-        });
+        navTo(`/pages/goods-detail/index?id=${pid}&tid=${tid}`);
     },
 
     /**
