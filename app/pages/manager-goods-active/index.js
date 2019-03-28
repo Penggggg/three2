@@ -181,12 +181,16 @@ Page({
 
     /** 拉取列表 */
     fetchList( ) {
-        const { active, pagenation, canLoadMore } = this.data;
+        const { active, pagenation, canLoadMore, loadingList} = this.data;
         const { page, totalPage } = pagenation;
 
-        if ( !canLoadMore ) {
+        if ( !canLoadMore || loadingList ) {
             return;
         }
+
+        this.setData({
+            loadingList: true
+        })
 
         let temp = {
             page: page + 1
@@ -208,6 +212,7 @@ Page({
                 const { list, pagenation } = data;
                 this.setData({
                     list,
+                    loadingList: false,
                     canLoadMore: totalPage > page + 1
                 })
             }

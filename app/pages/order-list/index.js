@@ -67,7 +67,9 @@ Page({
         // 通过参数传入的tid
         tidParam: '',
         // 是否来自与行程详情
-        fromDetail: false
+        fromDetail: false,
+        // 列表
+        loadingList: false,
     },
 
     /** 设置computed */
@@ -178,12 +180,16 @@ Page({
 
     /** 拉取订单数据 */
     fetchList( index ) {
-        const { page, keyMapType, skip, canloadMore, metaList, tidParam, fromDetail } = this.data;
+        const { page, keyMapType, skip, canloadMore, metaList, tidParam, fromDetail, loadingList } = this.data;
         const type = typeof index !== 'object' ?
             keyMapType[ index ] :
             keyMapType[ 0 ];
 
-        if ( !canloadMore ) { return; }
+        if ( !canloadMore || loadingList ) { return; }
+
+        this.setData({
+            loadingList: true
+        })
 
         let reqData = {
             type,
@@ -212,6 +218,7 @@ Page({
                 this.setData({
                     page,
                     skip: current,
+                    loadingList: false,
                     metaList: [ ...metaList, ...data.data ],
                     canloadMore: total > current
                 });

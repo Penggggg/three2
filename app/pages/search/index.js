@@ -70,9 +70,13 @@ Page({
 
     /** 拉取列表 */
     fetchList( ) {
-        const { page, result, search, canLoadMore } = this.data;
+        const { page, result, search, canLoadMore, loadingList } = this.data;
 
-        if ( !canLoadMore || !search ) { return; }
+        if ( !canLoadMore || !search || loadingList ) { return; }
+
+        this.setData({
+            loadingList: true
+        });
 
         // 搜索
         http({
@@ -88,6 +92,7 @@ Page({
                 const { page, totalPage } = data;
                 this.setData({
                     page,
+                    loadingList: false,
                     canLoadMore: totalPage > page,
                     result: page === 1 ?
                         data.data :
