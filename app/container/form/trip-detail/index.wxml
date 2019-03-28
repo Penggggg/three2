@@ -112,6 +112,7 @@
         bind:change="onPostageChange"
     />
 
+    <!-- 按钮 -->
     <view
         class="ptd-btn-block"
     >

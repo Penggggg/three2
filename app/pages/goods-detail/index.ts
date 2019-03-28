@@ -375,11 +375,10 @@ Page({
         this.watchRole( );
         this.runComputed( );
         
-        // id=W_o__NWuZ2FdFeZK&tid=XDGzG97E7L4wLIdu
-        this.setData!({
-            id: 'W_o__NWuZ2FdFeZK',
-            tid: 'XDGzG97E7L4wLIdu'
-        });
+        // this.setData!({
+        //     id: 'W_o__NWuZ2FdFeZK',
+        //     tid: 'XDGzG97E7L4wLIdu'
+        // });
 
         if ( !options!.id ) { return; }
         this.setData!({

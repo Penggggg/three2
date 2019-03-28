@@ -263,7 +263,7 @@ Component({
                     const { status, data } = res;
                     if ( status !== 200 ) { return; }
 
-                    const { title, destination, start_date, end_date, cashcoupon_atleast,
+                    const { title, destination, start_date, end_date, cashcoupon_atleast, isClosed,
                         cashcoupon_values, postagefree_atleast, reduce_price, fullreduce_atleast,
                         fullreduce_values, postage, payment, published, selectedProductIds, selectedProducts } = data;
                   
@@ -306,7 +306,7 @@ Component({
                             fullreduce_atleast: fullreduce_atleast || null,
                             fullreduce_values: fullreduce_values || null,
                             hasBeenPassStart: new Date( ).getTime( ) > start_date,
-                            canBeEnd: dealDate( end_date ) === dealDate( new Date( ).getTime( )) || new Date( ).getTime( ) >= end_date
+                            canBeEnd: !isClosed &&  end_date !== new Date( ).getTime( )
                         });
                         
                 }
