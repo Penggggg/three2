@@ -335,7 +335,6 @@ export const main = async ( event, context ) => {
      * {
      *     tid, 
      *     needOrders 是否需要返回订单
-     *     need
      * }
      * 行程的购物清单，用于调整商品价格、购买数量
      */
