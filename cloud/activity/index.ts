@@ -74,15 +74,13 @@ export const main = async ( event, context ) => {
 
             // 去重错误
             const errorList: string[] = [ ];
-            const hasError = checks$.some(( x, k ) => {
+            checks$.map(( x, k ) => {
                 if (  x.total > 0 ) {
                     errorList.push( dataMeta[ k ].title );
-                    return true;
-                } 
-                return false;
+                }
             });
 
-            if ( hasError ) {
+            if ( errorList.length > 0 ) {
                 return hasErr(`${errorList.join('、')} 特价已存在`);
             }
 
@@ -146,15 +144,13 @@ export const main = async ( event, context ) => {
 
             // 去重错误
             const errorList: string[] = [ ];
-            const hasError = checks$.some(( x, k ) => {
+            checks$.map(( x, k ) => {
                 if (  x.total > 0 ) {
                     errorList.push( list[ k ].title );
-                    return true;
                 } 
-                return false;
             });
 
-            if ( hasError ) {
+            if ( errorList.length > 0 ) {
                 return hasErr(`${errorList.join('、')}特价已存在`);
             }
 
