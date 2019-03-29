@@ -31,27 +31,36 @@ export const main = async ( event, context ) => {
                             })
                             .get( );
 
+
+            const goodsIds = Array.from(
+                new Set( meta$.data.map( x => x.pid ))
+            ).filter( x => !!x );
+
             // 需要查询 商品详情
-            const goodsDetails$ = await Promise.all( meta$.data.map( cart => {
+            const goodsDetails$ = await Promise.all( goodsIds.map( goodsId => {
                 return cloud.callFunction({
                     data: {
                         data: {
-                            _id: cart.pid,
+                            _id: goodsId,
                         },
                         $url: 'detail'
                     },
                     name: 'good'
                 }).then( res => {
-                    return {
-                        cart,
-                        detail: res.result.data
-                    }
+                    return res.result.data;
                 })
             }));
+
+            const cartInjectGoods = meta$.data.map( x => {
+                return {
+                    cart: x,
+                    detail: goodsDetails$.find( y =>  y._id === x.pid )
+                }
+            });
             
             return ctx.body = {
                 status: 200,
-                data: goodsDetails$
+                data: cartInjectGoods
             };
 
         } catch ( e ) {

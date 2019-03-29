@@ -237,6 +237,7 @@
     width: 100vw;
     bottom: 110rpx;
     padding: 25rpx;
+    background: #fff;
     position: fixed;
     display: flex;
     align-items: center;

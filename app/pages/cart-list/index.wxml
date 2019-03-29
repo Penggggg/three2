@@ -285,7 +285,7 @@
             <view
                 
                 class="pcl-pin-title-block"
-                wx:if="{{ showPin && shoppinglist.length > 0 }}"
+                wx:if="{{ showPin && shoppinglist.length > 0 && cartList.length === 0 }}"
             >
                 <view class="pcl-pin-title">
                     本期拼团
@@ -297,7 +297,7 @@
 
             <!-- 拼团列表 -->
             <swiper
-                wx:if="{{ showPin }}"
+                wx:if="{{ showPin && cartList.length === 0 }}"
                 autoplay="{{ true }}"
                 circular="{{ true }}"
                 duration="{{ 1000 }}"
