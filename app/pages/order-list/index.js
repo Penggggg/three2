@@ -239,6 +239,10 @@ Page({
 
     /** 拉取优惠券列表 */
     fetchCoupons( ) {
+
+        const { coupons } = this.data;
+        if ( coupons.length > 0 ) { return; }
+
         http({
             url: `coupon_list`,
             data: {

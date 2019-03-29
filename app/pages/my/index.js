@@ -33,6 +33,9 @@ Page({
 
     /** 拉取订单、卡券数据 */
     fetchData( ) {
+        const { baseInfo } = this.data;
+        if ( Object.keys( baseInfo ).length > 0 ) { return; }
+
         http({
             loadMsg: '加载中...',
             url: 'common_mypage-info',

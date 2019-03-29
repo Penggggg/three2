@@ -164,6 +164,7 @@ Page({
     onLoad: function (options) {
         wx.hideShareMenu({ });
         this.runComputed( );
+        this.fetchData( );
     },
   
     /**
@@ -177,7 +178,7 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function ( ) {
-      this.fetchData( );
+      
     },
   
     /**
