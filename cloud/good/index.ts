@@ -52,6 +52,7 @@ export const main = async ( event, context ) => {
         try {
 
             const _id = event.data._id;
+
             // 获取数据
             const data$ = await db.collection('goods')
                 .where({
