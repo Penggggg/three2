@@ -10,6 +10,14 @@
         />
     </view>
 
+    <!-- 暂无更多 -->
+    <view
+        class="pmgl-nomore"
+        wx:if="{{ !loadingList && list$.length === 0 }}"
+    >
+        No More
+    </view>
+
     <!-- 滑动列表 -->
     <scroll-view
         scroll-y
@@ -65,6 +73,17 @@
                         </view>
                     </view>
                     <view class="">
+                        <view
+                            class="pga-trash"
+                            catchtap="deleteGood"
+                            data-pid="{{ item._id }}"
+                        >
+                            <i-icon
+                                type="trash"
+                                size="18"
+                                color="#80848f"
+                            />
+                        </view>
                         <my-switch-text
                             color="#c5c5c5"
                             sign="{{ item.pid }}"

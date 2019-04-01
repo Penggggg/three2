@@ -177,6 +177,38 @@ Page({
 
         this.fetchData( );
     },
+
+    /** 删除该商品 */
+    deleteGood({ currentTarget }) {
+        const { pid } = currentTarget.dataset;
+        wx.showModal({
+            title: '提示',
+            content: '确定删除此商品吗？',
+            success: res => {
+                if ( res.confirm ) {
+                http({
+                    data: { 
+                        pid
+                    },
+                    url: 'good_delete',
+                    success: res => {
+                        const { status, data } = res;
+                        if ( status === 200 ) {
+                            wx.showToast({
+                                title: '删除成功!'
+                            });
+                            const { list } = this.data;
+                            list.splice( list.findIndex(( x: any ) => x._id === pid ), 1 );
+                            this.setData!({
+                                list: [ ...list ]
+                            });
+                        }
+                    }
+                });
+                }
+            }
+        });
+    }
   
     /**
      * 生命周期函数--监听页面加载
