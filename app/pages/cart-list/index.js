@@ -207,6 +207,8 @@ Page({
                         current,
                         // 活动
                         activity,
+                        // 是否已经删除
+                        isDelete: detail.isDelete,
                         // 是否可选
                         visiable: detail.visiable,
                         // 勾选框

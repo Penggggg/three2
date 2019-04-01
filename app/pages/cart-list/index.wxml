@@ -75,7 +75,7 @@
                             class="pcl-cart-item-radio"
                             checked="{{ item.selected }}"
                             catch:change="toggleSelectCart"
-                            disabled="{{ !isInDelete && ( item.current.hasBeenDelete || !item.visiable || item.current.outOfStock )}}"
+                            disabled="{{ !isInDelete && ( item.current.hasBeenDelete || item.isDelete || !item.visiable || item.current.outOfStock )}}"
                         />
 
                         <view
@@ -159,7 +159,7 @@
                                     <!-- 优惠信息 -->
                                     <view
                                         class="pcl-cart-item-info grey"
-                                        wx:if="{{ !item.activity && !(item.current.hasBeenDelete) && ( item.visiable ) && ( !item.current.outOfStock ) && (item.current.price < item.current.lastPrice) }}"
+                                        wx:if="{{ !item.activity && !(item.current.hasBeenDelete) && (!item.isDelete) && ( item.visiable ) && ( !item.current.outOfStock ) && (item.current.price < item.current.lastPrice) }}"
                                     >
                                         该商品<text class="pcl-text-red">降价了{{ item.current.lastPrice - item.current.price }}元！</text>
                                     </view>  
@@ -218,7 +218,7 @@
                                             data-cart="{{ item }}"
                                             class="pcl-counter"
                                             catch:tap="toggleSku"
-                                            wx:if="{{ !(item.current.hasBeenDelete) && item.visiable && !item.current.outOfStock }}"
+                                            wx:if="{{ !(item.current.hasBeenDelete) && !item.isDelete && item.visiable && !item.current.outOfStock }}"
                                         >
                                             <text class="pcl-counter-opt del">-</text>
                                             {{ item.current.count }}
@@ -268,6 +268,14 @@
                         wx:if="{{ !item.visiable }}"
                     >
                         已下架
+                    </view>
+
+                    <!-- 下架icon -->
+                    <view
+                        class="pcl-cart-item-icon"
+                        wx:if="{{ item.isDelete }}"
+                    >
+                        已删除
                     </view>
                     
                 </view>

@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/cart-list/index",
     "pages/trip-enter/index",
     "pages/index/index",
     "pages/manager-goods-active/index",
@@ -8,7 +9,6 @@
     "pages/manager-goods-detail/index",
     "pages/manager-trip-list/index",
     "pages/search/index",
-    "pages/cart-list/index",
     "pages/order-list/index",
     "pages/coupon-list/index",
     "pages/my/index",
