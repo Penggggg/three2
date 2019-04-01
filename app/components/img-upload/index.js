@@ -73,7 +73,8 @@ Component({
       wx.chooseImage({
         // count: that.data.max - that.data.has.length - that.data.list.length,
         count: that.data.max - that.data.list.length,
-        sizeType: ['original'],
+        sizeType: ['compressed'],
+        // sizeTye: ['original', 'compressed'],
         success: function( res ) {
           const filePaths = res.tempFilePaths;
           // 循环上传

@@ -181,7 +181,7 @@
                 <!-- 拼团 -->
                 <view
                     class="te-block"
-                    wx:if="{{ activities.length > 0 }}"
+                    wx:if="{{ pingList$.length > 0 }}"
                 >
                     <view class="te-block-title">
                         省钱·拼

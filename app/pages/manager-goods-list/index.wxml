@@ -85,7 +85,7 @@
        class='pmgl-entry-btn-container'
     >
         <view 
-            bindtap='navigate'
+            bindtap='onTab'
             class="pmgl-entry-btn"
         >
             <wxc-icon color="#fff" size="45" type="add" /> 

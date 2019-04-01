@@ -141,7 +141,10 @@ Page({
     /** 点击详情 */
     onTab({ currentTarget }) {
         const { pid } = currentTarget.dataset;
-        navTo( `/pages/manager-goods-detail/index?id=${pid}`);
+        navTo( pid ?
+            `/pages/manager-goods-detail/index?id=${pid}` :
+            `/pages/manager-goods-detail/index`
+        );
     },
 
     /** 确认输入 */
