@@ -110,6 +110,13 @@
       class="ptd-btn-block"
   >
       <view
+          class="ptd-btn"
+          wx:if="{{ !!pid }}"
+          bindtap="deleteGood"
+      >
+          删除
+      </view>
+      <view
           class="ptd-btn invert"
           bindtap="submit"
       >

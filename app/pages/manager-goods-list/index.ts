@@ -186,7 +186,7 @@ Page({
         this.runComputed( );
         this.fetchData( );
 
-        // 创建商品而来的
+        // 创建、删除商品而来的
         if ( options.newPid ) {
             // this.fetchNew( options.newPid );
         }

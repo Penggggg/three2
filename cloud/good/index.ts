@@ -637,6 +637,33 @@ export const main = async ( event, context ) => {
         } catch ( e ) {
             return ctx.body = { status: 500 };
         }
+    });
+
+    /**
+     * @description
+     * 删除商品
+     * {
+     *    pid 
+     * }
+     */
+    app.router('delete', async( ctx, next ) => {
+        try {
+            const { pid } = event.data;
+            await db.collection('goods')
+                .doc( String( pid ))
+                .update({
+                    data: {
+                        isDelete: true
+                    }
+                });
+            return ctx.body = {
+                data: pid,
+                status: 200
+            };
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
     })
 
     return app.serve( );

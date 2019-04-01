@@ -44,12 +44,8 @@ Component({
     // 详情 - 已上传的图片列表
     hasBeenUploaded: [ ],
     // 详情 - 商品类目
-    category: '0',
+    category: '0'
   },
-
-  /** 计算属性 */
-  // computed: ,
-
 
   /**
    * 组件的方法列表
@@ -499,13 +495,38 @@ Component({
           }
       });
 
+    },
+
+    /** 删除该商品 */
+    deleteGood( ) {
+      wx.showModal({
+        title: '提示',
+        content: '确定删除此商品吗？',
+        success: res => {
+          if ( res.confirm ) {
+            const { pid } = this.data;
+            http({
+              data: { 
+                pid
+              },
+              url: 'good_delete',
+              success: res => {
+                const { status, data } = res;
+                if ( status === 200 ) {
+                  navTo(`/pages/manager-goods-list/index?newPid=${pid}`)
+                }
+              }
+            });
+          }
+        }
+      });
     }
 
   },
 
   attached: function () {
     this.fetchDic( );
-    this.fetchDetail(  );
+    this.fetchDetail( );
     this.runComputed( )
   }
 
