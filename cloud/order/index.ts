@@ -671,7 +671,7 @@ export const main = async ( event, context ) => {
      *       title,
      *       desc,
      *       time
-     *    }[  ]
+     *    }
      * }
      */
     app.router('batch-adjust', async( ctx, next ) => {
@@ -739,7 +739,10 @@ export const main = async ( event, context ) => {
                     data: {
                         data: {
                             touser: openid,
-                            data: notification,
+                            data: {
+                                title: '您购买的商品已到货',
+                                time: `[行程]${trip.title}`
+                            },
                             form_id: target.prepay_id || target.form_id
                         },
                         $url: 'notification-getmoney'

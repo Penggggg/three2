@@ -466,7 +466,7 @@ export const main = async ( event, context ) => {
                 method: 'post',
                 url: `https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=${access_token}`
             });
-            console.log('-------- 模板推送 --------', new Date( ).toLocaleString( ), reqData, send.data );
+        
             return ctx.body = {
                 data: send.data,
                 status: 200

@@ -518,10 +518,10 @@ Component({
                     const data = {
                         tid: that.data.tid,
                         orders: orders$,
-                        notification: {
-                            title: '您购买的商品已到货',
-                            time: `[行程]${that.data.title}`
-                        }
+                        // notification: {
+                        //     title: '您购买的商品已到货',
+                        //     time: `[行程]${that.data.title}`
+                        // }
                     };
 
                     http({
