@@ -32,7 +32,7 @@ Page({
                 label: '上架中',
                 value: true
             }, {
-                label: '已下架',
+                label: '未上架',
                 value: false
             }
         ]
@@ -101,6 +101,23 @@ Page({
         });
     },
 
+    /** 获取新创建的商品 */
+    fetchNew( pid ) {
+        http({
+            data: {
+                _id: pid
+            },
+            url: 'good_detail',
+            success: res => {
+                const { list } = this.data;
+                const newList: any = [ res.data, ...list ];
+                this.setData!({
+                    list: newList
+                });
+            }
+        });
+    },
+
     /** 文字选项 ，开启关闭上下架*/
     onSwitch( e ) {
         const { value, sign } = e.detail;
@@ -164,10 +181,15 @@ Page({
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad: function (options) {
+    onLoad( options: any ) {
         wx.hideShareMenu({ });
         this.runComputed( );
         this.fetchData( );
+
+        // 创建商品而来的
+        if ( options.newPid ) {
+            // this.fetchNew( options.newPid );
+        }
     },
   
     /**

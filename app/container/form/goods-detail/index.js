@@ -1,5 +1,6 @@
 const { http } = require('../../../util/http.js');
 const { computed } = require('../../../lib/vuefy/index.js');
+const { navTo } = require('../../../util/route.js');
 
 /**
  * ! 数值之间的关系校验，如：团购价必须大于原价
@@ -491,6 +492,10 @@ Component({
             wx.showToast({
                 title: _id ? '更新成功' : '创建成功'
             });
+
+            if ( !_id ) {
+              navTo(`/pages/manager-goods-list/index?newPid=${res.data}`)
+            }
           }
       });
 

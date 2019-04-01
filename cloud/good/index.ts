@@ -300,6 +300,23 @@ export const main = async ( event, context ) => {
         try {
 
             let _id = event.data._id;
+
+            // 判断是否有同名商品
+            const { title } = event.data;
+            const check1$ = await db.collection('goods')
+                .where({
+                    title,
+                    isDelete: _.neq( true )
+                })
+                .count( );
+
+            if ( check1$.total !== 0 ) {
+                return ctx.body = {
+                    status: 500,
+                    message: '存在同名商品,请检查'
+                }
+            };
+
             if ( !_id ) {
                 // 创建
                 const { standards } = event.data;
@@ -307,7 +324,9 @@ export const main = async ( event, context ) => {
                 delete event.data['standards'];
     
                 const create$ = await db.collection('goods').add({
-                    data: event.data,
+                    data: Object.assign({ }, event.data, {
+                        isDelete: false
+                    })
                 });
                 _id = create$._id;
     
