@@ -76,7 +76,7 @@ Page({
     fetchList( ) {
         const { page, result, search, canLoadMore, loadingList } = this.data;
 
-        if ( !canLoadMore || !search || loadingList ) { return; }
+        if ( !canLoadMore || loadingList ) { return; }
 
         this.setData({
             loadingList: true
@@ -110,7 +110,7 @@ Page({
     onConfirm({ detail }) {
 
         const search = detail;
-        this.addHistory( search );
+        !!String( search ).trim( ) && this.addHistory( search );
       
         this.setData({
             page: 0,

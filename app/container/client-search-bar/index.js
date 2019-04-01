@@ -59,12 +59,12 @@ Component({
             /** 确定 */
             onConfirm( ) {
                   const { search } = this.data;
-                  if ( !search ) {
-                        return wx.showToast({
-                              icon: 'none',
-                              title: '未输入内容哦'
-                        })
-                  }
+                  // if ( !search ) {
+                  //       return wx.showToast({
+                  //             icon: 'none',
+                  //             title: '未输入内容哦'
+                  //       })
+                  // }
                   this.triggerEvent('confirm', search );
             },
 

@@ -36,8 +36,15 @@
             {{ item }}
         </view>
     </view>
+
+    <!-- 暂无更多 -->
+    <view
+        class="ps-nomore"
+        wx:if="{{ result$.length === 0 && !!search && !canLoadMore }}"
+    >
+        暂无相关商品
+    </view>
   
-    
     <!-- 列表 -->
     <scroll-view
         scroll-y
@@ -68,7 +75,6 @@
         </view>
 
     </scroll-view>
-
 
 
 </view>
