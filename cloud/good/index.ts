@@ -139,7 +139,8 @@ export const main = async ( event, context ) => {
             const total$ = await db.collection('goods')
                 .where({
                     category,
-                    title: search
+                    title: search,
+                    isDelete: _.neq( true )
                 })
                 .count( );
 
@@ -147,7 +148,8 @@ export const main = async ( event, context ) => {
             const data$ = await db.collection('goods')
                 .where({
                     category,
-                    title: search
+                    title: search,
+                    isDelete: _.neq( true )
                 })
                 .limit( limit )
                 .skip(( event.data.page - 1 ) * limit )
@@ -229,7 +231,9 @@ export const main = async ( event, context ) => {
                     new RegExp(event.data.title.replace(/\s+/g, ""), 'i') : null
             };
 
-            const temp = { };
+            const temp = {
+                isDelete: _.neq( true )
+            };
             Object.keys( searchReq ).map( key => {
                 if ( !!searchReq[ key ]) {
                     temp[ key ] = searchReq[ key ];

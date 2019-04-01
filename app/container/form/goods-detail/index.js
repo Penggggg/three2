@@ -526,7 +526,7 @@ Component({
 
   attached: function () {
     this.fetchDic( );
-    this.fetchDetail( );
+    // this.fetchDetail( );
     this.runComputed( )
   }
 

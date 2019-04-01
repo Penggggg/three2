@@ -25,13 +25,23 @@
         <view
             class="gbs-btn-special"
         >
+
+            <!-- 已删除 -->
+            <view
+                wx:if="{{ detail._id && detail.isDelete }}"
+                class="gbs-btn-special-item grey"
+            >   
+                已删除
+            </view>
+        
             <!-- 已下架 -->
             <view
-                wx:if="{{ detail._id && !detail.visiable }}"
+                wx:elif="{{ detail._id && !detail.visiable }}"
                 class="gbs-btn-special-item grey"
             >   
                 已下架
             </view>
+
             <!-- 已售罄 -->
             <view
                 wx:elif="{{ detail._id && detail.visiable && !hasStock }}"
@@ -39,8 +49,8 @@
             >   
                 已售罄
             </view>
-            <!-- 加入购物车 -->
-            <!-- 立即购买 -->
+
+            <!-- 加入购物车、立即购买 -->
             <view
                 wx:else
                 class="gbs-btn-special-item"

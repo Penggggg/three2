@@ -42,7 +42,7 @@ Page({
         /** 上下架选项 */
         closeOpts: [
             {
-                label: '已下架',
+                label: '未上架',
                 value: true
             }, {
                 label: '上架中',
