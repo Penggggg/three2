@@ -143,7 +143,7 @@ export const main = async ( event, context ) => {
             }));
 
             // 去重错误
-            const errorList: string[] = [ ];
+            const errorList: string[ ] = [ ];
             checks$.map(( x, k ) => {
                 if (  x.total > 0 ) {
                     errorList.push( list[ k ].title );

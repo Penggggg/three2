@@ -19,6 +19,11 @@ Component({
         shouldChoiceStander: {
             type: Boolean,
             value: false
+        },
+        // 是否需要检查产品是否已上架
+        shouldVisiable: {
+            type: Boolean,
+            value: false
         }
     },
 
@@ -40,7 +45,6 @@ Component({
         selectedProductId: null,
         /** 当前选中的商品 */
         selectedProduct: null,
-
         /** 已选择的型号列表 */
         selectedStanderIds: [ ],
         /** 展示型号选择框 */
@@ -61,7 +65,7 @@ Component({
         /** 点击modal确定(产品) */
         onOk( ) {
 
-            const { list, selectedProduct, selectedProductId } = this.data;
+            const { list, selectedProduct, selectedProductId, shouldVisiable } = this.data;
 
             // 如果没有搜索过 就变搜索
             if ( list.length === 0 ) { 
@@ -76,6 +80,16 @@ Component({
 
             } else {
 
+                // 是否需要坚持产品是否已上架
+                if ( shouldVisiable ) {
+                    if ( !selectedProduct.visiable ) {
+                        return wx.showToast({
+                            icon: 'none',
+                            title: '此商品未上架'
+                        })
+                    }
+                }
+
                 // 需要选择型号
                 if ( this.data.shouldChoiceStander && selectedProduct.standards.length > 0 ) {
 
@@ -83,7 +97,7 @@ Component({
                         show$: false,
                         show2$: true,
                         selectedStanderIds: [ ],
-                    })
+                    });
 
                 // 不需要选择型号
                 } else {

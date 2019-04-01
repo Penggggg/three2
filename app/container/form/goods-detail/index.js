@@ -124,6 +124,9 @@ Component({
                   rules: [{
                     validate: val => !!val,
                     message: '请设置商品划线价'
+                  }, {
+                    validate: val => Number( val ) > 0,
+                    message: '划线价不能为0'
                   }]
                 }, {
                   title: '规格型号',
@@ -141,6 +144,9 @@ Component({
                   rules: [{
                     validate: val => !!val,
                     message: '请设置商品单价'
+                  }, {
+                    validate: val => Number( val ) > 0,
+                    message: '价格不能为0'
                   }]
                 });
                 meta.splice( 9, 0, {
@@ -148,7 +154,11 @@ Component({
                   label: '团购价',
                   type: 'number',
                   placeholder: '鼓励多个客户在一趟团购行程中同时下单',
-                  value: undefined
+                  value: undefined,
+                  rules: [{
+                    validate: val => val !== null && val !== undefined && !!String( val ).trim( ) ? Number( String( val ).trim( )) > 0 : true,
+                    message: '价格不能为0'
+                  }]
                 });
                 meta.splice( 10, 0, {
                   key: 'stock',
@@ -256,20 +266,29 @@ Component({
           icon: 'none',
         });
       }
-      const { name, img, price } = this.data.standarForm;
+      const { name, img, price, groupPrice } = this.data.standarForm;
+   
       if ( !name || !name.trim( )) {
         return errMsg('请填写型号名称');
       }
 
-      if ( price <= 0 ) {
+      if ( price === undefined || price === null || !String( price ).trim( )) {
         return errMsg('请填写价格');
       } 
+
+      if ( price !== undefined && price !== null  && Number( price ) <= 0 ) {
+        return errMsg('价格不能为0');
+      }
+
+      if ( groupPrice !== undefined && groupPrice !== null  && Number( groupPrice ) <= 0 ) {
+        return errMsg('价格不能为0');
+      }
 
       if ( !img ) {
         return errMsg('请上传型号图片');
       }
 
-      let origin = [...this.data.standards];
+      let origin = [...this.data.standards ];
       if ( this.data.selectingStandarIndex === null ) {
         origin.push( this.data.standarForm );
       } else {

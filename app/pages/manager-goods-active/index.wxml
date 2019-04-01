@@ -151,6 +151,7 @@
         bind:close="toggleProduct"
         bind:confirm="onConfirmProduct"
         shouldChoiceStander="{{ true }}"
+        shouldVisiable="{{ true }}"
     />
 
     <!-- 商品一口价活动信息弹框 -->

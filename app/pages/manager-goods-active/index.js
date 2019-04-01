@@ -93,13 +93,17 @@ Page({
                         type: 'number',
                         placeholder: '无团购价，则不填写',
                         value: undefined,
+                        // rules: [{
+                        //     validate: val => !!val && !!String( val ).trim( ),
+                        //     message: '商品活动价不能为空'
+                        //   }, {
+                        //       validate: val => Number( val ) > 0,
+                        //       message: '团购价不能为0'
+                        //   }]
                         rules: [{
-                            validate: val => !!val && !!String( val ).trim( ),
-                            message: '商品活动价不能为空'
-                          }, {
-                              validate: val => Number( val ) > 0,
-                              message: '团购价不能为0'
-                          }]
+                            validate: val => val !== null && val !== undefined && !!String( val ).trim( ) ? Number( String( val ).trim( )) > 0 : true,
+                            message: '价格不能为0'
+                        }]
                     }, {
                         key: 'endTime',
                         label: '结束时间',
