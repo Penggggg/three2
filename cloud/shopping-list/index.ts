@@ -643,7 +643,7 @@ export const main = async ( event, context ) => {
 
     /**
      * @description
-     * 等待拼团列表 / 可拼团列表 ( 可指定商品 - 商品详情页面 )
+     * 等待拼团列表 / 可拼团列表 ( 可指定商品: 商品详情页面 )
      * {
      *    tid,
      *    pid,

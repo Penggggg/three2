@@ -241,7 +241,7 @@ Page({
             data: {
                 tid,
                 limit: 1,
-                type: 'pin',
+                // type: 'pin', 等待拼团，已拼团，均有
                 showUser: false
             },
             url: 'shopping-list_pin',

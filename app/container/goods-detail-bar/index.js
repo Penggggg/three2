@@ -171,7 +171,6 @@ Component({
         },
         /** 处理商品详情 */
         dealDetail( data ) {
-            console.log('???', data )
             if ( !data ) { return; }
 
             let result = false;
