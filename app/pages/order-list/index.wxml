@@ -239,7 +239,7 @@
                             <view class="pol-trip-img-block">
                                 <image
                                     lazy-load="{{ true }}"
-                                    mode="scaleToFill"
+                                    mode="aspectFill"
                                     class="pol-trip-order-img"
                                     src="{{ order.img[ 0 ]}}"
                                     bindtap="goGoodDetail"

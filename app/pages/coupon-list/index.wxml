@@ -59,7 +59,7 @@
                 >
                     <image
                         src="{{ item.img }}"
-                        mode="scaleToFill"
+                        mode="aspectFill"
                         class="pcl-swiper-image"
                     />
                     <view class="pcl-swiper-title">

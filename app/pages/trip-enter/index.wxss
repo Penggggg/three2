@@ -623,7 +623,7 @@
 .te-pinest-img {
     width: 100%;
     border-radius: 2px;
-    min-height: 300rpx;
+    height: 300rpx;
 }
 
 .te-pinest-text-block {

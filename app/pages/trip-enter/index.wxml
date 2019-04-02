@@ -70,7 +70,7 @@
                         >
                             <view class="te-pinest-img-con">
                                 <image
-                                    mode="widthFix"
+                                    mode="aspectFill"
                                     class="te-pinest-img"
                                     src="{{ pinest.detail.good.img[ 0 ]}}"
                                 />
@@ -78,7 +78,7 @@
                             <view class="te-pinest-text-block">
                                 <view class="te-pinest-text">拼团之</view>
                                 <image
-                                    mode="widthFix"
+                                    mode="aspectFill"
                                     class="te-pinest-icon"
                                     src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-star-3.png"
                                 />

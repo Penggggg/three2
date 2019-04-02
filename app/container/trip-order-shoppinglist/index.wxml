@@ -40,7 +40,7 @@
                     <!-- 图片 -->
                     <view class="tos-img-block">
                         <image
-                            mode="scaleToFill"
+                            mode="aspectFill"
                             src="{{ item.img }}"
                             data-data="{{ item }}"
                             class="tos-trip-order-img"
