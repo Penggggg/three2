@@ -5,6 +5,7 @@
   <my-active-form
     id="form1"
     meta="{{ meta }}"
+    bindchange="onForm1Change"
   />
 
  <!-- 规格信息 -->

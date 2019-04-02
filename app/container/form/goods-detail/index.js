@@ -57,7 +57,7 @@ Component({
     
             // 表单数据
             meta( ) {
-              
+
               const meta = [
                 {
                   title: '基本信息',
@@ -518,6 +518,20 @@ Component({
         standards: [ ],
         hasBeenUploaded: [ ],
         selectingStandarIndex: null,
+      });
+    },
+
+    /** 表单1 */
+    onForm1Change({ detail }) {
+      const { img } = detail;
+      const { hasBeenUploaded } = this.data;
+      
+      const needUpdate = img.some(( x, k ) => {
+        return x !== hasBeenUploaded[ k ];
+      });
+
+      needUpdate && this.setData({
+        hasBeenUploaded: img
       });
     }
 
