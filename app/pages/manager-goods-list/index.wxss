@@ -77,7 +77,7 @@
 
 .pmgl-item-img {
   width: 180rpx;
-  min-height: 180rpx;
+  height: 180rpx;
 }
 
 .pmgl-item-info-block {

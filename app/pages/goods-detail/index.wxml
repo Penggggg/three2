@@ -197,12 +197,18 @@
                             class="gd-activity-item"
                             wx:for="{{ activities }}"
                         >
-                            <image
-                                class="gd-activity-img"
-                                src="{{ item.img }}"
-                                data-img="{{ item.img }}"
-                                bindtap="previewSingleImg"
-                            />
+                            <view
+                                class="gd-item-img-con"
+                            >
+                                <image
+                                    mode="aspectFill"
+                                    class="gd-item-img"
+                                    src="{{ item.img }}"
+                                    lazy-load="{{ true }}"
+                                    data-img="{{ item.img }}"
+                                    bindtap="previewSingleImg"
+                                />
+                            </view>
                             <view class="gd-activity-info">
                                 <view >
                                     <view class="gd-activity-title">

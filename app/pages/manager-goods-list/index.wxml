@@ -36,7 +36,7 @@
                 class="pmgl-item-img-con"
             >
                 <image
-                    mode="widthFix"
+                    mode="aspectFill"
                     class="pmgl-item-img"
                     src="{{ item.img[ 0 ]}}"
                     lazy-load="{{ true }}"

@@ -33,7 +33,7 @@
                 class="pga-item-img-con"
             >
                 <image
-                    mode="widthFix"
+                    mode="aspectFill"
                     class="pga-item-img"
                     src="{{ item.img$ }}"
                     lazy-load="{{ true }}"
