@@ -47,7 +47,7 @@
                         <view class="ptd-waitpin-img-container">
                             <image
                                 lazy-load="true"
-                                mode="widthFix"
+                                mode="aspectFill"
                                 class="ptd-waitpin-img"
                                 src="{{ item.detail.img }}"
                             />
@@ -146,7 +146,7 @@
                     class="ptd-pin-img-block with-standar"
                 >
                     <image 
-                        mode="widthFix"
+                        mode="aspectFill"
                         lazy-load="{{ true }}"
                         class="ptd-pin-img-standar"
                         src="{{ item.detail.img }}"
@@ -155,7 +155,7 @@
                     />
                     <view class="ptd-pin-img-small-con">
                         <image
-                            mode="widthFix"
+                            mode="aspectFill"
                             lazy-load="{{ true }}"
                             class="ptd-pin-img-small"
                             src="{{ item.detail.good.img[ 0 ]}}"
@@ -204,7 +204,7 @@
                     <view class="ptd-pin-item-action-block">
                         <view class="ptd-pin-item-good-imgs">
                             <image
-                                mode="scaleToFill"
+                                mode="aspectFill"
                                 lazy-load="{{ true }}"
                                 src="{{ img }}"
                                 wx:for-index="k"

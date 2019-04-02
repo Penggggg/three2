@@ -28,11 +28,12 @@
             >
                 <swiper-item>
                     <image
-                        mode="widthFix"
+                        mode="aspectFill"
                         src="{{ item }}"
                         data-img="{{ item }}"
                         class="pgd-swiper-img"
                         bindtap='previewImg'
+                        lazy-load="{{ true }}"
                     />
                 </swiper-item>
             </block>

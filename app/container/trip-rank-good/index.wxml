@@ -10,7 +10,7 @@
                 wx:if="{{ top3$[ 1 ]}}"
             >
                 <image
-                    mode="widthFix"
+                    mode="aspectFill"
                     data-pid="{{ top3$[ 1 ].pid }}"
                     bindtap="goGoodDetail"
                     class="trg-square-img two"
@@ -46,7 +46,7 @@
                 wx:if="{{ top3$[ 0 ]}}"
             >
                 <image
-                    mode="widthFix"
+                    mode="aspectFill"
                      data-pid="{{ top3$[ 0 ].pid }}"
                     bindtap="goGoodDetail"
                     class="trg-square-img one"
@@ -81,7 +81,7 @@
                 wx:if="{{ top3$[ 2 ]}}"
             >
                 <image
-                    mode="widthFix"
+                    mode="aspectFill"
                      data-pid="{{ top3$[ 2 ].pid }}"
                     bindtap="goGoodDetail"
                     class="trg-square-img three"
@@ -133,7 +133,7 @@
                         class="trg-outtop3-square odd"
                     >
                         <image
-                            mode="widthFix"
+                            mode="aspectFill"
                             class="trg-outtop3-square-img"
                             src="{{ item.img }}"
                         />
@@ -176,7 +176,7 @@
                         class="trg-outtop3-square even"
                     >
                         <image
-                            mode="widthFix"
+                            mode="aspectFill"
                             class="trg-outtop3-square-img"
                             src="{{ item.img }}"
                         />

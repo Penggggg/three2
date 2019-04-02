@@ -234,6 +234,6 @@
 
 .con-ptd-rank-order-img {
     width: 90rpx;
-    min-height: 90rpx;
+    height: 90rpx;
     border-radius: 5px;
 }

@@ -49,13 +49,13 @@
 
 .trg-square-img.one {
     width: 270rpx;
-    min-height: 270rpx;
+    height: 270rpx;
 }
 
 .trg-square-img.two,
 .trg-square-img.three {
     width: 190rpx;
-    min-height: 190rpx
+    height: 190rpx
 }
 
 .trg-top-name {
@@ -165,7 +165,7 @@
     top: 50%;
     left: 50%;
     width: 160rpx;
-    min-height: 160rpx;
+    height: 160rpx;
     position: absolute;
     transform: translate( -50%, -50% ) rotate( -45deg );
 }
