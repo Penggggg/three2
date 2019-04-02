@@ -485,6 +485,7 @@ Component({
           url: `good_edit`,
           success: res => {
             if ( res.status !== 200 ) { return; }
+            this.initForm( );
             wx.showToast({
                 title: _id ? '更新成功' : '创建成功'
             });
@@ -520,13 +521,25 @@ Component({
           }
         }
       });
+    },
+
+    /** 初始化商品详情 */
+    initForm( ) {
+      const form1 = this.selectComponent('#form1');
+      const form2 = this.selectComponent('#form2');
+      form1 && form1.reset( );
+      form2 && form2.reset( );
+      this.setData({
+        standards: [ ],
+        hasBeenUploaded: [ ],
+        selectingStandarIndex: null,
+      });
     }
 
   },
 
-  attached: function () {
+  attached: function ( ) {
     this.fetchDic( );
-    // this.fetchDetail( );
     this.runComputed( )
   }
 

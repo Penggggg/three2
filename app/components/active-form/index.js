@@ -169,16 +169,18 @@ Component({
       })
     },
 
-    /** 处理本地formData */
-    dealFormData( ) {
+    /** 把obj合并到原始meta */
+    dealFormData2( theObj ) {
+
       let selectTypeIndex = { };
-      let obj = Object.assign({ }, this.data.formData );
+      let obj = JSON.parse( JSON.stringify( theObj ));
+
       this.data.meta.map( formItem => {
         if ( !!formItem.key ) {
           // 处理formData
           obj = Object.assign({ }, obj, {
-            [ formItem.key ]: this.data.formData[ formItem.key ] !== undefined ?
-              this.data.formData[ formItem.key] :
+            [ formItem.key ]: obj[ formItem.key ] !== undefined ?
+            obj[ formItem.key] :
               Array.isArray( formItem.value) ?
                 [ ...formItem.value ] : 
                 typeof formItem.value === 'object' && typeof formItem.value.getTime !== 'function' ?
@@ -192,8 +194,18 @@ Component({
             });
           }
         }
-
       });
+      return {
+        obj,
+        selectTypeIndex
+      };
+    },
+
+    /** 处理本地formData */
+    dealFormData( ) {
+      let theObj = Object.assign({ }, this.data.formData );
+      
+      const { obj, selectTypeIndex } = this.dealFormData2( theObj );
       this.setData({
         formData: obj,
         selectFormItemIndex: selectTypeIndex
@@ -266,11 +278,6 @@ Component({
       return !isExistedErr;
     },
 
-    /** public - 校验并拿到校验结果 */
-    getData( ) {
-      return this.validate( );
-    },
-
     /** 点击modal */
     modalClick({ detail }) {
       
@@ -311,13 +318,31 @@ Component({
       this.triggerEvent('change', this.data.formData );
     },
 
-    // 设置表单
+    /** 外部方法： 校验并拿到校验结果 */
+    getData( ) {
+      return this.validate( );
+    },
+
+    // 外部方法：设置表单
     set( obj ) {
       this.setData({
         formData: Object.assign({ }, this.data.formData, { ...obj })
       });
       Object.keys( obj ).map( k => this.validateItem( k ));
       this.triggerEvent('change', this.data.formData );
+    },
+    
+    // 外部方法：重置表单
+    reset( ) {
+      this.setData({
+        errData: { }
+      });
+      const { obj, selectTypeIndex } = this.dealFormData2({ });
+
+      this.setData({
+        formData: obj,
+        selectFormItemIndex: selectTypeIndex
+      });
     }
 
   },
