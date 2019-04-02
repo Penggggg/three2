@@ -251,7 +251,7 @@ Component({
           img: null
         }
       });
-      const imgEle = this.selectComponent('.img-upload');
+      const imgEle = this.selectComponent('.img-s-upload');
       imgEle && imgEle.reset( );
     },
 
@@ -340,24 +340,9 @@ Component({
       } else if ( index === 1 && selectingStandarIndex !== null) {
         this.deleteStandar( );
       } else if ( index === 2 && selectingStandarIndex !== null) {
-        this.addStandard();
+        this.addStandard( );
       } else if ( index === 1 && selectingStandarIndex === null ) {
-        this.addStandard();
-      }
-    },
-
-    /** 点击modal */
-    modalClick2({ detail }) {
-      const index = detail.index;
-      const { selectingStandarIndex } = this.data;
-      if ( index === 0 ) {
-        this.toogleStandard2( );
-      } else if ( index === 1 && selectingStandarIndex !== null) {
-        this.deleteStandar( );
-      } else if ( index === 2 && selectingStandarIndex !== null) {
-        this.addStandard();
-      } else if ( index === 1 && selectingStandarIndex === null ) {
-        this.addStandard();
+        this.addStandard( );
       }
     },
 
@@ -370,7 +355,7 @@ Component({
         standarForm: this.data.standards[ index ]
       });
       
-      const imgEle = this.selectComponent('.img-upload');
+      const imgEle = this.selectComponent('.img-s-upload');
       imgEle && imgEle.reset( );
     },
 

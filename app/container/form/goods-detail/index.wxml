@@ -97,7 +97,7 @@
       bindinput='standarInput'
     />
     <my-img-upload
-      class="img-upload"
+      class="img-s-upload"
       data-key="img"
       max="{{ 1 }}"
       bindchange="onImgChange"
