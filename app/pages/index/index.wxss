@@ -117,7 +117,7 @@
 
 .pi-new-title-img {
     width: 100%;
-    min-height: 100rpx;
+    height: 100rpx;
 }
 
 .pi-new-title {
@@ -184,7 +184,7 @@
 
 .pi-new-item-img {
     width: 100%;
-    min-height: 160rpx;
+    height: 160rpx;
 }
 
 .pi-new-decorate-text {

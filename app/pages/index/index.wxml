@@ -70,7 +70,7 @@
                         <view class="pi-new-title-img-icon"></view>
                         <view class="pi-new-title-img-con">
                             <image 
-                                mode="aspectFit"
+                                mode="aspectFill"
                                 lazy-load="{{ true }}"
                                 class="pi-new-title-img"
                                 src="{{ newList$[ 0 ].img[ 0 ]}}"
@@ -124,7 +124,7 @@
                                         class="pi-new-item-img-con"
                                     >
                                         <image 
-                                            mode="widthFix"
+                                            mode="aspectFill"
                                             lazy-load="{{ true }}"
                                             class="pi-new-item-img"
                                             src="{{ item.img[ 0 ]}}"
