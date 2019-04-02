@@ -341,6 +341,10 @@ Page({
                         success: res => {
                             const { status } = res;
                             if ( status === 200 ) {
+
+                                const form = this.selectComponent('#form1');
+                                form.reset( );
+
                                 // 初始化
                                 this.setData({
                                     current: null,
@@ -350,6 +354,7 @@ Page({
                                     title: '创建成功！'
                                 });
                                 this.reloadList( );
+                                
                             }
                         }
                     });
@@ -383,6 +388,9 @@ Page({
                         url: 'activity_update-good-discount',
                         success: res => {
                             if ( res.status === 200 ) {
+
+                                const form = this.selectComponent('#form1');
+                                form.reset( );
 
                                 wx.showToast({
                                     title: '更新成功！'

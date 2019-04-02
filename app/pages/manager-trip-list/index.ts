@@ -69,7 +69,7 @@ Page({
                 totalPage: 1
             });
         }
-        console.log('=====')
+
         this.setData!({
             loadingList: true
         });

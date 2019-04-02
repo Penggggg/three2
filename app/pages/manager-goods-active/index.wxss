@@ -214,3 +214,17 @@
     
   }
   
+  .pga-item-img-con {
+    width: 180rpx;
+    height: 180rpx;
+    overflow: hidden;
+    margin-right: 25rpx;
+    border-radius: 3px;
+    border: 2px solid #fff;
+    box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.12 );
+  }
+  
+  .pga-item-img {
+    width: 180rpx;
+    min-height: 180rpx;
+  }

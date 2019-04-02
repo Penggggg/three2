@@ -29,13 +29,25 @@
             bindtap="onTapItem"
         >
             <!-- 图片 -->
-            <image
+            <view
+                class="pga-item-img-con"
+            >
+                <image
+                    mode="widthFix"
+                    class="pga-item-img"
+                    src="{{ item.img$ }}"
+                    lazy-load="{{ true }}"
+                    catchtap="goDetail"
+                    data-pid="{{ item.pid }}"
+                />
+            </view>
+            <!-- <image
                 src="{{ item.img$ }}"
                 mode="scaleToFill"
                 class="pga-item-img"
                 catchtap="goDetail"
                 data-pid="{{ item.pid }}"
-            />
+            /> -->
 
            <!-- 标题、型号  -->
             <view class="pga-item-info-block">
