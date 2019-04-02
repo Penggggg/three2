@@ -676,6 +676,12 @@ export const main = async ( event, context ) => {
      */
     app.router('batch-adjust', async( ctx, next ) => {
         try {
+
+            /** 是否能拼团 */
+            let canGroupUserMapCount: {
+                [ k: string ] : number
+            } = { };
+
             const { tid, orders, notification } = event.data;
             const getWrong = message => ctx.body = {
                 message,
@@ -698,19 +704,28 @@ export const main = async ( event, context ) => {
 
             // 更新订单
             await Promise.all( orders.map( order => {
+                
+                // 有团购价、大于2人购买，且被分配数均大于0，该订单才达到“团购”的条件
+                const canGroup = !!orders.find( o => {
+                    return o.oid !== order.oid &&
+                        o.openid !== order.openid && 
+                        o.pid === order.pid && o.sid === order.sid &&
+                        o.allocatedCount > 0 && order.allocatedCount > 0 &&
+                        !!o.allocatedGroupPrice
+                });
+
+                if ( canGroup ) {
+                    canGroupUserMapCount = Object.assign({ }, canGroupUserMapCount, {
+                        [ order.openid ]: canGroupUserMapCount[ order.openid ] === undefined ? 1 : canGroupUserMapCount[ order.openid ] + 1
+                    });
+                }
+
                 return db.collection('order')
                     .doc( order.oid )
                     .update({
                         data: {
-                            base_status: '2',
-                            // 有团购价、大于2人购买，且被分配数均大于0，才达到“团购”的条件
-                            canGroup: !!orders.find( o => {
-                                return o.oid !== order.oid &&
-                                    o.openid !== order.openid && 
-                                    o.pid === order.pid && o.sid === order.sid &&
-                                    o.allocatedCount > 0 && order.allocatedCount > 0 &&
-                                    !!o.allocatedGroupPrice
-                            })
+                            canGroup,
+                            base_status: '2'
                         }
                     })
             }));
@@ -733,14 +748,18 @@ export const main = async ( event, context ) => {
 
             // console.log('------ 以下用户发送推送 ------', orders, users );
             const rs = await Promise.all( users.map( openid => {
+
                 const target = orders.find( order => order.openid === openid &&
                     (!!order.prepay_id || !!order.form_id ));
+
                 return cloud.callFunction({
                     data: {
                         data: {
                             touser: openid,
                             data: {
-                                title: '您购买的商品已到货',
+                                title: canGroupUserMapCount[ String( openid )] ?
+                                    `拼团${ canGroupUserMapCount[ String( openid )]}件！您购买的商品已到货` :
+                                    '您购买的商品已到货',
                                 time: `[行程]${trip.title}`
                             },
                             form_id: target.prepay_id || target.form_id

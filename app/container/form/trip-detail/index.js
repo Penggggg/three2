@@ -610,9 +610,7 @@ Component({
                                     title: '关闭成功'
                                 });
                                 setTimeout(( ) => {
-                                    wx.navigateBack({
-                                        delta: 1
-                                    })
+                                    navTo(`/pages/manager-trip-order/index?id=${tid}`)
                                 }, 200 );
                             }
                         }
