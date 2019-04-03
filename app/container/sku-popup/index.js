@@ -88,6 +88,7 @@ Component({
         },
         /** 初始化sku，排第一位的会被默认选中 */
         initSelectedSku( val ) {
+            console.log('...', val );
             const skus  = this.data.skuItems;
             if ( !skus || skus.length === 0 ) { return; }
 

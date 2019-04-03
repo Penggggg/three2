@@ -51,7 +51,7 @@
     padding-left: 300rpx;
 }
 
-.sku-img {
+.sku-img-block {
     top: -80rpx;
     left: 20rpx;
     width: 220rpx;
@@ -61,6 +61,11 @@
     border-radius: 5px;
     position: absolute;
     box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+}
+
+.sku-img {
+    width: 100%;
+    height: 100%;
 }
 
 .sku-img.hide {
@@ -216,3 +221,39 @@
     font-size: 30rpx;
 }
 
+
+.sku-tag-block {
+    top: 5rpx;
+    right: 5rpx;
+    display: flex;
+    width: 80rpx;
+    height: 25rpx;
+    border-radius: 3px;
+    padding: 3rpx 5rpx;
+    align-items: center;
+    background: #ff8787; 
+    position: absolute;
+    margin: 0 0 10rpx 15rpx;
+    background: -webkit-linear-gradient(to right, #ff61ab, #ff8787); 
+    background: linear-gradient(to right, #ff61ab, #ff8787); 
+}
+
+.sku-activity-icon {
+    width: 20rpx;
+    margin-right: 2rpx;
+    display: inline-block;
+}
+
+.sku-tag-text {
+    color: #fff;
+    font-size: 17rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+
+}
+
+.sku-pin-tips {
+    color: #333;
+    font-size: 30rpx;
+    font-weight: bold;
+    margin-right: 10rpx;
+}

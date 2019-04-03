@@ -44,7 +44,9 @@ Page({
         // 商品在本行程的购物清单列表
         shopping: [ ],
         // 一口价活动列表
-        activities: [ ]
+        activities: [ ],
+        // 本趟能够拼团的sku
+        canPinSku: [ ]
     },
 
     /** 设置computed */
@@ -264,8 +266,12 @@ Page({
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
                 this.setData!({
-                    shopping: data
-                })
+                    shopping: data,
+                    canPinSku: data.map( x => ({
+                        pid: x.pid,
+                        sid: x.sid
+                    }))
+                });
             }
         })
     },
@@ -372,6 +378,12 @@ Page({
     onLoad: function (options) {
         this.watchRole( );
         this.runComputed( );
+
+        // id=3fc2c9075ca40d98000afb8c1fe34053&tid=XDGzG97E7L4wLIdu
+        this.setData!({
+            id: '3fc2c9075ca40d98000afb8c1fe34053',
+            tid: 'XDGzG97E7L4wLIdu'
+        })
         
         if ( !options!.id ) { return; }
         this.setData!({

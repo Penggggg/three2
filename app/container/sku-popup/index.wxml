@@ -43,17 +43,38 @@
                         src="{{ selectedSku.img }}"
                         data-img="{{ selectedSku.img }}"
                     />
+                    <view
+                        class="sku-tag-block"
+                    >
+                        <image
+                            mode="widthFix"
+                            lazy-load="{{ true }}"
+                            class="sku-activity-icon"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                        />
+                        <view class="sku-tag-text">
+                            可拼团
+                        </view>
+                    </view>
                 </view>
 
                 <!-- 价格 -->
                 <view class="sku-price-block" wx:if="{{ selectedSku }}">
                     <view class="sku-price-set">
+                        <view
+                            class="sku-pin-tips"
+                            wx:if="{{ selectedSku.canPin }}"
+                        >
+                            拼团价
+                        </view>
                         <wxc-price
                             icon="sub"
                             decimal="small"
                             class="sku-price"
                         > 
-                            {{ selectedSku.price }}
+                            {{
+                                selectedSku.canPin ? selectedSku.groupPrice : selectedSku.price
+                            }}
                         </wxc-price>
                     </view>
                     <view
@@ -64,19 +85,19 @@
                     </view>
                     <view
                         class="sku-title"
+                        wx:if="{{ selectedSku.title !== '默认型号' }}"
                     >
                         已选择：{{ selectedSku.title }}
                     </view>
                     <view
                         class="sku-pin-title"
-                         wx:if="{{ selectedSku.groupPrice }}"
                     >
-                        拼团价：<wxc-price
+                        {{ selectedSku.canPin ? '原价：' : selectedSku.groupPrice ? '拼团价：' : '' }}<wxc-price
                             icon="sub"
                             decimal="small"
                             class="sku-price sm"
                         > 
-                            {{ selectedSku.groupPrice }}
+                            {{ selectedSku.canPin ? selectedSku.price : selectedSku.groupPrice || '' }}
                         </wxc-price>
                     </view>
                 </view>
@@ -91,13 +112,17 @@
 
                 <!-- 型号 -->
                 <view class="sku-standards-block">
-                    <view class="sku-info-title">
+                    <view
+                        class="sku-info-title"
+                        wx:if="{{ skuItems.length > 0 && skuItems[ 0 ].title !== '默认型号' }}"
+                    >
                         型号
                     </view>
                     <view class="sku-standards" wx:if="{{ selectedSku }}">
                         <view
                             wx:for="{{ skuItems }}"
                             wx:key="{{ index }}"
+                            wx:if="{{ item.title !== '默认型号' }}"
                             data-standard="{{ item }}"
                             bindtap="onSelectSku"
                             class="sku-standards-item {{ item.canSelect ? '' : 'out_select' }} {{ item._id === selectedSku._id ? 'selecting' : '' }} "

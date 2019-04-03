@@ -21,6 +21,14 @@ Component({
         activities: {
             type: Object,
             value: [ ]
+        },
+        /**
+         * 本躺行程，可以拼团的列表
+         * [{ pid: string, sid: string }]
+         */
+        canPinSku: {
+            type: Array,
+            value: [ ]
         }
     },
 
@@ -61,9 +69,22 @@ Component({
     },
 
     computed: {
-        // sku展示队列 _id, canSelect是否能选、 title名称、price价格、stock库存、pid产品id、sid型号id、img图片、limit限购数量
+        /**
+         * @description
+         * sku展示队列
+         * _id
+         * img 图片
+         * sid 型号id
+         * pid 产品id
+         * stock 库存
+         * title 名称
+         * price 价格
+         * limit 限购数量
+         * canSelect 是否能选
+         * canPin 本趟是否能拼团
+         */
         skuItems$( ) {
-            const { detail, activities } = this.data;
+            const { detail, activities, canPinSku } = this.data;
 
             if ( !detail ) { 
                 return [ ];
@@ -86,6 +107,7 @@ Component({
                     sid: null,
                     limit,
                     groupPrice,
+                    canPin: !!canPinSku.find( x => x.pid === _id ),
                     canSelect: stock === undefined || ( stock !== undefined && stock > 0 )
                 }];
 
@@ -103,15 +125,15 @@ Component({
                 skuItems = standards.map( x => ({
                     _id: x._id,
                     sid: x._id,
-                    pid: x.pid,
+                    pid: x.pid, 
                     title: x.name,
                     img: x.img,
                     stock: x.stock,
                     price: x.price,
                     limit: x.limit,
                     groupPrice: x.groupPrice,
+                    canPin: !!canPinSku.find( y => y.pid === x.pid && y.sid === x._id ),
                     canSelect: x.stock === undefined || ( x.stock !== undefined && x.stock > 0 )
-                    // canSelect: false
                 }))
 
                 // 根据活动 更改价格

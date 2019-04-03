@@ -13,6 +13,19 @@
     <view
         wx:else
     >
+
+        <!-- 商品拼团提示 -->
+        <view
+            class="gd-pin-tips"
+            wx:if="{{ shopping.length > 0 }}"
+        >
+            <wxc-notice
+                color="#fff"
+                bg-color="transparent"
+                scroll="{{ true }}"
+                notice="省！此商品可拼团"
+            />
+        </view>
         
         <!-- 轮播图 -->
         <swiper
@@ -290,6 +303,7 @@
         <my-goods-detail-bar
             pid="{{ id }}"
             detail="{{ detail }}"
+            canPinSku="{{ canPinSku }}"
             activities="{{ activities }}"
         />
 
