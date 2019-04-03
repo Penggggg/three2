@@ -45,6 +45,7 @@
                     />
                     <view
                         class="sku-tag-block"
+                        wx:if="{{ selectedSku.canPin }}"
                     >
                         <image
                             mode="widthFix"

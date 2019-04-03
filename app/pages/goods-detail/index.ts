@@ -378,12 +378,11 @@ Page({
     onLoad: function (options) {
         this.watchRole( );
         this.runComputed( );
-
-        // id=3fc2c9075ca40d98000afb8c1fe34053&tid=XDGzG97E7L4wLIdu
-        this.setData!({
-            id: '3fc2c9075ca40d98000afb8c1fe34053',
-            tid: 'XDGzG97E7L4wLIdu'
-        })
+        
+        // this.setData!({
+        //     id: '71f2cd945ca40f04000c272732f7398d',
+        //     tid: 'XDGzG97E7L4wLIdu'
+        // })
         
         if ( !options!.id ) { return; }
         this.setData!({
