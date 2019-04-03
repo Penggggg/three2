@@ -842,7 +842,7 @@ to {transform: translate( -50%,  -20% ) rotate( 180deg );}
     width: 100%;
     border-radius: 5px;
     /* border: 2px solid #fff; */
-    min-height: 100%;
+    height: 100%;
     position: absolute;
     /* box-shadow: 0 0 15px rgba( 0, 0, 0, 0.25 ); */
 }

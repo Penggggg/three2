@@ -537,9 +537,9 @@
                             wx:if="{{ item.type === 'good' && !!item.img }}"
                         >
                             <image
+                                mode="aspectFill"
                                 lazy-load="{{ true }}"
                                 src="{{ item.img }}"
-                                mode="widthFix"
                                 class="pol-task-good-img"
                                 
                             />
