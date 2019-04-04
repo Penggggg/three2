@@ -268,6 +268,7 @@ export const main = async ( event, context ) => {
     
                 delete origin['_id'];
                 delete event.data['_id']
+                delete event.data['sales_volume']
     
                 const temp = Object.assign({ }, origin, {
                     ...event.data
@@ -275,9 +276,12 @@ export const main = async ( event, context ) => {
     
                 await db.collection('trip')
                         .doc( _id )
-                        .set({
+                        .update({
                             data: temp
-                        });
+                        })
+                        // .set({
+                        //     data: temp
+                        // });
     
             }
 

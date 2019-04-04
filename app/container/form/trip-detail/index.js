@@ -52,7 +52,7 @@ Component({
         // 付款类型
         payment: '0',
         // 表单：邮费是否选择了满免
-        postageFullFree: true,
+        postageFullFree: false,
         // 是否已发布
         published: false,
         // 是否已过了开始时间
@@ -89,19 +89,21 @@ Component({
                       validate: val => !!val,
                       message: '行程名称不能为空'
                     }]
-                }, {
-                    key: 'destination',
-                    label: '行程地点',
-                    type: 'input',
-                    max: 50,
-                    placeholder: '如：香港',
-                    value: undefined,
-                    disabled: published && hasBeenPassStart,
-                    rules: [{
-                      validate: val => !!val,
-                      message: '行程目的地不能为空'
-                    }]
-                }, {
+                },
+                // {
+                //     key: 'destination',
+                //     label: '行程地点',
+                //     type: 'input',
+                //     max: 50,
+                //     placeholder: '如：香港',
+                //     value: undefined,
+                //     disabled: published && hasBeenPassStart,
+                //     rules: [{
+                //       validate: val => !!val,
+                //       message: '行程目的地不能为空'
+                //     }]
+                // },
+                {
                     key: 'start_date',
                     label: '开始时间',
                     type: 'date',
@@ -118,6 +120,7 @@ Component({
                     type: 'date',
                     start: `${year}-${String( month ).length < 2 ? '0' + month  : month}-${String( date ).length < 2 ? '0' + date  : date}`,
                     value: undefined,
+                    shadow: true,
                     disabled: published && hasBeenPassStart,
                     rules: [{
                       validate: val => !!val,
@@ -142,7 +145,7 @@ Component({
                     key: 'reduce_price',
                     label: '行程立减',
                     type: 'number',
-                    placeholder: '裂变：立减5元，客户转发才能获得优惠',
+                    placeholder: '客户转发才能获得全额优惠',
                     value: undefined,
                     disabled: published && !!tid,
                     rules: [{
@@ -161,15 +164,17 @@ Component({
                 {
                     title: '其他资费',
                     desc: ''
-                }, {
-                    key: 'postage',
-                    label: '邮费类型',
-                    type: 'select',
-                    placeholder: '请选择类型',
-                    value: postage,
-                    disabled: published && !!tid,
-                    options: this.data.dic['postage'] || [ ]
-                }, {
+                },
+                // {
+                //     key: 'postage',
+                //     label: '邮费类型',
+                //     type: 'select',
+                //     placeholder: '请选择类型',
+                //     value: postage,
+                //     disabled: published && !!tid,
+                //     options: this.data.dic['postage'] || [ ]
+                // },
+                {
                     key: 'payment',
                     label: '付款类型',
                     type: 'select',
@@ -181,6 +186,7 @@ Component({
                     key: 'published',
                     label: '立即发布',
                     type: 'switch',
+                    shadow: true,
                     disabled: published && !!tid,
                     value: false
                 }

@@ -1,6 +1,6 @@
 /* components/active-form/index.wxss */
 .c-active-form {
-  
+
 }
 
 .caf-title {
@@ -134,3 +134,12 @@ input::-moz-placeholder {
 input::-ms-input-placeholder {
   color: #bfbfbf;
 }
+
+/* .caf-item.shadow {
+  margin-bottom: 50rpx;
+  box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1 );
+}
+
+.caf-item.shadow::after {
+  display: none;
+} */

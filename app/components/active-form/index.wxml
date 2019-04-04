@@ -20,7 +20,7 @@
       
       <!-- 文本输入类型 -->
       <view
-        class="caf-inputs caf-item {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
+        class="caf-inputs caf-item {{ item.shadow ? 'shadow' : '' }} {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'input' }}"
 
       >
@@ -40,13 +40,14 @@
             placeholder="{{ item.placeholder || '' }}"
             bindinput='textInput'
             class="{{ left ? 'left' : '' }}"
+            placeholder-style="color:rgba(114,113,113,0.50);"
           />
         </view>
       </view>
 
       <!-- 多行文本 -->
       <view
-        class="caf-inputs caf-item {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
+        class="caf-inputs caf-item {{ item.shadow ? 'shadow' : '' }} {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'textarea' }}"
       >
         <text class='caf-item-label'>{{ item.label }}</text>
@@ -65,6 +66,7 @@
             placeholder="{{ item.placeholder || '' }}"
             bindinput='textInput'
             class="my-textarea"
+            placeholder-style="color:rgba(114,113,113,0.50);"
           />
         </view>
         
@@ -72,7 +74,7 @@
 
       <!-- 标签 -->
       <view
-        class="caf-inputs caf-item  {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
+        class="caf-inputs caf-item {{ item.shadow ? 'shadow' : '' }} {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'tag' }}"
       >
         <text class='caf-item-label'>{{ item.label }}</text>
@@ -113,7 +115,7 @@
 
       <!-- select -->
       <view
-        class="caf-inputs caf-item {{ index === meta.length - 1 ? 'noline' : '' }}"
+        class="caf-inputs caf-item {{ item.shadow ? 'shadow' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'select' }}"
       >
         <picker
@@ -142,7 +144,7 @@
 
       <!-- 图片上传 -->
       <view 
-        class="caf-img-block  {{ !!errData[ item.key ] ? 'error' : '' }}"
+        class="caf-img-block {{ item.shadow ? 'shadow' : '' }} {{ !!errData[ item.key ] ? 'error' : '' }}"
         wx:elif="{{ item.type === 'img' }}"
       > 
         <view
@@ -162,7 +164,7 @@
 
       <!-- 数字类 -->
       <view
-        class="caf-inputs caf-item  {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
+        class="caf-inputs caf-item {{ item.shadow ? 'shadow' : '' }} {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'number' }}"
       >
         <text class='caf-item-label'>{{ item.label }}</text>
@@ -181,13 +183,14 @@
             value="{{ formData[ item.key ]}}"
             placeholder="{{ item.placeholder || '' }}"
             class="{{ left ? 'left' : '' }}"
+            placeholder-style="color:rgba(114,113,113,0.50);"
           />
         </view>
       </view>
       
       <!-- switch类型 -->
       <view
-        class="caf-inputs caf-item {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
+        class="caf-inputs caf-item {{ item.shadow ? 'shadow' : '' }} {{ !!errData[ item.key ] ? 'error' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'switch' }}"
       >
         <text class='caf-item-label'>{{ item.label }}</text>
@@ -210,7 +213,7 @@
 
       <!-- 日期类型 -->
       <view
-        class="caf-inputs caf-item no-padding {{ index === meta.length - 1 ? 'noline' : '' }}"
+        class="caf-inputs caf-item no-padding {{ item.shadow ? 'shadow' : '' }} {{ index === meta.length - 1 ? 'noline' : '' }}"
         wx:elif="{{ item.type === 'date' }}"
       >
           <picker

@@ -1,7 +1,12 @@
-/* container/form/trip-detail/index.wxss */
 .recommend-btn-block {
     text-align: center;
-    margin: 30rpx 0;
+    margin: 30rpx 0 0;
+}
+
+.recommend-block {
+    padding-bottom: 30rpx;
+    /* margin-bottom: 30rpx; */
+    /* box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1 ); */
 }
 
 .recommend-list {
@@ -51,6 +56,11 @@
     position: relative;
     align-items: center;
 }
+
+/* .caf-item.shadow {
+    margin-bottom: 50rpx;
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1 );
+} */
   
 .caf-item::after {
     left: 0;
@@ -63,9 +73,13 @@
     position: absolute;
 }
 
+/* .caf-item.shadow::after {
+    display: none;
+} */
+
 .caf-item-label {
     color: #666;
-    font-size: 32rpx;
+    font-size: 24rpx;
     padding: 20rpx 0 20rpx 30rpx;
     margin-right: 50rpx;
 }
@@ -83,7 +97,8 @@
 }
 
 .caf-item-input.no-content {
-    color: rgba(0, 0, 0, 0.52 );
+    /* color: rgba(0, 0, 0, 0.52 ); */
+    color:rgba(114,113,113,0.50);
 }
 
 .error-tips {

@@ -83,14 +83,9 @@
         <view
             class="caf-item-input {{ !fullreducePrice ? 'no-content' : '' }}"
         >
-            <view
-                class="error-tips"
-            >
-                
-            </view>
             <view>
                 {{ fullreducePrice }}
-                {{ !fullreducePrice ? '如消费满200元，立减10元' : '' }}
+                {{ !fullreducePrice ? '如：满200元减10元' : '' }}
             </view>
         </view>
     </view>
@@ -104,14 +99,9 @@
         <view
             class="caf-item-input {{ !cashCouponPrice ? 'no-content' : '' }}"
         >
-            <view
-                class="error-tips"
-            >
-                
-            </view>
             <view>
                 {{ cashCouponPrice }}
-                {{ !cashCouponPrice ? '行程结束后发放一张代金券，用于下次消费' : '' }}
+                {{ !cashCouponPrice ? '行程结束后发放，用于下次消费' : '' }}
             </view>
         </view>
     </view>
@@ -171,18 +161,21 @@
             type="number"
             data-type="1"
             nocenter="{{ true }}"
-            placeholder="行程消费至少达到指定金额"
+            placeholder=""
             value='{{ fullreduce_atleast }}'
             bindinput='onInputFullReduce'
+            placeholder-style="color:rgba(114,113,113,0.50);"
         />
         <wxc-input
             title="减免金额"
             type="number"
             data-type="2"
             nocenter="{{ true }}"
-            placeholder="消费指定金额，自动减免"
+            placeholder=""
+            mode="none"
             value='{{ fullreduce_values }}'
             bindinput='onInputFullReduce'
+            placeholder-style="color:rgba(114,113,113,0.50);"
         />
     </i-modal>
     
@@ -198,18 +191,21 @@
             type="number"
             data-type="1"
             nocenter="{{ true }}"
-            placeholder="行程消费至少达到指定金额"
+            placeholder=""
             value='{{ cashcoupon_atleast }}'
             bindinput='onInputCashCoupon'
+            placeholder-style="color:rgba(114,113,113,0.50);"
         />
         <wxc-input
             title="减免金额"
             type="number"
             data-type="2"
+            mode="none"
             nocenter="{{ true }}"
-            placeholder="消费指定金额，可选择是否使用代金券"
+            placeholder=""
             value='{{ cashcoupon_values }}'
             bindinput='onInputCashCoupon'
+            placeholder-style="color:rgba(114,113,113,0.50);"
         />
     </i-modal>
 
