@@ -41,6 +41,17 @@
                     src="{{ item.img[ 0 ]}}"
                 />
                 <view class="recommend-item-title">{{ item.title }}</view>
+                <view
+                    data-data="{{ item }}"
+                    catchtap="deleteCommand"
+                    class='ptd-img-icon ptd-icon'
+                >
+                    <wxc-icon
+                        size="18"
+                        type="close"
+                        color="#fff"
+                    />
+                </view>
             </view>
         </scroll-view>
         

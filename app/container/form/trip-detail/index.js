@@ -622,7 +622,26 @@ Component({
         /** 进行行程订单管理页面 */
         goOrderManger( ) {
             navTo(`/pages/manager-trip-order/index?id=${this.data.tid}`)
+        },
+
+        /** 删除当前推荐的商品 */
+        deleteCommand({ currentTarget }) {
+            const { _id } = currentTarget.dataset.data;
+            const { selectedProductIds, selectedProducts } = this.data;
+            
+            const index1 = selectedProductIds.find( x => x === _id );
+            const index2 = selectedProducts.find( x => x._id === _id );
+
+            selectedProductIds.splice( index1, 1 );
+            selectedProducts.splice( index2, 1 );
+
+            this.setData({
+                selectedProductIds,
+                selectedProducts
+            });
+
         }
+
 
     },
 

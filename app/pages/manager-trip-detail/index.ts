@@ -13,6 +13,7 @@ Page({
      */
     onLoad: function (options) {
       wx.hideShareMenu({ });
+
       if ( !options!.id ) { return; }
       this.setData!({
         id: options!.id
