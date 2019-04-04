@@ -19,6 +19,7 @@ const http = ( params$: httpParam ) => {
     });
 
     const getError = ( msg = params.errMsg, err?: any ) => {
+        console.log('???????eeee')
         err && console.log(`Error: `, err || msg );
         wx.showToast({
             icon: 'none',

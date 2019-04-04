@@ -221,29 +221,59 @@ export const main = async ( event, context ) => {
         }
     });
 
+    /**
+     * @description
+     * 创建 / 编辑当前行程
+     */
     app.router('edit', async( ctx, next ) => {
         try {
 
             let _id = event.data._id;
+            const tid = event.data._id;
 
-            // 校验1：如果是想要发布当前行程，则检查是否有“已发布行程的结束时间大于等于当前新建行程的开始时间要”
-            if ( event.data.published && !_id ) {
-                const rule1$ = await db.collection('trip').where({
+            const getErr = message => {
+                return ctx.body = {
+                    status: 500,
+                    message
+                }
+            }
+
+            /**
+             * 校验1：
+             * 如果是想要创建、编辑当前行程
+             * 需要检查是否有 已发布行程的结束时间 大于等于 当前行程的开始时间
+             */
+            if ( event.data.published ) {
+
+                let where$ = {
                     isClosed: false,
                     end_date: _.gte( event.data.start_date )
-                })
+                };
+
+                if ( !!tid ) {
+                    where$ = Object.assign({ }, where$, {
+                        _id: _.neq( tid )
+                    });
+                }
+
+                const rule1$ = await db.collection('trip')
+                .where(  where$ )
                 .count( );
         
                 if ( rule1$.total > 0 ) {
-                    return new Promise( resolve => {
-                        resolve({
-                            data: null,
-                            status: 500,
-                            message: '开始时间必须大于上趟行程的结束时间'
-                        })
-                    });
+                    return getErr('开始时间必须大于上趟行程的结束时间');
                 }
             } 
+
+            /**
+             * 校验2:
+             * 结束时间不能小于开始时间
+             */
+            const { start_date, end_date } = event.data;
+            if ( start_date >= end_date  ) {
+                return getErr('开始时间必须大于结束时间');
+            }
+
     
             // 创建 
             if ( !_id ) {
@@ -276,12 +306,9 @@ export const main = async ( event, context ) => {
     
                 await db.collection('trip')
                         .doc( _id )
-                        .update({
+                        .set({
                             data: temp
-                        })
-                        // .set({
-                        //     data: temp
-                        // });
+                        });
     
             }
 

@@ -84,7 +84,6 @@ Component({
                     max: 50,
                     placeholder: '如：28号香港之旅',
                     value: undefined,
-                    disabled: published && hasBeenPassStart,
                     rules: [{
                       validate: val => !!val,
                       message: '行程名称不能为空'
@@ -121,7 +120,6 @@ Component({
                     start: `${year}-${String( month ).length < 2 ? '0' + month  : month}-${String( date ).length < 2 ? '0' + date  : date}`,
                     value: undefined,
                     shadow: true,
-                    disabled: published && hasBeenPassStart,
                     rules: [{
                       validate: val => !!val,
                       message: '结束时间不能为空'
@@ -145,7 +143,7 @@ Component({
                     key: 'reduce_price',
                     label: '行程立减',
                     type: 'number',
-                    placeholder: '客户转发才能获得全额优惠',
+                    placeholder: '客户分享才能获得全额优惠',
                     value: undefined,
                     disabled: published && !!tid,
                     rules: [{
@@ -247,9 +245,11 @@ Component({
                 success: res => {
                     const { status, data } = res;
                     if ( status !== 200 ) { return; }
+                    const { tid } = this.data;
                     this.setData({
-                        hasNextTrip: !!data[ 1 ]
-                    })
+                        hasNextTrip: !!data[ 1 ],
+                        hasBeenPassStart: !!data[ 0 ] && !!tid && data[ 0 ]._id === tid
+                    });
                 }
             })
         },
@@ -258,6 +258,10 @@ Component({
         fetchDetail( id ) {
 
             if ( !id ) { return; }
+
+            this.setData({
+                tid: id
+            });
 
             http({
                 data: {
@@ -312,7 +316,6 @@ Component({
                             cashcoupon_values: cashcoupon_values || null,
                             fullreduce_atleast: fullreduce_atleast || null,
                             fullreduce_values: fullreduce_values || null,
-                            hasBeenPassStart: new Date( ).getTime( ) > start_date,
                             canBeEnd: !isClosed &&  end_date !== new Date( ).getTime( )
                         });
                         
@@ -401,12 +404,12 @@ Component({
 
         /** 展示/关闭行程满减 */
         toggleFullReduce( ) {
-            const { published, tid, showFullReduce, fullreduce_values, fullreduce_atleast } = this.data;
+            const { hasBeenPassStart, tid, showFullReduce, fullreduce_values, fullreduce_atleast } = this.data;
             if ( !showFullReduce ) {
-                if ( !!tid && published ) {
+                if ( !!tid && hasBeenPassStart ) {
                     return wx.showToast({
                         icon: 'none',
-                        title: '已发布行程不能修改'
+                        title: '进行中的行程不能修改'
                     });
                 } else {
                     return this.setData({
@@ -463,12 +466,12 @@ Component({
 
         /** 行程代金券弹框 */
         toggleCashCoupon( ) {
-            const { published, tid, showCashCoupon, cashcoupon_atleast, cashcoupon_values } = this.data;
+            const { hasBeenPassStart, tid, showCashCoupon, cashcoupon_atleast, cashcoupon_values } = this.data;
             if ( !showCashCoupon ) {
-                if ( !!tid && published ) {
+                if ( !!tid && hasBeenPassStart ) {
                     return wx.showToast({
                         icon: 'none',
-                        title: '已发布行程不能修改'
+                        title: '进行中的行程不能修改'
                     });
                 } else {
                     return this.setData({
@@ -652,6 +655,7 @@ Component({
     },
 
     attached: function ( ) {
+        console.log('????', this.data )
         this.fetchDic( );
         this.fetchLastTrip( );
     }
