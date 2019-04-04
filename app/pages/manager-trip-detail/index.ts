@@ -13,7 +13,9 @@ Page({
      */
     onLoad: function (options) {
       wx.hideShareMenu({ });
-
+      this.setData!({
+        id: 'XDGzG97E7L4wLIdu'
+      })
       if ( !options!.id ) { return; }
       this.setData!({
         id: options!.id
