@@ -79,7 +79,7 @@
                             >
                                 <image
                                     src="{{ item.img }}"
-                                    mode="widthFix"
+                                    mode="aspectFill"
                                     class="pol-swiper-image"
                                     lazy-load="{{ true }}"
                                 />

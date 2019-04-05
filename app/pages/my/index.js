@@ -34,7 +34,6 @@ Page({
     /** 拉取订单、卡券数据 */
     fetchData( ) {
         const { baseInfo } = this.data;
-        if ( Object.keys( baseInfo ).length > 0 ) { return; }
 
         http({
             loadMsg: '加载中...',
@@ -67,7 +66,7 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-
+        this.fetchData( );
     },
 
     /**

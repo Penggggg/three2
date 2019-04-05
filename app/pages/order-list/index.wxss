@@ -587,6 +587,7 @@
 
 .pol-swiper-image {
     width: 140rpx;
+    height: 140rpx;
     margin-top: 25rpx;
     border-radius: 5px;
     border: 2px solid #fff;
