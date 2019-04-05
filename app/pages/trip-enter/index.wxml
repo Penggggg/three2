@@ -117,6 +117,7 @@
                     <!-- 仙女购物单版本2 -->
                     <view
                         bindtap="goTripDetail"
+                        wx:if="{{ fairyList$.length !== 0 || allPin.length !== 0 }}"
                         class="te-fairy-simple-title-block te-block"
                     >
                         <view class="te-fairy-simple-title te-block-title">
@@ -129,54 +130,92 @@
                             View all
                         </view>
                     </view>
+
                     <view
-                        bindtap="goTripDetail"
-                        scroll-x class="te-fairy-simple-list-contanier"
+                        class="te-pin-info-block"
+                        wx:if="{{ fairyList$.length !== 0 || allPin.length !== 0 }}"
                     >
-                        <view class="te-fairy-simple-list">
-                            <view
+                        <swiper
+                            autoplay="{{ true }}"
+                            duration="{{ 1000 }}"
+                            circular="{{ true }}"
+                            interval="{{ 3500 }}"
+                            class="te-pin-users"
+                            display-multiple-items="{{ 1 }}"
+                            wx:if="{{ fairyList$.length > 0 }}"
+                        >
+                            <block
                                 wx:key="{{ index }}"
                                 wx:for="{{ fairyList$ }}"
-                                class="te-fairy-simple-item"
                             >
-                                <image
-                                    mode="scaleToFill"
-                                    class="te-fairy-simple-user-img"
-                                    src="{{ item.user.avatarUrl }}"
-                                />
-                                <view class="te-fairy-simple-info">
+                                <swiper-item>
+                                    <view
+                                        bindtap="goTripDetail"
+                                        class="te-fairy-simple-item"
+                                    >
+                                        <image
+                                            mode="scaleToFill"
+                                            class="te-fairy-simple-user-img"
+                                            src="{{ item.user.avatarUrl }}"
+                                        />
+                                        <view class="te-fairy-simple-info">
 
-                                    <view class="te-fairy-simple-dataset">
-                                        <view class="te-fairy-simple-info-value">
-                                        {{ item.shoppinglist.length }}
-                                        </view>
-                                        <view class="te-fairy-simple-info-label">
-                                            拔草{{ item.shoppinglist.length }}件
+                                            <view class="te-fairy-simple-dataset">
+                                                <view class="te-fairy-simple-info-value">
+                                                {{ item.shoppinglist.length }}
+                                                </view>
+                                                <view class="te-fairy-simple-info-label">
+                                                    拔草{{ item.shoppinglist.length }}件
+                                                </view>
+                                            </view>
+
+                                            <view class="te-fairy-simple-dataset">
+                                                <view class="te-fairy-simple-info-value">
+                                                    {{ item.coupons.length }}
+                                                </view>
+                                                <view class="te-fairy-simple-info-label">
+                                                    张优惠券
+                                                </view>
+                                            </view>
+
+                                            <view class="te-fairy-simple-dataset">
+                                                <view class="te-fairy-simple-info-value">
+                                                    {{ item.delta }}
+                                                </view>
+                                                <view class="te-fairy-simple-info-label">
+                                                    元最多省
+                                                </view>
+                                            </view>
                                         </view>
                                     </view>
-
-                                    <view class="te-fairy-simple-dataset">
-                                        <view class="te-fairy-simple-info-value">
-                                            {{ item.coupons.length }}
-                                        </view>
-                                        <view class="te-fairy-simple-info-label">
-                                            张优惠券
-                                        </view>
-                                    </view>
-
-                                    <view class="te-fairy-simple-dataset">
-                                        <view class="te-fairy-simple-info-value">
-                                            <!-- <wxc-price
-                                                icon="sub"
-                                                decimal="small"
-                                                class="te-fairy-simple-info-value"
-                                            > 
-                                                {{ item.delta }}
-                                            </wxc-price> -->
-                                            {{ item.delta }}
-                                        </view>
-                                        <view class="te-fairy-simple-info-label">
-                                            元最多省
+                                </swiper-item>
+                            </block>
+                        </swiper>
+                        <view
+                            class="te-pin-goods"
+                        >
+                            <view class="te-pin-goods-list">
+                                <view
+                                    wx:for="{{ allPin }}"
+                                    wx:key="{{ index }}"
+                                    bindtap="goTripDetail"
+                                    class="te-pin-goods-img-con"
+                                >
+                                    <image 
+                                        mode="aspectFill"
+                                        class="te-pin-goods-img"
+                                        src="{{ item.detail.img }}"
+                                    />
+                                    <view
+                                        class="te-tag-block"
+                                    >
+                                        <image
+                                            mode="widthFix"
+                                            class="gd-activity-icon"
+                                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                                        />
+                                        <view class="te-tag-text">
+                                            拼团
                                         </view>
                                     </view>
                                 </view>
@@ -220,8 +259,8 @@
                         circular="{{ true }}"
                         interval="{{ 4000 }}"
                         class="recommond-swiper"
-                        wx:if="{{ recommendGoods$.length > 0 }}"
                         display-multiple-items="{{ 2 }}"
+                        wx:if="{{ recommendGoods$.length > 0 }}"
                     >
                         <block
                             wx:key="{{ index }}"

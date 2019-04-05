@@ -42,7 +42,10 @@ Page({
         /** 是否展示社交弹幕 */
         showMember: false,
         /** 本期拼团王产品 */
-        pinest: null
+        pinest: null,
+        /** 所有的拼团列表（待拼、可拼） */
+        allPin: [ ]
+
     },
 
     /** 设置computed */
@@ -240,7 +243,6 @@ Page({
         http({
             data: {
                 tid,
-                limit: 1,
                 // type: 'pin', 等待拼团，已拼团，均有
                 showUser: false
             },
@@ -248,8 +250,9 @@ Page({
             success: res => {
                 const { status, data } = res;
                 this.setData({
-                    pinest: data[ 0 ]
-                })
+                    pinest: data[ 0 ],
+                    allPin: data.map( x => Object.assign({ }, x )).splice( 1 )
+                });
             }
         });
     },
