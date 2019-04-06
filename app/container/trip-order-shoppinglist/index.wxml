@@ -21,16 +21,21 @@
             </view>
 
             <view>
-                <view class="tos-order-count">
+                <view
+                    bindtap="goAllOrder"
+                    class="tos-order-count"
+                >
                     总订单{{ count }}条
                     <view
                         wx:if="{{ unread }}"
+                        bindtap="goAllOrder"
                         class="tos-order-entry"
                     >
                         New {{ unread }}
                     </view>
                     <view
                         wx:else
+                        bindtap="goAllOrder"
                         class="tos-order-entry normal"
                     >   查看
                     </view>

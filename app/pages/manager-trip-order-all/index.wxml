@@ -1,0 +1,9 @@
+<view class="page-trip-order-all">
+    <!-- 加载中 -->
+    <view
+        wx:if="{{ loading && list$.length === 0 }}"
+        class="toa-loading-tips"
+    >
+        加载中...
+    </view>
+</view>

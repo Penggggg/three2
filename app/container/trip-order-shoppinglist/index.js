@@ -265,6 +265,12 @@ Component({
                 lastCheckTime: meta ? JSON.parse( meta ) : null
             });
             setTimeout(( ) => this.fetchUnRead( ), 200 );
+        },
+
+        // 跳到所有的订单
+        goAllOrder( ) {
+            const { tid, lastCheckTime } = this.data;
+            navTo(`/pages/manager-trip-order-all/index?tid=${tid}&last=${lastCheckTime}`);
         }
     },
 
