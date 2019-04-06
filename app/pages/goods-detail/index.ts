@@ -324,23 +324,17 @@ Page({
     onLike( ) {
         const that = this;
         if ( !this.data.hasInitLike ) { return; }
-        wx.cloud.callFunction({
-            name: 'api-like-collection',
+        http({
             data: {
                 pid: this.data.id
             },
-            success: function ( res: any ) {
-                if ( res.result.status === 200 ) {
-                    that.setData!({
-                        liked: !that.data.liked
+            url: 'like_create',
+            success:  ( res: any ) => {
+                if ( res.status === 200 ) {
+                    this.setData!({
+                        liked: !this.data.liked
                     })
                 }
-            },
-            fail: function( ) {
-                wx.showToast({
-                    icon: 'none',
-                    title: '设置“喜欢”错误',
-                });
             }
         });
     },
@@ -348,26 +342,18 @@ Page({
     /** 设置“喜欢” */
     checkLike( ) {
         const that = this;
-        wx.cloud.callFunction({
-            name: 'api-like-collection-detail',
+        http({
             data: {
                 pid: this.data.id
             },
-            success: function ( res: any ) {
-                that.setData!({
-                    hasInitLike: true
-                });
-                if ( res.result.status === 200 ) {
-                    that.setData!({
-                        liked: res.result.data
+            url: 'like_check',
+            success:  ( res: any ) => {
+                if ( res.status === 200 ) {
+                    this.setData!({
+                        liked: res.data,
+                        hasInitLike: true
                     })
                 }
-            },
-            fail: function( ) {
-                wx.showToast({
-                    icon: 'none',
-                    title: '查询“喜欢”错误',
-                });
             }
         });
     },
