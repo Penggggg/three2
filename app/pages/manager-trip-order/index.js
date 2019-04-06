@@ -9,7 +9,7 @@ Page({
         // 行程id
         id: '',
         // 上方活动tab
-        active: 1,
+        active: 0,
         // 上方tabs
         tabs: [{
             key: 0,
@@ -56,9 +56,6 @@ Page({
                 id: options.id
             });
         }
-        this.setData({
-            id: 'XDGzG97E7L4wLIdu'
-        })
     },
 
     /**

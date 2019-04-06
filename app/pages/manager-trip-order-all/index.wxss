@@ -12,7 +12,7 @@
 .toa-bg {
     top: 0;
     left: 0;
-    height: 350rpx;
+    height: 100rpx;
     position: fixed;
     width: 100vw;
     z-index: 0;
@@ -29,4 +29,150 @@
     z-index: 10;
     position: fixed;
     background: transparent;
+    padding:30rpx 30rpx 0rpx;
+    box-sizing: border-box;
+}
+
+.toa-item {
+    display: flex;
+    margin-bottom:40rpx;
+    position:relative;
+    background:#fff;
+    border-radius:10px;
+    box-sizing:border-box;
+    padding: 15rpx 20rpx 30rpx;
+    border: 1px solid rgba(0, 0, 0, 0.04 );
+    box-shadow:0px 3px 15px rgba(0, 0, 0, 0.06 );
+}
+
+.toa-avatar-con {
+    margin-right: 30rpx;
+}
+
+.toa-avatar {
+    overflow:hidden;
+    display:block;
+    width:120rpx;
+    height:120rpx;
+    border-radius:50%;
+    z-index:10;
+    box-shadow:3px 3px 13px rgba(0, 0, 0, 0.2);
+
+}
+
+.toa-info-block {
+    flex: 1;
+}
+
+.toa-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.toa-name {
+    color:#999;
+    font-size:24rpx;
+    display:inline;
+}
+
+.toa-statuscn {
+    border-radius: 3px;
+    line-height:34rpx;
+    color: #fff;
+    font-size: 24rpx;
+    padding: 8rpx 18rpx;
+    display: block;
+    box-sizing: border-box;
+    min-width: 80rpx;
+    background: #bc4e9c;  
+    background: -webkit-linear-gradient(to left, #f80759, #bc4e9c); 
+    background: linear-gradient(to left, #f80759, #bc4e9c); 
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
+.toa-good-info {
+    display: flex;
+    margin-top: 20rpx;
+}
+
+.toa-img {
+    overflow: hidden;
+    display: block;
+    width: 85rpx;
+    height: 85rpx;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    margin-right: 20rpx;
+    box-shadow: 3px 3px 13px rgba(0, 0, 0, 0.1);    
+}
+
+.toa-title-con {
+    flex: 1;
+}
+
+.toa-title {
+    color: #bfbfbf;
+    font-size: 24rpx;
+    overflow:hidden;
+    display:-webkit-box;
+    -webkit-line-clamp:1;
+    word-break:break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;    
+}
+
+.toa-standar {
+    font-size: 22rpx;
+    border-radius: 5px;
+    background: #f5f5f5;
+    padding: 2rpx 15rpx;
+    display: inline-block;
+    margin-right: 10rpx;
+    color: #bfbfbf;
+}
+
+.toa-count {
+    width: 100rpx;
+    color: #bfbfbf;
+    font-size: 22rpx;
+    text-align: right;
+}
+
+.toa-time {
+    font-size: 22rpx;
+    color: #bfbfbf;
+    text-align: right;
+}
+
+.toa-nomore {
+    margin-top: 100rpx;
+    margin-bottom: 50rpx;
+    color: #999;
+    font-size: 22rpx;
+    text-align: center;
+    letter-spacing: 0.05em;
+    position: relative;
+}
+
+.toa-nomore:after {
+    top: 50%;
+    right: 10%;
+    width: 30%;
+    height: 1px;
+    position: absolute;
+    content: '';
+    background: rgba( 0, 0, 0, 0.15 );
+    transform: translate( 0, -50% ) scaleY( 0.5 );
+}
+
+.toa-nomore:before {
+    top: 50%;
+    left: 10%;
+    width: 30%;
+    height: 1px;
+    position: absolute;
+    content: '';
+    background: rgba( 0, 0, 0, 0.15 );
+    transform: translate( 0, -50% ) scaleY( 0.5 );
 }

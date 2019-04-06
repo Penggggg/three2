@@ -36,7 +36,26 @@ Page({
 
             list$( ) {
                 const { list } = this.data;
-                return list;
+                const converTime = ts => {
+                    const time = new Date( Number( ts ));
+                    const m = time.getMonth( ) + 1;
+                    const d = time.getDate( );
+                    const h = time.getHours( );
+                    const mm = time.getMinutes( );
+                    const fix = s => `${String( s ).length === 1 ? '0' + s : s}`
+                    return `${fix( m )}-${fix( d )} ${fix( h )}:${ fix( mm )}`;
+                };
+                const meta = list.map( x => {
+                    return Object.assign({ }, x , {
+                        time$: converTime( x.createTime ),
+                        status$: x.pay_status === '0' ? 
+                            '' : 
+                            x.pay_status === '1' ? 
+                                '' :
+                                '已付款'
+                    });
+                });
+                return meta;
             }
         });
     },
@@ -83,6 +102,19 @@ Page({
         })
     },
 
+    /** 获取行程详情 */
+    fetchTrip( ) {
+        const { tid } = this.data;
+        http({
+            data: {
+                tid
+            },
+            url: 'trip_detail',
+            success: res => {
+                const { status, data } = res;
+            }
+        })
+    },
 
     /**
      * 生命周期函数--监听页面加载

@@ -180,13 +180,17 @@ export const main = async ( event, context ) => {
         } 
     });
     
+    /**
+     * @description
+     * 行程详情
+     */
     app.router('detail', async( ctx, next ) => {
         try {
 
             // 获取基本详情
             const data$ = await db.collection('trip')
                     .where({
-                        _id: event.data._id
+                        _id: event.data._id || event.data.tid
                     })
                     .get( );
             const meta = data$.data[ 0 ];

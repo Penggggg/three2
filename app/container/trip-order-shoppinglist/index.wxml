@@ -22,7 +22,6 @@
 
             <view>
                 <view
-                    bindtap="goAllOrder"
                     class="tos-order-count"
                 >
                     总订单{{ count }}条
@@ -318,6 +317,7 @@
             data-key="adjustGroupPrice"
             placeholder="无团购价，则不用输入"
             type="digit"
+            mode="none"
             bindinput='modalInput'
             value='{{ currentSL.adjustGroupPrice }}'
         />

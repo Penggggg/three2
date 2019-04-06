@@ -149,7 +149,6 @@ Component({
         goGoodDetail({ currentTarget }) {
             const { pid } = currentTarget.dataset.data;
             navTo(`/pages/goods-detail/index?id=${pid}&tid=${this.data.tid}`);
-
         },
 
         // 展开修改框

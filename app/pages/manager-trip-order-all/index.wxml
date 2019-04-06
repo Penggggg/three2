@@ -22,7 +22,82 @@
             bindscrolltolower="fetchList"
             wx:if="{{ list$.length > 0 }}"
         >
-            
+            <view
+                class="toa-item"
+                wx:for="{{ list$ }}"
+                wx:key="{{ index }}"
+            >
+                <!-- 头像 -->
+                <view class="toa-avatar-con">
+                    <image 
+                        class="toa-avatar"
+                        src="{{ item.user.avatarUrl }}"
+                    />
+                </view>
+                <view class="toa-info-block">
+
+                    <!-- 姓名、状态栏 -->
+                    <view class="toa-user">
+
+                        <view class="toa-name">
+                            {{ item.user.nickName }}
+                        </view>
+
+                        <view
+                            wx:if="{{ item.status$ }}"
+                            class="toa-statuscn"
+                        >
+                            {{ item.status$ }}
+                        </view>
+                        
+                    </view>
+
+                    <!-- 订单信息 -->
+                    <view class="toa-good-info">
+
+                        <!-- 商品图片 -->
+                        <image
+                            class="toa-img"
+                            mode="aspectFill"
+                            src="{{ item.img[ 0 ]}}"
+                            lazy-load="{{ true }}"
+                        />
+
+                        <!-- 商品名称、型号名称-->
+                        <view class="toa-title-con">
+                            
+                            <view class="toa-title">
+                                {{ item.name }}
+                            </view>
+                            <view
+                                class="toa-standar"
+                                wx:if="{{ item.sid }}"
+                            >
+                                {{ item.standername }}
+                            </view>
+                        </view>
+
+                        <!-- 数量  -->
+                        <view class="toa-count">
+                            x {{ item.count }}
+                        </view>
+
+                    </view>
+
+                    <!-- 日期 -->
+                    <view class="toa-time">
+                        {{ item.time$ }}
+                    </view>
+
+                </view>
+            </view>
+
+            <!-- 暂无更多 -->
+            <view
+                class="toa-nomore"
+            >
+                No More
+            </view>
         </scroll-view>
     </view>
 </view>
