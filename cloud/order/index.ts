@@ -239,6 +239,9 @@ export const main = async ( event, context ) => {
     });
 
     /**
+     * @description
+     * 客户端查询
+     * 
      * 分页 + query 查询订单列表（未聚合）
      * ----- 请求 ------
      * {
@@ -461,7 +464,7 @@ export const main = async ( event, context ) => {
             const orders$ = await db.collection('order')
                 .where({
                     tid,
-                    pay_status: _.or( _.eq('1'), _.eq('2'), _.eq('3'))
+                    pay_status: _.or( _.eq('1'), _.eq('2'))
                 })
                 .get( );
             
@@ -953,6 +956,118 @@ export const main = async ( event, context ) => {
             }
 
         } catch ( e ) { return ctx.body = { status: 500 };}
+    });
+
+    /** 
+     * @description
+     * 代购查看所有的订单列表
+     */
+    app.router('list-all', async( ctx, next ) => {
+        try {
+            // 查询条数
+            const limit = 10;
+            const { tid, page } = event.data;
+
+            const where$ = {
+                tid,
+                pay_status: _.or( _.eq('1'), _.eq('2'))
+            };
+
+            const total$ = await db.collection('order')
+                .where( where$ )
+                .count( );
+            
+            const orders$ = await db.collection('order')
+                .where( where$ )
+                .limit( limit )
+                .skip(( page - 1 ) * limit )
+                .orderBy('createTime', 'desc')
+                .get( );
+
+            const pids = Array.from(
+                new Set( 
+                    orders$.data
+                        .map( x => x.pid )
+                )
+            );
+
+            const sids = Array.from(
+                new Set( 
+                    orders$.data
+                        .map( x => x.sid )
+                        .filter( x => !!x )
+                )
+            );
+
+            const uids = Array.from(
+                new Set( 
+                    orders$.data
+                        .map( x => x.openid )
+                        .filter( x => !!x )
+                )
+            );
+
+            // const goods$$ = await Promise.all(
+            //     pids.map( 
+            //         pid => db.collection('goods')
+            //             .doc( String( pid ))
+            //             .get( )
+            //     )
+            // );
+            // const goods$ = goods$$.map( x => x.data );
+
+            // const standars$$ = await Promise.all(
+            //     sids.map( 
+            //         sid => db.collection('standards')
+            //             .doc( String( sid ))
+            //             .field({
+            //                 pid: true,
+            //                 name: true
+            //             })
+            //             .get( )
+            //     )
+            // );
+            // const standars$ = standars$$.map( x => x.data );
+
+            const users$$ = await Promise.all(
+                uids.map( 
+                    openid => db.collection('user')
+                        .where({
+                            openid
+                        })
+                        .field({
+                            openid: true,
+                            avatarUrl: true,
+                            nickName: true
+                        })
+                        .get( )
+                )
+            );
+            const users$ = users$$.map( x => x.data[ 0 ]);
+
+            const meta = orders$.data.map( order => {
+
+                const user = users$.find( user => user.openid === order.openid );
+                // const detail = goods$.find( good => good._id === order.pid );
+                // const standar = standars$.find( s => s._id === order.sid );
+
+                return Object.assign({ }, order, {
+                    user,
+                    // detail,
+                    // standar
+                })
+            });
+
+            return ctx.body = {
+                status: 200,
+                data: meta
+            }
+
+
+        } catch ( e ) { 
+            console.log('???', e )
+            return ctx.body = { status: 500 }
+        }
     })
  
    return app.serve( );

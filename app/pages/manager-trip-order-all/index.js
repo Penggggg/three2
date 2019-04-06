@@ -2,6 +2,8 @@ const { http } = require('../../util/http.js');
 const { navTo } = require('../../util/route.js');
 const { computed } = require('../../lib/vuefy/index.js');
 
+const storageKey = 'manager-check-order';
+
 Page({
 
     /**
@@ -43,7 +45,16 @@ Page({
     fetchList( ) {
         const { tid, last, page, list, canLoadMore, loading } = this.data;
         if ( !canLoadMore || loading ) { return; }
-        console.log('???', tid );
+ 
+        // 刷新时间
+        // 去重
+        http({
+            data: {
+                tid,
+                page: page + 1
+            },
+            url: 'order_list-all'
+        })
     },
 
 
