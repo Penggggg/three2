@@ -925,6 +925,35 @@ export const main = async ( event, context ) => {
             return ctx.body = { status: 500 }
         }
     });
+
+    /** 
+     * @description
+     * 代购获取未读订单
+     */
+    app.router('unread', async( ctx, next ) => {
+        try {
+            const { tid, lastTime } = event.data;
+            let where$ = {
+                tid
+            };
+
+            if ( lastTime ) {
+                where$ = Object.assign({ }, where$, {
+                    createtime: _.gte( lastTime )
+                });
+            }
+
+            const data$ = await db.collection('order')
+                .where( where$ )
+                .count( );
+
+            return ctx.body = {
+                status: 200,
+                data: data$.total
+            }
+
+        } catch ( e ) { return ctx.body = { status: 500 };}
+    })
  
    return app.serve( );
 

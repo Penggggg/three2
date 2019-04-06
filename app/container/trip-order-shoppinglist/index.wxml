@@ -23,8 +23,16 @@
             <view>
                 <view class="tos-order-count">
                     总订单{{ count }}条
-                    <view class="tos-order-entry">
-                        查看
+                    <view
+                        wx:if="{{ unread }}"
+                        class="tos-order-entry"
+                    >
+                        New {{ unread }}
+                    </view>
+                    <view
+                        wx:else
+                        class="tos-order-entry normal"
+                    >   查看
                     </view>
                 </view>
             </view>

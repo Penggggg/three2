@@ -1,6 +1,8 @@
 const { http } = require('../../util/http.js');
 const { navTo } = require('../../util/route.js');
 
+const storageKey = 'manager-check-order';
+
 Component({
     /**
      * 组件的属性列表
@@ -40,7 +42,11 @@ Component({
             purchase: 0,
             adjustPrice: 0,
             adjustGroupPrice: 0
-        }
+        },
+        // 上次拉取未读订单的时间
+        lastCheckTime: null,
+        // 未读订单数
+        unread: 0
     },
 
     /**
@@ -116,6 +122,25 @@ Component({
                             callMoneyTimes
                         })
                     }
+                }
+            })
+        },
+
+        // 拉取未读订单
+        fetchUnRead( ) {
+            const { tid, lastCheckTime } = this.data;
+            http({
+                url: 'order_unread',
+                data: {
+                    tid,
+                    lastTime: lastCheckTime
+                },
+                success: res => {
+                    const { status, data } = res;
+                    if ( status !== 200 ) { return; }
+                    this.setData({
+                        unread: data
+                    });
                 }
             })
         },
@@ -231,10 +256,19 @@ Component({
             this.setData({
                 slTemp: temp
             });
+        },
+
+        // 初始化上次拉取未读订单的时间
+        initTime( ) {
+            const meta =  wx.getStorageSync( storageKey );
+            this.setData({
+                lastCheckTime: meta ? JSON.parse( meta ) : null
+            });
+            setTimeout(( ) => this.fetchUnRead( ), 200 );
         }
     },
 
     attached: function( ) {
- 
+        this.initTime( );
     }
 })
