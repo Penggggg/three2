@@ -235,7 +235,6 @@ Component({
     },
 
     attached: function( ) {
-        // this.fetchDetail( this.data.tid );
-        // this.fetchShoppingList( this.data.tid );
+ 
     }
 })
