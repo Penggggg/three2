@@ -1060,7 +1060,13 @@ export const main = async ( event, context ) => {
 
             return ctx.body = {
                 status: 200,
-                data: meta
+                data: {
+                    page,
+                    pageSize: limit,
+                    data: meta,
+                    total: total$.total,
+                    totalPage: Math.ceil( total$.total / limit )
+                }
             }
 
 

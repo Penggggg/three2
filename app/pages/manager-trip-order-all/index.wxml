@@ -6,4 +6,23 @@
     >
         加载中...
     </view>
+
+    <view
+        class=""
+        wx:else
+    >
+        <!-- 背景 -->
+        <view class="toa-bg"></view>
+
+        <!-- 列表 -->
+        <scroll-view
+            scroll-y
+            lower-threshold="100"
+            class="toa-list"
+            bindscrolltolower="fetchList"
+            wx:if="{{ list$.length > 0 }}"
+        >
+            
+        </scroll-view>
+    </view>
 </view>

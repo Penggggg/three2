@@ -45,15 +45,41 @@ Page({
     fetchList( ) {
         const { tid, last, page, list, canLoadMore, loading } = this.data;
         if ( !canLoadMore || loading ) { return; }
+
+        this.setData({
+            loading: true
+        });
  
-        // 刷新时间
-        // 去重
         http({
             data: {
                 tid,
                 page: page + 1
             },
-            url: 'order_list-all'
+            url: 'order_list-all',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                const { page, totalPage } = data;
+
+                // 去重
+                let meta = [ ];
+                if ( page === 1 ) {
+                    meta = data.data;
+                } else {
+                    meta = [ ...list, ...data.data.filter( x => !list.find( y => y._id === x._id ))]
+                }
+
+                this.setData({
+                    page,
+                    loading: false,
+                    canLoadMore: totalPage > page,
+                    list: meta
+                });
+
+                // 刷新时间
+                page === 1 && wx.setStorageSync( storageKey, String( new Date( ).getTime( )));
+            }
         })
     },
 

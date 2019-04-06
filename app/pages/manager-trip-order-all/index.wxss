@@ -8,3 +8,25 @@
     text-align: center;
     padding-top: 200rpx;
 }
+
+.toa-bg {
+    top: 0;
+    left: 0;
+    height: 350rpx;
+    position: fixed;
+    width: 100vw;
+    z-index: 0;
+    background: #bc4e9c;  
+    background: -webkit-linear-gradient(to bottom, #f80759, #bc4e9c);  
+    background: linear-gradient(to bottom, #f80759, #bc4e9c); 
+}
+
+.toa-list {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    position: fixed;
+    background: transparent;
+}
