@@ -62,6 +62,11 @@ Page({
         navTo('/pages/coupon-list/index');
     },
 
+    /** 跳到我的喜欢 */
+    goLike( ) {
+        navTo('/pages/like-goods/index');
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */

@@ -1,0 +1,77 @@
+<view class="p-like-goods">
+    <!-- 列表 -->
+    <scroll-view
+        scroll-y
+        lower-threshold="100"
+        class='plg-result-container'
+        bindscrolltolower="fetchList"
+    >
+
+        <!-- 列表 -->
+        <view
+            class="lg-good-item"
+            wx:key="{{ index }}"
+            wx:for="{{ list$ }}"
+            data-good="{{ item }}"
+            bindtap="goDetail"
+        >
+            <view
+                class="lg-good-img-con"
+            >
+                <image 
+                    mode="aspectFill"
+                    class="lg-good-img"
+                    lazy-load="{{ true }}"
+                    src="{{ item.img[ 0 ]}}"
+                />
+                <view
+                    class="lg-tag-block"
+                    wx:if="{{ item.hasActivity }}"
+                >
+                    <image
+                        mode="widthFix"
+                        class="gd-activity-icon"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                    />
+                    <view class="lg-tag-text">
+                        活动
+                    </view>
+                </view>
+            </view>
+            <view
+                class="lg-good-info"
+            >
+                <view class="lg-good-base">
+                    <view class="lg-good-title">
+                        {{ item.title }}
+                    </view>
+                    <view class="lg-good-tag">
+                        {{ item.detail }}
+                    </view>
+                </view>
+                <view class="lg-good-price-block">
+                    <wxc-price
+                        icon="sub"
+                        decimal="small"
+                        class="lg-price"
+                    > 
+                        {{ item.price$ }}
+                    </wxc-price>
+                    <view
+                        class="lg-btn"
+                    >
+                        去看看
+                    </view>
+                </view>
+            </view>
+        </view>
+
+        <!-- 暂无更多 -->
+        <view
+            class="plg-nomore"
+            wx:if="{{ !canLoadMore }}"
+        >
+            No More
+        </view>
+    </scroll-view>
+</view>

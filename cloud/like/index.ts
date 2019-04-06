@@ -96,6 +96,70 @@ export const main = async ( event, context ) => {
             }
 
         } catch ( e ) { return ctx.body = { status: 500 };}
+    });
+
+    /** 
+     * @description
+     * 查询喜欢列表
+     */
+    app.router('list', async( ctx, next ) => {
+        try {
+
+            // 查询条数
+            const limit = 10;
+            const { page } = event.data;
+            const openid = event.userInfo.openId;
+
+            const total$ = await db.collection('like-collection')
+                .where({
+                    openid 
+                })
+                .count( );
+            
+            const like$ = await db.collection('like-collection')
+                .where({
+                    openid
+                })
+                .limit( limit )
+                .skip(( page - 1 ) * limit )
+                .orderBy('createTime', 'desc')
+                .get( );
+
+            const good$ = await Promise.all( like$.data.map( l => {
+                return db.collection('goods')
+                    .doc( String( l.pid ))
+                    .get( );
+            }));
+
+            const activities$ = await Promise.all( like$.data.map( l => {
+                return db.collection('activity')
+                    .where({
+                        pid: l.pid,
+                        isClosed: false,
+                        isDeleted: false,
+                        type: 'good_discount'
+                    })
+                    .get( );
+            }));
+
+            const insertActivities = good$.map(( meta, k ) => {
+                return Object.assign({ }, meta.data, {
+                    activity: activities$[ k ].data.length === 0 ? null : activities$[ k ].data[ 0 ]
+                });
+            });
+
+            return ctx.body = {
+                status: 200,
+                data: {
+                    page,
+                    pageSize: limit,
+                    data: insertActivities,
+                    total: total$.total,
+                    totalPage: Math.ceil( total$.total / limit )
+                }
+            }
+
+        } catch ( e ) { return ctx.body = { status: 500 }}
     })
 
     return app.serve( );

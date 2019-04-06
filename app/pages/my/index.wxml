@@ -30,7 +30,10 @@
                     <view class="pm-bar-item-content">{{ baseInfo.coupons }}</view>
                     <view class="pm-bar-item-title">卡券</view>
                 </view>
-                <view class="pm-header-bar-item">
+                <view
+                    class="pm-header-bar-item"
+                    bindtap="goLike"
+                >
                     <view class="pm-bar-item-content">
                         <image
                             class="pm-bar-item-image"
