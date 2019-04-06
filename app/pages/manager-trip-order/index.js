@@ -57,9 +57,9 @@ Page({
             });
         }
 
-        // this.setData({
-        //     id: 'XDGzG97E7L4wLIdu'
-        // });
+        this.setData({
+            id: 'XDGzG97E7L4wLIdu'
+        });
     },
 
     /**

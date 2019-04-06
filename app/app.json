@@ -1,10 +1,11 @@
 {
   "pages": [
+    "pages/manager-trip-order/index",
+    "pages/manager-trip-detail/index",
+    "pages/manager-trip-list/index",
     "pages/my/index",
     "pages/like-goods/index",
     "pages/trip-enter/index",
-    "pages/manager-trip-list/index",
-    "pages/manager-trip-detail/index",
     "pages/index/index",
     "pages/goods-detail/index",
     "pages/manager-goods-detail/index",
@@ -14,7 +15,6 @@
     "pages/cart-list/index",
     "pages/search/index",
     "pages/coupon-list/index",
-    "pages/manager-trip-order/index",
     "pages/trip-detail/index",
     "pages/concat/index",
     "pages/trip-deliver/index",

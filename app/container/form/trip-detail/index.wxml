@@ -1,7 +1,7 @@
 <!--container/form/trip-detail/index.wxml-->
 
 <view class='con-form-trip-detail'>
-    {{ hasBeenPassStart }}
+
     <!-- 顶部公告 -->
     <wxc-notice
         color="#4d4d4d"

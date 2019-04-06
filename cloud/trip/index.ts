@@ -327,7 +327,13 @@ export const main = async ( event, context ) => {
 
     /** 
      * @description
-     * 获取行程底下的基本业务数据 销售总额、客户总数、未付尾款客户数量、总订单数、行程名称、已发送催款次数
+     * 获取行程底下的基本业务数据
+     * 销售总额、
+     * 客户总数、
+     * 未付尾款客户数量、
+     * 总订单数、
+     * 行程名称、
+     * 已发送催款次数
      */
     app.router('order-info', async( ctx, next ) => {
         try {
@@ -372,7 +378,7 @@ export const main = async ( event, context ) => {
              */
             const notPayAllClients = Array.from(
                 new Set( orders$.data
-                    .filter( x => x.pay_status === '1' && !!x.allocatedCount )
+                    .filter( x => x.pay_status === '1' )
                     .map( x => x.openid )
             )).length;
 
