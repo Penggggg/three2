@@ -58,10 +58,15 @@ Page({
             url: 'common_add-auth-by-psw',
             success: res => {
                 if ( res.status === 200 ) {
-                    return wx.showToast({
+                    wx.showToast({
                         icon: 'none',
-                        title: '创建成功！请重启小程序',
-                      })
+                        title: '创建成功！',
+                    });
+                    setTimeout(( ) => {
+                        wx.redirectTo({
+                            url: `/pages/trip-enter/index`
+                        });
+                    }, 300 );
                 }
             }
         })
