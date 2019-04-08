@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/my/index",
     "pages/manager-auth-init/index",
+    "pages/my/index",
     "pages/manager-goods-list/index",
     "pages/manager-trip-order/index",
     "pages/manager-goods-detail/index",

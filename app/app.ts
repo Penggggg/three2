@@ -1,5 +1,7 @@
 import { http } from './util/http';
 
+const prodEnv = 'prod-b87b76';
+
 App<MyApp>({
 
     /** fade globalData */
@@ -77,7 +79,7 @@ App<MyApp>({
             // 云
             wx.cloud.init({
                 traceUser: true,
-                // env: 'prod-b87b76'
+                env: prodEnv
             });
             resolve( );
         });

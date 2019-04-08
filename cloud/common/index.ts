@@ -589,12 +589,7 @@ export const main = async ( event, context ) => {
             }
 
             // 初始化各个表
-            try {
-                const collections = CONFIG.collections;
-                await Promise.all(
-                    collections.map( collectionName => (db as any).createCollection( collectionName ))
-                );
-            } catch ( e ) { }
+            await initDB( );
 
             return ctx.body = {
                 status: 200
@@ -611,3 +606,23 @@ export const main = async ( event, context ) => {
     return app.serve( );
 
 }
+
+/**
+ * 初始化数据库、基础数据
+ */
+const initDB = ( ) => new Promise( async resolve => {
+    try {
+
+        /** 初始化表 */
+        const collections = CONFIG.collections;
+        await Promise.all(
+            collections.map( collectionName => (db as any).createCollection( collectionName ))
+        );
+
+        /** 初始化数据字典 */
+        
+
+        resolve( );
+
+    } catch ( e ) { resolve( );}
+});
