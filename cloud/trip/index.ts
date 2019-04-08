@@ -8,17 +8,6 @@ cloud.init({
 const db: DB.Database = cloud.database( );
 const _ = db.command;
 
-/**
- * @description { }
- * @argument { db: deliver }
- * 快递模块字段 
- */
-　/**
- * -------- 字段 ----------
- * tid,
- * imgs,
- * type: 'deliver-img'
- */
 
 /**
  *
@@ -242,11 +231,11 @@ export const main = async ( event, context ) => {
                     status: 500,
                     message
                 }
-            }
+            };
 
             /**
              * 校验1：
-             * 如果是想要创建、编辑当前行程
+             * 如果行程选择“已发布”
              * 需要检查是否有 已发布行程的结束时间 大于等于 当前行程的开始时间
              */
             if ( event.data.published ) {
@@ -303,11 +292,12 @@ export const main = async ( event, context ) => {
                 const origin = origin$.data[ 0 ];
     
                 delete origin['_id'];
-                delete event.data['_id']
+                delete event.data['_id'];
                 delete event.data['sales_volume']
     
                 const temp = Object.assign({ }, origin, {
-                    ...event.data
+                    ...event.data,
+                    isClosed: new Date( ).getTime( ) >= Number( end_date ) 
                 })
     
                 await db.collection('trip')
@@ -315,7 +305,6 @@ export const main = async ( event, context ) => {
                         .set({
                             data: temp
                         });
-    
             }
 
             return ctx.body = {
