@@ -1,6 +1,8 @@
 const { http } = require('../../util/http.js');
 const { computed } = require('../../lib/vuefy/index.js');
 
+const app = getApp( );
+
 Page({
 
     /**
@@ -62,11 +64,11 @@ Page({
                         icon: 'none',
                         title: '创建成功！',
                     });
-                    setTimeout(( ) => {
+                    app.getUserInfo(( ) => {
                         wx.redirectTo({
                             url: `/pages/trip-enter/index`
                         });
-                    }, 300 );
+                    });
                 }
             }
         })

@@ -92,7 +92,7 @@ App<MyApp>({
             success: res => {
                 this.setGlobalData({
                     isNew: res.data
-                })
+                });
             }
         })
     },
@@ -119,11 +119,12 @@ App<MyApp>({
     },
 
     /** 获取用户权限信息 role/ openid */
-    getUserInfo( ) {
+    getUserInfo( cb ) {
         wx.cloud.callFunction({
             name: 'login'
         }).then(( res: any) => {
             this.setGlobalData( res.result );
+            !!cb && cb( );
         });
     },
 
@@ -196,7 +197,7 @@ export interface MyApp {
     watchingKeys: string[ ]
     init: ( ) => void
     initCloud: ( ) => Promise<any>
-    getUserInfo: ( ) => void,
+    getUserInfo: ( cb?: () => void ) => void,
     getIsNewCustom:  ( ) => void,
     getWxUserInfo: ( cb?: ( ) => void ) => void,
     setGlobalData: <K extends keyof globalState>( data: globalState | Pick<globalState, K> ) => void,
