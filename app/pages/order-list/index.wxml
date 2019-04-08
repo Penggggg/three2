@@ -290,6 +290,7 @@
                                     bindtap="goGoodDetail"
                                     data-data="{{ order }}"
                                     class="pol-trip-order-standar"
+                                    wx:if="{{ order.standername !== '默认型号' }}"
                                 >
                                     {{ order.standername }}
                                 </view>

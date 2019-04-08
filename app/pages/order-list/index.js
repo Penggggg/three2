@@ -713,7 +713,7 @@ Page({
 
                         img: order.img[ 0 ],
 
-                        desc: `${order.name} ${order.standername}`,
+                        desc: `${order.name} ${order.standername !== '默认型号' ? order.standername : ''}`,
 
                         share: {
                             title: `省${order.allocatedGroupPrice ?
