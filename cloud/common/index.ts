@@ -487,6 +487,7 @@ export const main = async ( event, context ) => {
         try {
 
             try {
+                await (db as any).createCollection('manager-member');
                 await (db as any).createCollection('authpsw');
             } catch ( e ) { }
 
@@ -590,9 +591,9 @@ export const main = async ( event, context ) => {
             // 初始化各个表
             try {
                 const collections = CONFIG.collections;
-                await Promise.all([
+                await Promise.all(
                     collections.map( collectionName => (db as any).createCollection( collectionName ))
-                ]);
+                );
             } catch ( e ) { }
 
             return ctx.body = {

@@ -33,12 +33,12 @@ export const collections = [
     'order',
     'coupon',
     'goods',
-    'manager-member',
     'shopping-list',
     'trip',
     'standards',
     'deliver',
-    'authpsw'
+    'authpsw',
+    'manager-member',
 ];
 
 /** 权限模块 */
