@@ -13,6 +13,14 @@
         notice="没有下一个【即将开始】的行程，请尽快创建！"
     />
 
+    <!-- 暂无更多 -->
+    <view
+        class="pmgl-nomore"
+        wx:if="{{ !loadingList && list.length === 0 }}"
+    >
+        No More
+    </view>
+
     <!-- 中间列表 -->
     <scroll-view
         scroll-y

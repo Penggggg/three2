@@ -203,3 +203,35 @@
   letter-spacing: 0.02em;
   display: inline-block;
 }
+
+.pmgl-nomore {
+  margin-top: 100rpx;
+  margin-bottom: 50rpx;
+  color: #999;
+  font-size: 22rpx;
+  text-align: center;
+  letter-spacing: 0.05em;
+  position: relative;
+}
+
+.pmgl-nomore:after {
+  top: 50%;
+  right: 10%;
+  width: 30%;
+  height: 1px;
+  position: absolute;
+  content: '';
+  background: rgba( 0, 0, 0, 0.15 );
+  transform: translate( 0, -50% ) scaleY( 0.5 );
+}
+
+.pmgl-nomore:before {
+  top: 50%;
+  left: 10%;
+  width: 30%;
+  height: 1px;
+  position: absolute;
+  content: '';
+  background: rgba( 0, 0, 0, 0.15 );
+  transform: translate( 0, -50% ) scaleY( 0.5 );
+}
