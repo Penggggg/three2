@@ -567,13 +567,11 @@ Component({
             if ( !tid ) {
                 tripDetail = Object.assign({ }, tripDetail, {
                     isClosed: false,
-                    isPassed: false,
                     createTime: new Date( ).getTime( )
                 });
             } else {
                 tripDetail = Object.assign({ }, tripDetail, {
-                    _id: tid,
-                    isPassed: false,
+                    _id: tid
                 });
             }
 

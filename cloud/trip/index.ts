@@ -14,7 +14,7 @@ const _ = db.command;
  * @description 行程模块
  * -------- 字段 ----------
         title 标题 string
-        destination 目的地 string
+ *!     destination 目的地 string
         start_date 开始时间 number
         end_date 结束时间 number
         reduce_price 行程立减 number
@@ -23,11 +23,10 @@ const _ = db.command;
         fullreduce_values 行程满减 - 减多少 number
         cashcoupon_atleast 行程代金券 - 门槛 number
         cashcoupon_values 行程代金券 - 金额 number
-        postage 邮费类型 dic 
-        postagefree_atleast  免邮门槛 number
+*!      postage 邮费类型 dic 
+*!      postagefree_atleast  免邮门槛 number
         payment 付款类型 dic 
         published 是否发布 boolean
-        isPassed 是否过期
         createTime 创建时间
         updateTime 更新时间
         isClosed: 是否已经手动关闭
