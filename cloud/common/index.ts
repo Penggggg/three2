@@ -125,6 +125,7 @@ export const main = async ( event, context ) => {
     });
 
     /**
+     * @description
      * 是新客还是旧客
      * 新客，成功支付订单 <= 3
     */
@@ -614,13 +615,44 @@ const initDB = ( ) => new Promise( async resolve => {
     try {
 
         /** 初始化表 */
-        const collections = CONFIG.collections;
-        await Promise.all(
-            collections.map( collectionName => (db as any).createCollection( collectionName ))
-        );
+        try {
+            const collections = CONFIG.collections;
+            await Promise.all(
+                collections.map( collectionName => (db as any).createCollection( collectionName ))
+            );
+        } catch ( e ) { }
 
         /** 初始化数据字典 */
-        
+        try {
+            const dics = CONFIG.dic;
+            await Promise.all(
+                dics.map( async dicSet => {
+
+                    const targetDic$ = await db.collection('dic')
+                        .where({
+                            belong: dicSet.belong
+                        })
+                        .get( );
+
+                    const targetDic = targetDic$.data[ 0 ];
+                    if ( !!targetDic ) {
+                        await db.collection('dic')
+                            .doc( String( targetDic._id ))
+                            .set({
+                                data: dicSet
+                            });
+
+                    } else {
+                        await db.collection('dic')
+                            .add({
+                                data: dicSet
+                            });
+                    }
+                })
+            );
+        } catch ( e ) {
+            console.log('eee', e );
+        }
 
         resolve( );
 

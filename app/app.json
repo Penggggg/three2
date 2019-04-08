@@ -1,10 +1,10 @@
 {
   "pages": [
-    "pages/manager-auth-init/index",
     "pages/my/index",
+    "pages/manager-goods-detail/index",
+    "pages/manager-auth-init/index",
     "pages/manager-goods-list/index",
     "pages/manager-trip-order/index",
-    "pages/manager-goods-detail/index",
     "pages/manager-trip-order-all/index",
     "pages/manager-trip-detail/index",
     "pages/manager-trip-list/index",

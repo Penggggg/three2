@@ -1,3 +1,5 @@
+import dicConf from './dic';
+
 /** app */
 export const app = {
     id: 'wx60bf7f745ce31ef0',
@@ -45,3 +47,6 @@ export const collections = [
 export const auth = {
     salt: 'hzpisbest'
 }
+
+/** 数据字典 */
+export const dic = dicConf;

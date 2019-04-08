@@ -1,6 +1,6 @@
 import { http } from './util/http';
 
-const prodEnv = 'prod-b87b76';
+const cloudEnv = undefined;
 
 App<MyApp>({
 
@@ -79,7 +79,7 @@ App<MyApp>({
             // 云
             wx.cloud.init({
                 traceUser: true,
-                env: prodEnv
+                env: cloudEnv
             });
             resolve( );
         });
