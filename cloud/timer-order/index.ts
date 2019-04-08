@@ -3,7 +3,9 @@ import { overtime, payedFix, priceFix } from './order';
 import { catchLostOrders } from './shopping-list';
 import { overtimeTrip } from './trip';
 
-cloud.init( );
+cloud.init({
+    env: process.env.cloud
+});
 
 const db: DB.Database = cloud.database( );
 const _ = db.command;

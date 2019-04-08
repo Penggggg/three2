@@ -5,7 +5,9 @@ import * as crypto from 'crypto';
 import * as rp from 'request-promise';
 import * as CONFIG from './config';
 
-cloud.init( );
+cloud.init({
+    env: process.env.cloud
+});
 
 const db: DB.Database = cloud.database( );
 const _ = db.command;

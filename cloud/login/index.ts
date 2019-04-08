@@ -2,7 +2,9 @@
 // const cloud = require('wx-server-sdk');
 import * as cloud from 'wx-server-sdk';
 
-cloud.init( );
+cloud.init({
+  env: process.env.cloud
+});
 
 const db: DB.Database = cloud.database();
 

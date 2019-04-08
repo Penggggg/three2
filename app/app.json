@@ -1,6 +1,8 @@
 {
   "pages": [
-    "pages/my/index",
+    "pages/my/index ",
+    "pages/manager-goods-list/index",
+    "pages/manager-auth-init/index",
     "pages/manager-trip-order/index",
     "pages/manager-goods-detail/index",
     "pages/manager-trip-order-all/index",
@@ -10,7 +12,6 @@
     "pages/trip-enter/index",
     "pages/index/index",
     "pages/goods-detail/index",
-    "pages/manager-goods-list/index",
     "pages/manager-goods-active/index",
     "pages/order-list/index",
     "pages/cart-list/index",
@@ -19,7 +20,6 @@
     "pages/trip-detail/index",
     "pages/concat/index",
     "pages/trip-deliver/index",
-    "pages/manager-auth-init/index",
     "pages/manager-person-info/index"
   ],
   "usingComponents": {

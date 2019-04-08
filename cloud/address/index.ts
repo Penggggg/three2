@@ -4,7 +4,9 @@ import * as TcbRouter from 'tcb-router';
 import { create$ } from './create';
 import { find$ } from './find';
 
-cloud.init( );
+cloud.init({
+    env: process.env.cloud
+});
 
 const db: DB.Database = cloud.database( );
 

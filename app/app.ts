@@ -76,22 +76,9 @@ App<MyApp>({
 
             // 云
             wx.cloud.init({
-                traceUser: true
+                traceUser: true,
+                // env: 'prod-b87b76'
             });
-
-            /**
-             * 这里可能要在指定页面去发起“激活”
-             */
-            // http({
-            //     url: 'common_init',
-            //     success: res => {
-            //         if ( res.status !== 200 ) {
-            //             return reject( );
-            //         }
-            //         resolve( );
-            //     }
-            // })
-
             resolve( );
         });
     },

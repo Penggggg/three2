@@ -2,7 +2,9 @@
 import * as cloud from 'wx-server-sdk';
 import * as TcbRouter from 'tcb-router';
 
-cloud.init( );
+cloud.init({
+    env: process.env.cloud
+});
 
 const db: DB.Database = cloud.database( );
 const _ = db.command;
