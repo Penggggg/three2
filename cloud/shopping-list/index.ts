@@ -130,24 +130,36 @@ export const main = async ( event, context ) => {
                 if ( !!i.sid ) {
                     return db.collection('standards')
                         .where({
-                            _id: i.sid,
-                            isDelete: _.neq( true )
+                            _id: i.sid
                         })
                         .get( )
                 } else {
                     return db.collection('goods')
                         .where({
-                            _id: i.pid,
-                            visiable: true,
-                            isDelete: _.neq( true )
+                            _id: i.pid
                         })
                         .get( )
                 }
+            }));
 
+            /** 型号所属商品 */
+            const belongGoodIds = Array.from( 
+                new Set(
+                    event.data.list
+                        .filter( i => !!i.sid )
+                        .map( o => o.pid )
+                )
+            );
+
+            const belongGoods$ = await Promise.all( belongGoodIds.map( pid => {
+                return db.collection('goods')
+                    .doc( String( pid ))
+                    .get( );
             }));
            
             const goods = goodDetails$.map( x => x.data[ 0 ]).filter( y => !!y ).filter( z => !z.pid );
             const standards = goodDetails$.map( x => x.data[ 0 ]).filter( y => !!y ).filter( z => !!z.pid );
+            const belongGoods = belongGoods$.map( x => x.data );
 
             // 库存不足
             let lowStock: any = [ ];
@@ -166,8 +178,11 @@ export const main = async ( event, context ) => {
             event.data.list.map( i => {
                 // 型号
                 if ( !!i.sid ) {
+                    const belongGood = belongGoods.find( x => x._id === i.pid );
                     const standard = standards.find( x => x._id === i.sid && x.pid === i.pid );
-                    if ( !standard ) {
+
+                    // 型号本身被删除、主体本身被下架/删除
+                    if ( !standard || ( !!standard && standard.isDelete ) || ( !!belongGood && !belongGood.visiable ) || ( !!belongGood && belongGood.isDelete )) {
                         hasBeenDelete.push( i );
                     } else if ( standard.stock !== undefined &&  standard.stock < i.count ) {
                         lowStock.push( Object.assign({ }, i, {
@@ -179,7 +194,7 @@ export const main = async ( event, context ) => {
                 // 主体商品
                 } else {
                     const good = goods.find( x => x._id === i.pid );
-                    if ( !good || ( !!good && !good.visiable )) {
+                    if ( !good || ( !!good && !good.visiable ) || ( !!good && good.isDelete )) {
                         hasBeenDelete.push( i )
                     } else if ( good.stock !== undefined &&  good.stock < i.count ) {
                         lowStock.push( Object.assign({ }, i, {

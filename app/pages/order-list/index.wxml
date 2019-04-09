@@ -459,7 +459,7 @@
                                 wx:if="{{ item.tripStatusCN === '待付订金' }}"
                                 class="pol-trip-order-btn purple"
                             >
-                                订金 {{ item.lastDepositPrice || 0 }}
+                                付订金 {{ item.lastDepositPrice || 0 }}
                             </view>
 
                             <!-- 尾款按钮 -->

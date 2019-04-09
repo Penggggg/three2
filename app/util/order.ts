@@ -46,7 +46,7 @@ export const createOrders = ( tid, targetBuys, from, successCB, errorCB ) => {
             if ( cannotBuy.length > 0 ) {
                 return wx.showModal({
                     title: '提示',
-                    content: `火爆！${cannotBuy.map( x => `${x.goodName}${x.standardName}`).join('、')}暂时无货！`
+                    content: `火爆！${cannotBuy.map( x => `${x.goodName || x.name}${x.standername !== '默认型号' ? x.standername : ''}`).join('、')}暂时无货！`
                 });
             }
 
@@ -54,7 +54,7 @@ export const createOrders = ( tid, targetBuys, from, successCB, errorCB ) => {
             if ( hasBeenDelete.length > 0 ) {
                 return wx.showModal({
                     title: '提示',
-                    content: `${hasBeenDelete.map( x => `${x.goodName}${x.standerName}`).join('、')}已被删除，请重新选择！`
+                    content: `${hasBeenDelete.map( x => `${x.goodName || x.name}${x.standername !== '默认型号' ? x.standername : ''}`).join('、')}已被删除，请重新选择！`
                 });
             }
 
@@ -62,7 +62,7 @@ export const createOrders = ( tid, targetBuys, from, successCB, errorCB ) => {
             if ( lowStock.length > 0 ) {
                 return wx.showModal({
                     title: '提示',
-                    content: `${lowStock.map( x => `${x.goodName}${x.standerName}`).join('、')}货存不足，请重新选择！`
+                    content: `${lowStock.map( x => `${x.goodName || x.name}${x.standername !== '默认型号' ? x.standername : ''}`).join('、')}货存不足，请重新选择！`
                 });
             }
 

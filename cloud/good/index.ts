@@ -142,6 +142,7 @@ export const main = async ( event, context ) => {
                 .where({
                     category,
                     title: search,
+                    visiable: true,
                     isDelete: _.neq( true )
                 })
                 .count( );
@@ -151,6 +152,7 @@ export const main = async ( event, context ) => {
                 .where({
                     category,
                     title: search,
+                    visiable: true,
                     isDelete: _.neq( true )
                 })
                 .limit( limit )
