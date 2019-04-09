@@ -80,9 +80,9 @@
                     </view>
                     <view
                         class="sku-stock"
-                        wx:if="{{ selectedSku.stock }}"
+                        wx:if="{{ selectedSku.stock || selectedSku.limit }}"
                     >
-                        库存{{ selectedSku.stock }}件<text wx:if="{{ selectedSku.limit }}">，限购{{ selectedSku.limit }}件</text>
+                        {{ selectedSku.stock ? '库存' + selectedSku.stock + '件' : '' }}<text>{{ selectedSku.limit ? '限购' + selectedSku.limit + '件' : '' }}</text>
                     </view>
                     <view
                         class="sku-title"
