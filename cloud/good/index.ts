@@ -353,27 +353,17 @@ export const main = async ( event, context ) => {
     
                 // 更新
                 const meta = Object.assign({ }, event.data );
-                delete meta[ _id ];
-                const { title, category, depositPrice, detail, fadePrice, img, limit, 
-                    standards, tag, updateTime, visiable, price, groupPrice, stock, saled } = meta;
-                await db.collection('goods').doc( _id ).update({
-                    data: { 
-                        tag,
-                        img,
-                        stock,
-                        price,
-                        limit,
-                        title,
-                        detail,
-                        saled,
-                        groupPrice,
-                        category,
-                        fadePrice,
-                        visiable,
-                        updateTime,
-                        depositPrice
-                    }
-                });
+
+                delete meta._id;
+                delete event.data._id;
+
+                const { standards } = meta;
+
+                await db.collection('goods')
+                    .doc( _id )
+                    .set({
+                        data: Object.assign({ }, meta, event.data )
+                    })
     
                 // 0. 查询该产品底下所有的型号
                 const allStandards$ = await db.collection('standards')
