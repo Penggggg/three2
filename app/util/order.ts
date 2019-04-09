@@ -40,7 +40,7 @@ export const createOrders = ( tid, targetBuys, from, successCB, errorCB ) => {
             const { status, data } = res;
             if ( status !== 200 ) { return; }
 
-            const { hasBeenBuy, cannotBuy, hasBeenDelete, lowStock, orders } = data;
+            const { hasBeenBuy, cannotBuy, hasBeenDelete, lowStock, hasLimitGood, orders } = data;
       
             /** 提示行程无货 */
             if ( cannotBuy.length > 0 ) {
@@ -74,6 +74,16 @@ export const createOrders = ( tid, targetBuys, from, successCB, errorCB ) => {
                 wx.showModal({
                     title: '提示',
                     content: `群主已经买了${hasBeenBuy.map( x => `${x.goodName}${x.standardName}`).join('、')}，不一定会返程购买，请联系群主！`
+                });
+            }
+
+            /**
+             * 限购提示
+             */
+            if ( hasLimitGood.length > 0 ) {
+                wx.showModal({
+                    title: '提示',
+                    content: `${hasLimitGood.map( x => `${x.goodName || x.name || x.title}`).join('、')}已限购`
                 });
             }
             

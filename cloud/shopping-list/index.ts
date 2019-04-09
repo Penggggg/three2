@@ -94,7 +94,7 @@ export const main = async ( event, context ) => {
      */
     app.router('findCannotBuy', async( ctx, next ) => {
         try {
-
+            console.log('======>findCannotBuy')
             const { tid, list } = event.data;
             const openId = event.data.openId || event.userInfo.openId;
 
@@ -146,7 +146,7 @@ export const main = async ( event, context ) => {
             const belongGoodIds = Array.from( 
                 new Set(
                     event.data.list
-                        .filter( i => !!i.sid )
+                        // .filter( i => !!i.sid )
                         .map( o => o.pid )
                 )
             );
@@ -160,6 +160,9 @@ export const main = async ( event, context ) => {
             const goods = goodDetails$.map( x => x.data[ 0 ]).filter( y => !!y ).filter( z => !z.pid );
             const standards = goodDetails$.map( x => x.data[ 0 ]).filter( y => !!y ).filter( z => !!z.pid );
             const belongGoods = belongGoods$.map( x => x.data );
+
+            // 限购
+            let hasLimitGood: any = [ ];
 
             // 库存不足
             let lowStock: any = [ ];
@@ -176,7 +179,7 @@ export const main = async ( event, context ) => {
             const hasBeenBuy = [ ];
 
             event.data.list.map( i => {
-                // 型号
+                // 型号 - 计算已被删除、库存不足、主体本身被下架/删除
                 if ( !!i.sid ) {
                     const belongGood = belongGoods.find( x => x._id === i.pid );
                     const standard = standards.find( x => x._id === i.sid && x.pid === i.pid );
@@ -191,7 +194,7 @@ export const main = async ( event, context ) => {
                             standerName: i.standername
                         }));
                     }
-                // 主体商品
+                // 主体商品 - 计算已被删除、库存不足
                 } else {
                     const good = goods.find( x => x._id === i.pid );
                     if ( !good || ( !!good && !good.visiable ) || ( !!good && good.isDelete )) {
@@ -202,16 +205,46 @@ export const main = async ( event, context ) => {
                             goodName: i.name
                         }));
                     }
-
                 }
             });
+
+
+            // 查询限购
+            const limitGoods = belongGoods.filter( x => !!x.limit );
+
+            await Promise.all( limitGoods.map( async good => {
+
+                const orders = await db.collection('order')
+                    .where({
+                        tid,
+                        pid: good._id,
+                        openid: openId,
+                        pay_status: _.or( _.eq('1'), _.eq('2'))
+                    })
+                    .get( );
+
+                const hasBeenBuyCount = orders.data.reduce(( x, y ) => {
+                    return x + y.count
+                }, 0 );
+
+                const thisTripBuyCount = event.data.list
+                    .filter( x => x.pid === good._id )
+                    .reduce(( x, y ) => {
+                        return x + y.count
+                    }, 0 );
+                    
+                if ( thisTripBuyCount + hasBeenBuyCount > good.limit ) {
+                    hasLimitGood.push( good );
+                }
+            }));
+            
 
             let orders = [ ];
             /**
              * 如果可以购买
              * ! 批量创建预付订单
              */
-            if ( lowStock.length === 0 && cannotBuy.length === 0 && hasBeenDelete.length === 0 ) {
+            if ( hasLimitGood.length === 0 && lowStock.length === 0 && cannotBuy.length === 0 && hasBeenDelete.length === 0 ) {
 
                 const reqData = {
                     tid,
@@ -239,11 +272,12 @@ export const main = async ( event, context ) => {
 
             return ctx.body = {
                 data: {
+                    orders,
                     lowStock,
-                    hasBeenDelete,
                     cannotBuy,
+                    hasLimitGood,
                     hasBeenBuy,
-                    orders
+                    hasBeenDelete,
                 },
                 status: 200
             }
