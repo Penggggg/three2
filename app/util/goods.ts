@@ -150,7 +150,9 @@ const dealGoodPin = good => {
         return {
             list: meta,
             // 每对可拼团型号，可优惠的价格区间
-            eachPriceRound: `${deltas[ deltas.length - 1 ]} ~ ${deltas[ 0 ]}`
+            eachPriceRound:  deltas[ deltas.length - 1 ] !== deltas[ 0 ] ?
+                 `${deltas[ deltas.length - 1 ]} ~ ${deltas[ 0 ]}` :
+                 deltas[ 0 ]
         };
     }
 }

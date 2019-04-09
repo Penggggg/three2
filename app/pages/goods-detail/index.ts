@@ -77,6 +77,7 @@ Page({
                     return ''
                 } else {
                     const result = delayeringGood( detail );
+                    console.log('??', result)
                     return result ? result.goodPins.eachPriceRound : '';
                 }
             },
