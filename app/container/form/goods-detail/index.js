@@ -475,9 +475,7 @@ Component({
                 title: _id ? '更新成功' : '创建成功'
             });
 
-            if ( !_id ) {
-              navTo(`/pages/manager-goods-list/index`)
-            }
+            navTo(`/pages/manager-goods-list/index`)
           }
       });
 

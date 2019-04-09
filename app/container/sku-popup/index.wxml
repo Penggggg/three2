@@ -97,6 +97,7 @@
                             icon="sub"
                             decimal="small"
                             class="sku-price sm"
+                            wx:if="{{ (selectedSku.canPin && selectedSku.price ) || (!selectedSku.canPin && selectedSku.groupPrice) }}"
                         > 
                             {{ selectedSku.canPin ? selectedSku.price : selectedSku.groupPrice || '' }}
                         </wxc-price>

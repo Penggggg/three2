@@ -232,11 +232,11 @@ Page({
                  * 先处理：立减
                  * 如果未领取立减到上半部分，则系统创建
                  **/
-                const halfOfLijian = Number( reduce_price * 0.4 ).toFixed( 1 );
+                const halfOfLijian = Number( reduce_price * 0.4 ).toFixed( 2 );
                 this.setData({
                     lijian: {
                         hasBeenGet: halfOfLijian,
-                        notGet: Number( reduce_price * 0.6 ).toFixed( 1 ),
+                        notGet: Number( reduce_price * 0.6 ).toFixed( 2 ),
                     }
                 })
 
@@ -265,7 +265,7 @@ Page({
             success: res => {
                 const { status, data } = res;
                 this.setData({
-                    pinest: data[ 0 ],
+                    pinest: data[ 0 ] || null,
                     allPin: data.map( x => Object.assign({ }, x )).splice( 1 )
                 });
             }
