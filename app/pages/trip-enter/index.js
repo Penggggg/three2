@@ -3,49 +3,64 @@ const { navTo } = require('../../util/route.js');
 const { computed } = require('../../lib/vuefy/index.js');
 const { delayeringGood } = require('../../util/goods.js');
 
-// app/pages/trip-enter/index.js
+const app = getApp( );
+
 Page({
 
     /**
      * 页面的初始数据
      */
     data: {
-        /** 是否已加载过 */
-        loaded: false,
+
+        role: 0,
+
         /** 最快可用行程 */
         current: null,
+
         /** 下一趟可用行程 */
         next: null,
+
         /** 顶部公共 */
         notice: '',
+
         /** 热门推荐 */
         recommendGoods: [ ],
+
         /** 排行榜商品 */
         rankGoods: [ ],
+
         /** 3~20名商品 */
         otherGoods: [ ],
+
         /** 展开立减框 */
         showLijian: false,
+
         /** 展开满减 */
         showManjian: false,
+
         /** 立减信息 */
         lijian: {
             notGet: 0,
             hasBeenGet: 0
         },
+
         /** 参加人数 */
         memberCount: 0,
+
         /** 仙女购物单 */
         fairyList: [ ],
+
         /** 一口价商品列表 */
         goodDiscounts: [ ],
+
         /** 是否展示社交弹幕 */
         showMember: false,
+
         /** 本期拼团王产品 */
         pinest: null,
+
         /** 所有的拼团列表（待拼、可拼） */
         allPin: [ ]
-
     },
 
     /** 设置computed */
@@ -105,9 +120,6 @@ Page({
     /** 拉取两个最新行程 */
     fetchLast( ) {
 
-        const { loaded } = this.data;
-        if ( loaded ) { return; }
-
         http({
             data: { },
             errMsg: '加载失败，请重试',
@@ -120,7 +132,6 @@ Page({
                 const current = data[ 0 ];
                 const next = data[ 1 ];
                 this.setData({
-                    loaded: true,
                     recommendGoods: current? current.products.map( delayeringGood ).filter( x => !!x ) : [ ],
                     next: data[ 1 ] ? this.dealTrip( data[ 1 ]) : null,
                     current: data[ 0 ] ? this.dealTrip( data[ 0 ]) : null
@@ -180,8 +191,8 @@ Page({
     /** 拉取商品销量排行榜(前20) */
     fetchRank( ) {
      
-        const { rankGoods } = this.data;
-        if ( rankGoods.length > 0 ) { return; }
+        const { rankGoods, role } = this.data;
+        if ( role === 0 && rankGoods.length > 0 ) { return; }
 
         http({
             data: {
@@ -362,7 +373,30 @@ Page({
      */
     onLoad: function (options) {
         this.fetchRank( );
+        this.fetchLast( );
         this.runComputed( );
+
+        app.watch$('role', role => {
+            this.setData({
+                role
+            });
+        });
+    },
+
+    /**
+     * 生命周期函数--监听页面显示
+     */
+    onShow: function ( ) {
+        const { role } = this.data;
+        if ( role === 1 ) {
+            this.setData({
+                
+            });
+            setTimeout(( ) => {
+                this.fetchRank( );
+                this.fetchLast( );
+            }, 20 );
+        }
     },
 
     /**
@@ -370,13 +404,6 @@ Page({
      */
     onReady: function () {
         
-    },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow: function ( ) {
-        this.fetchLast( );
     },
 
     /**

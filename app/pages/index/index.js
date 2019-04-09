@@ -9,6 +9,8 @@ Page({
 
     data: {
 
+        role: 0,
+
         // 数据字典
         dic: { },
 
@@ -109,8 +111,8 @@ Page({
 
     /** 拉取一口价列表 */
     fetchDiscount( ) {
-        const { activities } = this.data;
-        if ( activities.length > 0 ) { return; }
+        const { activities, role } = this.data;
+        if ( role === 0 && activities.length > 0 ) { return; }
 
         http({
             data: {
@@ -311,14 +313,38 @@ Page({
         navTo(`/pages/trip-detail/index?id=${tid}`);
     },
 
-    onLoad( options ) {
-
-        this.runComputed( );
+    /** 初始化加载 */
+    initLoad( ) {
         this.fetchRank( );
         this.fetchNew( );
         this.fetchDic( );
         this.fetchDiscount( );
         this.fetchCurrentTrip( );
+    },
+
+    onShow( ) {
+        const { role } = this.data;
+        if ( role === 1 ) {
+            this.setData({
+                page: 0,
+                newPage: 0,
+                canLoadMore: true,
+                canLoadNewMore: true
+            });
+            setTimeout(( ) => {
+                this.initLoad( );
+            }, 20 );
+        }
+    },
+
+    onLoad( options ) {
+        this.runComputed( );
+        this.initLoad( );
+        app.watch$('role', role => {
+            this.setData({
+                role
+            });
+        });
     },
 
     /**
