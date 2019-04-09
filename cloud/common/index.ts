@@ -608,6 +608,10 @@ export const main = async ( event, context ) => {
 
 }
 
+const time = ts => new Promise( resovle => {
+    setTimeout(( ) => resovle( ), ts );
+})
+
 /**
  * 初始化数据库、基础数据
  */
@@ -621,6 +625,8 @@ const initDB = ( ) => new Promise( async resolve => {
                 collections.map( collectionName => (db as any).createCollection( collectionName ))
             );
         } catch ( e ) { }
+
+        await time( 800 );
 
         /** 初始化数据字典 */
         try {
