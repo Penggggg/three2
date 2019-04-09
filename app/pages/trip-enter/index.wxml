@@ -124,7 +124,6 @@
                             越拼·越省
                         </view>
                         <view
-                            bindtap="goTripDetail"
                             class="te-fairy-simple-entry"
                         >
                             View all

@@ -14,6 +14,9 @@ Page({
 
         role: 0,
 
+        /** 加载 */
+        loaded: false,
+
         /** 最快可用行程 */
         current: null,
 
@@ -132,6 +135,7 @@ Page({
                 const current = data[ 0 ];
                 const next = data[ 1 ];
                 this.setData({
+                    loaded: true,
                     recommendGoods: current? current.products.map( delayeringGood ).filter( x => !!x ) : [ ],
                     next: data[ 1 ] ? this.dealTrip( data[ 1 ]) : null,
                     current: data[ 0 ] ? this.dealTrip( data[ 0 ]) : null
