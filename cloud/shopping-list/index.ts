@@ -99,28 +99,30 @@ export const main = async ( event, context ) => {
             const openId = event.data.openId || event.userInfo.openId;
 
             // 不能购买的商品列表（清单里面买不全）
-            const findings$: any = await Promise.all( event.data.list.map( i => {
-                return find$({
-                    tid: i.tid,
-                    pid: i.pid,
-                    sid: i.sid,
-                    buy_status: '2'
-                }, db, ctx )
-            }))
+            // const findings$: any = await Promise.all( event.data.list.map( i => {
+            //     return find$({
+            //         tid: i.tid,
+            //         pid: i.pid,
+            //         sid: i.sid,
+            //         buy_status: '2'
+            //     }, db, ctx )
+            // }))
+            const findings$ = [ ];
 
-            if ( findings$.some( x => x.status !== 200 )) {
-                throw '查询购物清单错误';
-            }
+            // if ( findings$.some( x => x.status !== 200 )) {
+            //     throw '查询购物清单错误';
+            // }
 
             // 已完成购买的商品列表
-            const hasBeenBuy$: any = await Promise.all( event.data.list.map( i => {
-                return find$({
-                    tid: i.tid,
-                    pid: i.pid,
-                    sid: i.sid,
-                    buy_status: '1'
-                }, db, ctx )
-            }));
+            // const hasBeenBuy$: any = await Promise.all( event.data.list.map( i => {
+            //     return find$({
+            //         tid: i.tid,
+            //         pid: i.pid,
+            //         sid: i.sid,
+            //         buy_status: '1'
+            //     }, db, ctx )
+            // }));
+            const hasBeenBuy$ = [ ];
 
             // 查询商品详情、或者型号详情
             const goodDetails$: any = await Promise.all( event.data.list.map( i => {
@@ -128,13 +130,16 @@ export const main = async ( event, context ) => {
                 if ( !!i.sid ) {
                     return db.collection('standards')
                         .where({
-                            _id: i.sid
+                            _id: i.sid,
+                            isDelete: _.neq( true )
                         })
                         .get( )
                 } else {
                     return db.collection('goods')
                         .where({
-                            _id: i.pid
+                            _id: i.pid,
+                            visiable: true,
+                            isDelete: _.neq( true )
                         })
                         .get( )
                 }
@@ -151,10 +156,12 @@ export const main = async ( event, context ) => {
             let hasBeenDelete: any = [ ];
 
             // 买不到
-            const cannotBuy = findings$.map( x => x.data[ 0 ]).filter( y => !!y );
+            // const cannotBuy = findings$.map( x => x.data[ 0 ]).filter( y => !!y );
+            const cannotBuy = [ ];
 
             // 已经被购买了（风险单）
-            const hasBeenBuy = hasBeenBuy$.map( x => x.data[ 0 ]).filter( y => !!y )
+            // const hasBeenBuy = hasBeenBuy$.map( x => x.data[ 0 ]).filter( y => !!y )
+            const hasBeenBuy = [ ];
 
             event.data.list.map( i => {
                 // 型号
@@ -723,7 +730,7 @@ export const main = async ( event, context ) => {
                 // 商品
                 let allGoods$: any = await Promise.all( goodIds.map( goodId => {
                     return db.collection('goods')
-                        .doc( goodId )
+                        .doc( String( goodId ))
                         .get( );
                 }));
 
@@ -732,7 +739,7 @@ export const main = async ( event, context ) => {
                 // 型号
                 let allStandars$: any = await Promise.all( standarsIds.map( sid => {
                     return db.collection('standards')
-                        .doc( sid )
+                        .doc( String( sid ))
                         .get( );
                 }));
 

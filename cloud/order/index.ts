@@ -736,6 +736,10 @@ export const main = async ( event, context ) => {
             }));
 
             /**
+             * !更新购物清单
+             */
+
+            /**
              * 消息推送
              * !未付全款才发送
              */
@@ -751,7 +755,7 @@ export const main = async ( event, context ) => {
                 )
             );
 
-            // console.log('------ 以下用户发送推送 ------', orders, users );
+            /** 推送通知 */
             const rs = await Promise.all( users.map( openid => {
 
                 const target = orders.find( order => order.openid === openid &&
