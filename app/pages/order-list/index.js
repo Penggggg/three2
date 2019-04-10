@@ -301,6 +301,15 @@ Page({
         const { metaList, pinList } = this.data;
         const orderObj = { };
 
+        const fixNumber = n => {
+            const str = Number( Number( n )).toFixed( 2 );
+            if ( !str.includes('.00')) {
+                return str;
+            } else {
+                return str.split('.')[ 0 ];
+            }
+        };
+
 
         // 计算当前可结算的商品数量 
         const count$ = order => {
@@ -661,7 +670,7 @@ Page({
                 }
             });
 
-            tripOrders['cutoff'] = cutoff;
+            tripOrders['cutoff'] = fixNumber( cutoff );
 
 
             /**
@@ -688,7 +697,7 @@ Page({
 
 
             /** 总减免 和 目前减免的差值 */
-            tripOrders['cutoff_delta'] = Math.floor( total_cutoff - cutoff );
+            tripOrders['cutoff_delta'] = fixNumber( total_cutoff - cutoff );
 
 
             /** 总减免 和 目前减免的比例 */
@@ -730,6 +739,7 @@ Page({
                     })
                 }
             });
+
             
             ['t_lijian', 't_manjian', 't_daijin'].map( quan => {
                 const target = tripOrders[ quan ];
@@ -741,9 +751,9 @@ Page({
 
                         price: quan === 't_lijian' ?
                             target.value < orders[ 0 ].trip.reduce_price ?
-                                orders[ 0 ].trip.reduce_price - target.value :
-                                target.value :
-                            target.value,
+                            fixNumber( orders[ 0 ].trip.reduce_price - target.value ) :
+                                fixNumber( target.value ):
+                                fixNumber( target.value ),
 
                         title: quan === 't_lijian' ?
                             '立减券' :
