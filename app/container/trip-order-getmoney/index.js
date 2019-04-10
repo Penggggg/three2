@@ -61,7 +61,7 @@ Component({
                 const wholePriceNotDiscount = orders.reduce(( x, y ) => {
                     let currentPrice = 0;
                     const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
-                    if ( y.base_status === '2' ) {
+                    if ( y.base_status === '2' || y.base_status === '3' ) {
                         currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * count$( y );
                     } else if ( y.base_status === '0' || y.base_status === '1' ) {
                         currentPrice = count$( y ) * ( allocatedPrice || price );

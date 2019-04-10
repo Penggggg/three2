@@ -79,7 +79,7 @@
                             <view
                                 class="tog-user-name ml color"
                             >
-                                {{ item.wholePriceByDiscount }}
+                                ¥{{ item.wholePriceByDiscount < 0 ? 0 : wholePriceByDiscount }}
                             </view>
                         </view>
 
@@ -136,7 +136,7 @@
                             class="tog-order-info-block"
                         >
                             <view class="tog-text big">{{ order.acid ? '【活动】' : '' }}{{ order.name }}</view>
-                            <view class="tog-stander">{{ order.standername }}</view>
+                            <view class="tog-stander">{{ order.standername !== '默认型号' ? order.standername : '' }}</view>
                             <view
                                 class="tog-tag-block"
                                 wx:if="{{ order.acid }}"
@@ -223,7 +223,7 @@
                                         {{ orderitem.acid ? '【活动商品】' : '' }}{{ orderitem.name }}
                                     </view>
                                     <view class="tog-address-stander">
-                                        {{ orderitem.standername }}
+                                        {{ orderitem.standername !== '默认型号' ? orderitem.standername : '' }}
                                     </view>
                                 </view>
                                 <view class="tog-address-allocated">
@@ -252,23 +252,23 @@
                             class="tog-pay-inline"
                             wx:if="{{( item.t_lijian.isUsed || item.t_lijian.canUsed ) && ( item.t_lijian.value )}}"
                         >   
-                            立减券：-<view class="tog-pay-color">{{ item.t_lijian.value }}</view>
+                            立减券：<view class="tog-pay-color">-{{ item.t_lijian.value }}</view>
                         </view>
                         <view
                             class="tog-pay-inline ml"
                             wx:if="{{( item.t_manjian.isUsed || item.t_manjian.canUsed ) && ( item.t_manjian.value )}}"
                         >   
-                            满减券：-<view class="tog-pay-color">{{ item.t_manjian.value }}</view>
+                            满减券：-<view class="tog-pay-color">-{{ item.t_manjian.value }}</view>
                         </view>
                         <view
                             class="tog-pay-inline ml"
                             wx:if="{{( item.t_daijin.isUsed || item.t_daijin.canUsed ) && ( item.t_daijin.value )}}"
                         >   
-                            代金券：-<view class="tog-pay-color">{{ item.t_daijin.value }}</view>
+                            代金券：-<view class="tog-pay-color">-{{ item.t_daijin.value }}</view>
                         </view>
                     </view>
-                    <view class="tog-pay-text">应付：<view class="tog-pay-color">¥{{ item.wholePriceNotDiscount }}</view></view>
-                    <view class="tog-pay-text">实付：<view class="tog-pay-color">¥{{ item.wholePriceByDiscount }}</view></view>
+                    <view class="tog-pay-text">应付：<view class="tog-pay-color">¥{{ item.wholePriceNotDiscount < 0 ? 0 : item.wholePriceNotDiscount }}</view></view>
+                    <view class="tog-pay-text">实付：<view class="tog-pay-color">¥{{ item.wholePriceByDiscount < 0 ? 0 : item.wholePriceByDiscount }}</view></view>
                 </view>
 
                 <!-- 更多按钮 -->
