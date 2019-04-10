@@ -166,6 +166,16 @@
                     </view>
                 </view>
 
+                <!-- 订金 -->
+                <!-- <view
+                    wx:else
+                    class="sku-standards-block"
+                >
+                    <view class="sku-info-title mt">
+                        该商品免订金
+                    </view>
+                </view> -->
+
             </scroll-view>
 
             <!-- 确认按钮 -->

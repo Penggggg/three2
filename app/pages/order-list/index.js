@@ -838,6 +838,7 @@ Page({
                             duration: 2000,
                             title: '领取成功！'
                         });
+                        this.fetchCoupons( );
                     }, 2500 );
                 }
             }

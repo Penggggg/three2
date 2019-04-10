@@ -76,17 +76,32 @@
                             class="tog-oder-user-info"
                             wx:if="{{ item.isAllAdjusted }}"
                         >
-                            <view class="tog-user-name ml color">¥{{ item.wholePriceByDiscount }}</view>
+                            <view
+                                class="tog-user-name ml color"
+                            >
+                                {{ item.wholePriceByDiscount }}
+                            </view>
                         </view>
 
                     </view>
-               
+
                     <view
+                        catchtap="giveBackMoney"
+                        data-data="{{ item }}"
                         class="tog-statuscn text"
-                        wx:if="{{ (item.statusCN && item.statusCN.indexOf('退订金') === -1) || (item.statusCN && item.statusCN.indexOf('退订金') !== -1 && callMoneyTimes > 0 ) }}"
+                        wx:if="{{ item.statusCN.indexOf('退订金') !== -1 }}"
                     >
                         {{ item.statusCN }}
                     </view>
+
+                    <view
+                        wx:else
+                        class="tog-statuscn text"
+                    >
+                        {{ item.statusCN }}
+                    </view>
+               
+                    
                 </view>
 
                 <!-- 订单信息 -->
