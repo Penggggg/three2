@@ -56,12 +56,27 @@
                     <view class="toa-good-info">
 
                         <!-- 商品图片 -->
-                        <image
-                            class="toa-img"
-                            mode="aspectFill"
-                            src="{{ item.img[ 0 ]}}"
-                            lazy-load="{{ true }}"
-                        />
+                        <view class="toa-img-con">
+                            <image
+                                class="toa-img"
+                                mode="aspectFill"
+                                src="{{ item.img[ 0 ]}}"
+                                lazy-load="{{ true }}"
+                            />
+                            <view
+                                class="gi3-tag-block"
+                                wx:if="{{ item.acid }}"
+                            >
+                                <image
+                                    mode="widthFix"
+                                    class="gi3-activity-icon"
+                                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                                />
+                                <view class="gi3-tag-text">
+                                    活动
+                                </view>
+                            </view>
+                        </view>
 
                         <!-- 商品名称、型号名称-->
                         <view class="toa-title-con">

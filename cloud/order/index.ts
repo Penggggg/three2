@@ -976,7 +976,7 @@ export const main = async ( event, context ) => {
 
             const where$ = {
                 tid,
-                pay_status: _.or( _.eq('1'), _.eq('2'))
+                pay_status: _.neq('0')
             };
 
             const total$ = await db.collection('order')
