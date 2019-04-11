@@ -209,7 +209,7 @@ export const main = async ( event, context ) => {
                 status: 200,
                 data: {
                     isNew,
-                    shouldPrepay: judge( trip, isNew )
+                    shouldPrepay: judge( isNew, trip )
                 }
             }
 

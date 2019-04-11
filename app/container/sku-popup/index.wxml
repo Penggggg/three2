@@ -152,29 +152,59 @@
                     class="sku-standards-block"
                     wx:if="{{ depositPrice }}"
                 >
-                    <view class="sku-info-title mt">
-                        订金
-                    </view>
-                    <view class="sku-info-text">
-                        <wxc-price
-                            icon="sub"
-                            decimal="small"
-                            class="deposit-price"
-                        > 
-                            {{ depositPrice }}
-                        </wxc-price>
-                    </view>
-                </view>
 
-                <!-- 订金 -->
-                <!-- <view
-                    wx:else
-                    class="sku-standards-block"
-                >
-                    <view class="sku-info-title mt">
-                        该商品免订金
+                    <view
+                        wx:if="{{ !shouldPrepay && !isNew }}"
+                    >
+                        <view class="sku-info-title mt il">
+                            您免付订金
+                        </view>
+                         <!-- <view class="sku-info-text il">
+                            <wxc-price
+                                icon="sub"
+                                decimal="small"
+                                class="deposit-price"
+                            > 
+                                {{ depositPrice }}
+                            </wxc-price>
+                        </view> -->
                     </view>
-                </view> -->
+
+                    <view
+                        wx:elif="{{ !shouldPrepay && isNew }}"
+                    >
+                        <view class="sku-info-title mt il">
+                            本趟行程免订金
+                        </view>
+                         <!-- <view class="sku-info-text il">
+                            <wxc-price
+                                icon="sub"
+                                decimal="small"
+                                class="deposit-price"
+                            > 
+                                {{ depositPrice }}
+                            </wxc-price>
+                        </view> -->
+                    </view>
+
+                    <view
+                        wx:else
+                    >
+                        <view class="sku-info-title mt il">
+                            订金
+                        </view>
+                        <view class="sku-info-text il">
+                            <wxc-price
+                                icon="sub"
+                                decimal="small"
+                                class="deposit-price"
+                            > 
+                                {{ depositPrice }}
+                            </wxc-price>
+                        </view>
+                    </view>
+                    
+                </view>
 
             </scroll-view>
 

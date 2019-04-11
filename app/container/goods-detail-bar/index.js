@@ -72,6 +72,12 @@ Component({
         skuSelectType: null,
         /** 是否进行了用户授权 */
         isUserAuth: false,
+
+        // 是否为新客
+        isNew: true,
+
+        // 是否需要付订金
+        shouldPrepay: true
     },
 
     computed: {
@@ -170,7 +176,12 @@ Component({
                 url: 'common_should-prepay',
                 success: res => {
                     const { status, data } = res;
-                    console.log('?????', data );
+                    if ( status !== 200 ) { return; }
+                    const { isNew, shouldPrepay } = data;
+                    this.setData({
+                        isNew,
+                        shouldPrepay
+                    });
                 }
             })
         },
@@ -257,7 +268,7 @@ Component({
         /** 立即购买 */
         buy( item, form_id ) {
 
-            const { tid } = this.data;
+            const { tid, shouldPrepay } = this.data;
             const { sid, pid, price, count, img, title, groupPrice, acid } = item;
 
             // 判断是否没有最新行程
@@ -297,11 +308,15 @@ Component({
                     createOrders( tid, [ orderObj ], 'buy', orders => {
                       
                         // 发起微信支付
-                        const total_fee = orders.reduce(( x, y ) => {
+                        let total_fee = orders.reduce(( x, y ) => {
                             const { pay_status, depositPrice } = y;
                             const deposit_price = pay_status === '0' && !!depositPrice ? depositPrice : 0;
                             return x + deposit_price * y.count;
                         }, 0 );
+
+                        if ( !shouldPrepay ) {
+                            total_fee = 0;
+                        }
                       
                         // 支付里面
                         wxPay( total_fee, ({ prepay_id }) => {
