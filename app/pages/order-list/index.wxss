@@ -8,6 +8,7 @@
 .pol-scroll-view {
     height: 100vh;
     overflow-y: scroll;
+    box-sizing: border-box;
 }
 
 .pol-scroll-view.pb {
