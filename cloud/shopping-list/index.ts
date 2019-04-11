@@ -98,6 +98,24 @@ export const main = async ( event, context ) => {
             const { tid, list } = event.data;
             const openId = event.data.openId || event.userInfo.openId;
 
+            const getErr = message => ({
+                message, 
+                status: 500
+            });
+
+            if ( !tid ) {
+                return ctx.body = getErr('无效行程');
+            }
+
+            // 查询行程是否还有效
+            const trip$ = await db.collection('trip')
+                .doc( String( tid ))
+                .get( );
+
+            if ( trip$.data.isClosed || new Date( ).getTime( ) > trip$.data.end_date ) {
+                return ctx.body = getErr('暂无购物行程～');
+            }
+
             // 不能购买的商品列表（清单里面买不全）
             // const findings$: any = await Promise.all( event.data.list.map( i => {
             //     return find$({

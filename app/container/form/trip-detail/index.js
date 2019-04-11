@@ -653,7 +653,6 @@ Component({
     },
 
     attached: function ( ) {
-        console.log('????', this.data )
         this.fetchDic( );
         this.fetchLastTrip( );
     }

@@ -15,36 +15,54 @@ Page({
      * 页面的初始数据
      */
     data: {
+
+        // 是否为新客
+        isNew: true,
+
         // 行程
         tid: '',
+
         // 商品id
         id: '',
+
         // 商品详情
         detail: null,
+        
         // 数据字典
         dic: { },
+        
         // 加载状态
         loading: true,
+
         // 是否初始化过“喜欢”
         hasInitLike: false,
+
         // 是否“喜欢”
         liked: false,
+
         // 文字保证提示
         promiseTips: [
             '正品保证', '价格优势', '真人跑腿'
         ],
+
         // 动画
         animationMiddleHeaderItem: null,
+
         // 展示管理入口
         showBtn: false,
+
         // 展示弹框
         showTips: 'hide',
+
         // 拼团列表
         pin: [ ],
+
         // 商品在本行程的购物清单列表
         shopping: [ ],
+
         // 一口价活动列表
         activities: [ ],
+
         // 本趟能够拼团的sku
         canPinSku: [ ]
     },
@@ -77,7 +95,6 @@ Page({
                     return ''
                 } else {
                     const result = delayeringGood( detail );
-                    console.log('??', result)
                     return result ? result.goodPins.eachPriceRound : '';
                 }
             },
@@ -235,25 +252,6 @@ Page({
         });
     },
 
-    /** 拉取数据字典 */
-    fetchDic( ) {
-        const { dic } = this.data;
-        if ( Object.keys( dic ).length > 0 ) { return; }
-        http({
-            data: {
-              dicName: 'goods_category',
-            },
-            errMsg: '加载失败，请重试',
-            url: `common_dic`,
-            success: res => {
-              if ( res.status !== 200 ) { return; }
-              this.setData!({
-                    dic: res.data
-              });
-            }
-        });
-    },
-
     /** 拉取当前商品的购物请单信息 */
     fetchShopping( pid, tid ) {
         http({
@@ -296,6 +294,11 @@ Page({
             this.setData!({
                 showBtn: ( val === 1 )
             })
+        });
+        (app as any).watch$('isNew', val => {
+            this.setData!({
+                isNew: val
+            });
         });
     },
     
@@ -366,10 +369,10 @@ Page({
         this.watchRole( );
         this.runComputed( );
         
-        // this.setData!({
-        //     id: '71f2cd945ca40f04000c272732f7398d',
-        //     tid: 'XDGzG97E7L4wLIdu'
-        // })
+        this.setData!({
+            id: '71f2cd945cae0bac03a90e0e6bc64c40',
+            tid: '1a2751ef5cae0bcb03d6230e362d0382'
+        })
         
         if ( !options!.id ) { return; }
         this.setData!({
@@ -411,7 +414,7 @@ Page({
      */
     onShow: function ( ) {
         const { id, tid } = this.data;
-        // this.fetchDic( ); 
+
         this.checkLike( );
         this.fetDetail( id );
         this.fetchShopping( id, tid );

@@ -301,6 +301,7 @@
 
         <!-- 商品下面的栏 -->
         <my-goods-detail-bar
+            tid="{{ tid }}"
             pid="{{ id }}"
             detail="{{ detail }}"
             canPinSku="{{ canPinSku }}"

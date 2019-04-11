@@ -173,10 +173,15 @@ export const main = async ( event, context ) => {
     /**
      * @description
      * 行程详情
+     * {
+     *      moreDetail: undefined | false | true
+     * }
      */
     app.router('detail', async( ctx, next ) => {
         try {
 
+            const { moreDetail } = event.data;
+            
             // 获取基本详情
             const data$ = await db.collection('trip')
                     .where({
@@ -185,22 +190,27 @@ export const main = async ( event, context ) => {
                     .get( );
             const meta = data$.data[ 0 ];
 
-            // 通过已选的商品ids,拿到对应的图片、title、_id
-            const products$: any = await Promise.all( meta.selectedProductIds.map( pid => {
-                return db.collection('goods')
-                        .where({
-                            _id: pid
-                        })
-                        .field({
-                            img: true,
-                            title: true
-                        })
-                        .get( );
-            }));
+            if ( moreDetail !== false ) {
+                // 通过已选的商品ids,拿到对应的图片、title、_id
+                const products$: any = await Promise.all( meta.selectedProductIds.map( pid => {
+                    return db.collection('goods')
+                            .where({
+                                _id: pid
+                            })
+                            .field({
+                                img: true,
+                                title: true
+                            })
+                            .get( );
+                }));
 
-            meta.selectedProducts = products$.map( x => {
-                return x.data[ 0 ];
-            });
+                meta.selectedProducts = products$.map( x => {
+                    return x.data[ 0 ];
+                });
+            } else {
+                meta.selectedProducts = [ ];
+            }
+            
 
             return ctx.body = {
                 status: 200,
