@@ -246,7 +246,12 @@
                     class="tog-pay-detail"
                     wx:if="{{ item.canShowMore && item.isAllAdjusted }}"
                 >
-                    <view class="tog-pay-text">已付订金：¥{{ item.hasPayDepositPrice }}</view>
+                    <view class="tog-pay-text">
+                        已付订金：¥{{ item.hasPayDepositPrice }}
+                        <view class="tog-pay-text inline ml">
+                            应付：<view class="tog-pay-color">¥{{ item.wholePriceNotDiscount < 0 ? 0 : item.wholePriceNotDiscount }}</view>
+                        </view>
+                    </view>
                     <view class="tog-pay-text">
                         <view
                             class="tog-pay-inline"
@@ -267,7 +272,6 @@
                             代金券：-<view class="tog-pay-color">-{{ item.t_daijin.value }}</view>
                         </view>
                     </view>
-                    <view class="tog-pay-text">应付：<view class="tog-pay-color">¥{{ item.wholePriceNotDiscount < 0 ? 0 : item.wholePriceNotDiscount }}</view></view>
                     <view class="tog-pay-text">实付：<view class="tog-pay-color">¥{{ item.wholePriceByDiscount < 0 ? 0 : item.wholePriceByDiscount }}</view></view>
                 </view>
 

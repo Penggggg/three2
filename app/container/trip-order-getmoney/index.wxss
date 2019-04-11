@@ -487,6 +487,14 @@
     margin-bottom: 8rpx;
 }
 
+.tog-pay-text.inline {
+    display: inline;
+}
+
+.tog-pay-text.ml {
+    margin-left: 20rpx;
+}
+
 .tog-pay-inline {
     display: inline;
 }
