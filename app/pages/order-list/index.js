@@ -812,8 +812,12 @@ Page({
                 tripOrders['tripStatusCN'] = '需退款';
             }
 
+            if ( hasPay ) {
+                tripOrders['tripStatusCN'] = '已付款';
+            }
+
         });
-        
+        console.log('??', Object.keys( orderObj ).map( tid => orderObj[ tid ]))
         this.setData({
             loading: false,
             tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
