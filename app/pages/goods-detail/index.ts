@@ -369,11 +369,6 @@ Page({
         this.watchRole( );
         this.runComputed( );
         
-        this.setData!({
-            id: '71f2cd945cae0bac03a90e0e6bc64c40',
-            tid: '1a2751ef5cae0bcb03d6230e362d0382'
-        })
-        
         if ( !options!.id ) { return; }
         this.setData!({
             id: options!.id,

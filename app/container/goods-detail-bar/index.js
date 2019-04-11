@@ -293,7 +293,7 @@ Component({
                         price,
                         count,
                         img: [ img ],
-                        depositPrice: this.data.detail.depositPrice || 0,
+                        depositPrice: shouldPrepay ? this.data.detail.depositPrice || 0 : 0,
                         name: this.data.detail.title,
                         standername: title,
                         groupPrice,

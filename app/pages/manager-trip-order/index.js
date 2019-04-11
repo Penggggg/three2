@@ -56,6 +56,9 @@ Page({
                 id: options.id
             });
         }
+        // this.setData({
+        //     id: 'f4cf49925caf4add047bc2e96f3a2bc6'
+        // })
     },
 
     /**

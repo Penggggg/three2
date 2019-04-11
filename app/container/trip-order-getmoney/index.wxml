@@ -79,7 +79,7 @@
                             <view
                                 class="tog-user-name ml color"
                             >
-                                ¥{{ item.wholePriceByDiscount < 0 ? 0 : wholePriceByDiscount }}
+                                ¥{{ item.wholePriceByDiscount < 0 ? 0 : item.wholePriceByDiscount }}
                             </view>
                         </view>
 
@@ -89,13 +89,13 @@
                         catchtap="giveBackMoney"
                         data-data="{{ item }}"
                         class="tog-statuscn text"
-                        wx:if="{{ item.statusCN.indexOf('退订金') !== -1 }}"
+                        wx:if="{{ item.statusCN.indexOf('退订金') !== -1 && !!item.statusCN }}"
                     >
                         {{ item.statusCN }}
                     </view>
 
                     <view
-                        wx:else
+                        wx:elif="{{ !!item.statusCN }}"
                         class="tog-statuscn text"
                     >
                         {{ item.statusCN }}
