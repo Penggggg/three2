@@ -178,6 +178,12 @@ Page({
         const { tid } = currentTarget.dataset;
         navTo(`/pages/manager-trip-detail/index?id=${tid}`);
     },
+
+    /** 跳动详情的订单 */
+    goOrder({ currentTarget }) {
+        const { tid } = currentTarget.dataset;
+        navTo(`/pages/manager-trip-order/index?id=${tid}`);
+    },
   
     /**
      * 生命周期函数--监听页面加载
