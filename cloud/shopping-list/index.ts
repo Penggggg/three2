@@ -94,33 +94,53 @@ export const main = async ( event, context ) => {
      */
     app.router('findCannotBuy', async( ctx, next ) => {
         try {
-
+            console.log('======>findCannotBuy')
             const { tid, list } = event.data;
             const openId = event.data.openId || event.userInfo.openId;
 
-            // 不能购买的商品列表（清单里面买不全）
-            const findings$: any = await Promise.all( event.data.list.map( i => {
-                return find$({
-                    tid: i.tid,
-                    pid: i.pid,
-                    sid: i.sid,
-                    buy_status: '2'
-                }, db, ctx )
-            }))
+            const getErr = message => ({
+                message, 
+                status: 500
+            });
 
-            if ( findings$.some( x => x.status !== 200 )) {
-                throw '查询购物清单错误';
+            if ( !tid ) {
+                return ctx.body = getErr('无效行程');
             }
 
+            // 查询行程是否还有效
+            const trip$ = await db.collection('trip')
+                .doc( String( tid ))
+                .get( );
+
+            if ( trip$.data.isClosed || new Date( ).getTime( ) > trip$.data.end_date ) {
+                return ctx.body = getErr('暂无购物行程～');
+            }
+
+            // 不能购买的商品列表（清单里面买不全）
+            // const findings$: any = await Promise.all( event.data.list.map( i => {
+            //     return find$({
+            //         tid: i.tid,
+            //         pid: i.pid,
+            //         sid: i.sid,
+            //         buy_status: '2'
+            //     }, db, ctx )
+            // }))
+            const findings$ = [ ];
+
+            // if ( findings$.some( x => x.status !== 200 )) {
+            //     throw '查询购物清单错误';
+            // }
+
             // 已完成购买的商品列表
-            const hasBeenBuy$: any = await Promise.all( event.data.list.map( i => {
-                return find$({
-                    tid: i.tid,
-                    pid: i.pid,
-                    sid: i.sid,
-                    buy_status: '1'
-                }, db, ctx )
-            }));
+            // const hasBeenBuy$: any = await Promise.all( event.data.list.map( i => {
+            //     return find$({
+            //         tid: i.tid,
+            //         pid: i.pid,
+            //         sid: i.sid,
+            //         buy_status: '1'
+            //     }, db, ctx )
+            // }));
+            const hasBeenBuy$ = [ ];
 
             // 查询商品详情、或者型号详情
             const goodDetails$: any = await Promise.all( event.data.list.map( i => {
@@ -138,11 +158,29 @@ export const main = async ( event, context ) => {
                         })
                         .get( )
                 }
+            }));
 
+            /** 型号所属商品 */
+            const belongGoodIds = Array.from( 
+                new Set(
+                    event.data.list
+                        // .filter( i => !!i.sid )
+                        .map( o => o.pid )
+                )
+            );
+
+            const belongGoods$ = await Promise.all( belongGoodIds.map( pid => {
+                return db.collection('goods')
+                    .doc( String( pid ))
+                    .get( );
             }));
            
             const goods = goodDetails$.map( x => x.data[ 0 ]).filter( y => !!y ).filter( z => !z.pid );
             const standards = goodDetails$.map( x => x.data[ 0 ]).filter( y => !!y ).filter( z => !!z.pid );
+            const belongGoods = belongGoods$.map( x => x.data );
+
+            // 限购
+            let hasLimitGood: any = [ ];
 
             // 库存不足
             let lowStock: any = [ ];
@@ -151,16 +189,21 @@ export const main = async ( event, context ) => {
             let hasBeenDelete: any = [ ];
 
             // 买不到
-            const cannotBuy = findings$.map( x => x.data[ 0 ]).filter( y => !!y );
+            // const cannotBuy = findings$.map( x => x.data[ 0 ]).filter( y => !!y );
+            const cannotBuy = [ ];
 
             // 已经被购买了（风险单）
-            const hasBeenBuy = hasBeenBuy$.map( x => x.data[ 0 ]).filter( y => !!y )
+            // const hasBeenBuy = hasBeenBuy$.map( x => x.data[ 0 ]).filter( y => !!y )
+            const hasBeenBuy = [ ];
 
             event.data.list.map( i => {
-                // 型号
+                // 型号 - 计算已被删除、库存不足、主体本身被下架/删除
                 if ( !!i.sid ) {
+                    const belongGood = belongGoods.find( x => x._id === i.pid );
                     const standard = standards.find( x => x._id === i.sid && x.pid === i.pid );
-                    if ( !standard ) {
+
+                    // 型号本身被删除、主体本身被下架/删除
+                    if ( !standard || ( !!standard && standard.isDelete ) || ( !!belongGood && !belongGood.visiable ) || ( !!belongGood && belongGood.isDelete )) {
                         hasBeenDelete.push( i );
                     } else if ( standard.stock !== undefined &&  standard.stock < i.count ) {
                         lowStock.push( Object.assign({ }, i, {
@@ -169,10 +212,10 @@ export const main = async ( event, context ) => {
                             standerName: i.standername
                         }));
                     }
-                // 主体商品
+                // 主体商品 - 计算已被删除、库存不足
                 } else {
                     const good = goods.find( x => x._id === i.pid );
-                    if ( !good || ( !!good && !good.visiable )) {
+                    if ( !good || ( !!good && !good.visiable ) || ( !!good && good.isDelete )) {
                         hasBeenDelete.push( i )
                     } else if ( good.stock !== undefined &&  good.stock < i.count ) {
                         lowStock.push( Object.assign({ }, i, {
@@ -180,16 +223,46 @@ export const main = async ( event, context ) => {
                             goodName: i.name
                         }));
                     }
-
                 }
             });
+
+
+            // 查询限购
+            const limitGoods = belongGoods.filter( x => !!x.limit );
+
+            await Promise.all( limitGoods.map( async good => {
+
+                const orders = await db.collection('order')
+                    .where({
+                        tid,
+                        pid: good._id,
+                        openid: openId,
+                        pay_status: _.or( _.eq('1'), _.eq('2'))
+                    })
+                    .get( );
+
+                const hasBeenBuyCount = orders.data.reduce(( x, y ) => {
+                    return x + y.count
+                }, 0 );
+
+                const thisTripBuyCount = event.data.list
+                    .filter( x => x.pid === good._id )
+                    .reduce(( x, y ) => {
+                        return x + y.count
+                    }, 0 );
+                    
+                if ( thisTripBuyCount + hasBeenBuyCount > good.limit ) {
+                    hasLimitGood.push( good );
+                }
+            }));
+            
 
             let orders = [ ];
             /**
              * 如果可以购买
              * ! 批量创建预付订单
              */
-            if ( lowStock.length === 0 && cannotBuy.length === 0 && hasBeenDelete.length === 0 ) {
+            if ( hasLimitGood.length === 0 && lowStock.length === 0 && cannotBuy.length === 0 && hasBeenDelete.length === 0 ) {
 
                 const reqData = {
                     tid,
@@ -217,11 +290,12 @@ export const main = async ( event, context ) => {
 
             return ctx.body = {
                 data: {
+                    orders,
                     lowStock,
-                    hasBeenDelete,
                     cannotBuy,
+                    hasLimitGood,
                     hasBeenBuy,
-                    orders
+                    hasBeenDelete,
                 },
                 status: 200
             }
@@ -723,7 +797,7 @@ export const main = async ( event, context ) => {
                 // 商品
                 let allGoods$: any = await Promise.all( goodIds.map( goodId => {
                     return db.collection('goods')
-                        .doc( goodId )
+                        .doc( String( goodId ))
                         .get( );
                 }));
 
@@ -732,7 +806,7 @@ export const main = async ( event, context ) => {
                 // 型号
                 let allStandars$: any = await Promise.all( standarsIds.map( sid => {
                     return db.collection('standards')
-                        .doc( sid )
+                        .doc( String( sid ))
                         .get( );
                 }));
 

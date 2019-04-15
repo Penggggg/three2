@@ -80,9 +80,9 @@
                     </view>
                     <view
                         class="sku-stock"
-                        wx:if="{{ selectedSku.stock }}"
+                        wx:if="{{ selectedSku.stock || selectedSku.limit }}"
                     >
-                        库存{{ selectedSku.stock }}件<text wx:if="{{ selectedSku.limit }}">，限购{{ selectedSku.limit }}件</text>
+                        {{ selectedSku.stock ? '库存' + selectedSku.stock + '件' : '' }}<text>{{ selectedSku.limit ? '限购' + selectedSku.limit + '件' : '' }}</text>
                     </view>
                     <view
                         class="sku-title"
@@ -97,6 +97,7 @@
                             icon="sub"
                             decimal="small"
                             class="sku-price sm"
+                            wx:if="{{ (selectedSku.canPin && selectedSku.price ) || (!selectedSku.canPin && selectedSku.groupPrice) }}"
                         > 
                             {{ selectedSku.canPin ? selectedSku.price : selectedSku.groupPrice || '' }}
                         </wxc-price>
@@ -151,18 +152,58 @@
                     class="sku-standards-block"
                     wx:if="{{ depositPrice }}"
                 >
-                    <view class="sku-info-title mt">
-                        订金
+
+                    <view
+                        wx:if="{{ !shouldPrepay && !isNew }}"
+                    >
+                        <view class="sku-info-title mt il">
+                            您免付订金
+                        </view>
+                         <!-- <view class="sku-info-text il">
+                            <wxc-price
+                                icon="sub"
+                                decimal="small"
+                                class="deposit-price"
+                            > 
+                                {{ depositPrice }}
+                            </wxc-price>
+                        </view> -->
                     </view>
-                    <view class="sku-info-text">
-                        <wxc-price
-                            icon="sub"
-                            decimal="small"
-                            class="deposit-price"
-                        > 
-                            {{ depositPrice }}
-                        </wxc-price>
+
+                    <view
+                        wx:elif="{{ !shouldPrepay && isNew }}"
+                    >
+                        <view class="sku-info-title mt il">
+                            本趟行程免订金
+                        </view>
+                         <!-- <view class="sku-info-text il">
+                            <wxc-price
+                                icon="sub"
+                                decimal="small"
+                                class="deposit-price"
+                            > 
+                                {{ depositPrice }}
+                            </wxc-price>
+                        </view> -->
                     </view>
+
+                    <view
+                        wx:else
+                    >
+                        <view class="sku-info-title mt il">
+                            订金
+                        </view>
+                        <view class="sku-info-text il">
+                            <wxc-price
+                                icon="sub"
+                                decimal="small"
+                                class="deposit-price"
+                            > 
+                                {{ depositPrice }}
+                            </wxc-price>
+                        </view>
+                    </view>
+                    
                 </view>
 
             </scroll-view>

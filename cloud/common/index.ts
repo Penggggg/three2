@@ -153,6 +153,69 @@ export const main = async ( event, context ) => {
         }
     });
 
+    /** 
+     * @description
+     * 客户在该躺行程，是否需要付订金
+     * {
+     *    tid
+     * }
+     */
+    app.router('should-prepay', async( ctx, next ) => {
+        try {
+
+            const { tid } = event.data;
+            const openid = event.data.openId || event.userInfo.openId;
+
+            const find$ = await db.collection('order')
+                .where({
+                    openid,
+                    base_status: '3'
+                })
+                .count( );
+
+            const trip$ = await db.collection('trip')
+                .doc( String( tid ))
+                .get( );
+            const trip = trip$.data;
+
+            const isNew = find$.total < 3;
+
+            const judge = ( isNew, trip ) => {
+                if ( !trip ) { return true; }
+                if ( isNew && trip.payment === '0' ) {
+                    return true;
+
+                } else if ( isNew && trip.payment === '1' ) {
+                    return true;
+
+                }  else if ( isNew && trip.payment === '2' ) {
+                    return false;
+                    
+                } else if ( !isNew && trip.payment === '0' ) {
+                    return false;
+                    
+                }  else if ( !isNew && trip.payment === '1' ) {
+                    return true;
+                    
+                } else if ( isNew && trip.payment === '2' ) {
+                    return false;
+                    
+                } else {
+                    return true;
+                }
+            }
+
+            return ctx.body = {
+                status: 200,
+                data: {
+                    isNew,
+                    shouldPrepay: judge( isNew, trip )
+                }
+            }
+
+        } catch ( e ) { return ctx.body = { status: 500 };}
+    })
+
     /**
      * 微信支付，返回支付api必要参数
      * ----------- 请求 ----------
@@ -608,6 +671,10 @@ export const main = async ( event, context ) => {
 
 }
 
+const time = ts => new Promise( resovle => {
+    setTimeout(( ) => resovle( ), ts );
+})
+
 /**
  * 初始化数据库、基础数据
  */
@@ -621,6 +688,8 @@ const initDB = ( ) => new Promise( async resolve => {
                 collections.map( collectionName => (db as any).createCollection( collectionName ))
             );
         } catch ( e ) { }
+
+        await time( 800 );
 
         /** 初始化数据字典 */
         try {

@@ -162,6 +162,10 @@
     margin-top: 18rpx;
 }
 
+.sku-info-title.il {
+    display: inline;
+}
+
 .sku-standards-item {
     color: #999;
     font-size: 24rpx;
@@ -216,6 +220,10 @@
     font-size: 24rpx;
 }
 
+.sku-info-text.il {
+    display: inline;
+}
+
 .deposit-price {
     color: #ff5777;
     font-size: 30rpx;
@@ -240,6 +248,7 @@
 
 .sku-activity-icon {
     width: 20rpx;
+    max-height: 30rpx;
     margin-right: 2rpx;
     display: inline-block;
 }

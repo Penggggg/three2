@@ -179,6 +179,7 @@
             type="digit"
             disabled="{{ item.disabled }}"
             data-key="{{ item.key }}"
+            data-type="number"
             bindinput='textInput'
             value="{{ formData[ item.key ]}}"
             placeholder="{{ item.placeholder || '' }}"

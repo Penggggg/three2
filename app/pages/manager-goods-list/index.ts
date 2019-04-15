@@ -208,7 +208,7 @@ Page({
                 }
             }
         });
-    }
+    },
   
     /**
      * 生命周期函数--监听页面加载
@@ -216,12 +216,19 @@ Page({
     onLoad( options: any ) {
         wx.hideShareMenu({ });
         this.runComputed( );
-        this.fetchData( );
+    },
 
-        // 创建、删除商品而来的
-        if ( options.newPid ) {
-            // this.fetchNew( options.newPid );
-        }
+    /**
+     * 生命周期函数--监听页面显示
+     */
+    onShow: function ( ) {
+        this.setData!({
+            page: 0,
+            canLoadMore: true
+        });
+        setTimeout(( ) => {
+            this.fetchData( );
+        }, 20 );
     },
   
     /**
@@ -229,13 +236,6 @@ Page({
      */
     onReady: function () {
   
-    },
-  
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow: function ( ) {
-      
     },
   
     /**

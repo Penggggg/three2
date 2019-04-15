@@ -78,11 +78,13 @@
 
     <!-- sku -->
     <my-sku-popup
+        isNew="{{ isNew }}"
+        shouldPrepay="{{ shouldPrepay }}"
         open="{{ openSku }}"
-        skuItems="{{ skuItems$ }}"
-        depositPrice="{{ detail.depositPrice }}"
         bind:close="onCloseSku"
+        skuItems="{{ skuItems$ }}"
         bind:confirm="onConfirmSku"
+        depositPrice="{{ detail.depositPrice }}"
     />
 
 </view>

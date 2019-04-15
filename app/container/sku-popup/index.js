@@ -5,6 +5,19 @@ Component({
      * 组件的属性列表
      */
     properties: {
+
+        // 是否为新客
+        isNew: {
+            type: Boolean,
+            value: true,
+        },
+
+        // 是否要付订金
+        shouldPrepay: {
+            type: Boolean,
+            value: true,
+        },
+
         // 展开
         open: {
             type: Boolean,

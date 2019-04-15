@@ -91,6 +91,7 @@
 
 .gd-activity-icon {
     width: 20rpx;
+    max-height: 30rpx;
     margin-right: 2rpx;
     display: inline-block;
 }

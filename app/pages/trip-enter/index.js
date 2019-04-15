@@ -3,49 +3,67 @@ const { navTo } = require('../../util/route.js');
 const { computed } = require('../../lib/vuefy/index.js');
 const { delayeringGood } = require('../../util/goods.js');
 
-// app/pages/trip-enter/index.js
+const app = getApp( );
+
 Page({
 
     /**
      * 页面的初始数据
      */
     data: {
-        /** 是否已加载过 */
+
+        role: 0,
+
+        /** 加载 */
         loaded: false,
+
         /** 最快可用行程 */
         current: null,
+
         /** 下一趟可用行程 */
         next: null,
+
         /** 顶部公共 */
         notice: '',
+
         /** 热门推荐 */
         recommendGoods: [ ],
+
         /** 排行榜商品 */
         rankGoods: [ ],
+
         /** 3~20名商品 */
         otherGoods: [ ],
+
         /** 展开立减框 */
         showLijian: false,
+
         /** 展开满减 */
         showManjian: false,
+
         /** 立减信息 */
         lijian: {
             notGet: 0,
             hasBeenGet: 0
         },
+
         /** 参加人数 */
         memberCount: 0,
+
         /** 仙女购物单 */
         fairyList: [ ],
+
         /** 一口价商品列表 */
         goodDiscounts: [ ],
+
         /** 是否展示社交弹幕 */
         showMember: false,
+
         /** 本期拼团王产品 */
         pinest: null,
+
         /** 所有的拼团列表（待拼、可拼） */
         allPin: [ ]
-
     },
 
     /** 设置computed */
@@ -104,9 +122,6 @@ Page({
 
     /** 拉取两个最新行程 */
     fetchLast( ) {
-
-        const { loaded } = this.data;
-        if ( loaded ) { return; }
 
         http({
             data: { },
@@ -180,8 +195,8 @@ Page({
     /** 拉取商品销量排行榜(前20) */
     fetchRank( ) {
      
-        const { rankGoods } = this.data;
-        if ( rankGoods.length > 0 ) { return; }
+        const { rankGoods, role } = this.data;
+        if ( role === 0 && rankGoods.length > 0 ) { return; }
 
         http({
             data: {
@@ -217,11 +232,11 @@ Page({
                  * 先处理：立减
                  * 如果未领取立减到上半部分，则系统创建
                  **/
-                const halfOfLijian = Number( reduce_price * 0.4 ).toFixed( 1 );
+                const halfOfLijian = Number( reduce_price * 0.4 ).toFixed( 2 );
                 this.setData({
                     lijian: {
                         hasBeenGet: halfOfLijian,
-                        notGet: Number( reduce_price * 0.6 ).toFixed( 1 ),
+                        notGet: Number( reduce_price * 0.6 ).toFixed( 2 ),
                     }
                 })
 
@@ -250,7 +265,7 @@ Page({
             success: res => {
                 const { status, data } = res;
                 this.setData({
-                    pinest: data[ 0 ],
+                    pinest: data[ 0 ] || null,
                     allPin: data.map( x => Object.assign({ }, x )).splice( 1 )
                 });
             }
@@ -362,7 +377,30 @@ Page({
      */
     onLoad: function (options) {
         this.fetchRank( );
+        this.fetchLast( );
         this.runComputed( );
+
+        app.watch$('role', role => {
+            this.setData({
+                role
+            });
+        });
+    },
+
+    /**
+     * 生命周期函数--监听页面显示
+     */
+    onShow: function ( ) {
+        const { role } = this.data;
+        if ( role === 1 ) {
+            this.setData({
+                
+            });
+            setTimeout(( ) => {
+                this.fetchRank( );
+                this.fetchLast( );
+            }, 20 );
+        }
     },
 
     /**
@@ -370,13 +408,6 @@ Page({
      */
     onReady: function () {
         
-    },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow: function ( ) {
-        this.fetchLast( );
     },
 
     /**

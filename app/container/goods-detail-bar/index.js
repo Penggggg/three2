@@ -11,6 +11,14 @@ Component({
      * 组件的属性列表
      */
     properties: {
+
+        // 行程id
+        tid: {
+            type: String,
+            value: '',
+            observer: 'checkPrePay'
+        },
+
         // 商品详情
         detail: {
             type: Object,
@@ -62,10 +70,14 @@ Component({
         openSku: false,
         // 选择sku的类型：cart、buy，（购物车、立即购买）
         skuSelectType: null,
-        // 可用想起
-        trip: null,
         /** 是否进行了用户授权 */
         isUserAuth: false,
+
+        // 是否为新客
+        isNew: true,
+
+        // 是否需要付订金
+        shouldPrepay: true
     },
 
     computed: {
@@ -154,6 +166,25 @@ Component({
      * 组件的方法列表
      */
     methods: {
+        /** 检查是否需要付订金 */
+        checkPrePay( tid ) {
+            if ( !tid ) { return; }
+            http({
+                data: {
+                    tid
+                },
+                url: 'common_should-prepay',
+                success: res => {
+                    const { status, data } = res;
+                    if ( status !== 200 ) { return; }
+                    const { isNew, shouldPrepay } = data;
+                    this.setData({
+                        isNew,
+                        shouldPrepay
+                    });
+                }
+            })
+        },
         /** 展开/关闭 sku */
         toggleSku( e ) {
             const { openSku } = this.data;
@@ -237,11 +268,11 @@ Component({
         /** 立即购买 */
         buy( item, form_id ) {
 
-            const { trip } = this.data;
+            const { tid, shouldPrepay } = this.data;
             const { sid, pid, price, count, img, title, groupPrice, acid } = item;
 
             // 判断是否没有最新行程
-            if ( !trip ) {
+            if ( !tid ) {
                 return wx.showToast({
                     icon: 'none',
                     title: '暂无行程计划，暂时不能购买～'
@@ -257,12 +288,12 @@ Component({
                         type: 'pre', // 预付类型订单，
                         sid,
                         pid,
-                        tid: trip._id,
+                        tid,
                         acid,
                         price,
                         count,
                         img: [ img ],
-                        depositPrice: this.data.detail.depositPrice || 0,
+                        depositPrice: shouldPrepay ? this.data.detail.depositPrice || 0 : 0,
                         name: this.data.detail.title,
                         standername: title,
                         groupPrice,
@@ -274,14 +305,18 @@ Component({
                         }
                     };
 
-                    createOrders( trip._id, [ orderObj ], 'buy', orders => {
+                    createOrders( tid, [ orderObj ], 'buy', orders => {
                       
                         // 发起微信支付
-                        const total_fee = orders.reduce(( x, y ) => {
+                        let total_fee = orders.reduce(( x, y ) => {
                             const { pay_status, depositPrice } = y;
                             const deposit_price = pay_status === '0' && !!depositPrice ? depositPrice : 0;
                             return x + deposit_price * y.count;
                         }, 0 );
+
+                        if ( !shouldPrepay ) {
+                            total_fee = 0;
+                        }
                       
                         // 支付里面
                         wxPay( total_fee, ({ prepay_id }) => {
@@ -334,20 +369,6 @@ Component({
             });
             
         },
-        /** 拉取最新可用行程 */
-        fetchTrip( ) {
-            http({
-                data: { },
-                url: `trip_enter`,
-                success: res => {
-                    if ( res.status === 200 ) {
-                        this.setData({
-                            trip: res.data[ 0 ] || null
-                        });
-                    }
-                }
-            });  
-        },
         /** 地址跳转 */
         navigate( e ) {
             navTo( e.currentTarget.dataset.url );
@@ -371,8 +392,7 @@ Component({
     },
 
     attached: function( ) {
-        this.fetchTrip( );
-        // this.checkAuth( );
+
     }
 
 })

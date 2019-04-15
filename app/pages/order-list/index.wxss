@@ -8,6 +8,7 @@
 .pol-scroll-view {
     height: 100vh;
     overflow-y: scroll;
+    box-sizing: border-box;
 }
 
 .pol-scroll-view.pb {
@@ -78,7 +79,7 @@
     border-radius: 10px;
     padding-bottom: 10rpx;
     margin-bottom: 40rpx;
-    /* box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.20); */
+    box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.08);
 }
 
 .pol-trip-header-block {
@@ -935,6 +936,7 @@ to {transform: translate( -50%,  -20% ) rotate( 180deg );}
 
 .pol-activity-icon {
     width: 20rpx;
+    max-height: 30rpx;
     margin-right: 2rpx;
     display: inline-block;
 }

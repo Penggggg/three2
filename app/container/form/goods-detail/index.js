@@ -180,13 +180,13 @@ Component({
                   key: 'depositPrice',
                   label: '商品订金',
                   type: 'number',
-                  placeholder: '在行程出发前，客户将收到订金收款推送',
+                  placeholder: '购买时先付订金',
                   value: undefined
                 }, {
                   key: 'limit',
                   label: '限购数量',
                   type: 'number',
-                  placeholder: '不填或为0，则表示不限购',
+                  placeholder: '不填则表示不限购',
                   value: undefined
                 }, {
                   key: 'visiable',
@@ -475,9 +475,7 @@ Component({
                 title: _id ? '更新成功' : '创建成功'
             });
 
-            if ( !_id ) {
-              navTo(`/pages/manager-goods-list/index?newPid=${res.data}`)
-            }
+            navTo(`/pages/manager-goods-list/index`)
           }
       });
 
@@ -499,7 +497,7 @@ Component({
               success: res => {
                 const { status, data } = res;
                 if ( status === 200 ) {
-                  navTo(`/pages/manager-goods-list/index?newPid=${pid}`)
+                  navTo(`/pages/manager-goods-list/index`)
                 }
               }
             });

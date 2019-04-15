@@ -59,7 +59,12 @@
                 </view>
 
                 <view class="pmgl-action">
-                    <view class="pmgl-important">
+
+                    <view
+                        data-tid="{{ item._id }}"
+                        catchtap="goOrder"
+                        class="pmgl-important"
+                    >
                         <wxc-price
                             icon="sub"
                             decimal="small"

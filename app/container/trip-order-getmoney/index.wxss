@@ -487,6 +487,14 @@
     margin-bottom: 8rpx;
 }
 
+.tog-pay-text.inline {
+    display: inline;
+}
+
+.tog-pay-text.ml {
+    margin-left: 20rpx;
+}
+
 .tog-pay-inline {
     display: inline;
 }
@@ -518,6 +526,7 @@
 
 .tog-activity-icon {
     width: 20rpx;
+    max-height: 30rpx;
     margin-right: 2rpx;
     display: inline-block;
 }

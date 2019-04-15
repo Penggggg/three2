@@ -70,17 +70,45 @@ Component({
    */
   methods: {
 
+    onTrigger( ) {
+      
+      let formData = { };
+      const { meta } = this.data;
+      const origin = JSON.parse( JSON.stringify( this.data.formData ));
+
+      Object.keys( origin ).map( key => {
+        const formMeta = meta.find( x => x.key === key );
+        if ( formMeta.type === 'number' && origin[ key ] === '' ) {
+          formData[ key ] = null;  
+        } else if ( formMeta.type === 'number' && origin[ key ] !== '' ) {
+          formData[ key ] = Number( origin[ key ]);  
+        } else {
+          formData[ key ] = origin[ key ];
+        }
+      });
+      this.triggerEvent('change', formData );
+    },
+
     /** swithc/文本输入 */
     textInput( e ) {
+      const { type } =  e.currentTarget.dataset;
       const formItemKey = e.currentTarget.dataset.key;
-      const value = e.detail.value;
+      let value = e.detail.value;
+      
+      // if ( type === 'number' && value === '' ) {
+      //   value = null
+
+      // } else if ( type === 'number' && value !== '' ) {
+      //   value = Number( value );
+      // }
+
       this.setData({
         formData: Object.assign({ }, this.data.formData, {
           [ formItemKey ]: value 
         })
       });
       this.validateItem( formItemKey );
-      this.triggerEvent('change', this.data.formData );
+      this.onTrigger( )
     },
 
     /** select输入 */
@@ -97,7 +125,7 @@ Component({
         })
       })
       this.validateItem( formItemKey );
-      this.triggerEvent('change', this.data.formData );
+      this.onTrigger( )
     },
 
     /** Date输入 */
@@ -110,7 +138,7 @@ Component({
           })
         });
         this.validateItem( formItemKey );
-        this.triggerEvent('change', this.data.formData );
+        this.onTrigger( )
     },
 
     /** 展开tag */
@@ -159,7 +187,7 @@ Component({
         selecingTag: '',
       });
       this.validateItem( selectingTagKey );
-      this.triggerEvent('change', this.data.formData );
+      this.onTrigger( )
     },
 
     /** 编辑ing标签 */
@@ -221,7 +249,7 @@ Component({
         })
       });
       this.validateItem( key );
-      this.triggerEvent('change', this.data.formData );
+      this.onTrigger( )
     },
 
     /** 全部表单校验 */
@@ -240,7 +268,7 @@ Component({
           [ formKey ]: ( formData[ formKey ] === null || formData[ formKey ] === undefined ) ?
             formData[ formKey ]:
             currentTarget.type === 'number' ? 
-              Number( formData[ formKey ]) : 
+              formData[ formKey ] === '' ? null : Number( formData[ formKey ]) : 
               formData[ formKey ]
         })
       });      
@@ -315,7 +343,7 @@ Component({
           })
         })
       }
-      this.triggerEvent('change', this.data.formData );
+      this.onTrigger( )
     },
 
     /** 外部方法： 校验并拿到校验结果 */
@@ -329,7 +357,7 @@ Component({
         formData: Object.assign({ }, this.data.formData, { ...obj })
       });
       Object.keys( obj ).map( k => this.validateItem( k ));
-      this.triggerEvent('change', this.data.formData );
+      this.onTrigger( )
     },
     
     // 外部方法：重置表单

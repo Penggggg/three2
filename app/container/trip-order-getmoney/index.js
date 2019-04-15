@@ -61,7 +61,7 @@ Component({
                 const wholePriceNotDiscount = orders.reduce(( x, y ) => {
                     let currentPrice = 0;
                     const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
-                    if ( y.base_status === '2' ) {
+                    if ( y.base_status === '2' || y.base_status === '3' ) {
                         currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * count$( y );
                     } else if ( y.base_status === '0' || y.base_status === '1' ) {
                         currentPrice = count$( y ) * ( allocatedPrice || price );
@@ -216,7 +216,7 @@ Component({
                                 '已到帐' :
                             '' :
                     '';
-                if (( hasNotEnougth || getNothing ) && retreat ) {
+                if ( !hasBeenGivenMoney && retreat ) {
                     statusCN = '退订金 ' + retreat;
                 } 
 
@@ -276,8 +276,8 @@ Component({
                     // 未被分配的订单量
                     hasNotAdjustedLength: x.orders.filter( o => o.allocatedCount === undefined ).length
                 });
-            })
-            console.log( meta );
+            });
+
             return meta;
         },
         lastCallMoneyTimes$( ) {
@@ -545,6 +545,55 @@ Component({
 
                 }
             })
+        },
+
+        /** 退订金 */
+        giveBackMoney({ currentTarget }) {
+            const { tid } = this.data;
+            const { data } = currentTarget.dataset;
+            const { wholePriceByDiscount, wholePriceNotDiscount, coupons } = data;
+
+            const orders = data.orders.map( order => {
+                const { _id, pid, sid, canGroup, allocatedGroupPrice, allocatedCount, allocatedPrice } = order;
+                const final_price = !!canGroup && allocatedGroupPrice ?
+                    allocatedCount * allocatedGroupPrice :
+                    allocatedCount * allocatedPrice;
+                return {
+                    pid,
+                    sid,
+                    oid: _id,
+                    final_price,
+                    allocatedCount,
+                }
+            });
+
+            const reqData = {
+                tid,
+                orders,
+                coupons,
+                integral: wholePriceByDiscount > 0 ? wholePriceByDiscount : wholePriceNotDiscount
+            };
+
+            wx.showModal({
+                title: '提示',
+                content: '确定已退款吗?',
+                success: res => {
+                    if ( res.confirm ) {
+                        http({
+                            data: reqData,
+                            url: 'order_pay-last',
+                            success: res => {
+                                if ( res.status === 200 ) {
+                                    wx.showToast({
+                                        title: '退款成功'
+                                    });
+                                    this.init( tid );
+                                }
+                            }
+                        });
+                    }
+                }
+            });
         }
 
     },

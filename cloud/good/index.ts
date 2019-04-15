@@ -142,6 +142,7 @@ export const main = async ( event, context ) => {
                 .where({
                     category,
                     title: search,
+                    visiable: true,
                     isDelete: _.neq( true )
                 })
                 .count( );
@@ -151,6 +152,7 @@ export const main = async ( event, context ) => {
                 .where({
                     category,
                     title: search,
+                    visiable: true,
                     isDelete: _.neq( true )
                 })
                 .limit( limit )
@@ -309,19 +311,21 @@ export const main = async ( event, context ) => {
 
             // 判断是否有同名商品
             const { title } = event.data;
-            const check1$ = await db.collection('goods')
+            if ( !_id ) {
+                const check1$ = await db.collection('goods')
                 .where({
                     title,
                     isDelete: _.neq( true )
                 })
                 .count( );
 
-            if ( check1$.total !== 0 ) {
-                return ctx.body = {
-                    status: 500,
-                    message: '存在同名商品,请检查'
-                }
-            };
+                if ( check1$.total !== 0 ) {
+                    return ctx.body = {
+                        status: 500,
+                        message: '存在同名商品,请检查'
+                    }
+                };
+            }
 
             if ( !_id ) {
                 // 创建
@@ -351,27 +355,17 @@ export const main = async ( event, context ) => {
     
                 // 更新
                 const meta = Object.assign({ }, event.data );
-                delete meta[ _id ];
-                const { title, category, depositPrice, detail, fadePrice, img, limit, 
-                    standards, tag, updateTime, visiable, price, groupPrice, stock, saled } = meta;
-                await db.collection('goods').doc( _id ).update({
-                    data: { 
-                        tag,
-                        img,
-                        stock,
-                        price,
-                        limit,
-                        title,
-                        detail,
-                        saled,
-                        groupPrice,
-                        category,
-                        fadePrice,
-                        visiable,
-                        updateTime,
-                        depositPrice
-                    }
-                });
+
+                delete meta._id;
+                delete event.data._id;
+
+                const { standards } = meta;
+
+                await db.collection('goods')
+                    .doc( _id )
+                    .set({
+                        data: Object.assign({ }, meta, event.data )
+                    })
     
                 // 0. 查询该产品底下所有的型号
                 const allStandards$ = await db.collection('standards')
