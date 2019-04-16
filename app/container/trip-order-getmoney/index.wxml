@@ -225,7 +225,7 @@
                                         {{ orderitem.acid ? '【活动商品】' : '' }}{{ orderitem.name }}
                                     </view>
                                     <view
-                                        class="tog-address-stander {{ order.standername === '默认型号' ? 'white' : '' }}"
+                                        class="tog-address-stander {{ orderitem.standername === '默认型号' ? 'white' : '' }}"
                                     >
                                         {{ orderitem.standername !== '默认型号' ? orderitem.standername : '' }}
                                     </view>
