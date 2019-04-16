@@ -269,6 +269,10 @@
     color: #bfbfbf
 }
 
+.tog-stander.white {
+    background: #fff;
+}
+
 .tog-small-tips {
     font-size: 20rpx;
     color: #ff5777;
@@ -431,6 +435,10 @@
     display: inline-block;
     margin-top: 5rpx;
     color: #bfbfbf
+}
+
+.tog-address-stander.white {
+    background: #fff;
 }
 
 .tog-address-allocated {
