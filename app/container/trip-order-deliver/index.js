@@ -70,6 +70,7 @@ Component({
             const imgs = e.detail;
             if ( !this.data.inited ) { return; }
             if ( imgs.length !== 0 && imgs.every(( img, key ) => this.data.hasBeenUploaded[ key ] === img )) { return; }
+            if ( imgs.length === 0 && this.data.hasBeenUploaded.length === 0 ) { return }
             http({
                 url: 'trip_update-deliver',
                 data: {
