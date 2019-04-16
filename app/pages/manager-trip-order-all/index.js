@@ -126,8 +126,7 @@ Page({
 
         this.setData({
             last: last || null,
-            // tid,
-            tid: 'f4cf49925cac081d02afc3f052b42ea0'
+            tid
         });
         this.fetchList( );
     },

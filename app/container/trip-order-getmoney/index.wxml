@@ -136,7 +136,9 @@
                             class="tog-order-info-block"
                         >
                             <view class="tog-text big">{{ order.acid ? '【活动】' : '' }}{{ order.name }}</view>
-                            <view class="tog-stander">{{ order.standername !== '默认型号' ? order.standername : '' }}</view>
+                            <view 
+                                class="tog-stander {{ order.standername === '默认型号' ? 'white' : '' }}"
+                            >{{ order.standername !== '默认型号' ? order.standername : '' }}</view>
                             <view
                                 class="tog-tag-block"
                                 wx:if="{{ order.acid }}"
@@ -222,7 +224,9 @@
                                     <view class="tog-address-goodname">
                                         {{ orderitem.acid ? '【活动商品】' : '' }}{{ orderitem.name }}
                                     </view>
-                                    <view class="tog-address-stander">
+                                    <view
+                                        class="tog-address-stander {{ order.standername === '默认型号' ? 'white' : '' }}"
+                                    >
                                         {{ orderitem.standername !== '默认型号' ? orderitem.standername : '' }}
                                     </view>
                                 </view>
