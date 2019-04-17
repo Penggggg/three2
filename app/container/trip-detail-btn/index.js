@@ -34,15 +34,15 @@ Component({
             const { tid } = this.data;
             const meta = [
                 {
-                    title: '推荐',
+                    title: '拼团',
                     url: `/pages/trip-detail/index?id=${tid}`,
                     img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-kouhong.png',
                     activeImg: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-kouhong-active.png'
                 }, {
-                    title: '我的',
+                    title: '省钱',
                     url: `/pages/order-list/index?tid=${tid}&fromDetail=true`,
-                    img: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-person.png",
-                    activeImg: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-person-active.png"
+                    img: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-money.png",
+                    activeImg: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-money-active.png"
                 }, {
                     title: '排行榜',
                     url: `/pages/trip-deliver/index?tid=${tid}&fromDetail=true`,
