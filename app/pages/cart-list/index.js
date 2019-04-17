@@ -35,8 +35,6 @@ Page({
         isUserAuth: false,
         /** 当前行程 */
         trip: null,
-        // 是否新客户
-        isNew: true,
         // 订金总额
         sum2: 0,
         // 是否处于结算中
@@ -45,37 +43,18 @@ Page({
         shoppinglist: [ ],
         // 是否展示拼团列表
         showPin: false,
+
+        // 是否为新客
+        isNew: true,
+
+        // 是否需要付订金
+        shouldPrepay: true
     },
 
     /** 设置computed */
     runComputed( ) {
         computed( this, {
-            // 是否需要付订金
-            needPrePay: function( ) {
-                const { isNew, trip } = this.data;
-                if ( !trip ) { return true; }
-                if ( isNew && trip.payment === '0' ) {
-                    return true;
 
-                } else if ( isNew && trip.payment === '1' ) {
-                    return true;
-
-                }  else if ( isNew && trip.payment === '2' ) {
-                    return false;
-                    
-                } else if ( !isNew && trip.payment === '0' ) {
-                    return false;
-                    
-                }  else if ( !isNew && trip.payment === '1' ) {
-                    return true;
-                    
-                } else if ( isNew && trip.payment === '2' ) {
-                    return false;
-                    
-                } else {
-                    return true;
-                }
-            }
         });
     },
 
@@ -86,6 +65,26 @@ Page({
                 isNew: val
             })
         });
+    },
+
+    /** 检查是否需要付订金 */
+    checkPrePay( tid ) {
+        if ( !tid ) { return; }
+        http({
+            data: {
+                tid
+            },
+            url: 'common_should-prepay',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                const { isNew, shouldPrepay } = data;
+                this.setData({
+                    isNew,
+                    shouldPrepay
+                });
+            }
+        })
     },
 
     /** 拉取购物车列表 */
@@ -216,7 +215,6 @@ Page({
                     });
                 });
                 
-                console.log('...', dealed );
                 this.setData({
                     cartList: dealed,
                     hasInitCart: true
@@ -554,7 +552,7 @@ Page({
 
     /** 批量进行购物车结算 */
     batchSettle( e ) {
-        const { cartList, selectCartIdList, trip, isSettling } = this.data;
+        const { shouldPrepay, cartList, selectCartIdList, trip, isSettling } = this.data;
 
         if ( isSettling ) {
             return;
@@ -601,7 +599,7 @@ Page({
                             img: [ img ],
                             groupPrice,
                             tid: trip._id,
-                            depositPrice: depositPrice || 0,
+                            depositPrice: shouldPrepay ? depositPrice || 0 : 0,
                             type: 'pre', // 预付类型订单，
                             cid: temp.cart._id,
                             name: `${title}`,
@@ -620,11 +618,15 @@ Page({
                 createOrders( trip._id, selectedCheck, 'cart', orders => {
 
                     // 发起微信支付
-                    const total_fee = orders.reduce(( x, y ) => {
+                    let total_fee = orders.reduce(( x, y ) => {
                         const { pay_status, depositPrice } = y;
                         const deposit_price = pay_status === '0' && !!depositPrice ? depositPrice : 0;
                         return x + deposit_price;
                     }, 0 );
+
+                    if ( !shouldPrepay ) {
+                        total_fee = 0;
+                    }
 
                     // 去往订单列表
                     const goOrders = ( ) => {
@@ -707,8 +709,7 @@ Page({
         this.watchRole( );
         this.checkAuth( );
         this.runComputed( );
-        // this.fetchCurrentTrip( tid => this.fetchGroupList( tid ));
-        this.fetchCurrentTrip( tid => { });
+        this.fetchCurrentTrip( tid => this.checkPrePay( tid ));
     },
 
     /**
