@@ -8,9 +8,7 @@ export const app = {
 
 /** 推送模版 */
 export const notification_template = {
-    getMoney: 'fWj6ya_Jn8LNb7W2Du35ZYlF-29-GR6edkQZHMQKlr8', // 自定义了一个
-    getMoney2: 'fCvCrY8_5l60svPglMvQdLlA8eHcVeDBh0N-QPv1DFk', // 业务受理
-    getMoney3: 'fCvCrY8_5l60svPglMvQdO1sulAZQUTcOt3hdtrDIsw'// 业务受理2
+    getMoney3: 'fCvCrY8_5l60svPglMvQdO1sulAZQUTcOt3hdtrDIsw'// 业务受理通知
 }
 
 /** 微信支付 */
