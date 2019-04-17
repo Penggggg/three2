@@ -324,7 +324,7 @@
                                 {{ item.goodName }}
                             </view>
                             <view class="pcl-swiper-title sm">
-                                ¥{{ item.adjustGroupPrice }}
+                                ¥{{ item.adjustGroupPrice || item.adjustPrice || item.groupPrice || item.price }}
                             </view>
                             <view
                                 wx:if="{{ item.tag[ 0 ]}}"
