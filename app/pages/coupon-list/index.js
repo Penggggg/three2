@@ -26,7 +26,7 @@ Page({
                     ...coupons.filter( x => x.tid === tid )
                 ]
             },
-            // 当前行程卡券
+            // 之前的行程卡券
             list2$: function( ) {
                 const { coupons, tid } = this.data;
                 return [

@@ -44,6 +44,7 @@
         circular="{{ true }}"
         duration="{{ 1000 }}"
         interval="{{ 3000 }}"
+        wx:if="{{ shoppinglist.length > 0 }}"
         class="pcl-swiper {{ shoppinglist.length <= 3 ? shoppinglist.length === 1 ? 'one' : shoppinglist.length === 2 ? 'two' : shoppinglist.length === 3 ? 'three' : '' : '' }}"
         display-multiple-items="{{ shoppinglist.length <= 3 ? shoppinglist.length : 3 }}"
     >
@@ -66,7 +67,7 @@
                         {{ item.goodName }}
                     </view>
                     <view class="pcl-swiper-title sm">
-                        ¥{{ item.adjustGroupPrice }}
+                        ¥{{ item.adjustGroupPrice || item.adjustPrice || item.groupPrice || item.price }}
                     </view>
                     <view
                         wx:if="{{ item.tag[ 0 ]}}"
@@ -78,5 +79,32 @@
             </swiper-item>
         </block>
     </swiper>
+
+    <!-- 旧卡券 -->
+    <view
+        class="pcl-pin-title-block"
+        wx:if="{{ list2$.length > 0 }}"
+    >
+        <view class="pcl-pin-title">
+            往期卡券
+        </view>
+        <view class="pcl-pin-tips">
+            <!-- View all -->
+        </view>
+    </view>
+
+    <!-- 旧卡券 -->
+    <view class="pcl-coupon-list">
+        <my-coupon-item-1
+            wx:for="{{ list2$ }}"
+            wx:key="{{ index }}"
+            type="{{ item.type }}"
+            value="{{ item.value }}"
+            atleast="{{ item.atleast }}" 
+            trip="{{ item.trip }}" 
+            isUsed="{{ item.isUsed }}"
+            title="{{ item.title }}"
+        />
+    </view>
 
 </view>
