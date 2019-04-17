@@ -239,6 +239,13 @@
             </view>
         </view>
 
+        <view
+            class="ptd-nomore"
+            wx:if="{{ pingList$.length === 0 && waitPin$.length === 0 }}"
+        >
+            暂无拼团
+        </view>
+
     </view>
     
     <my-trip-detail-btn
