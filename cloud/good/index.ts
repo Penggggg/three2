@@ -79,7 +79,8 @@ export const main = async ( event, context ) => {
                     pid: _id,
                     isClosed: false,
                     isDeleted: false,
-                    type: 'good_discount'
+                    type: 'good_discount',
+                    endTime: _.gt( new Date( ).getTime( ))
                 })
                 .field({
                     pid: true,
@@ -576,7 +577,8 @@ export const main = async ( event, context ) => {
                         pid: good._id,
                         isClosed: false,
                         isDeleted: false,
-                        type: 'good_discount'
+                        type: 'good_discount',
+                        endTime: _.gt( new Date( ).getTime( ))
                     })
                     .field({
                         pid: true,

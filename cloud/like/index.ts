@@ -139,7 +139,8 @@ export const main = async ( event, context ) => {
                         pid: l.pid,
                         isClosed: false,
                         isDeleted: false,
-                        type: 'good_discount'
+                        type: 'good_discount',
+                        endTime: _.gt( new Date( ).getTime( ))
                     })
                     .get( );
             }));
