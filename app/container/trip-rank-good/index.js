@@ -22,9 +22,7 @@ Component({
     /**
      * 组件的初始数据
      */
-    data: {
-        // img: "https://wx60bf7f745ce31ef0-1257764567.cos.ap-guangzhou.myqcloud.com/WechatIMG17.jpeg",
-        
+    data: {        
         /** 列表 */
         list: [ ]
     },
