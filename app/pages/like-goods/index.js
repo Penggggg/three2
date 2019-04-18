@@ -34,7 +34,6 @@ Page({
             list$( ) {
                 const { list } = this.data;
                 const meta = list.map( delayeringGood );
-                console.log('??', meta );
                 return meta;
             }
 
