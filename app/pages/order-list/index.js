@@ -322,34 +322,37 @@ Page({
         }
 
 
-        // 计算当前订单的拼团 (可减免)
+        // 计算当前订单的拼团 (可减免金额)
         const pinCutoff$ = order => {
-
+            let _cutoff = 0;
             const b = order.base_status;
             const { canGroup, allocatedCount, allocatedGroupPrice, allocatedPrice, count, groupPrice, price } = order;
 
             if (( b === '2' || b === '3' )) {
 
                 if ( canGroup && allocatedGroupPrice ) {
-                    return allocatedCount * ( allocatedPrice - allocatedGroupPrice );
+                    _cutoff = allocatedCount * ( allocatedPrice - allocatedGroupPrice );
 
                 } else {
-                    return 0;
+                    _cutoff = 0;
                 }
             } else if (( b === '0' || b === '1' )) {
 
                 /**
                  * 这里不用预测
                 */
-                if ( groupPrice ) {
-                    return count * ( price - groupPrice );
+               if ( allocatedGroupPrice ) {
+                    _cutoff = allocatedCount * ( allocatedPrice - allocatedGroupPrice );
+               } else if ( groupPrice ) {
+                    _cutoff = count * ( price - groupPrice );
                 } else {
-                    return 0;
+                    _cutoff = 0;
                 }
 
             } else {
-                return 0
+                _cutoff = 0
             }
+            return _cutoff;
         }
 
 
@@ -817,7 +820,6 @@ Page({
             }
 
         });
-        console.log('??', Object.keys( orderObj ).map( tid => orderObj[ tid ]))
         this.setData({
             loading: false,
             tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
