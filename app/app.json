@@ -72,5 +72,6 @@
     "navigationBarTitleText": "smile优选",
     "navigationBarBackgroundColor": "#fff"
   },
-  "cloud": true
+  "cloud": true,
+  "sitemapLocation": "sitemap.json"
 }

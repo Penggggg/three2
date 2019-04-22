@@ -19,5 +19,7 @@
 	"projectname": "three2",
 	"libVersion": "2.6.4",
 	"compileType": "miniprogram",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {}
 }
