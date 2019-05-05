@@ -43,7 +43,8 @@ Page({
                     return [ ...arr1, ...arr2 ]
                 };
     
-                return changeSort( result ).map( delayeringGood );
+                const meta = changeSort( result ).map( delayeringGood );
+                return meta;
             }
         })
     },

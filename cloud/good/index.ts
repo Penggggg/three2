@@ -570,7 +570,7 @@ export const main = async ( event, context ) => {
                 .orderBy('saled', 'desc')
                 .get( );
 
-            // 拼接型号或商品活动
+            // 拼接型号和商品活动
             const activities$ = await Promise.all( data$.data.map( good => {
                 return db.collection('activity')
                     .where({
@@ -591,8 +591,18 @@ export const main = async ( event, context ) => {
                     .get( );
             }));
 
+            const standards$ = await Promise.all( data$.data.map( good => {
+                return db.collection('standards')
+                    .where({
+                        pid: good._id,
+                        isDelete: false
+                    })
+                    .get( );
+            }));
+
             const insertActivities = data$.data.map(( meta, k ) => {
                 return Object.assign({ }, meta, {
+                    standards: standards$[ k ].data, 
                     activity: activities$[ k ].data.length === 0 ? null : activities$[ k ].data[ 0 ]
                 });
             })

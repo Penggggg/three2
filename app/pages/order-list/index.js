@@ -342,7 +342,7 @@ Page({
                  * 这里不用预测
                 */
                if ( allocatedGroupPrice ) {
-                    _cutoff = allocatedCount * ( allocatedPrice - allocatedGroupPrice );
+                    _cutoff = ( allocatedCount || count ) * ( allocatedPrice - allocatedGroupPrice );
                } else if ( groupPrice ) {
                     _cutoff = count * ( price - groupPrice );
                 } else {
@@ -820,6 +820,7 @@ Page({
             }
 
         });
+
         this.setData({
             loading: false,
             tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
