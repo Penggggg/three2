@@ -2,18 +2,18 @@ import dicConf from './dic';
 
 /** app */
 export const app = {
-    id: 'wx60bf7f745ce31ef0',
-    secrect: '6c8ff31489cce7dd4edf0b1843b7b0f5'
+    id: 'wx46190709a1df31ab',
+    secrect: '78d9b8f5371cacf3e887e6dcd531da3b'
 }
 
 /** 推送模版 */
 export const notification_template = {
-    getMoney3: 'fCvCrY8_5l60svPglMvQdO1sulAZQUTcOt3hdtrDIsw'// 业务受理通知
+    getMoney3: '7TDuFkSVtVULTwAebcxmsJCK3Ts3vGqDli0jGf6WXNI'// 购买成功通知
 }
 
 /** 微信支付 */
 export const wxPay = {
-    mch_id: '1521522781', // 商户号
+    mch_id: '1534060231', // 商户号
     key: 'a92006250b4ca9247c02edce69f6a21a', // 这个是商户号设置的key
     body: '微信支付', // 简单描述
     attach: 'anything', // 附加数据
