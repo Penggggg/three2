@@ -537,8 +537,10 @@ Component({
                                     that.setData({
                                         callMoneyTimes: 3 - res.data
                                     });
-                                    that.fetchOrder( that.data.tid );
-                                }, 100 );
+                                    setTimeout(( ) => {
+                                        that.fetchOrder( that.data.tid );
+                                    }, 300 );
+                                }, 20 );
                             }
                         }
                     });
