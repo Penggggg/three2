@@ -509,11 +509,11 @@ export const main = async ( event, context ) => {
                 form_id,
                 template_id: CONFIG.notification_template.getMoney3,
                 data: {
-                    // 购买时间
+                    // 备注
                     "keyword1": {
                         "value": data.title
                     },
-                    // 订单总价
+                    // 活动
                     "keyword2": {
                         "value": data.time
                     }
