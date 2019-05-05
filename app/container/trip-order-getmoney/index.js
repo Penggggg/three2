@@ -538,7 +538,7 @@ Component({
                                         callMoneyTimes: 3 - res.data
                                     });
                                     that.fetchOrder( that.data.tid );
-                                }, 0 );
+                                }, 100 );
                             }
                         }
                     });
