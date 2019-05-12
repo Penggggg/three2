@@ -1,3 +1,4 @@
+const { http } = require('../../util/http.js');
 const { delayeringGood } = require('../../util/goods.js');
 const { computed } = require('../../lib/vuefy/index.js');
 const { navTo } = require('../../util/route.js');
@@ -68,6 +69,35 @@ Page({
             current: img,
             urls: [ ...this.data.detail.img ],
         });
+    },
+
+    /** 提交当前表单的值 */
+    submit( ) {
+        const { detail } = this.data;
+        if ( !detail ) { return; }
+
+        const { _id } = detail;
+    
+        http({
+            data: this.data.detail,
+            loadingMsg: _id ? '更新中...' : '创建中..',
+            errMsg: _id ? '更新失败' : '创建失败',
+            url: `good_edit`,
+            success: res => {
+                if ( res.status !== 200 ) { return; }
+
+                wx.showToast({
+                    title: _id ? '更新成功' : '创建成功'
+                });
+
+                app.setGlobalData({
+                    editingGood: null
+                });
+  
+                navTo(`/pages/manager-goods-list/index`)
+            }
+        });
+  
     },
 
     /**

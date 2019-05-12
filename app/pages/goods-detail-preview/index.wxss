@@ -268,3 +268,17 @@
     background: -webkit-linear-gradient(to bottom, #ff61ab, #ff8787); 
     background: linear-gradient(to bottom, #ff61ab, #ff8787); 
 }
+
+.gd-pin-tips {
+    top: 20rpx;
+    left: 20rpx;
+    color: #fff;
+    font-size: 24rpx;
+    position: fixed;
+    width: 200rpx;
+    box-sizing: border-box;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+    z-index: 1000;
+    background: rgba( 0, 0, 0, 0.35 );
+}
