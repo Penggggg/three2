@@ -25,6 +25,8 @@ Component({
     data: {
         // 数据字典
         dic: { },
+        // 行程是否已经被关闭
+        isClosed: false,
         // 展开删除推荐
         showDelete: false,
         // 展开商品选择
@@ -310,6 +312,7 @@ Component({
     
                         this.setData({
                             published,
+                            isClosed,
                             selectedProducts: selectedProducts || [ ],
                             selectedProductIds: selectedProductIds || [ ],
                             cashcoupon_atleast: cashcoupon_atleast || null,

@@ -10,7 +10,7 @@
         scroll="{{ true }}"
         close="{{ true }}"
         show-icon="{{ true }}"
-        notice="已发布行程仅能修改基本信息，已开始行程将无法修改任何信息！"
+        notice="{{ isClosed ? '行程已关闭，无法修改' : '已发布行程仅能修改基本信息，已开始行程将无法修改任何信息！'}}"
     />
 
     <!-- 表单：基本信息 -->
@@ -125,8 +125,9 @@
             结束行程( 收尾款 )
         </view>
         <view
-            class="ptd-btn invert"
             bindtap="submit"
+            class="ptd-btn invert"
+            wx:if="{{ !isClosed }}"
         >
             {{ !!tid ? '更新' : '创建' }}
         </view>
