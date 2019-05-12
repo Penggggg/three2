@@ -1,3 +1,4 @@
+const { delayeringGood } = require('../../util/goods.js');
 const { computed } = require('../../lib/vuefy/index.js');
 const { navTo } = require('../../util/route.js');
 
@@ -11,7 +12,36 @@ Page({
     data: {
 
         // 商品详情
-        detail: null
+        detail: null,
+
+        // 文字保证提示
+        promiseTips: [
+            '正品保证', '价格优势', '真人跑腿'
+        ]
+
+    },
+
+    /** 设置computed */
+    runComputed( ) {
+        computed( this, {
+
+            // 计算价格
+            price$: function( ) {
+                const { detail } = this.data;
+                const result = delayeringGood( detail );
+                return result ? result.price$ : '';
+            },
+
+            // 商品详情 - 分行显示
+            detailIntro$: function( ) {
+                const { detail } = this.data;
+                if ( !detail || ( !!detail && !detail.detail )) {
+                    return [ ];
+                } else {
+                    return detail.detail.split('\n').filter( x => !!x );
+                }
+            }
+        })
     },
 
     /**
@@ -19,6 +49,7 @@ Page({
      */
     onLoad: function (options) {
         this.init( );
+        this.runComputed( );
     },
 
     init( ) {

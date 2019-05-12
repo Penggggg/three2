@@ -117,18 +117,18 @@
       >
           删除
       </view>
-      <!-- <view
+      <view
           class="ptd-btn invert"
           bindtap="submit"
       >
           {{ !!pid ? '更新' : '创建' }}
-      </view> -->
-      <view
+      </view>
+      <!-- <view
           class="ptd-btn invert"
           bindtap="preview"
       >
           预览-{{ !!pid ? '更新' : '创建' }}
-      </view>
+      </view> -->
   </view>
 
 </view>
