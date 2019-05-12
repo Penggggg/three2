@@ -123,6 +123,12 @@
       >
           {{ !!pid ? '更新' : '创建' }}
       </view>
+      <!-- <view
+          class="ptd-btn invert"
+          bindtap="preview"
+      >
+          预览-{{ !!pid ? '更新' : '创建' }}
+      </view> -->
   </view>
 
 </view>

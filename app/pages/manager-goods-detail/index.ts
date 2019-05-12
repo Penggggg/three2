@@ -13,9 +13,9 @@ Page({
      */
     onLoad: function (options) {
       wx.hideShareMenu({ });
-      if ( !options!.id ) { return; }
+      // if ( !options!.id ) { return; }
       this.setData!({
-        id: options!.id
+        id: options!.id || '71f2cd945cab4fc10261232b3f358619'
       });
     },
   

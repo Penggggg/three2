@@ -303,9 +303,10 @@ export const main = async ( event, context ) => {
                 delete origin['_id'];
                 delete event.data['_id'];
                 delete event.data['sales_volume']
-    
+                
                 const temp = Object.assign({ }, origin, {
                     ...event.data,
+                    callMoneyTimes: event.data['end_date'] > origin['end_date'] ? 0 : origin['callMoneyTimes'],
                     isClosed: new Date( ).getTime( ) >= Number( end_date ) 
                 })
     
