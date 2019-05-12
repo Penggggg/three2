@@ -1,18 +1,18 @@
 {
   "pages": [
-    "pages/order-list/index",
     "pages/trip-enter/index",
+    "pages/manager-goods-detail/index",
+    "pages/goods-detail/index",
+    "pages/order-list/index",
     "pages/search/index",
     "pages/coupon-list/index",
     "pages/cart-list/index",
     "pages/manager-trip-list/index",
     "pages/manager-trip-order/index",
-    "pages/goods-detail/index",
     "pages/manager-trip-order-all/index",
     "pages/manager-goods-list/index",
     "pages/manager-auth-init/index",
     "pages/my/index",
-    "pages/manager-goods-detail/index",
     "pages/manager-trip-detail/index",
     "pages/like-goods/index",
     "pages/index/index",
@@ -20,7 +20,8 @@
     "pages/trip-detail/index",
     "pages/concat/index",
     "pages/trip-deliver/index",
-    "pages/manager-person-info/index"
+    "pages/manager-person-info/index",
+    "pages/goods-detail-preview/index"
   ],
   "usingComponents": {
     "my-nav": "./container/nav-bar/index",
