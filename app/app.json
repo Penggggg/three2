@@ -1,8 +1,8 @@
 {
   "pages": [
+    "pages/trip-enter/index",
     "pages/manager-goods-detail/index",
     "pages/goods-detail/index",
-    "pages/trip-enter/index",
     "pages/order-list/index",
     "pages/search/index",
     "pages/coupon-list/index",
