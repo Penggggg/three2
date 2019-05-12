@@ -55,10 +55,18 @@ Page({
     init( ) {
         app.watch$('editingGood', val => {
             if ( !val ) { return; }
-            console.log('???', val );
             this.setData({
                 detail: val
             });
+        });
+    },
+
+    /** 预览图片 */
+    previewImg({ currentTarget }) {
+        const { img } = currentTarget.dataset;
+        this.data.detail && wx.previewImage({
+            current: img,
+            urls: [ ...this.data.detail.img ],
         });
     },
 

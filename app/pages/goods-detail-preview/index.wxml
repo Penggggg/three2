@@ -175,6 +175,22 @@
             </view>
         </view>
 
+        <!-- 商品下面的栏 -->
+        <my-goods-detail-bar
+            tid=""
+            preview="{{ true }}"
+            detail="{{ detail }}"
+            canPinSku="{{[ ]}}"
+            activities="{{[ ]}}"
+        />
+
+    </view>
+
+    <!-- 商品管理页面入口 -->
+    <view
+        class="gd-btn-entry"
+    >
+        确认
     </view>
 
 </view>

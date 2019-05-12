@@ -11,7 +11,7 @@
             wx:for="{{ btnList }}"
             wx:key="{{ index }}"
             data-url="{{ item.url }}"
-            bindtap="navigate"
+            catchtap="navigate"
         >
             <image
                 mode="aspectFill"
@@ -28,7 +28,7 @@
 
             <!-- 已删除 -->
             <view
-                wx:if="{{ detail._id && detail.isDelete }}"
+                wx:if="{{ !preview && detail._id && detail.isDelete }}"
                 class="gbs-btn-special-item grey"
             >   
                 已删除
@@ -36,7 +36,7 @@
         
             <!-- 已下架 -->
             <view
-                wx:elif="{{ detail._id && !detail.visiable }}"
+                wx:elif="{{ !preview && detail._id && !detail.visiable }}"
                 class="gbs-btn-special-item grey"
             >   
                 已下架
@@ -44,7 +44,7 @@
 
             <!-- 已售罄 -->
             <view
-                wx:elif="{{ detail._id && detail.visiable && !hasStock }}"
+                wx:elif="{{ !preview && detail._id && detail.visiable && !hasStock }}"
                 class="gbs-btn-special-item grey"
             >   
                 已售罄

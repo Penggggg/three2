@@ -75,10 +75,11 @@ Component({
       let formData = { };
       const { meta } = this.data;
       const origin = JSON.parse( JSON.stringify( this.data.formData ));
-
       Object.keys( origin ).map( key => {
         const formMeta = meta.find( x => x.key === key );
-        if ( formMeta.type === 'number' && origin[ key ] === '' ) {
+        if ( formMeta === undefined ) {
+          return;
+        } else if ( formMeta.type === 'number' && origin[ key ] === '' ) {
           formData[ key ] = null;  
         } else if ( formMeta.type === 'number' && origin[ key ] !== '' ) {
           formData[ key ] = Number( origin[ key ]);  

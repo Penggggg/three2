@@ -12,6 +12,12 @@ Component({
      */
     properties: {
 
+        // 是否在预览模式
+        preview: {
+            type: Boolean,
+            value: false
+        },
+
         // 行程id
         tid: {
             type: String,
@@ -245,8 +251,10 @@ Component({
         },
         /** 加入购物车 */
         putCart( item ) {
-            
+            const { preview } = this.data;
             const { count, current_price, pid, standard_id } = item;
+
+            if ( preview ) { return; }
 
             http({
                 data: {
@@ -268,8 +276,10 @@ Component({
         /** 立即购买 */
         buy( item, form_id ) {
 
-            const { tid, shouldPrepay } = this.data;
+            const { tid, shouldPrepay, preview } = this.data;
             const { sid, pid, price, count, img, title, groupPrice, acid } = item;
+
+            if ( preview ) { return; }
 
             // 判断是否没有最新行程
             if ( !tid ) {
@@ -371,7 +381,8 @@ Component({
         },
         /** 地址跳转 */
         navigate( e ) {
-            navTo( e.currentTarget.dataset.url );
+            const { preview } = this.data;
+            !preview && navTo( e.currentTarget.dataset.url );
         },
         /** 监听用户授权情况 */
         checkAuth( ) {
