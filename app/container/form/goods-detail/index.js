@@ -2,6 +2,8 @@ const { http } = require('../../../util/http.js');
 const { computed } = require('../../../lib/vuefy/index.js');
 const { navTo } = require('../../../util/route.js');
 
+const app = getApp( );
+
 /**
  * ! 数值之间的关系校验，如：团购价必须大于原价
  */
@@ -418,18 +420,19 @@ Component({
       });
     },
 
-    /** 提交当前表单的值 */
-    submit( ) {
+    /** 检查、并返回商品数据 */
+    check( ) {
       const form1 = this.selectComponent('#form1');
       const form2 = this.selectComponent('#form2');
       const r1 = form1.getData();
       const r2 = form2.getData( );
 
       if ( !r1.result || !r2.result ) {
-        return wx.showToast({
+        wx.showToast({
           icon: 'none',
           title: '请完善商品信息',
-        })
+        });
+        return null;
       }
 
       // 这里有点奇怪 number 如果是带 小数点的 会返回 string，因此做个特殊处理
@@ -463,6 +466,15 @@ Component({
           });
       }
 
+      return goodsDetail;
+    },
+
+    /** 提交当前表单的值 */
+    submit( ) {
+      const _id = this.data.pid;
+      const goodsDetail = this.check( );
+      if ( !goodsDetail ) { return; }
+  
       http({
           data: goodsDetail,
           loadingMsg: _id ? '更新中...' : '创建中..',
@@ -479,6 +491,19 @@ Component({
           }
       });
 
+    },
+
+    /** 预览 */
+    preview( ) {
+      const _id = this.data.pid;
+      const goodsDetail = this.check( );
+      if ( !goodsDetail ) { return; }
+      app.setGlobalData({
+        editingGood: goodsDetail
+      });
+      setTimeout(( ) => {
+        navTo('/pages/goods-detail-preview/index')
+      }, 20 );
     },
 
     /** 删除该商品 */

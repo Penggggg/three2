@@ -16,7 +16,9 @@ App<MyApp>({
         // 用户信息
         userInfo: null,
         /** 是否是新客户 */
-        isNew: true
+        isNew: true,
+        /** 编辑中的商品数据 */
+        editingGood: null
     },
 
     /** 全局store */
@@ -25,7 +27,8 @@ App<MyApp>({
         openid: '',
         isUserAuth: false,
         userInfo: null,
-        isNew: true
+        isNew: true,
+        editingGood: null
     },
 
     /** 监听函数的对象数组 */
