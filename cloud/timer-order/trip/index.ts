@@ -1,6 +1,8 @@
 import * as cloud from 'wx-server-sdk';
 
-cloud.init( );
+cloud.init({
+    env: process.env.cloud
+});
 
 const db: DB.Database = cloud.database( );
 const _ = db.command;

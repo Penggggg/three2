@@ -709,39 +709,41 @@ Page({
             
             /** 任务列表 */
             const task = [ ];
-            orders.map( order => {
-                if ( !!order.groupPrice || !!order.allocatedGroupPrice ) {
+            orders
+                .filter( order => order.base_status !== '4' && order.base_status !== '5')
+                .map( order => {
+                    if ( !!order.groupPrice || !!order.allocatedGroupPrice ) {
 
-                    const price = order.allocatedGroupPrice ?
-                        order.allocatedPrice - order.allocatedGroupPrice :
-                        order.price - order.groupPrice;
+                        const price = order.allocatedGroupPrice ?
+                            order.allocatedPrice - order.allocatedGroupPrice :
+                            order.price - order.groupPrice;
 
-                    task.push({
-                        type: 'good',
+                        task.push({
+                            type: 'good',
 
-                        price: price * order.count,
+                            price: price * order.count,
 
-                        title: '拼团',
+                            title: '拼团',
 
-                        img: order.img[ 0 ],
+                            img: order.img[ 0 ],
 
-                        desc: `${order.name} ${order.standername !== '默认型号' ? order.standername : ''}`,
+                            desc: `${order.name} ${order.standername !== '默认型号' && !!order.standername ? order.standername : ''}`,
 
-                        share: {
-                            title: `省${order.allocatedGroupPrice ?
-                                order.allocatedPrice - order.allocatedGroupPrice :
-                                order.price - order.groupPrice}元！${order.name}`,
-                            path: `/pages/goods-detail/index?id=${order.pid}&tid=${this.data.tid}`,
-                            imageUrl: order.img[ 0 ]
-                        },
+                            share: {
+                                title: `省${order.allocatedGroupPrice ?
+                                    order.allocatedPrice - order.allocatedGroupPrice :
+                                    order.price - order.groupPrice}元！${order.name}`,
+                                path: `/pages/goods-detail/index?id=${order.pid}&tid=${this.data.tid}`,
+                                imageUrl: order.img[ 0 ]
+                            },
 
-                        // 处理真正拼团跟预测拼团
-                        finished: !!pinList.find( shopping => {
-                            return shopping.pid === order.pid && shopping.sid === order.sid
+                            // 处理真正拼团跟预测拼团
+                            finished: !!pinList.find( shopping => {
+                                return shopping.pid === order.pid && shopping.sid === order.sid
+                            })
                         })
-                    })
-                }
-            });
+                    }
+                });
 
             
             ['t_lijian', 't_manjian', 't_daijin'].map( quan => {
