@@ -35,7 +35,10 @@
             <view class="sku-header">
 
                 <!-- 图片 -->
-                <view class="sku-img-block" wx:if="{{ selectedSku }}">
+                <view
+                    class="sku-img-block {{ open ? '' : 'hide' }}"
+                    wx:if="{{ selectedSku }}"
+                >
                     <image
                         class="sku-img {{ open ? '' : 'hide' }}"
                         mode="aspectFill"

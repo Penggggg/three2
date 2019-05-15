@@ -51,14 +51,10 @@ Page({
      */
     onLoad: function (options) {
         wx.hideShareMenu( );
-        if ( options.id ) { 
-            this.setData({
-                id: options.id
-            });
-        }
-        // this.setData({
-        //     id: '71f2cd945cab52210262830e507fcec6'
-        // })
+        if ( !options.id ) { return }
+        this.setData({
+            id: options.id
+        })
     },
 
     /**

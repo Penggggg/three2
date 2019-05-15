@@ -195,7 +195,11 @@
                         wx:for="{{ item.addressOrders }}"
                     >
                         <!-- 地址信息 -->
-                        <view class="tog-address-user-info-block">
+                        <view
+                            data-info="{{ addressOrder.address }}"
+                            catchtap="copyDeliver"
+                            class="tog-address-user-info-block"
+                        >
                             <view class="tog-address-user" >
                                 {{ addressOrder.address.username }}
                             </view>
@@ -206,7 +210,11 @@
                                 {{ addressOrder.address.postalcode }}
                             </view>
                         </view>
-                        <view class="tog-address">
+                        <view
+                            class="tog-address"
+                            catchtap="copyDeliver"
+                            data-info="{{ addressOrder.address }}"
+                        >
                             {{ addressOrder.address.address }}
                         </view>
 

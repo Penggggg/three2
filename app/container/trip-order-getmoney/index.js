@@ -596,6 +596,19 @@ Component({
                     }
                 }
             });
+        },
+
+        /** 复制快递信息 */
+        copyDeliver({ currentTarget }) {
+            const { info } = currentTarget.dataset;
+            wx.setClipboardData({
+                data: `${info.username} ${info.phone} ${info.address} ${info.postalcode}`,
+                success: res => {
+                    wx.showToast({
+                        title: '快递信息复制'
+                    });
+                }
+            })
         }
 
     },
