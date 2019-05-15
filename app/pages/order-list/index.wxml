@@ -290,7 +290,7 @@
                                     bindtap="goGoodDetail"
                                     data-data="{{ order }}"
                                     class="pol-trip-order-standar"
-                                    wx:if="{{ order.standername !== '默认型号' }}"
+                                    wx:if="{{ order.standername !== '默认型号' && order.standername !== null }}"
                                 >
                                     {{ order.standername }}
                                 </view>
@@ -302,8 +302,8 @@
                                     {{
                                         order.pining ?
                                             order.b === '0' || order.b === '1' ?
-                                                '拼团成功！将减' + order.pin_cutoff + '元' :
-                                                '拼团成功！减' + order.pin_cutoff + '元' :
+                                                '拼团！将减' + order.pin_cutoff + '元' :
+                                                '拼团！减' + order.pin_cutoff + '元' :
                                             '拼团可减' + order.pin_cutoff + '元'
                                     }}
                                 </view>

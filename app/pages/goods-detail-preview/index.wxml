@@ -11,6 +11,19 @@
     <view
         wx:else
     >
+
+        <!-- 预览提示 -->
+        <view
+            class="gd-pin-tips"
+        >
+            <wxc-notice
+                color="#fff"
+                bg-color="transparent"
+                scroll="{{ true }}"
+                notice="正在处于商品预览模式"
+            />
+        </view>
+
         <!-- 轮播图 -->
         <swiper
             autoplay="{{ true }}"
@@ -175,6 +188,23 @@
             </view>
         </view>
 
+        <!-- 商品下面的栏 -->
+        <my-goods-detail-bar
+            tid=""
+            preview="{{ true }}"
+            detail="{{ detail }}"
+            canPinSku="{{[ ]}}"
+            activities="{{[ ]}}"
+        />
+
+    </view>
+
+    <!-- 商品管理页面入口 -->
+    <view
+        class="gd-btn-entry"
+        bindtap="submit"
+    >
+        确认
     </view>
 
 </view>

@@ -251,6 +251,7 @@ export const main = async ( event, context ) => {
 
                 let where$ = {
                     isClosed: false,
+                    start_date: _.lt( new Date( ).getTime( )),
                     end_date: _.gte( event.data.start_date )
                 };
 
@@ -261,8 +262,8 @@ export const main = async ( event, context ) => {
                 }
 
                 const rule1$ = await db.collection('trip')
-                .where(  where$ )
-                .count( );
+                    .where(  where$ )
+                    .count( );
         
                 if ( rule1$.total > 0 ) {
                     return getErr('开始时间必须大于上趟行程的结束时间');
