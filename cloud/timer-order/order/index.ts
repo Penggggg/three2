@@ -1,6 +1,8 @@
 import * as cloud from 'wx-server-sdk';
 
-cloud.init( );
+cloud.init({
+    env: process.env.cloud
+});
 
 const db: DB.Database = cloud.database( );
 const _ = db.command;
@@ -18,7 +20,7 @@ export const overtime = async ( ) => {
                 createTime: _.lte( new Date( ).getTime( ) - 30 * 60 * 1000 )
             })
             .get( );
-
+        
         // 订单更新
         await Promise.all( orders$.data.map( order => {
             return db.collection('order').doc( String( order._id ))
@@ -35,7 +37,8 @@ export const overtime = async ( ) => {
             const targetId = order.sid || order.pid;
             const collection = order.sid ? 'standards' : 'goods';
 
-            const target = await db.collection( collection ).doc( targetId )
+            const target = await db.collection( collection )
+                .doc( targetId )
                 .get( );
 
             if ( target.data.stock === undefined || target.data.stock === null ) { return; }
