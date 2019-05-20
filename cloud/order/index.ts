@@ -540,7 +540,7 @@ export const main = async ( event, context ) => {
                 const coupons = coupons$.length > 0 ?
                     coupons$
                         .map( x => x.data )
-                        .filter( x => x[ 0 ].openid === user.openid ) :
+                        .filter( x => x.length > 0 && x[ 0 ].openid === user.openid ) :
                     undefined;
 
                 return {
