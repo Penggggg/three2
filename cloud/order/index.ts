@@ -252,6 +252,7 @@ export const main = async ( event, context ) => {
      *     skip: number
      *     type: 我的全部 | 未付款订单 | 待发货 | 已完成 | 管理员（行程订单）| 管理员（所有订单）
      *     type: my-all | my-notpay | my-deliver | my-finish | manager-trip | manager-all
+     *     passusedless: true | false | undefined 是否过滤掉过期的订单
      * }
      * ! 未付款订单：pay_status: 未付款/已付订金 或 type: pre
      * ! 待发货：deliver_status：未发货 且 pay_status 已付款
@@ -261,12 +262,13 @@ export const main = async ( event, context ) => {
         try {
 
             let where$ = { };
-            const { type, tid } = event.data;
+            const { type, tid, passusedless } = event.data;
 
             // 查询条数
             const limit = tid ? 99 : 10;
 
             const openid = event.userInfo.openId;
+
 
             // 我的全部
             if ( type === 'my-all' ) {
@@ -302,6 +304,13 @@ export const main = async ( event, context ) => {
                     pay_status: '2',
                     deliver_status: '1'
                 };
+            }
+
+            // 过滤掉过期订单
+            if ( passusedless === true ) {
+                where$ = Object.assign({ }, where$, {
+                    base_status: _.neq('5')
+                });
             }
 
             // 行程订单

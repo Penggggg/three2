@@ -194,7 +194,8 @@ Page({
         let reqData = {
             type,
             skip,
-            page: page + 1
+            page: page + 1,
+            passusedless: fromDetail
         };
 
         if ( !!tidParam && !!fromDetail ) {
@@ -238,10 +239,10 @@ Page({
     },
 
     /** 拉取优惠券列表 */
-    fetchCoupons( ) {
+    fetchCoupons( check = false ) {
 
         const { coupons } = this.data;
-        if ( coupons.length > 0 ) { return; }
+        if ( coupons.length > 0 && !check ) { return; }
 
         http({
             url: `coupon_list`,
@@ -847,7 +848,7 @@ Page({
                             duration: 2000,
                             title: '领取成功！'
                         });
-                        this.fetchCoupons( );
+                        this.fetchCoupons( true );
                     }, 2500 );
                 }
             }
@@ -961,7 +962,7 @@ Page({
                             page: 0
                         })
                         setTimeout(( ) => {
-                            this.fetchCoupons( );
+                            this.fetchCoupons( true );
                             this.fetchList( this.data.active );
                         }, 0 );
                     
@@ -1014,12 +1015,17 @@ Page({
     onLoad: function (options) {
         this.watchRole( );
         this.runComputed( );
+        wx.hideShareMenu( );
 
         const { tid, fromDetail } = options;
         if ( tid ) { 
             this.setData({
                 tidParam: tid || null,
                 fromDetail: fromDetail === 'true'
+            });
+
+            wx.setNavigationBarTitle({
+                title: '省钱'
             });
         }
     },
