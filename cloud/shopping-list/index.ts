@@ -761,16 +761,16 @@ export const main = async ( event, context ) => {
             let data: any = [ ];
             let data$ = shopping$.data.filter( s => {
                 if ( type === 'pin' ) {
-                    return !!s.adjustGroupPrice && s.uids.length > 1;
+                    return ( !!s.adjustGroupPrice || !!s.groupPrice ) && s.uids.length > 1;
 
                 } else if ( type === 'wait' ) {
                     // return !!s.adjustGroupPrice && s.uids.length === 1 && s.uids[ 0 ] !== openid
-                    return !!s.adjustGroupPrice && s.uids.length === 1;
+                    return ( !!s.adjustGroupPrice || !!s.groupPrice ) && s.uids.length === 1;
 
                 } else {
                     // return ( !!s.adjustGroupPrice && s.uids.length > 1 ) ||
                     //     ( !!s.adjustGroupPrice && s.uids.length === 1 && s.uids[ 0 ] !== openid )
-                    return !!s.adjustGroupPrice;
+                    return ( !!s.adjustGroupPrice || !!s.groupPrice );
                 }
             });
 

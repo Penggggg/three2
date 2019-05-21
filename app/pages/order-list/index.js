@@ -194,7 +194,8 @@ Page({
         let reqData = {
             type,
             skip,
-            page: page + 1
+            page: page + 1,
+            passusedless: fromDetail
         };
 
         if ( !!tidParam && !!fromDetail ) {
