@@ -52,7 +52,7 @@ Component({
         // 邮费类型
         postage: '0',
         // 付款类型
-        payment: '0',
+        payment: '1',
         // 表单：邮费是否选择了满免
         postageFullFree: false,
         // 是否已发布

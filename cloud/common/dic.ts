@@ -25,14 +25,14 @@ export default [
         belong: 'payment',
         payment: [
             {
-                label: '新客付订金/旧客免订金',
-                value: '0'
-            }, {
                 label: '所有人付订金',
                 value: '1'
             }, {
                 label: '所有人免订金',
                 value: '2'
+            }, {
+                label: '新客付订金/旧客免订金',
+                value: '0'
             }
         ]
     }, {
