@@ -113,11 +113,15 @@
                                     
                                     <!-- 需要采购数 -->
                                     <view class="tos-compare-total line right">
-                                        <view class="tos-compare-total-label right">
+                                        <!-- <view class="tos-compare-total-label right">
                                             需要购买
+                                        </view> -->
+                                        <view class="tos-compare-total-label right">
+                                            实际购买
                                         </view>
-                                        <view class="tos-compare-total-number">
-                                            {{ item.total }}
+                                        <view class="tos-compare-total-number acturely">
+                                            {{ item.purchase }} 
+                                            <view class="tos-compare-total-number-tips">/ {{ item.total }}</view>
                                         </view>
                                     </view>
 
@@ -125,14 +129,14 @@
                                 <view class="tos-compare-item">
                                     
                                     <!-- 实际 -->
-                                    <view class="tos-compare-total nocenter">
+                                    <!-- <view class="tos-compare-total nocenter">
                                         <view class="tos-compare-total-number acturely right">
                                             {{ item.purchase }}
                                         </view>
                                         <view class="tos-compare-total-label">
                                             实际购买
                                         </view>
-                                    </view>
+                                    </view> -->
 
                                 </view>
                             </view>
@@ -143,15 +147,19 @@
                                     
                                     <!-- 需要采购数 -->
                                     <view class="tos-compare-total right">
-                                        <view class="tos-compare-total-label small right">
+                                        <!-- <view class="tos-compare-total-label small right">
                                             商城价格
+                                        </view> -->
+                                        <view class="tos-compare-total-label small right">
+                                            本次售价
                                         </view>
                                         <wxc-price
                                             icon="sub"
                                             decimal="small"
-                                            class="tos-compare-total-number small"
+                                            class="tos-compare-total-number small acturely"
                                         > 
-                                            {{ item.ac_price || item.price }}
+                                            <!-- {{ item.ac_price || item.price }} -->
+                                            {{ item.adjustPrice }}
                                         </wxc-price>
                                     </view>
 
@@ -159,7 +167,7 @@
                                 <view class="tos-compare-item">
                                     
                                     <!-- 实际 -->
-                                    <view class="tos-compare-total nocenter">
+                                    <!-- <view class="tos-compare-total nocenter">
                                         <wxc-price
                                             icon="sub"
                                             decimal="small"
@@ -170,7 +178,7 @@
                                         <view class="tos-compare-total-label">
                                             本次售价
                                         </view>
-                                    </view>
+                                    </view> -->
 
                                 </view>
                             </view>
@@ -178,21 +186,23 @@
                             <!-- 对比 2、团购价 -->
                             <view
                                 class="tos-compare"
-                                wx:if="{{ item.groupPrice }}"
+                                wx:if="{{ item.adjustGroupPrice }}"
                             >
                                 <view class="tos-compare-item">
                                     
                                     <!-- 需要采购数 -->
                                     <view class="tos-compare-total right">
                                         <view class="tos-compare-total-label small right">
-                                            商城团购价
+                                            <!-- 商城团购价 -->
+                                            本次团购
                                         </view>
                                         <wxc-price
                                             icon="sub"
                                             decimal="small"
-                                            class="tos-compare-total-number small"
+                                            class="tos-compare-total-number small acturely"
                                         > 
-                                            {{ item.ac_groupPrice || item.groupPrice }}
+                                            <!-- {{ item.ac_groupPrice || item.groupPrice }} -->
+                                            {{ item.adjustGroupPrice }}
                                         </wxc-price>
                                     </view>
 
@@ -200,7 +210,7 @@
                                 <view class="tos-compare-item">
                                     
                                     <!-- 实际 -->
-                                    <view class="tos-compare-total nocenter">
+                                    <!-- <view class="tos-compare-total nocenter">
                                         <wxc-price
                                             icon="sub"
                                             decimal="small"
@@ -218,7 +228,7 @@
                                         <view class="tos-compare-total-label">
                                             本次团购价
                                         </view>
-                                    </view>
+                                    </view> -->
 
                                 </view>
                             </view>
@@ -234,14 +244,6 @@
                         <view
                             class="tos-order-more"
                         >
-                            <!-- <view>
-                                {{ item.depositPricesArr[ 0 ] ?
-                                    item.depositPricesArr.length === 1 ?
-                                        '订金：¥' + item.depositPricesArr[ 0 ] :
-                                        '订金：¥' + item.depositPricesArr[ 0 ] + '~' + item.depositPricesArr[ item.depositPricesArr.length - 1 ] :
-                                    ''
-                                }}
-                            </view> -->
                             <view
                                 wx:if="{{ item.lastAllocated && item.base_status === '1' }}"
                             >
@@ -254,11 +256,11 @@
                         </view>
                         <view class="tos-trip-order-btns">
 
-                            <view
+                            <!-- <view
                                 class="tos-trip-order-btn"
                             >
                                 清单详情
-                            </view>
+                            </view> -->
 
                             <view
                                 bindtap="showModal"
@@ -278,7 +280,7 @@
 
     <!-- 弹框 -->
     <i-modal
-        title="行程调整"
+        title="调整"
         visible="{{ show }}"
         bind:ok="submit"
         bind:cancel="cancel"
