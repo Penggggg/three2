@@ -318,6 +318,29 @@
         <!-- 管理入口 -->
         <my-manager-entry-btn />
 
+        <!-- 提示有立减优惠券 -->
+        <view
+            bindtap="showBigLijian"
+            class="te-lijian-tips-con"
+            wx:if="{{ lijian.total && showLijianTips }}"
+        >
+            <image
+                mode="aspectFill"
+                class="te-lijian-tips-icon"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hongbao.png"
+            />
+            <wxc-price
+                icon="sub"
+                decimal="small"
+                class="te-lijian-tips-price"
+            > 
+                {{ lijian.total }}
+            </wxc-price>
+            <view class="te-lijian-tips-text">
+                立减
+            </view>
+        </view>
+
         <!-- 立减优惠券 -->
         <my-coupon-lijian
             tid="{{ current._id }}"
