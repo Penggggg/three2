@@ -717,12 +717,19 @@
 
 .te-lijian-tips-con {
     z-index: 10;
-    right: 60rpx;
     bottom: 200rpx;
     position: fixed;
     background: #fff;
     border-radius: 5px;
     box-shadow: 5px 5px 15px rgba( 0, 0, 0, 0.10 );
+}
+
+.te-lijian-tips-con.left {
+    left: 60rpx;
+}
+
+.te-lijian-tips-con.right {
+    right: 60rpx;
 }
 
 .te-lijian-tips-icon {
