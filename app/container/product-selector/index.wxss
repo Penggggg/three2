@@ -31,7 +31,7 @@
 
 .search-input {
     color: #999;
-    font-size: 30rpx;
+    font-size: 24rpx;
     text-align: left;
     padding: 0rpx 25rpx 20rpx 60rpx;  
 }
@@ -73,12 +73,13 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 .result-item-title {
     color: #666;
     text-align: left;
-    font-size: 32rpx;
+    font-size: 26rpx;
     overflow:hidden; 
     display:-webkit-box; 
     -webkit-line-clamp:1;
@@ -98,9 +99,9 @@
 }
 
 .result-item-count {
-    color: #666;
+    color: #999;
     margin-right: 5rpx;
-    font-size: 26rpx;
+    font-size: 22rpx;
 }
 
 .item-price-block {

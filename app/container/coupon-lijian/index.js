@@ -52,7 +52,7 @@ Component({
         /** 初始化 */
         init( val ) {
             if ( val ) {
-                this.vibrateShort( );
+                // this.vibrateShort( );
             }
         },
 

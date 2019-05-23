@@ -55,13 +55,13 @@
 
                     <!-- 标题、价格、库存、加购、销量 -->
                     <view class="result-item-info">
-                        <view class="result-item-title">
-                            {{ item.title }}
-                        </view>
-                        <view class="result-item-tips">
-                            <!-- <view class="result-item-count">销量: {{ item.saled }}</view>
-                            <view class="result-item-count">加购: {{ item.carts }}</view> -->
-                            <view class="result-item-count">库存: {{ item.stock || '不限' }}</view>
+                        <view>
+                            <view class="result-item-title">
+                                {{ item.title }}
+                            </view>
+                            <view class="result-item-tips">
+                                <view class="result-item-count">库存: {{ item.stock || '不限' }}</view>
+                            </view>
                         </view>
                         <view class="item-price-block">
                             <wxc-price

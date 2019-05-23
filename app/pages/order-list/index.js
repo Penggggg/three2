@@ -353,7 +353,7 @@ Page({
             } else {
                 _cutoff = 0
             }
-            return _cutoff;
+            return Number( _cutoff.toFixed( 2 ));
         }
 
 
@@ -722,7 +722,7 @@ Page({
                         task.push({
                             type: 'good',
 
-                            price: price * order.count,
+                            price: Number(( price * order.count).toFixed( 2 )),
 
                             title: '拼团',
 
@@ -732,8 +732,8 @@ Page({
 
                             share: {
                                 title: `省${order.allocatedGroupPrice ?
-                                    order.allocatedPrice - order.allocatedGroupPrice :
-                                    order.price - order.groupPrice}元！${order.name}`,
+                                    ( order.allocatedPrice - order.allocatedGroupPrice ).toFixed( 2 ) :
+                                    ( order.price - order.groupPrice ).toFixed( 2 )}元！${order.name}`,
                                 path: `/pages/goods-detail/index?id=${order.pid}&tid=${this.data.tid}`,
                                 imageUrl: order.img[ 0 ]
                             },
@@ -814,7 +814,7 @@ Page({
                 (hasPayDepositPrice - wholePriceByDiscount).toFixed( 2 ) : 0;
             tripOrders['retreat'] = retreat;
 
-            if ( retreat > 0 ) {
+            if ( retreat > 0 && orderObj[ tid ].isClosed ) {
                 tripOrders['tripStatusCN'] = '需退款';
             }
 

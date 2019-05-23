@@ -38,11 +38,15 @@ Page({
         /** 展开立减框 */
         showLijian: false,
 
+        /** 展开立减的小红包 */
+        showLijianTips: false,
+
         /** 展开满减 */
         showManjian: false,
 
         /** 立减信息 */
         lijian: {
+            total: 0,
             notGet: 0,
             hasBeenGet: 0
         },
@@ -216,6 +220,7 @@ Page({
 
     /** 拉取优惠券信息 */
     fetchCoupon( tid ) {
+        if ( !!this.data.lijian.total ) { return; }
         http({
             url: 'coupon_isget',
             data: {
@@ -235,6 +240,7 @@ Page({
                 const halfOfLijian = Number( reduce_price * 0.4 ).toFixed( 2 );
                 this.setData({
                     lijian: {
+                        total: reduce_price,
                         hasBeenGet: halfOfLijian,
                         notGet: Number( reduce_price * 0.6 ).toFixed( 2 ),
                     }
@@ -246,9 +252,15 @@ Page({
                 }
 
                 this.setData({
-                    showLijian: t_lijian === 'half',
+                    showLijianTips: t_lijian === 'half',
                     showManjian: t_manjian === false
                 });
+
+                if ( t_lijian === 'half' ) {
+                    setTimeout(( ) => {
+                        this.vibrateShort( );
+                    }, 200 );
+                }
             }
         })
     },
@@ -288,8 +300,11 @@ Page({
             url: 'coupon_create',
             success: res => {
                 this.setData({
-                    showLijian: true
+                    showLijianTips: true
                 });
+                setTimeout(( ) => {
+                    this.vibrateShort( );
+                }, 200 );
             }
         })
     },
@@ -317,6 +332,18 @@ Page({
             }
         })
         
+    },
+
+    /** 短振动 */
+    vibrateShort( ) {
+        wx.vibrateShort({
+            success: res => { }
+        });
+        setTimeout(( ) => {
+            wx.vibrateShort({
+                success: res => { }
+            });
+        }, 30 );
     },
 
     /** 社交弹幕 */
@@ -370,6 +397,14 @@ Page({
         const { current } = this.data;
         if ( !current ) { return; } 
         navTo(`/pages/trip-detail/index?id=${current._id}`)
+    },
+
+    /** 展示立减大红包 */
+    showBigLijian( ) {
+        this.setData({
+            showLijian: true,
+            showLijianTips: false
+        })
     },
 
     /**
