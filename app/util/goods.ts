@@ -118,7 +118,7 @@ const dealGoodPin = good => {
                 groupPrice: gp
             }],
             // 每对可拼团型号，可优惠的价格区间
-            eachPriceRound: gp ? p - gp : 0
+            eachPriceRound: gp ? (p - gp).toFixed( 2 ) : 0
         }
     } else {
 
@@ -144,7 +144,7 @@ const dealGoodPin = good => {
         }).filter( x => !!x );
 
         const deltas = meta.map( x => 
-            x.price - ( x.groupPrice || 0 )
+            (x.price - ( x.groupPrice || 0 )).toFixed( 2 )
         ).sort(( x, y ) => y - x );
 
         return {

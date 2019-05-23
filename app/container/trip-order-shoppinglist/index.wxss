@@ -175,12 +175,13 @@
     display: flex;
     position: relative;
     align-items:flex-end;
-    justify-content: center;
+    /* justify-content: center; */
+    padding-left: 50rpx;
 }
 
 .tos-compare-total.right {
-    justify-content: flex-end;
-    padding-right: 40rpx;
+    /* justify-content: flex-end;
+    padding-right: 40rpx; */
 }
 
 /* .tos-compare-total.line:after {
@@ -209,7 +210,7 @@
 }
 
 .tos-compare-total-label.small {
-    margin-right: 10rpx;
+    margin-right: 30rpx;
 }
 
 .tos-compare-total-number {
@@ -218,6 +219,7 @@
     color: #bfbfbf;
     margin-bottom: -5rpx;
 }
+
 
 .tos-compare-total-number.acturely {
     color: #ff5777;
@@ -231,6 +233,12 @@
     font-size: 24rpx;
     margin-right: 10rpx;
     margin-bottom: 0rpx;
+}
+
+.tos-compare-total-number-tips {
+    color: #bfbfbf;
+    font-size: 20rpx;
+    display: inline;
 }
 
 .tos-tips {
