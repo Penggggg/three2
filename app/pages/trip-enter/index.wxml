@@ -321,7 +321,7 @@
         <!-- 提示有立减优惠券 -->
         <view
             bindtap="showBigLijian"
-            class="te-lijian-tips-con"
+            class="te-lijian-tips-con {{ role === 1 ? 'left' : 'right' }}"
             wx:if="{{ lijian.total && showLijianTips }}"
         >
             <image
