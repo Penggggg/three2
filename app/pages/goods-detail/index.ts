@@ -159,7 +159,11 @@ Page({
                         })
                     }
                 });
-                return meta;
+
+                const meta2 = meta.map( x => Object.assign({ }, x, {
+                    delta: Number( x.price - x.groupPrice ).toFixed( 0 )
+                }));
+                return meta2;
             },
 
             // 马上可以拼团的个数
