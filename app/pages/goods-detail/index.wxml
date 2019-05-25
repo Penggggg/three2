@@ -376,10 +376,12 @@
                                 {{ item.name }}
                             </view>
                             <view class="gd-swiper-title small">
-                                原价：¥{{ item.price }}
+                                <!-- ¥{{ item.price }} -->
+                                拼 ¥{{ item.groupPrice }}
                             </view>
                             <view class="gd-swiper-title small color">
-                                拼: ¥{{ item.groupPrice }}
+                                <!-- 拼: {{ item.groupPrice }} -->
+                                省 ¥{{ item.delta }}
                             </view>
                             <view
                                 class="gd-swiper-tag"

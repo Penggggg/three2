@@ -453,11 +453,12 @@
 .gd-swiper-title.color {
     margin-top: 30rpx;
     min-width:80rpx;
-    line-height:28rpx;
+    line-height:32rpx;
     color:#fff;
     font-size:22rpx;
-    padding:8rpx 18rpx;
+    padding:8rpx rpx;
     border-radius:15px;
+    text-align: center;
     display:block;
     box-sizing:border-box;
     min-width:80rpx;
