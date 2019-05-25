@@ -242,7 +242,7 @@ Component({
 
             } else {
                 // 有型号
-                result = standards.some( x => x.stock === undefined || x.stock > 0 )
+                result = standards.some( x => x.stock !== 0 )
             } 
             
             that.setData({
