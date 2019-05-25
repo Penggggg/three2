@@ -179,7 +179,7 @@
                 </view>
 
                 <!-- 拼团 -->
-                <view
+                <!-- <view
                     class="te-block"
                     wx:if="{{ pingList$.length > 0 }}"
                 >
@@ -192,10 +192,10 @@
                     >
                         View all
                     </view>
-                </view>
+                </view> -->
 
                 <!-- 热门拼团 -->
-                <view
+                <!-- <view
                     class="pi-pin-list"
                     wx:if="{{ pingList$.length > 0 }}"
                 >
@@ -204,7 +204,7 @@
                         wx:key="{{ index }}"
                         wx:for="{{ pingList$ }}"
                     >
-                        <!-- 主图：只有主体商品 -->
+
                         <view
                             wx:if="{{ !item.sid }}"
                             class="pi-pin-img-block only-p"
@@ -224,7 +224,7 @@
                             </view>
                         </view>
 
-                        <!-- 主图：型号 -->
+
                         <view
                             wx:else
                             class="pi-pin-img-block with-standar"
@@ -249,10 +249,10 @@
                             </view>
                         </view>
 
-                        <!-- 商品详情 -->
+
                         <view class="pi-pin-item-info-block">
 
-                            <!-- 显示参团人数 -->
+     
                             <view class="pi-pin-item-member-block">
                                 <view class="pi-pin-item-member-title">
                                     {{ item.users.length }}人已拼团
@@ -271,7 +271,7 @@
                                 </view>
                             </view>
 
-                            <!-- 商品名称 -->
+          
                             <view
                                 wx:if="{{ item.sid }}"
                                 class="pi-pin-good-title"
@@ -279,12 +279,12 @@
                                 {{ item.detail.title }}
                             </view>
 
-                            <!-- 商品介绍 -->
+              
                             <view class="pi-pin-item-info">
                                 {{ item.detail.good.detail }}
                             </view>
 
-                            <!-- 商品图片、价格按钮 -->
+                       
                             <view class="pi-pin-item-action-block">
                                 <view class="pi-pin-item-good-imgs">
                                     <image
@@ -321,7 +321,7 @@
 
                         </view>
                     </view>
-                </view>
+                </view> -->
 
                 <!-- 排行榜列表 -->
                 <view
