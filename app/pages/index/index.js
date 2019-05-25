@@ -216,7 +216,8 @@ Page({
                     this.setData({
                         tid
                     });
-                    this.fetchPin( tid )
+                    // 此页面不再需要完整的拼团列表
+                    // this.fetchPin( tid )
                 }
             }
         });
