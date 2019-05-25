@@ -126,7 +126,7 @@ Component({
                     limit,
                     groupPrice,
                     canPin: !!canPinSku.find( x => x.pid === _id ),
-                    canSelect: stock === undefined || ( stock !== undefined && stock > 0 )
+                    canSelect: stock !== 0
                 }];
 
                 // 根据活动 更改价格
@@ -151,7 +151,7 @@ Component({
                     limit: x.limit,
                     groupPrice: x.groupPrice,
                     canPin: !!canPinSku.find( y => y.pid === x.pid && y.sid === x._id ),
-                    canSelect: x.stock === undefined || ( x.stock !== undefined && x.stock > 0 )
+                    canSelect: x.stock !== 0
                 }))
 
                 // 根据活动 更改价格
@@ -238,7 +238,7 @@ Component({
                     
             if ( standards.length === 0 ) {
                 // 只有单品本身
-                result = stock === undefined || stock > 0;
+                result = stock !== 0
 
             } else {
                 // 有型号
