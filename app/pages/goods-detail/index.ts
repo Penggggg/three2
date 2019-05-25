@@ -455,7 +455,7 @@ Page({
                             '限时特价超实惠！' : 
                         '一起拼团更实惠！'
                 }${detail.title}`,
-            path: `/pages/good-detail/index?${detail._id}&tid=${this.data.tid}`,
+            path: `/pages/goods-detail/index?id=${detail._id}&tid=${this.data.tid}`,
             imageUrl: `${detail.img[ 0 ]}`
         }
     }
