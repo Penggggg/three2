@@ -37,7 +37,7 @@
     padding: 0 20rpx;
     box-sizing: border-box;
     letter-spacing:0.05em;
-
+    line-height: 40rpx;
 }
 
 .gi3-tips-label {
