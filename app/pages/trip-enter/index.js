@@ -477,14 +477,26 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( event ) {
+
+        const { current } = this.data; 
+
         // 获取另一个立减
         if ( event.from === 'button' ) {
             this.getAnotherLijian( );
         }
-        return {
-            title: '[有人@你]跟我一起来拔草～',
-            path: '/pages/trip-enter/index',
-            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+
+        if ( !current ) {
+            return {
+                title: '分享给你一个良心超值代购～',
+                path: '/pages/trip-enter/index',
+                imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+            }
+        } else {
+            return {
+                title: `${current.title}在${current.start_date$}开始！来瞧瞧大家拔草了什么～`,
+                path: '/pages/trip-enter/index',
+                imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+            }
         }
     }
 })
