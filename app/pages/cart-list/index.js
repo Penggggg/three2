@@ -552,138 +552,141 @@ Page({
 
     /** 批量进行购物车结算 */
     batchSettle( e ) {
-        const { shouldPrepay, cartList, selectCartIdList, trip, isSettling } = this.data;
 
-        if ( isSettling ) {
-            return;
-        }
+        app.getWxUserInfo(( ) => {
+            const { shouldPrepay, cartList, selectCartIdList, trip, isSettling } = this.data;
 
-        this.setData({
-            isSettling: true
-        });
-
-        if ( selectCartIdList.length === 0 ) {
-            return this.setData({
-                isSettling: false
+            if ( isSettling ) {
+                return;
+            }
+    
+            this.setData({
+                isSettling: true
             });
-        }
-
-        // 判断是否没有最新行程
-        if ( !trip ) {
-            wx.showToast({
-                icon: 'none',
-                title: '暂无行程计划，暂时不能购买～'
-            });
-
-            return this.setData({
-                isSettling: false
-            });
-        }
-
-        // 地址选择
-        wx.chooseAddress({
-            success: res => {
-                
-                const { userName, provinceName, cityName, countyName, detailInfo, postalCode, telNumber } = res;
-
-                // 购物车商品
-                const selectedCheck = selectCartIdList.map( cid => {
-                    const temp = cartList.find( x => x.cart._id === cid );
-                    if ( temp ) {
-                        const { pid, sid, count, price, groupPrice, img, standardName, title, depositPrice } = temp.current;
-                        return {
-                            sid,
-                            pid,
-                            count,
-                            price,
-                            img: [ img ],
-                            groupPrice,
-                            tid: trip._id,
-                            depositPrice: shouldPrepay ? depositPrice || 0 : 0,
-                            type: 'pre', // 预付类型订单，
-                            cid: temp.cart._id,
-                            name: `${title}`,
-                            standername: standardName,
-                            address: {
-                                username: userName,
-                                postalcode: postalCode,
-                                phone: telNumber,
-                                address: `${provinceName}${cityName}${countyName}${detailInfo}`
-                            }
-                        }
-                    }
-                    return null; 
-                }).filter( x => !!x );
-
-                createOrders( trip._id, selectedCheck, 'cart', orders => {
-
-                    // 发起微信支付
-                    let total_fee = orders.reduce(( x, y ) => {
-                        const { pay_status, depositPrice } = y;
-                        const deposit_price = pay_status === '0' && !!depositPrice ? depositPrice : 0;
-                        return x + deposit_price;
-                    }, 0 );
-
-                    if ( !shouldPrepay ) {
-                        total_fee = 0;
-                    }
-
-                    // 去往订单列表
-                    const goOrders = ( ) => {
-                        navTo('/pages/order-list/index');
-                    }
-
-                    // 支付里面
-                    wxPay( total_fee, ({ prepay_id }) => {
-                        // 批量更新订单为已支付
-                        const pay = ( ) => http({
-                            url: 'order_upadte-to-payed',
-                            data: {
-                                orderIds: orders.map( x => {
-                                    return x.pay_status === '0' || x.pay_status === '1' ? x.oid : ''
-                                })
-                                .filter( x => !!x )
-                                .join(','),
-                                prepay_id,
-                                form_id: e ? e.detail.formId : 0
-                            },
-                            success: res => {
-                
-                                if ( res.status === 200 ) {
-                                    total_fee && wx.showToast({
-                                        title: '支付成功'
-                                    });
-                                } else {
-                                    wx.showToast({
-                                        icon: 'none',
-                                        title: '支付成功，刷新失败，重试中...'
-                                    });
-                                    pay( );
+    
+            if ( selectCartIdList.length === 0 ) {
+                return this.setData({
+                    isSettling: false
+                });
+            }
+    
+            // 判断是否没有最新行程
+            if ( !trip ) {
+                wx.showToast({
+                    icon: 'none',
+                    title: '暂无行程计划，暂时不能购买～'
+                });
+    
+                return this.setData({
+                    isSettling: false
+                });
+            }
+    
+            // 地址选择
+            wx.chooseAddress({
+                success: res => {
+                    
+                    const { userName, provinceName, cityName, countyName, detailInfo, postalCode, telNumber } = res;
+    
+                    // 购物车商品
+                    const selectedCheck = selectCartIdList.map( cid => {
+                        const temp = cartList.find( x => x.cart._id === cid );
+                        if ( temp ) {
+                            const { pid, sid, count, price, groupPrice, img, standardName, title, depositPrice } = temp.current;
+                            return {
+                                sid,
+                                pid,
+                                count,
+                                price,
+                                img: [ img ],
+                                groupPrice,
+                                tid: trip._id,
+                                depositPrice: shouldPrepay ? depositPrice || 0 : 0,
+                                type: 'pre', // 预付类型订单，
+                                cid: temp.cart._id,
+                                name: `${title}`,
+                                standername: standardName,
+                                address: {
+                                    username: userName,
+                                    postalcode: postalCode,
+                                    phone: telNumber,
+                                    address: `${provinceName}${cityName}${countyName}${detailInfo}`
                                 }
                             }
+                        }
+                        return null; 
+                    }).filter( x => !!x );
+    
+                    createOrders( trip._id, selectedCheck, 'cart', orders => {
+    
+                        // 发起微信支付
+                        let total_fee = orders.reduce(( x, y ) => {
+                            const { pay_status, depositPrice } = y;
+                            const deposit_price = pay_status === '0' && !!depositPrice ? depositPrice : 0;
+                            return x + deposit_price;
+                        }, 0 );
+    
+                        if ( !shouldPrepay ) {
+                            total_fee = 0;
+                        }
+    
+                        // 去往订单列表
+                        const goOrders = ( ) => {
+                            navTo('/pages/order-list/index');
+                        }
+    
+                        // 支付里面
+                        wxPay( total_fee, ({ prepay_id }) => {
+                            // 批量更新订单为已支付
+                            const pay = ( ) => http({
+                                url: 'order_upadte-to-payed',
+                                data: {
+                                    orderIds: orders.map( x => {
+                                        return x.pay_status === '0' || x.pay_status === '1' ? x.oid : ''
+                                    })
+                                    .filter( x => !!x )
+                                    .join(','),
+                                    prepay_id,
+                                    form_id: e ? e.detail.formId : 0
+                                },
+                                success: res => {
+                    
+                                    if ( res.status === 200 ) {
+                                        total_fee && wx.showToast({
+                                            title: '支付成功'
+                                        });
+                                    } else {
+                                        wx.showToast({
+                                            icon: 'none',
+                                            title: '支付成功，刷新失败，重试中...'
+                                        });
+                                        pay( );
+                                    }
+                                }
+                            });
+                            pay( );
+                        }, ( ) => {
+                            // 失败/成功-订单列表
+                            goOrders( );
+                            this.setData({
+                                isSettling: false
+                            });
                         });
-                        pay( );
+    
                     }, ( ) => {
-                        // 失败/成功-订单列表
-                        goOrders( );
                         this.setData({
                             isSettling: false
                         });
                     });
-
-                }, ( ) => {
+    
+                },
+                fail: err => {
                     this.setData({
                         isSettling: false
                     });
-                });
-
-            },
-            fail: err => {
-                this.setData({
-                    isSettling: false
-                });
-            }
-        });
+                }
+            });
+        })
 
     },
 

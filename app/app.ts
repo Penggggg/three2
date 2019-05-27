@@ -1,7 +1,7 @@
 import { http } from './util/http';
 
-// const cloudEnv = 'prod-b87b76';
-const cloudEnv = undefined;
+const cloudEnv = 'prod-b87b76';
+// const cloudEnv = undefined;
 
 App<MyApp>({
 
@@ -127,6 +127,7 @@ App<MyApp>({
         wx.cloud.callFunction({
             name: 'login'
         }).then(( res: any) => {
+            console.log('[LOGIN]', res.result );
             this.setGlobalData( res.result );
             !!cb && cb( );
         });
