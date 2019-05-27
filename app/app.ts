@@ -127,6 +127,7 @@ App<MyApp>({
         wx.cloud.callFunction({
             name: 'login'
         }).then(( res: any) => {
+            console.log('[LOGIN]', res.result );
             this.setGlobalData( res.result );
             !!cb && cb( );
         });
