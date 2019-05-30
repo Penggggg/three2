@@ -135,7 +135,8 @@ export const main = async ( event, context ) => {
             const salesVolume$ = await Promise.all( injectOrderCount.map( x => {
                 return db.collection('order')
                     .where({
-                        tid: x._id
+                        tid: x._id,
+                        pay_status: _.neq('0')
                     })
                     .get( );
             }))
