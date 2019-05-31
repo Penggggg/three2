@@ -451,13 +451,13 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( ) {
-        const { detail, pin$, activities } = this.data;
+        const { detail, pin$, activities, priceGap } = this.data;
         return {
-            title: `${pin$.length === 0 ? 
+            title: `${priceGap !== '' ? 
                         activities.length === 0 ?
-                            '给你看看这宝贝！' :
+                            `一起买！一起省${priceGap}元！` :
                             '限时特价超实惠！' : 
-                        '一起拼团更实惠！'
+                        '给你看看这宝贝！'
                 }${detail.title}`,
             path: `/pages/goods-detail/index?id=${detail._id}&tid=${this.data.tid}`,
             imageUrl: `${detail.img[ 0 ]}`
