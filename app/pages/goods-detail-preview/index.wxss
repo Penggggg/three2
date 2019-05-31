@@ -98,11 +98,14 @@
     left: 20vw;
     height: 100%;
     width: 80vw;
-    flex-direction: row;
+    display:flex;
+    flex-direction:column;
     background: #722ed1;
     position: absolute;
     box-sizing: border-box;
-    align-items: center;
+    /* align-items: center; */
+    /* padding-left: 50rpx; */
+    padding: 0rpx 0 0 50rpx;
     border-radius: 60rpx 10rpx 10rpx 60rpx;
 }
 
