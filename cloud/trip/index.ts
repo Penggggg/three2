@@ -136,17 +136,20 @@ export const main = async ( event, context ) => {
                 return db.collection('order')
                     .where({
                         tid: x._id,
-                        pay_status: _.neq('0')
+                        pay_status: _.neq('0'),
+                        base_status: _.or( _.eq('1'), _.eq('2'), _.eq('3'))
                     })
                     .get( );
             }))
 
-            const injectSalesVolume = salesVolume$.map(( x, k ) => {
-                const salesVolume = x.data.reduce(( n, m ) => {
-                    const price = m.allocatedPrice || m.price;
-                    const count = m.allocatedCount === undefined || m.allocatedCount === null ? m.count : m.allocatedCount ;
-                    return n + count * price;
-                }, 0 );
+            const injectSalesVolume = salesVolume$.map(( o, k ) => {
+                const salesVolume = o.data
+                    .filter( x => x.pay_status !== '0' &&
+                        (( x.base_status === '1' ) || ( x.base_status === '2' ) || ( x.base_status === '3' ))
+                    )
+                    .reduce(( x, y ) => {
+                        return x + ( y.allocatedPrice * ( y.allocatedCount || 0 ));
+                    }, 0 );
                 return Object.assign({ }, injectOrderCount[ k ], {
                     sales_volume: salesVolume
                 });
