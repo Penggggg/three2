@@ -40,8 +40,8 @@ const _ = db.command;
  * prepay_id,
  * final_price 最后成交价
  * ! canGroup 是否可以拼团
- * ! base_status: 0,1,2,3,4,5 进行中，代购已购买，已调整，已结算，已取消（买不到），已过期（支付过期）
- * ! pay_status: 0,1,2 未付款，已付订金，已付全款
+ * base_status: 0,1,2,3,4,5 进行中，代购已购买，已调整，已结算，已取消（买不到），已过期（支付过期）
+ * pay_status: 0,1,2 未付款，已付订金，已付全款
  * ! deliver_status: 0,1 未发布，已发布、
  */
 export const main = async ( event, context ) => {
