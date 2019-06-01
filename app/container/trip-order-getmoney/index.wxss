@@ -75,12 +75,14 @@
     background: #fffefc;
     border-radius: 10px;
     position: relative;
+    z-index: 100;
     box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.08);
 }
 
 .tog-good-info-block {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     position: relative;
     padding: 15rpx 20rpx;
     background: #fff;
@@ -93,18 +95,18 @@
 .tog-statuscn {
     min-width:90rpx;
     line-height:34rpx;
-    top: 50%;
+    /* top: 50%; */
     z-index: 100;
-    right: 20rpx;
+    /* right: 20rpx; */
     color: #fff;
     font-size: 24rpx;
-    position: absolute;
+    /* position: absolute; */
     padding: 8rpx 18rpx;
     border-radius: 15px;
     display: block;
     box-sizing: border-box;
     min-width: 80rpx;
-    transform: translate( 0, -50% );
+    /* transform: translate( 0, -50% ); */
     background: #bc4e9c;  
     background: -webkit-linear-gradient(to left, #f80759, #bc4e9c); 
     background: linear-gradient(to left, #f80759, #bc4e9c); 
@@ -113,6 +115,44 @@
 
 .tog-statuscn.text {
     border-radius: 3px;
+}
+
+.tog-deliver-icon {
+    width: 40rpx;
+    height: 40rpx;
+}
+
+.tog-deliver-icon-con {
+    width: 55rpx;
+    height: 55rpx;
+    display: flex;
+    border-radius: 50%;
+    align-items: center;
+    background: #bc4e9c;  
+    justify-content: center;
+    border: 1px solid #fff;
+    margin-right: 10rpx;
+    background: -webkit-linear-gradient(to left, #f80759, #bc4e9c); 
+    background: linear-gradient(to left, #f80759, #bc4e9c); 
+    box-shadow: 3px 3px 13px rgba(0, 0, 0, 0.2);
+}
+
+.tog-deliver-tips {
+    color: #ff5777;
+    font-size: 20rpx;
+    padding: 5rpx 10rpx;
+    border: 1px solid #ff5777;
+}
+
+.tog-deliver-yuan {
+    display: inline;
+    font-size: 16rpx;
+    margin-right: 5rpx;
+}
+
+.tog-user-deliver {
+    display: inline;
+    margin-left: 15rpx;
 }
 
 .tog-tips-bubble {
@@ -125,6 +165,7 @@
     padding: 0rpx 0rpx;
     width: 220rpx;
     z-index: 10;
+    z-index: 101;
     background: rgba( 0, 0, 0, 0.15 );
 }
 
@@ -149,6 +190,11 @@
     background: #bc4e9c;  
     background: -webkit-linear-gradient(to left, #f80759, #bc4e9c);  
     background: linear-gradient(to left, #f80759, #bc4e9c); 
+}
+
+.tog-user-con {
+    display: flex;
+    align-items: center;
 }
 
 .tog-user-avatar {

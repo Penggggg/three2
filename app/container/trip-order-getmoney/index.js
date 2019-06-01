@@ -29,8 +29,10 @@ Component({
         clientOders: [ ], // 客户订单,
         showMore: [ ], // 展示更多 uid[ ]
         showModal: false, // 展示弹框
+        showDeliverModal: false, // 快递弹框
         currentOrder: null, // 当前选中的订单
         form: { // 弹框表单
+            fee: null,
             count: null
         },
         showBtn: false, // 展示行程列表按钮,
@@ -54,11 +56,11 @@ Component({
             }
 
             const meta = clientOders.map( x => {
-
-                const { coupons, orders } = x;
+                
+                const { coupons, orders, deliverFee } = x;
 
                 // 应付全款（不含优惠券）
-                const wholePriceNotDiscount = orders.reduce(( x, y ) => {
+                let wholePriceNotDiscount = orders.reduce(( x, y ) => {
                     let currentPrice = 0;
                     const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
                     if ( y.base_status === '2' || y.base_status === '3' ) {
@@ -71,6 +73,12 @@ Component({
                     return x + currentPrice;
                 }, 0 );
 
+                // 邮费
+                const userDeliverFee = !!deliverFee ? Number( Number( deliverFee.fee ).toFixed( 2 )) : null;
+
+                if ( userDeliverFee ) {
+                    wholePriceNotDiscount += userDeliverFee;
+                }
 
                 // 优惠券
                 const coupons_manjian = coupons.find( c => c.type === 't_manjian' && c.tid === tid );
@@ -221,6 +229,8 @@ Component({
                 } 
 
                 return Object.assign({ }, x , {
+
+                    userDeliverFee,
 
                     hasPayDepositPrice,
 
@@ -386,6 +396,15 @@ Component({
             });
         },
 
+        /** 展示调整快递费用弹框 */
+        onShowDeliverModal({ currentTarget }) {
+            const currentOrder = currentTarget.dataset.data;
+            this.setData({
+                currentOrder,
+                showDeliverModal: true
+            });
+        },
+
         /** 展示调整弹框 */
         onShowModal({ currentTarget }) {
             const currentOrder = currentTarget.dataset.data;
@@ -417,6 +436,19 @@ Component({
                 currentOrder: null,
                 showModal: false,
                 form: {
+                    fee: null,
+                    count: null
+                }
+            })
+        },
+
+        /** 取消弹框2 */
+        onCancelModal2( ) {
+            this.setData({
+                currentOrder: null,
+                showDeliverModal: false,
+                form: {
+                    fee: null,
                     count: null
                 }
             })
@@ -457,6 +489,51 @@ Component({
             });
         },
 
+        /** 提交邮费修改 */
+        submitDeliverFee( ) {
+            const { currentOrder, form, tid } = this.data;
+
+            if ( form.fee === null||
+                form.fee === undefined ||
+                ( typeof form.fee === 'string' && !form.fee.trim( ))
+            ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '费用不能为空'
+                })
+            }
+
+            const { deliverFee } = currentOrder;
+            let temp = {
+                tid,
+                openid: currentOrder.user.openid,
+                fee: Number (Number( form.fee ).toFixed( 0 ))
+            }
+
+            if ( deliverFee ) {
+                temp = Object.assign({ }, temp, {
+                    _id: deliverFee._id
+                })
+            }
+
+            http({
+                data: temp,
+                url: 'deliver_adjust-fee',
+                success: res => {
+                    if ( res.status === 200 ) {
+                        this.onCancelModal2( );
+                        this.fetchOrder( this.data.tid );
+                        setTimeout(( ) => {
+                            wx.showToast({
+                                title: '更新成功'
+                            });
+                        }, 0 );
+                    }
+                }
+            });
+
+        },
+
         /** 弹框输入 */
         modalInput( e ) {
             const { detail, currentTarget } = e;
@@ -478,8 +555,63 @@ Component({
         allGetMoney( ) {
             const that = this;
             const { callMoneyTimes } = this.data;
-            const ok = this.data.clientOders$.every( o => !!o.isAllAdjusted );
-            if ( !ok ) {
+            const isAllAdjusted = this.data.clientOders$.every( o => !!o.isAllAdjusted );
+            const isAllHasDeliver = this.data.clientOders$.every( o => !!o.deliverFee );
+
+            const sendGetMoney = ( ) => {
+                wx.showModal({
+                    title: '提示',
+                    content: '发送收款推送后，不能更改订单数量/价格',
+                    success: res => {
+                        if ( !res.confirm ) { return; }
+    
+                        const orders$ = [ ];
+                        that.data.clientOders$.map( userOrder => {
+                            const { user, orders } = userOrder;
+                            orders.map( order => {
+                                const { _id, prepay_id, form_id, pid, sid, openid, pay_status, allocatedCount, allocatedGroupPrice } = order;
+                                const temp = {
+                                    oid: _id,
+                                    pay_status,
+                                    allocatedCount,
+                                    allocatedGroupPrice,
+                                    prepay_id, form_id, pid, sid, openid
+                                };
+                                orders$.push( temp );
+                            });
+                        });
+    
+                        const data = {
+                            tid: that.data.tid,
+                            orders: orders$
+                        };
+    
+                        http({
+                            data,
+                            url: 'order_batch-adjust',
+                            success: res => {
+                                if ( res.status === 200 ) {
+                                    setTimeout(( ) => {
+                                        wx.showToast({
+                                            duration: 2000,
+                                            title: `发送成功`
+                                        });
+                                        that.setData({
+                                            callMoneyTimes: 3 - res.data
+                                        });
+                                        setTimeout(( ) => {
+                                            that.fetchOrder( that.data.tid );
+                                        }, 300 );
+                                    }, 20 );
+                                }
+                            }
+                        });
+    
+                    }
+                })
+            }
+
+            if ( !isAllAdjusted ) {
                 return wx.showToast({
                     icon: 'none',
                     title: '请处理待分配订单'
@@ -493,60 +625,18 @@ Component({
                 });
             }
 
-            wx.showModal({
-                title: '提示',
-                content: '发送收款推送后，不能更改订单数量/价格',
-                success(res) {
-                    if ( !res.confirm ) { return; }
+            if ( !isAllHasDeliver ) {
+                wx.showModal({
+                    title: '提示',
+                    content: '有未调整邮费，确定提交吗？',
+                    success: res => {
+                        res.confirm && sendGetMoney( )
+                    }
+                });
+            } else {
+                sendGetMoney( );
+            }
 
-                    const orders$ = [ ];
-                    that.data.clientOders$.map( userOrder => {
-                        const { user, orders } = userOrder;
-                        orders.map( order => {
-                            const { _id, prepay_id, form_id, pid, sid, openid, pay_status, allocatedCount, allocatedGroupPrice } = order;
-                            const temp = {
-                                oid: _id,
-                                pay_status,
-                                allocatedCount,
-                                allocatedGroupPrice,
-                                prepay_id, form_id, pid, sid, openid
-                            };
-                            orders$.push( temp );
-                        });
-                    });
-
-                    const data = {
-                        tid: that.data.tid,
-                        orders: orders$,
-                        // notification: {
-                        //     title: '您购买的商品已到货',
-                        //     time: `[行程]${that.data.title}`
-                        // }
-                    };
-
-                    http({
-                        data,
-                        url: 'order_batch-adjust',
-                        success: res => {
-                            if ( res.status === 200 ) {
-                                setTimeout(( ) => {
-                                    wx.showToast({
-                                        duration: 2000,
-                                        title: `发送成功`
-                                    });
-                                    that.setData({
-                                        callMoneyTimes: 3 - res.data
-                                    });
-                                    setTimeout(( ) => {
-                                        that.fetchOrder( that.data.tid );
-                                    }, 300 );
-                                }, 20 );
-                            }
-                        }
-                    });
-
-                }
-            })
         },
 
         /** 退订金 */

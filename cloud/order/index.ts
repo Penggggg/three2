@@ -472,6 +472,8 @@ export const main = async ( event, context ) => {
     app.router('daigou-list', async( ctx, next ) => {
         try {
             const { tid, needCoupons, needAddress } = event.data;
+
+            // 订单信息
             const orders$ = await db.collection('order')
                 .where({
                     tid,
@@ -487,6 +489,20 @@ export const main = async ( event, context ) => {
                 ))
                 .map( uid => db.collection('user')
                     .where({
+                        openid: uid
+                    })
+                    .get( ))
+            );
+
+            // 快递费用信息
+            const deliverfees$ = await Promise.all(
+                Array.from( 
+                    new Set( orders$.data
+                        .map( x => x.openid )
+                ))
+                .map( uid => db.collection('deliver-fee')
+                    .where({
+                        tid,
                         openid: uid
                     })
                     .get( ))
@@ -532,8 +548,7 @@ export const main = async ( event, context ) => {
                 );
             }
             
-
-            const userOders = users$.map( user$ => {
+            const userOders = users$.map(( user$, k ) => {
                 
                 const user = user$.data[ 0 ];
 
@@ -552,10 +567,13 @@ export const main = async ( event, context ) => {
                         .filter( x => x.length > 0 && x[ 0 ].openid === user.openid ) :
                     undefined;
 
+                const deliverFee = deliverfees$[ k ].data[ 0 ] || null
+
                 return {
                     user,
                     orders,
                     address,
+                    deliverFee,
                     coupons: (!!coupons && coupons.length > 0 ) ? coupons[ 0 ] : [ ]
                 };
             });
