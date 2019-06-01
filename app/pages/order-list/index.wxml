@@ -302,8 +302,8 @@
                                     {{
                                         order.pining ?
                                             order.b === '0' || order.b === '1' ?
-                                                '拼团！将减' + order.pin_cutoff + '元' :
-                                                '拼团！减' + order.pin_cutoff + '元' :
+                                                '拼团成功！将减' + order.pin_cutoff + '元' :
+                                                '拼团成功！减' + order.pin_cutoff + '元' :
                                             '拼团可减' + order.pin_cutoff + '元'
                                     }}
                                 </view>
@@ -311,12 +311,12 @@
 
                             <!-- 价格、数量，调整完成之前，都是看到默认的count跟price -->
                             <view class="pol-trip-order-price-block">
-                                <view 
+                                <!-- <view 
                                     class="pol-trip-order-status-pin"
                                     wx:if="{{ order.allocatedGroupPrice && order.canGroup }}"
                                 >
                                     拼
-                                </view>
+                                </view> -->
                                 <!-- 正价 调整前 -->
                                 <view
                                     wx:if="{{ !order.canGroup }}"
@@ -362,8 +362,11 @@
                         <view class="pol-trip-order-sum">
                             共{{ item.sum }}件商品
                         </view>
-                        <view class="pol-trip-order-totalprice">
+                        <view class="pol-trip-order-totalprice ml">
                             已付订金：<view class="pol-totalprice">¥{{ item.hasPayDepositPrice }}</view>
+                        </view>
+                        <view class="pol-trip-order-totalprice ml">
+                            邮费：<view class="pol-totalprice">¥{{ item.userDeliverFee }}</view>
                         </view>
                     </view>
 

@@ -25,6 +25,7 @@ export const wxPay = {
 export const collections = [
     'activity',
     'address',
+    'deliver-fee',
     'like-collection',
     'cart',
     'dic',
