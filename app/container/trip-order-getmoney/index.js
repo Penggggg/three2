@@ -287,7 +287,7 @@ Component({
                     hasNotAdjustedLength: x.orders.filter( o => o.allocatedCount === undefined ).length
                 });
             });
-            console.log('...', meta );
+       
             return meta;
         },
         lastCallMoneyTimes$( ) {

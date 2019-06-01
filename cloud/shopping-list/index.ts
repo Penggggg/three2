@@ -94,7 +94,7 @@ export const main = async ( event, context ) => {
      */
     app.router('findCannotBuy', async( ctx, next ) => {
         try {
-            console.log('======>findCannotBuy')
+
             const { tid, list } = event.data;
             const openId = event.data.openId || event.userInfo.openId;
 
@@ -115,32 +115,6 @@ export const main = async ( event, context ) => {
             if ( trip$.data.isClosed || new Date( ).getTime( ) > trip$.data.end_date ) {
                 return ctx.body = getErr('暂无购物行程～');
             }
-
-            // 不能购买的商品列表（清单里面买不全）
-            // const findings$: any = await Promise.all( event.data.list.map( i => {
-            //     return find$({
-            //         tid: i.tid,
-            //         pid: i.pid,
-            //         sid: i.sid,
-            //         buy_status: '2'
-            //     }, db, ctx )
-            // }))
-            const findings$ = [ ];
-
-            // if ( findings$.some( x => x.status !== 200 )) {
-            //     throw '查询购物清单错误';
-            // }
-
-            // 已完成购买的商品列表
-            // const hasBeenBuy$: any = await Promise.all( event.data.list.map( i => {
-            //     return find$({
-            //         tid: i.tid,
-            //         pid: i.pid,
-            //         sid: i.sid,
-            //         buy_status: '1'
-            //     }, db, ctx )
-            // }));
-            const hasBeenBuy$ = [ ];
 
             // 查询商品详情、或者型号详情
             const goodDetails$: any = await Promise.all( event.data.list.map( i => {
@@ -189,11 +163,9 @@ export const main = async ( event, context ) => {
             let hasBeenDelete: any = [ ];
 
             // 买不到
-            // const cannotBuy = findings$.map( x => x.data[ 0 ]).filter( y => !!y );
             const cannotBuy = [ ];
 
             // 已经被购买了（风险单）
-            // const hasBeenBuy = hasBeenBuy$.map( x => x.data[ 0 ]).filter( y => !!y )
             const hasBeenBuy = [ ];
 
             event.data.list.map( i => {
@@ -205,7 +177,7 @@ export const main = async ( event, context ) => {
                     // 型号本身被删除、主体本身被下架/删除
                     if ( !standard || ( !!standard && standard.isDelete ) || ( !!belongGood && !belongGood.visiable ) || ( !!belongGood && belongGood.isDelete )) {
                         hasBeenDelete.push( i );
-                    } else if ( standard.stock !== undefined &&  standard.stock < i.count ) {
+                    } else if ( standard.stock !== undefined && standard.stock !== null &&  standard.stock < i.count ) {
                         lowStock.push( Object.assign({ }, i, {
                             stock: standard.stock,
                             goodName: i.name,
@@ -217,7 +189,7 @@ export const main = async ( event, context ) => {
                     const good = goods.find( x => x._id === i.pid );
                     if ( !good || ( !!good && !good.visiable ) || ( !!good && good.isDelete )) {
                         hasBeenDelete.push( i )
-                    } else if ( good.stock !== undefined &&  good.stock < i.count ) {
+                    } else if ( good.stock !== undefined && good.stock !== null && good.stock < i.count ) {
                         lowStock.push( Object.assign({ }, i, {
                             stock: good.stock,
                             goodName: i.name
