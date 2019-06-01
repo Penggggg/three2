@@ -746,7 +746,7 @@ export const main = async ( event, context ) => {
                 }
             });
 
-            data$ = data$.sort(( x, y ) => x.uids.length - y.uids.length );
+            data$ = data$.sort(( x, y ) => y.uids.length - x.uids.length );
             data = data$;
 
             // 查询每条清单底下每个商品的详情
