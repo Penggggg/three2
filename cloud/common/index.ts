@@ -406,7 +406,8 @@ export const main = async ( event, context ) => {
             // 订单数
             const orders$ = await db.collection('order')
                 .where({
-                    openid: event.userInfo.openId
+                    openid: event.userInfo.openId,
+                    base_status: _.neq('5')
                 })
                 .count( );
 
