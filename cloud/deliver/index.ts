@@ -64,5 +64,41 @@ export const main = async ( event, context ) => {
         } catch ( e ) { return ctx.body = { status: 500 };}
     });
 
+    /** 
+     * @description 获取指定几个行程的邮费列表
+     * {
+     *     openid
+     *     tids
+     * }
+     */
+    app.router('trips-fee', async( ctx, next ) => {
+        try {
+
+            const { tids } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+
+            const fees$$: any = await Promise.all( 
+                tids.split(',')
+                    .map( tid => 
+                        db.collection('deliver-fee')
+                            .where({
+                                tid,
+                                openid
+                            })
+                            .get( )
+                    )
+            );
+
+            const meta = fees$$
+                .filter( x => !!x.data[ 0 ])
+                .map( x => x.data[ 0 ])
+
+            return ctx.body = {
+                status: 200,
+                data: meta
+            }
+        } catch ( e ) { return ctx.body = { status: 500 };}
+    });
+
     return app.serve( );
 }

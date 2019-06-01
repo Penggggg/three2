@@ -42,6 +42,8 @@ Page({
         canloadMore: true,
         // 原始订单列表
         metaList: [ ],
+        // 快递费用列表
+        deliverFees: [ ],
         // 以行程为基调的订单列表
         tripOrders: [ ],
         // 是否新客户
@@ -219,7 +221,6 @@ Page({
                 this.setData({
                     page,
                     skip: current,
-                    loadingList: false,
                     metaList: [ ...metaList, ...data.data ],
                     canloadMore: total > current
                 });
@@ -227,7 +228,15 @@ Page({
                 // 有订单则显示订单，并设置bar
                 if ( data.data.length !== 0 ) {
                     this.setNavBar( );
-                    this.covertOrder( );
+
+                    const tidsArr = [ ];
+                    [ ...metaList, ...data.data ].map( o => {
+                        if ( tidsArr.findIndex( s => s === o.tid ) === -1 ) {
+                            tidsArr.push( o.tid )
+                        }
+                    });
+                    this.fetchDeliverFee( tidsArr.join(','));
+                    
                     this.fetchCurrentTrip( tid => this.fetchPinList( tid ));
                 // 无订单则显示默认文案
                 } else {
@@ -258,6 +267,40 @@ Page({
                 this.data.metaList.length > 0 && this.covertOrder( );
             }
         })
+    },
+
+    /** 拉取快递费用 */
+    fetchDeliverFee( tids ) {
+
+        const action = ( ) => {
+            this.setData({
+                loadingList: false
+            })
+            this.covertOrder( );
+        }
+
+        if ( !tids ) {
+            return action( );
+        }
+
+        http({
+            data: {
+                tids
+            },
+            url: 'deliver_trips-fee',
+            success: res => {
+                const { status, data } = res;
+                if ( status === 200 ) {
+                    this.setData({
+                        deliverFees: data
+                    });
+                    setTimeout(( ) => {
+                        action( );
+                    }, 20 );
+                }
+            }
+        })
+        
     },
 
     /** 跳到快递排行榜页面 */
@@ -299,7 +342,7 @@ Page({
          *  }
          */
 
-        const { metaList, pinList } = this.data;
+        const { metaList, pinList, deliverFees } = this.data;
         const orderObj = { };
 
         const fixNumber = n => {
@@ -501,6 +544,7 @@ Page({
             const tripOrders = orderObj[ tid ];
             const orders = tripOrders.meta;
 
+
             //  处理订单整体状态
             if ( orders.filter( x => x.b !== '4' && x.b !== '5').some( x => x.statusCN[ 0 ] === '待付订金' )) {
                 tripStatusCN = '待付订金';
@@ -554,7 +598,7 @@ Page({
 
 
             // 应付全款（不含优惠券）
-            const wholePriceNotDiscount = orders.reduce(( x, y ) => {
+            let wholePriceNotDiscount = orders.reduce(( x, y ) => {
                 let currentPrice = 0;
                 const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
                 if ( canSettle ) {
@@ -564,8 +608,18 @@ Page({
                 }
                 return x + currentPrice;
             }, 0 );
-            tripOrders['wholePriceNotDiscount'] = wholePriceNotDiscount;
+            
 
+            // 邮费
+            const userDeliverFeeMeta = deliverFees.find( x => x.tid === tripOrders.tid );
+            const userDeliverFee = userDeliverFeeMeta ? userDeliverFeeMeta.fee : null;
+
+            if ( userDeliverFee ) {
+                wholePriceNotDiscount += userDeliverFee;
+            }
+            tripOrders['userDeliverFee'] = userDeliverFee;
+            tripOrders['wholePriceNotDiscount'] = wholePriceNotDiscount;
+            
 
             // 优惠券
             const { coupons } = this.data;
