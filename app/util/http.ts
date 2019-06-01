@@ -53,7 +53,7 @@ const http = ( params$: httpParam ) => {
         fail: err => {
             getError( '网络错误', err );
             params.error && params.error( );
-            console.log(`【---- Request ERROR : ${params$.url}】`);
+            console.log(`【---- Request ERROR : ${params$.url}】`, params$.data );
         },
         complete: ( ) => {
             // wx.hideLoading({ });
