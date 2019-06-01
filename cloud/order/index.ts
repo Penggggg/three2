@@ -354,7 +354,8 @@ export const main = async ( event, context ) => {
                 fix$ = await db.collection('order')
                     .where({
                         openid,
-                        tid: last.tid
+                        tid: last.tid,
+                        base_status: _.neq('5')
                     })
                     .orderBy('createTime', 'desc')
                     .skip( event.data.skip ? event.data.skip + data$.data.length : ( event.data.page - 1 ) * limit + data$.data.length )
