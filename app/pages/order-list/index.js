@@ -1103,11 +1103,6 @@ Page({
             this.fetchCoupons( );
             this.fetchList( this.data.active );
         }, 0 );
-        setTimeout(( ) => {
-            this.setData({
-                showFinger: false
-            })
-        }, 6000 )
     },
 
     /**
