@@ -49,7 +49,7 @@ Component({
             const count$ = order => {
                 const b = order.base_status;
                 return b === '0' || b === '1' ?
-                        order.allocatedCount || order.count :
+                        order.allocatedCount !== undefined ? order.allocatedCount : order.count :
                         b === '2' || b === '3' ?
                             order.allocatedCount:
                             0;
@@ -287,7 +287,7 @@ Component({
                     hasNotAdjustedLength: x.orders.filter( o => o.allocatedCount === undefined ).length
                 });
             });
-
+            console.log('...', meta );
             return meta;
         },
         lastCallMoneyTimes$( ) {
