@@ -350,15 +350,18 @@ Component({
 
     /** 点击规格 */
     standarClick({ currentTarget }) {
-      const { index } = currentTarget.dataset;
-      this.setData({
-        standarding: true,
-        selectingStandarIndex: index,
-        standarForm: this.data.standards[ index ]
-      });
-      
-      const imgEle = this.selectComponent('.img-s-upload');
-      imgEle && imgEle.reset( );
+      const { index } = currentTarget.dataset;      
+      setTimeout(( ) => {
+        const imgEle = this.selectComponent('.img-s-upload');
+        imgEle && imgEle.reset( );
+        setTimeout(( ) => {
+          this.setData({
+            standarding: true,
+            selectingStandarIndex: index,
+            standarForm: this.data.standards[ index ]
+          });
+        }, 20 )
+      }, 20 )
     },
 
     /** 删除规格 */
