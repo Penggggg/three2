@@ -97,7 +97,9 @@ export const main = async ( event, context ) => {
                 status: 200,
                 data: meta
             }
-        } catch ( e ) { return ctx.body = { status: 500 };}
+        } catch ( e ) { 
+            return ctx.body = { status: 500 };
+        }
     });
 
     return app.serve( );

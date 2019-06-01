@@ -347,7 +347,7 @@
                                 <!-- 被分配的采购量 -->
                                 <view
                                     class="pol-trip-order-count purple"
-                                    wx:if="{{ order.b !== '0' &&  order.b !== '1' && order.allocatedCount !== order.count }}"
+                                    wx:if="{{ ( order.b === '2' || order.b === '3' ) && order.allocatedCount !== order.count }}"
                                 >
                                     x {{ order.allocatedCount }}
                                 </view>
@@ -365,7 +365,10 @@
                         <view class="pol-trip-order-totalprice ml">
                             已付订金：<view class="pol-totalprice">¥{{ item.hasPayDepositPrice }}</view>
                         </view>
-                        <view class="pol-trip-order-totalprice ml">
+                        <view 
+                            class="pol-trip-order-totalprice ml"
+                            wx:if="{{ item.userDeliverFee !== null }}"
+                        >
                             邮费：<view class="pol-totalprice">¥{{ item.userDeliverFee }}</view>
                         </view>
                     </view>

@@ -307,7 +307,7 @@ export const main = async ( event, context ) => {
             }
 
             // 过滤掉过期订单
-            if ( passusedless === true ) {
+            if ( passusedless !== false ) {
                 where$ = Object.assign({ }, where$, {
                     base_status: _.neq('5')
                 });
