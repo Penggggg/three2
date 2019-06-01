@@ -40,8 +40,8 @@ const _ = db.command;
  * prepay_id,
  * final_price 最后成交价
  * ! canGroup 是否可以拼团
- * ! base_status: 0,1,2,3,4,5 进行中，代购已购买，已调整，已结算，已取消（买不到），已过期（支付过期）
- * ! pay_status: 0,1,2 未付款，已付订金，已付全款
+ * base_status: 0,1,2,3,4,5 进行中，代购已购买，已调整，已结算，已取消（买不到），已过期（支付过期）
+ * pay_status: 0,1,2 未付款，已付订金，已付全款
  * ! deliver_status: 0,1 未发布，已发布、
  */
 export const main = async ( event, context ) => {
@@ -472,6 +472,8 @@ export const main = async ( event, context ) => {
     app.router('daigou-list', async( ctx, next ) => {
         try {
             const { tid, needCoupons, needAddress } = event.data;
+
+            // 订单信息
             const orders$ = await db.collection('order')
                 .where({
                     tid,
@@ -487,6 +489,20 @@ export const main = async ( event, context ) => {
                 ))
                 .map( uid => db.collection('user')
                     .where({
+                        openid: uid
+                    })
+                    .get( ))
+            );
+
+            // 快递费用信息
+            const deliverfees$ = await Promise.all(
+                Array.from( 
+                    new Set( orders$.data
+                        .map( x => x.openid )
+                ))
+                .map( uid => db.collection('deliver-fee')
+                    .where({
+                        tid,
                         openid: uid
                     })
                     .get( ))
@@ -532,8 +548,7 @@ export const main = async ( event, context ) => {
                 );
             }
             
-
-            const userOders = users$.map( user$ => {
+            const userOders = users$.map(( user$, k ) => {
                 
                 const user = user$.data[ 0 ];
 
@@ -552,10 +567,13 @@ export const main = async ( event, context ) => {
                         .filter( x => x.length > 0 && x[ 0 ].openid === user.openid ) :
                     undefined;
 
+                const deliverFee = deliverfees$[ k ].data[ 0 ] || null
+
                 return {
                     user,
                     orders,
                     address,
+                    deliverFee,
                     coupons: (!!coupons && coupons.length > 0 ) ? coupons[ 0 ] : [ ]
                 };
             });

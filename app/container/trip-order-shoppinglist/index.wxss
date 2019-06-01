@@ -85,7 +85,7 @@
 
 .tos-shoppinglist-item {
     z-index: 10;
-    padding: 25rpx 20rpx;
+    padding: 25rpx 20rpx 15rpx 20rpx;
     box-sizing: border-box;
     margin-bottom: 40rpx;
     background: #fff;
@@ -265,7 +265,7 @@
 .tos-trip-order-btn-block {
     display: flex;
     align-items: center;
-    padding: 20rpx 10rpx 0 10rpx;
+    padding: 0rpx 10rpx 0 10rpx;
     justify-content: space-between;
 }
 
