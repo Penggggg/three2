@@ -192,7 +192,7 @@
                         wx:if="{{ item.sid }}"
                         class="ptd-pin-good-title"
                     >
-                        {{ item.detail.title }}
+                        {{ item.detail.title }} ({{ item.detail.name }})
                     </view>
 
                     <!-- 商品介绍 -->
