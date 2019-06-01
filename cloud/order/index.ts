@@ -248,6 +248,7 @@ export const main = async ( event, context ) => {
      * ----- 请求 ------
      * {
      *!    tid: 行程id （可无）
+     *     openid: （可无）
      *     page: number
      *     skip: number
      *     type: 我的全部 | 未付款订单 | 待发货 | 已完成 | 管理员（行程订单）| 管理员（所有订单）
@@ -267,7 +268,7 @@ export const main = async ( event, context ) => {
             // 查询条数
             const limit = tid ? 99 : 10;
 
-            const openid = event.userInfo.openId;
+            const openid = event.data.openid || event.userInfo.openId;
 
 
             // 我的全部
@@ -478,6 +479,7 @@ export const main = async ( event, context ) => {
             const orders$ = await db.collection('order')
                 .where({
                     tid,
+                    base_status: _.neq('5'),
                     pay_status: _.or( _.eq('1'), _.eq('2'))
                 })
                 .get( );
