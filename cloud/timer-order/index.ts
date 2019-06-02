@@ -1,6 +1,6 @@
 import * as cloud from 'wx-server-sdk';
 import { overtime, payedFix, priceFix } from './order';
-import { catchLostOrders } from './shopping-list';
+import { catchLostOrders, removeUselessOrders } from './shopping-list';
 import { overtimeTrip } from './trip';
 
 cloud.init({
@@ -25,6 +25,7 @@ export const main = async ( event, context ) => {
         await priceFix( );
         await overtimeTrip( );
         await catchLostOrders( );
+        await removeUselessOrders( );
         
         return {
             status: 200
