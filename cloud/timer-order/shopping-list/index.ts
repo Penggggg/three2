@@ -113,3 +113,77 @@ export const catchLostOrders = async ( ) => {
         return { status: 500 };
     }
 }
+
+/** 清单2: 查询支付订金超时的订单，并把其从购物清单中去掉 */
+export const removeUselessOrders = async ( ) => {
+    try {
+
+        // 获取当前进行中的行程
+        const trips$ = await cloud.callFunction({
+            name: 'trip',
+            data: {
+                $url: 'enter'
+            }
+        });
+
+        const currentTrip = trips$.result.data[ 0 ];
+        
+        if ( !currentTrip ) { 
+            return {
+                status: 200
+            }
+        }
+
+        const tid = currentTrip._id;
+
+        const uselessOrders$ = await db.collection('order')
+            .where({
+                tid,
+                base_status: '5'
+            })
+            .get( );
+
+        await Promise.all( uselessOrders$.data.map( async order => {
+            const orderId = order._id;
+            const { pid, sid, tid } = order;
+
+            let where$ = {
+                pid,
+                tid
+            };
+
+            if ( !!sid ) {
+                where$ = Object.assign({ }, where$, {
+                    sid
+                });
+            }
+
+            const shoppingList$ = await db.collection('shopping-list')
+                .where( where$ )
+                .get( );
+            const theShoppingList = shoppingList$.data[ 0 ];
+
+            if ( !theShoppingList ) { return; }
+
+            const { oids } = theShoppingList;
+            const orderIndex = oids.findIndex( x => x === orderId );
+
+            if ( orderIndex !== -1 ) {
+                oids.splice( orderIndex, 1 )
+                await db.collection( 'shopping-list' )
+                    .doc( String( theShoppingList._id ))
+                    .update({
+                        data: {
+                            oids
+                        }
+                    })
+                return;
+            }
+            return;
+        }));
+
+
+    } catch ( e ) {
+        return { status: 500 }
+    }
+}
