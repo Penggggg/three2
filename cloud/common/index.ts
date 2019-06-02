@@ -724,6 +724,38 @@ const initDB = ( ) => new Promise( async resolve => {
             console.log('eee', e );
         }
 
+        /** 初始化应用配置 */
+        try {
+            const appConf = CONFIG.appConfs;
+            await Promise.all(
+                appConf.map( async conf => {
+                    const targetConf$ = await db.collection('app-config')
+                        .where({
+                            type: conf.type
+                        })
+                        .get( );
+
+                    const targetConf = targetConf$.data[ 0 ];
+                    if ( !!targetConf ) {
+                        // 由于配置已经生效且投入使用，这里不能直接更改已有的线上配置
+                        // await db.collection('app-config')
+                        //     .doc( String( targetConf._id ))
+                        //     .set({
+                        //         data: conf
+                        //     });
+
+                    } else {
+                        await db.collection('app-config')
+                            .add({
+                                data: conf
+                            });
+                    }
+                })
+            );
+        } catch ( e ) {
+            console.log('eee', e );
+        }
+
         resolve( );
 
     } catch ( e ) { resolve( );}
