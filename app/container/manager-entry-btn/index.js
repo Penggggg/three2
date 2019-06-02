@@ -40,6 +40,11 @@ Component({
                 desc: '让新客户主动联系自己',
                 url: '/pages/manager-person-info/index',
                 img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-3.png'
+            }, {
+                title: '设置',
+                desc: '应用设置',
+                url: '/pages/manager-person-info/index',
+                img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-5.png'
             }
         ]
     },
