@@ -40,23 +40,47 @@ export const main = async ( event, context ) => {
     /**
      * @description 
      * 数据字典
+     * {
+     *      dicName: 'xxx,yyy,zzz'
+     *      filterBjp: false | true | undefined （ 是否过滤保健品 ）
+     * }
      */
     app.router('dic', async( ctx, next ) => {
         try {
 
+            // 保健品配置
+            let bjpConfig: any = null;
+            const { dicName, filterBjp } = event.data;
             const dbRes = await db.collection('dic')
                 .where({
                     belong: db.RegExp({
-                        regexp: event.data.dicName.replace(/\,/g, '|'),
+                        regexp: dicName.replace(/\,/g, '|'),
                         optiond: 'i'
                     })
                 })
                 .get( );
+
+            // 保健品配置
+            if ( !!filterBjp ) {
+                const bjpConfig$ = await db.collection('app-config')
+                    .where({
+                        type: 'app-bjp-visible'
+                    })
+                    .get( );
+                bjpConfig = bjpConfig$.data[ 0 ];
+            }
         
             let result = { };
             dbRes.data.map( dic => {
                 result = Object.assign({ }, result, {
-                    [ dic.belong ]: dic[ dic.belong ].filter( x => !!x )
+                    [ dic.belong ]: dic[ dic.belong ]
+                        .filter( x => !!x )
+                        .filter( x => {
+                            if ( !!bjpConfig && !bjpConfig.value ) {
+                                return String( x.value ) !== '4'
+                            }
+                            return true;
+                        })
                 });
             });
 

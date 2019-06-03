@@ -148,7 +148,8 @@ Page({
             data: {
                 limit: 5,
                 page: newPage + 1,
-                sort: 'createTime'
+                sort: 'createTime',
+                filterBjp: true
             },
             url: `good_rank`,
             success: res => {
@@ -175,10 +176,11 @@ Page({
     /** 拉取数据字典 */
     fetchDic( ) {
         const { dic } = this.data;
-        if ( Object.keys( dic ).length > 0 ) { return;}
+        // if ( Object.keys( dic ).length > 0 ) { return;}
 
         http({
             data: {
+                filterBjp: true,
                 dicName: 'goods_category',
             },
             errMsg: '加载失败，请重试',
@@ -256,7 +258,8 @@ Page({
         http({
             data: {
                 limit: 10,
-                page: page + 1
+                page: page + 1,
+                filterBjp: true
             },
             url: `good_rank`,
             success: res => {

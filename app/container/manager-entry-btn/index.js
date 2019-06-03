@@ -43,7 +43,7 @@ Component({
             }, {
                 title: '设置',
                 desc: '应用设置',
-                url: '/pages/manager-person-info/index',
+                url: '/pages/manager-app-config/index',
                 img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-5.png'
             }
         ]
