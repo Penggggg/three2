@@ -1,4 +1,5 @@
 import dicConf from './dic';
+import appConf from './app-config';
 
 /** app */
 export const app = {
@@ -26,6 +27,7 @@ export const collections = [
     'activity',
     'address',
     'deliver-fee',
+    'app-config',
     'like-collection',
     'cart',
     'dic',
@@ -49,3 +51,6 @@ export const auth = {
 
 /** 数据字典 */
 export const dic = dicConf;
+
+/** 应用配置 */
+export const appConfs = appConf;

@@ -23,26 +23,47 @@
     <view
       class="con-manager-entry-drawer"
     >
-      <view 
-        wx:key="{{ index }}"
-        wx:for="{{ list }}"
-        data-url="{{ item.url }}"
-        class="con-manager-entry-btn-list-item"
-        bindtap='navigate'
-    >
-        <view class="con-manager-entry-btn-list-check">
-          <image
-            mode="aspectFill"
-            src="{{ item.img }}"
-            class="con-manager-entry-btn-list-image radius"
-          />
-          <wxc-list
-            title="{{ item.title }}"
-            detail="{{ item.desc }}"
-            class="con-manager-entry-btn-item"
-          />
+      <view class="con-manager-entry-btn-list">
+        <view 
+          wx:key="{{ index }}"
+          wx:for="{{ list }}"
+          data-url="{{ item.url }}"
+          class="con-manager-entry-btn-list-item"
+          bindtap='navigate'
+        >
+          <view class="con-manager-entry-btn-list-check">
+            <image
+              mode="aspectFill"
+              src="{{ item.img }}"
+              class="con-manager-entry-btn-list-image radius"
+            />
+            <wxc-list
+              title="{{ item.title }}"
+              detail="{{ item.desc }}"
+              class="con-manager-entry-btn-item"
+            />
+          </view>
         </view>
-    </view>
+      </view>
+
+      <view class="con-manager-entry-btn-small-list">
+          <view 
+            wx:key="{{ index }}"
+            wx:for="{{ list2 }}"
+            bindtap='navigate'
+            data-url="{{ item.url }}"
+            class="con-manager-entry-btn-small-item"
+          >
+            <image
+              mode="aspectFill"
+              src="{{ item.img }}"
+              class="con-manager-entry-btn-small-img"
+            />
+            <view class="con-manager-entry-btn-small-text">
+              {{ item.title }}
+            </view>
+          </view>
+      </view>
 
     </view>
   </i-drawer>

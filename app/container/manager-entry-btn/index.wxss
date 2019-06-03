@@ -13,13 +13,24 @@
 .con-manager-entry-drawer {
   height: 100vh;
   width: 75vw;
-  overflow-y: scroll;
-  background: #fff;
+  display: flex;
   z-index: 1000;
+  background: #fff;
+  flex-direction: column;
+}
+
+.con-manager-entry-btn-list {
+  flex: 1;
+  overflow-y: scroll;
+}
+
+.con-manager-entry-btn-small-list {
+  display: flex;
+  padding-bottom: 20rpx;
 }
 
 .con-manager-entry-drawer-list-item {
-  flex: 1;
+  /* flex: 1; */
 }
 
 .con-manager-entry-btn-list-item {
@@ -69,4 +80,23 @@
   background: -webkit-linear-gradient(to bottom, #ff61ab, #ff8787); 
   background: linear-gradient(to bottom, #ff61ab, #ff8787); 
   
+}
+
+.con-manager-entry-btn-small-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 10rpx 20rpx;
+  justify-content:center;
+}
+
+.con-manager-entry-btn-small-img {
+  width: 55rpx;
+  height: 55rpx;
+  margin-right: 15rpx;
+}
+
+.con-manager-entry-btn-small-text {
+  color: #999;
+  font-size: 22rpx;
 }
