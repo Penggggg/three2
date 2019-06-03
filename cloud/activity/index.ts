@@ -170,6 +170,7 @@ export const main = async ( event, context ) => {
      * {
      *     page:(必填)
      *     limit
+     *     filterBjp: false | true | undefined （ 是否过滤保健品 ）
      *     filterPass: boolean (是否过滤掉已过期 - 客户端要过滤掉)
      *     isClosed: undefined | true | false
      * }
@@ -177,6 +178,7 @@ export const main = async ( event, context ) => {
     app.router('good-discount-list', async( ctx, next ) => {
         try {
 
+            let bjpConfig: any = null;
             // 查询条数
             const limit = event.data.limit || 20;
             const { isClosed, filterPass } = event.data;
@@ -186,6 +188,14 @@ export const main = async ( event, context ) => {
                 isDeleted: false,
                 type: 'good_discount'
             };
+
+            // 保健品配置
+            const bjpConfig$ = await db.collection('app-config')
+                    .where({
+                        type: 'app-bjp-visible'
+                    })
+                    .get( );
+            bjpConfig = bjpConfig$.data[ 0 ];
 
             if ( isClosed !== undefined ) {
                 where$ = Object.assign({ }, where$, {
@@ -211,14 +221,16 @@ export const main = async ( event, context ) => {
                 .orderBy('updatedTime', 'desc')
                 .get( );
 
+            let activities = data$.data;
+
             // 商品id列表
             const goodsIds = Array.from(
-                new Set( data$.data.map( x => x.pid ))
+                new Set( activities.map( x => x.pid ))
             ).filter( x => !!x );
 
             // 型号id列表
             const sIds = Array.from(
-                new Set( data$.data.map( x => x.sid ))
+                new Set( activities.map( x => x.sid ))
             ).filter( x => !!x );
 
             // 查询商品详情
@@ -227,7 +239,6 @@ export const main = async ( event, context ) => {
                     .doc( String( pid ))
                     .get( )
             }));
-
             const goods$ = goods$$.map( x => x.data );
 
             // 查询型号详情
@@ -239,8 +250,23 @@ export const main = async ( event, context ) => {
 
             const standars$ = standars$$.map( x => x.data );
 
+            // 查询保健品数量、过滤保健品活动
+            let bjpCount = 0;
+            if ( !!bjpConfig && !bjpConfig.value ) {
+                const notBjpActivies = activities
+                    .filter( active => {
+                        const { pid } = active;
+                        const good = goods$.find( x => x._id === pid );
+                        return !!good && String( good.category ) !== '4'
+                    });
+         
+                bjpCount = activities.length - notBjpActivies.length;
+                activities = notBjpActivies
+            }
+
+
             // 数据处理
-            const result = data$.data.map( meta => {
+            const result = activities.map( meta => {
 
                 let good = goods$.find( good$ => {
                     return good$._id === meta.pid
@@ -266,10 +292,10 @@ export const main = async ( event, context ) => {
                 data: {
                     list: result,
                     pagenation: {
-                        total: total$.total,
+                        total: total$.total - bjpCount,
                         pageSize: limit,
                         page: event.data.page,
-                        totalPage: Math.ceil( total$.total / limit )
+                        totalPage: Math.ceil(( total$.total - bjpCount ) / limit )
                     }
                 }
             }

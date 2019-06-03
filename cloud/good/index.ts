@@ -136,7 +136,7 @@ export const main = async ( event, context ) => {
             let bjpConfig: any = null;
             // 查询条数
             const limit = event.data.limit || 20;
-            const { category, sort, filterBjp } = event.data;
+            const { category, sort } = event.data;
             const search$ = event.data.search || '';
             const search = new RegExp( search$.replace(/\s+/g, ""), 'i');
 
@@ -148,14 +148,12 @@ export const main = async ( event, context ) => {
             };
 
             // 保健品配置
-            if ( !!filterBjp ) {
-                const bjpConfig$ = await db.collection('app-config')
+            const bjpConfig$ = await db.collection('app-config')
                     .where({
                         type: 'app-bjp-visible'
                     })
                     .get( );
-                bjpConfig = bjpConfig$.data[ 0 ];
-            }
+            bjpConfig = bjpConfig$.data[ 0 ];
 
             if ( !category && !!bjpConfig && !bjpConfig.value ) {
                 where$ = Object.assign({ }, where$, {

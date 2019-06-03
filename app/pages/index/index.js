@@ -148,8 +148,7 @@ Page({
             data: {
                 limit: 5,
                 page: newPage + 1,
-                sort: 'createTime',
-                filterBjp: true
+                sort: 'createTime'
             },
             url: `good_rank`,
             success: res => {
@@ -258,8 +257,7 @@ Page({
         http({
             data: {
                 limit: 10,
-                page: page + 1,
-                filterBjp: true
+                page: page + 1
             },
             url: `good_rank`,
             success: res => {
