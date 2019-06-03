@@ -21,21 +21,25 @@ Component({
         // 展示列表
         list: [
             {
-                title: '我的商品',
-                desc: '新增、编辑、上下架商品',
+                title: '商品',
+                desc: '创建、编辑商品',
                 url: '/pages/manager-goods-list/index',
                 img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-1.png'
             }, {
-                title: '我的行程',
-                desc: '发布、编辑最新行程',
+                title: '行程',
+                desc: '发布、编辑代购行程',
                 url: '/pages/manager-trip-list/index',
                 img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-2.png'
             }, {
-                title: '一口价',
-                desc: '商品特惠活动',
+                title: '特价',
+                desc: '创建商品特价活动',
                 url: '/pages/manager-goods-active/index',
                 img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-4.png'
-            }, {
+            }
+        ],
+        // 下方列表
+        list2: [
+            {
                 title: '我的资料',
                 desc: '让新客户主动联系自己',
                 url: '/pages/manager-person-info/index',
