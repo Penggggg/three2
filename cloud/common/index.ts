@@ -668,6 +668,36 @@ export const main = async ( event, context ) => {
         }
     });
 
+    /**
+     * @description
+     * 查询应用配置
+     */
+    app.router('check-app-config', async( ctx, next ) => {
+        try {
+
+            let configObj = { };
+            const config$ = await db.collection('app-config')
+                .where({ })
+                .get( );
+
+            const meta = config$.data.map( conf => {
+                configObj = Object.assign({ }, configObj, {
+                    [ conf.type ]: conf.value
+                })
+            });
+
+            return ctx.body = {
+                data: configObj,
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    });
+
     return app.serve( );
 
 }

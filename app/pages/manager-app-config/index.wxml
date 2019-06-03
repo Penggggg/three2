@@ -4,7 +4,7 @@
         <!-- 基本信息 -->
         <my-active-form
             id="form"
-            meta="{{ meta }}"
+            meta="{{ meta$ }}"
         />
     </view>
 
