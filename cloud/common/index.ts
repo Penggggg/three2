@@ -40,23 +40,47 @@ export const main = async ( event, context ) => {
     /**
      * @description 
      * 数据字典
+     * {
+     *      dicName: 'xxx,yyy,zzz'
+     *      filterBjp: false | true | undefined （ 是否过滤保健品 ）
+     * }
      */
     app.router('dic', async( ctx, next ) => {
         try {
 
+            // 保健品配置
+            let bjpConfig: any = null;
+            const { dicName, filterBjp } = event.data;
             const dbRes = await db.collection('dic')
                 .where({
                     belong: db.RegExp({
-                        regexp: event.data.dicName.replace(/\,/g, '|'),
+                        regexp: dicName.replace(/\,/g, '|'),
                         optiond: 'i'
                     })
                 })
                 .get( );
+
+            // 保健品配置
+            if ( !!filterBjp ) {
+                const bjpConfig$ = await db.collection('app-config')
+                    .where({
+                        type: 'app-bjp-visible'
+                    })
+                    .get( );
+                bjpConfig = bjpConfig$.data[ 0 ];
+            }
         
             let result = { };
             dbRes.data.map( dic => {
                 result = Object.assign({ }, result, {
-                    [ dic.belong ]: dic[ dic.belong ].filter( x => !!x )
+                    [ dic.belong ]: dic[ dic.belong ]
+                        .filter( x => !!x )
+                        .filter( x => {
+                            if ( !!bjpConfig && !bjpConfig.value ) {
+                                return String( x.value ) !== '4'
+                            }
+                            return true;
+                        })
                 });
             });
 
@@ -668,6 +692,79 @@ export const main = async ( event, context ) => {
         }
     });
 
+    /**
+     * @description
+     * 查询应用配置
+     */
+    app.router('check-app-config', async( ctx, next ) => {
+        try {
+
+            let configObj = { };
+            const config$ = await db.collection('app-config')
+                .where({ })
+                .get( );
+
+            const meta = config$.data.map( conf => {
+                configObj = Object.assign({ }, configObj, {
+                    [ conf.type ]: conf.value
+                })
+            });
+
+            return ctx.body = {
+                data: configObj,
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    });
+
+    /**
+     * @description
+     * 更新应用配置
+     * --------------
+     * configs: {
+     *    [ key: string ]: any 
+     * }
+     */
+    app.router('update-app-config', async( ctx, next ) => {
+        try {
+            const { configs } = event.data;
+
+            await Promise.all(
+                Object.keys( configs )
+                    .map( async configKey => {
+                        const target$ = await db.collection('app-config')
+                            .where({
+                                type: configKey
+                            })
+                            .get( )
+
+                        if ( !target$.data[ 0 ]) { return; }
+
+                        await db.collection('app-config')
+                            .doc( String( target$.data[ 0 ]._id ))
+                            .update({
+                                data: {
+                                    value: configs[ configKey ]
+                                }
+                            })
+                    })
+            );
+
+            return ctx.body = {
+                status: 200
+            }
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    })
+
     return app.serve( );
 
 }
@@ -716,6 +813,38 @@ const initDB = ( ) => new Promise( async resolve => {
                         await db.collection('dic')
                             .add({
                                 data: dicSet
+                            });
+                    }
+                })
+            );
+        } catch ( e ) {
+            console.log('eee', e );
+        }
+
+        /** 初始化应用配置 */
+        try {
+            const appConf = CONFIG.appConfs;
+            await Promise.all(
+                appConf.map( async conf => {
+                    const targetConf$ = await db.collection('app-config')
+                        .where({
+                            type: conf.type
+                        })
+                        .get( );
+
+                    const targetConf = targetConf$.data[ 0 ];
+                    if ( !!targetConf ) {
+                        // 由于配置已经生效且投入使用，这里不能直接更改已有的线上配置
+                        // await db.collection('app-config')
+                        //     .doc( String( targetConf._id ))
+                        //     .set({
+                        //         data: conf
+                        //     });
+
+                    } else {
+                        await db.collection('app-config')
+                            .add({
+                                data: conf
                             });
                     }
                 })

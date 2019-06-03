@@ -704,6 +704,7 @@ export const main = async ( event, context ) => {
     app.router('pin', async( ctx, next ) => {
         try {
 
+            let bjpConfig: any = null;
             const openid = event.userInfo.openId;
             const { tid, detail, pid, type, limit } = event.data;
             const showUser = event.data.showUser || false;
@@ -727,6 +728,13 @@ export const main = async ( event, context ) => {
                     .get( );
             }
             
+            // 保健品配置
+            const bjpConfig$ = await db.collection('app-config')
+            .where({
+                type: 'app-bjp-visible'
+            })
+            .get( );
+            bjpConfig = bjpConfig$.data[ 0 ];
 
             // uids长度为1，为待拼列表 ( 查询待拼列表时，可以有自己，让客户知道系统会列出来 )
             // uids长度为2，为可以拼团列表
@@ -736,12 +744,9 @@ export const main = async ( event, context ) => {
                     return ( !!s.adjustGroupPrice || !!s.groupPrice ) && s.uids.length > 1;
 
                 } else if ( type === 'wait' ) {
-                    // return !!s.adjustGroupPrice && s.uids.length === 1 && s.uids[ 0 ] !== openid
                     return ( !!s.adjustGroupPrice || !!s.groupPrice ) && s.uids.length === 1;
 
                 } else {
-                    // return ( !!s.adjustGroupPrice && s.uids.length > 1 ) ||
-                    //     ( !!s.adjustGroupPrice && s.uids.length === 1 && s.uids[ 0 ] !== openid )
                     return ( !!s.adjustGroupPrice || !!s.groupPrice );
                 }
             });
@@ -749,47 +754,47 @@ export const main = async ( event, context ) => {
             data$ = data$.sort(( x, y ) => y.uids.length - x.uids.length );
             data = data$;
 
+            // 商品
+            const goodIds = Array.from(
+                new Set( data$.map( list => 
+                    list.pid
+                ))
+            );
+
+            // 型号
+            const standarsIds = Array.from(
+                new Set( data$.map( list => 
+                    list.sid
+                ))
+            ).filter( x => !!x );
+            
+            // 商品
+            let allGoods$: any = await Promise.all( goodIds.map( goodId => {
+                return db.collection('goods')
+                    .doc( String( goodId ))
+                    .get( );
+            }));
+
+            allGoods$ = allGoods$.map( x => x.data );
+
+            // 型号
+            let allStandars$: any = await Promise.all( standarsIds.map( sid => {
+                return db.collection('standards')
+                    .doc( String( sid ))
+                    .get( );
+            }));
+
+            allStandars$ = allStandars$.map( x => x.data );
+
             // 查询每条清单底下每个商品的详情
             if ( detail === undefined || !!detail ) {
-
-                // 商品
-                const goodIds = Array.from(
-                    new Set( data$.map( list => 
-                        list.pid
-                    ))
-                );
-
-                // 型号
-                const standarsIds = Array.from(
-                    new Set( data$.map( list => 
-                        list.sid
-                    ))
-                ).filter( x => !!x );
-                
-                // 商品
-                let allGoods$: any = await Promise.all( goodIds.map( goodId => {
-                    return db.collection('goods')
-                        .doc( String( goodId ))
-                        .get( );
-                }));
-
-                allGoods$ = allGoods$.map( x => x.data );
-
-                // 型号
-                let allStandars$: any = await Promise.all( standarsIds.map( sid => {
-                    return db.collection('standards')
-                        .doc( String( sid ))
-                        .get( );
-                }));
-
-                allStandars$ = allStandars$.map( x => x.data );
 
                 const good$ = data$.map( list => {
 
                     const { pid, sid } = list;
                     const good: any = allGoods$.find( x => x._id === pid );
                     const standar = allStandars$.find( x => x._id === sid );
-
+    
                     return {
                         good,
                         tag: good.tag,
@@ -801,13 +806,14 @@ export const main = async ( event, context ) => {
                         groupPrice: standar ? standar.groupPrice : good.groupPrice,
                     }
                 });
-
+    
                 // 注入商品详情
                 data = data$.map(( shopping, k ) => {
                     return Object.assign({ }, shopping, {
                         detail: good$[ k ]
                     })
                 });
+
             }
 
             // 展示用户头像
@@ -845,6 +851,16 @@ export const main = async ( event, context ) => {
 
             }
             
+            // 根据保健品设置进行相应的过滤
+            if ( !!bjpConfig && !bjpConfig.value ) {
+                const meta = data
+                    .filter( x => {
+                        const good = allGoods$.find( y => y._id === x.pid );
+                        return String( good.category ) !== '4'
+                    });
+                data = meta;
+            }
+
             return ctx.body = {
                 data,
                 status: 200

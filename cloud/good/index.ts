@@ -119,6 +119,7 @@ export const main = async ( event, context ) => {
      *      page: 页数
      *      search: 搜索
      *      category: 商品类目
+     *      filterBjp: false | true | undefined （ 是否过滤保健品 ）
      * }
      * ---------- 返回 --------
      * {
@@ -132,30 +133,42 @@ export const main = async ( event, context ) => {
     app.router('rank', async( ctx, next ) => {
         try {
 
+            let bjpConfig: any = null;
             // 查询条数
             const limit = event.data.limit || 20;
             const { category, sort } = event.data;
             const search$ = event.data.search || '';
             const search = new RegExp( search$.replace(/\s+/g, ""), 'i');
 
+            let where$ = {
+                category,
+                title: search,
+                visiable: true,
+                isDelete: _.neq( true )
+            };
+
+            // 保健品配置
+            const bjpConfig$ = await db.collection('app-config')
+                    .where({
+                        type: 'app-bjp-visible'
+                    })
+                    .get( );
+            bjpConfig = bjpConfig$.data[ 0 ];
+
+            if ( !category && !!bjpConfig && !bjpConfig.value ) {
+                where$ = Object.assign({ }, where$, {
+                    category: _.neq('4')
+                })
+            }
+
             // 获取总数
             const total$ = await db.collection('goods')
-                .where({
-                    category,
-                    title: search,
-                    visiable: true,
-                    isDelete: _.neq( true )
-                })
+                .where( where$ )
                 .count( );
 
             // 获取商品数据
             const data$ = await db.collection('goods')
-                .where({
-                    category,
-                    title: search,
-                    visiable: true,
-                    isDelete: _.neq( true )
-                })
+                .where( where$ )
                 .limit( limit )
                 .skip(( event.data.page - 1 ) * limit )
                 .orderBy( sort || 'saled', 'desc')

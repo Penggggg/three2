@@ -1,0 +1,44 @@
+.pmac-page {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.pmac-page-con {
+    flex: 1;
+    overflow-y: scroll;
+}
+
+.pmac-btn-block {
+    width: 100vw;
+    display: flex;
+    margin-top: 35rpx;
+    padding: 0 35rpx 30rpx;
+    box-sizing: border-box;
+    background: transparent;
+}
+
+.pmac-btn {
+    flex: 1;
+    color: #fff;
+    font-size: 26rpx;
+    text-align: center;
+    padding: 25rpx 0;
+    border-radius: 30px;
+    border: 1px solid #fff;
+    box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.20 );
+    background: #fff;
+    color: #f80759;
+  }
+  
+  .pmac-btn.invert {
+    width: 100rpx;
+    color: #fff;
+    border: none;
+    background: #bc4e9c;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.25 );
+    background:linear-gradient(to right, #f80759, #bc4e9c);
+    background:-webkit-linear-gradient(to right, #f80759, #bc4e9c);
+  }
+  
