@@ -208,14 +208,16 @@ Component({
         if ( !!formItem.key ) {
           // 处理formData
           obj = Object.assign({ }, obj, {
-            [ formItem.key ]: obj[ formItem.key ] !== undefined ?
-            obj[ formItem.key] :
+            [ formItem.key ]: 
               Array.isArray( formItem.value) ?
                 [ ...formItem.value ] : 
                 typeof formItem.value === 'object' && typeof formItem.value.getTime !== 'function' ?
                   Object.assign({ }, formItem.value ) :
-                  formItem.value
+                  formItem.type === 'switch' ?
+                    formItem.value :
+                    obj[ formItem.key ]
           });
+
           // 处理select类型
           if ( formItem.type === 'select' ) {
             selectTypeIndex = Object.assign({ }, selectTypeIndex, {
@@ -224,6 +226,7 @@ Component({
           }
         }
       });
+
       return {
         obj,
         selectTypeIndex
@@ -377,7 +380,7 @@ Component({
   },
 
   attached: function( ) {
-    this.dealFormData( );
+    // this.dealFormData( );
   }
 
 })
