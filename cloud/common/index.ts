@@ -698,6 +698,49 @@ export const main = async ( event, context ) => {
         }
     });
 
+    /**
+     * @description
+     * 更新应用配置
+     * --------------
+     * configs: {
+     *    [ key: string ]: any 
+     * }
+     */
+    app.router('update-app-config', async( ctx, next ) => {
+        try {
+            const { configs } = event.data;
+
+            await Promise.all(
+                Object.keys( configs )
+                    .map( async configKey => {
+                        const target$ = await db.collection('app-config')
+                            .where({
+                                type: configKey
+                            })
+                            .get( )
+
+                        if ( !target$.data[ 0 ]) { return; }
+
+                        await db.collection('app-config')
+                            .doc( String( target$.data[ 0 ]._id ))
+                            .update({
+                                data: {
+                                    value: configs[ configKey ]
+                                }
+                            })
+                    })
+            );
+
+            return ctx.body = {
+                status: 200
+            }
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    })
+
     return app.serve( );
 
 }

@@ -17,13 +17,11 @@ Page({
             meta$: function( ) {
                 const { config } = this.data;
                 const meta = [{
-                    // title: '保健品',
-                    title: 'test',
+                    title: '保健品',
                     desc: '相关设置'
                   }, {
                     key: 'app-bjp-visible',
-                    // label: '保健品商品是否可见',
-                    label: '123',
+                    label: '保健品商品是否可见',
                     type: 'switch',
                     max: 1,
                     rules: [ ],
@@ -49,6 +47,44 @@ Page({
                 });
             }
         })
+    },
+
+    /** 
+     * 提交配置
+     */
+    updateConf( ) {
+        const form = this.selectComponent('#form');
+        const r = form.getData( );
+
+        if ( !r.result ) {
+            return wx.showToast({
+              icon: 'none',
+              title: '请完善设置信息',
+            });
+        }
+
+        wx.showModal({
+            title: '提示',
+            content: '确认更新配置吗?',
+            success: res => {
+                if ( !res.confirm )  { return; }
+                http({
+                    data: {
+                        configs: r.data,
+                    },
+                    url: `common_update-app-config`,
+                    success: res => {
+                        if ( res.status !== 200 ) { return; }
+                        wx.showToast({
+                            title: '更新成功',
+                        });
+                        
+                    }
+                })
+            }
+        });
+
+
     },
 
     /**

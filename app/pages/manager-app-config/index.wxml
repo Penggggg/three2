@@ -11,8 +11,8 @@
     <!-- 按钮 -->
     <view class="pmac-btn-block">
         <view
+            bindtap="updateConf"
             class="pmac-btn invert"
-            bindtap="preview"
         >
             确定
         </view>
