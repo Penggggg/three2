@@ -202,6 +202,11 @@ export const main = async ( event, context ) => {
                     type: !!meta.depositPrice ? meta.type : 'normal'
                 });
                 delete t['address'];
+
+                if ( !t['sid'] ) {
+                    delete t['sid'];
+                }
+
                 return t;
             });
 
