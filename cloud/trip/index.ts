@@ -359,7 +359,8 @@ export const main = async ( event, context ) => {
             const orders$ = await db.collection('order')
                 .where({
                     tid,
-                    pay_status: _.neq('0')
+                    pay_status: _.neq('0'),
+                    base_status: _.neq('5')
                 })
                 .get( );
 
