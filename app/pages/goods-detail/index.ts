@@ -453,7 +453,7 @@ Page({
     onShareAppMessage: function ( ) {
         const { detail, pin$, activities, priceGap } = this.data;
         return {
-            title: `${priceGap !== '' ? 
+            title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
                         activities.length === 0 ?
                             `一起买！一起省${priceGap}元！` :
                             '限时特价超实惠！' : 
