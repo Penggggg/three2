@@ -261,6 +261,9 @@ Page({
 
     /** 拉取当前商品的购物请单信息 */
     fetchShopping( pid, tid ) {
+
+        if ( !pid || !tid ) { return; }
+
         http({
             url: 'shopping-list_pin',
             data: {
@@ -278,6 +281,27 @@ Page({
                         sid: x.sid
                     }))
                 });
+            }
+        })
+    },
+
+    /** 拉取两个最新行程 */
+    fetchLast( ) {
+        const { id } = this.data;
+        http({
+            data: { },
+            url: `trip_enter`,
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                if ( !!data[ 0 ]) {
+                    const tid = data[ 0 ]._id
+                    this.setData!({
+                        tid: data[ 0 ]._id
+                    });
+                    this.fetchShopping( id, tid );
+                }
             }
         })
     },
@@ -390,6 +414,10 @@ Page({
         this.setData!({
             id: '1a2751ef5caf49a6046f440808e620d1'
         });
+
+        if ( !options!.tid ) {
+            this.fetchLast( );
+        }
         
         if ( !options!.id ) { return; }
         this.setData!({
