@@ -209,8 +209,8 @@ Component({
           // 处理formData
           obj = Object.assign({ }, obj, {
             [ formItem.key ]: 
-              Array.isArray( formItem.value) ?
-                [ ...formItem.value ] : 
+              Array.isArray( formItem.value ) ?
+                 obj[ formItem.key ] : 
                 typeof formItem.value === 'object' && typeof formItem.value.getTime !== 'function' ?
                   Object.assign({ }, formItem.value ) :
                   formItem.type === 'switch' ?
@@ -226,7 +226,7 @@ Component({
           }
         }
       });
-
+      console.log('====', JSON.parse( JSON.stringify( theObj )), obj )
       return {
         obj,
         selectTypeIndex
@@ -236,8 +236,9 @@ Component({
     /** 处理本地formData */
     dealFormData( ) {
       let theObj = Object.assign({ }, this.data.formData );
-      
+
       const { obj, selectTypeIndex } = this.dealFormData2( theObj );
+
       this.setData({
         formData: obj,
         selectFormItemIndex: selectTypeIndex
@@ -361,7 +362,9 @@ Component({
         formData: Object.assign({ }, this.data.formData, { ...obj })
       });
       Object.keys( obj ).map( k => this.validateItem( k ));
-      this.onTrigger( )
+      setTimeout(( ) => {
+        this.onTrigger( )
+      }, 20 );
     },
     
     // 外部方法：重置表单
