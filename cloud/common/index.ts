@@ -765,6 +765,32 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /** 
+     * @description
+     * 生成二维码
+     */
+    app.router('create-qrcode', async( ctx, next ) => {
+        try {
+            const result = await cloud.openapi.wxacode.getUnlimited({
+                scene: 'a=1'
+            });
+
+            if ( result.errCode !== 0 ) {
+                throw result.errMsg
+            }
+
+            return ctx.body = {
+                status: 200,
+                data: result.buffer
+            }
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500,
+                message: typeof e === 'string' ? e : JSON.stringify( e )
+            }
+        }
+    });
+
     return app.serve( );
 
 }

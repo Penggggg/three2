@@ -17,9 +17,10 @@
 	},
 	"appid": "wx60bf7f745ce31ef0",
 	"projectname": "three2",
-	"libVersion": "2.7.0",
+	"libVersion": "2.7.1",
 	"compileType": "miniprogram",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
+	"cloudfunctionTemplateRoot": "cloudfunctionTemplate",
 	"condition": {}
 }

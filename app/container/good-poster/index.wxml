@@ -1,0 +1,7 @@
+<view class="con-good-poster">
+    <canvas 
+        canvas-id='c1'
+        class="cgp-canvas"
+        style="height:{{ canvasHeight }}px"
+    />
+</view>

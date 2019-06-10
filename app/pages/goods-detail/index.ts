@@ -372,6 +372,10 @@ Page({
     onLoad: function (options) {
         this.watchRole( );
         this.runComputed( );
+
+        this.setData!({
+            id: '1a2751ef5caf49a6046f440808e620d1'
+        });
         
         if ( !options!.id ) { return; }
         this.setData!({
@@ -455,7 +459,7 @@ Page({
         return {
             title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
                         activities.length === 0 ?
-                            `一起买！一起省${priceGap}元！` :
+                            `一起买！一起省${String( priceGap ).replace(/\.00/g, '')}元！` :
                             '限时特价超实惠！' : 
                         '给你看看这宝贝！'
                 }${detail.title}`,

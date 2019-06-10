@@ -313,6 +313,11 @@
 
     </view> 
 
+    <!-- 海报 -->
+    <my-good-poster
+        good="{{ detail }}"
+    />
+
     <!-- 商品管理页面入口 -->
     <view
         wx:if="{{ showBtn }}"
