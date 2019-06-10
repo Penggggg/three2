@@ -12,7 +12,7 @@ Component({
         good: {
             type: Object,
             required: true,
-            observer: 'onDraw'
+            observer: 'onInit'
         }
     },
 
@@ -20,21 +20,36 @@ Component({
      * 组件的初始数据
      */
     data: {
-        canvasHeight: 600
+
+        // 是否展开
+        show: false,
+
+        // 传进来的
+        goodMeta: null,
+
+        // 画布高度
+        canvasHeight: 300
     },
 
     /**
      * 组件的方法列表
      */
     methods: {
-        /**  */
+        // 初始化
+        onInit( good ) {
+            this.setData({
+                goodMeta: good
+            })
+        },
+
+        /** 画画 */
         onDraw( ) {
             http({
                 data: { },
                 url: `common_create-qrcode`,
                 success: res => {
-                    const { good } = this.data;
-                    const decorateGood = delayeringGood( good );
+                    const { goodMeta } = this.data;
+                    const decorateGood = delayeringGood( goodMeta );
                     const { status, data } = res;
                     const fsm = wx.getFileSystemManager( );
                     if ( status !== 200 ) { return; }
@@ -56,11 +71,11 @@ Component({
                             // 标题
                             ctx.setFillStyle('#333');
                             ctx.font = 'normal bold 20px sans-serif'
-                            ctx.fillText( good.title, 10, 30, maxWidth );
+                            ctx.fillText( goodMeta.title, 10, 30, maxWidth );
 
                             // 主图（网络图）
                             wx.getImageInfo({
-                                src: good.img[ 0 ],
+                                src: goodMeta.img[ 0 ],
                                 success: res => {
                                     
                                     const proportion = res.width / res.height;
@@ -76,7 +91,7 @@ Component({
                                     ctx.drawImage( res.path, 10, 50, imgWidth, imgHeight )
 
                                     // 原价
-                                    const fadePriceText = `原价${good.fadePrice}元`;
+                                    const fadePriceText = `原价${goodMeta.fadePrice}元`;
                                     ctx.setFillStyle('#333');
                                     ctx.font = 'normal 16px sans-serif'
                                     ctx.fillText( fadePriceText, 10, imgHeight + 75, maxWidth );
@@ -130,6 +145,18 @@ Component({
                 }
             });
         },
+
+        /** 展开画布 */
+        toggle( ) {
+            const { show } = this.data;
+            this.setData({
+                show: !show
+            });
+            if ( !show ) {
+                this.onDraw( );
+            }
+            this.triggerEvent('toggle', !show );
+        }
     },
 
     attached: function( ) {

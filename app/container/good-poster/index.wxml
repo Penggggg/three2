@@ -1,7 +1,71 @@
 <view class="con-good-poster">
-    <canvas 
-        canvas-id='c1'
-        class="cgp-canvas"
-        style="height:{{ canvasHeight }}px"
-    />
+
+    <!-- 画布 -->
+    <view class="cgp-canvas-block {{ !show ? 'hide' : '' }}">
+
+        <!-- 画布 -->
+        <view class="cgp-canvas-con">
+            <canvas 
+                canvas-id='c1'
+                class="cgp-canvas"
+                style="height:{{ canvasHeight }}px"
+            />
+        </view>
+        
+        <!-- 两个按钮 -->
+        <view class="cgp-btn-block">
+            
+            <view class="cgp-btn mr">
+                <image
+                    class="cgp-btn-img"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-wechat.png"
+                />
+                发送到朋友/群
+                <button
+                    open-type="share"
+                    class="cgp-share-btn"
+                >
+                </button>
+            </view>
+
+            <view class="cgp-btn">
+                <image
+                    class="cgp-btn-img"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-pengyouquan.png"
+                />
+                保存图片,转发朋友圈
+            </view>
+
+        </view>
+
+        <!-- 关闭按钮 -->
+        <view 
+            bindtap="toggle"
+            class="cgp-close-btn"
+        >
+            <image
+                class="cgp-btn-img small"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-close2.png"
+            />
+        </view>
+
+    </view>
+
+    <!-- 分享按钮 -->
+    <view 
+        bindtap="toggle"
+        class="cgp-toggle-btn"
+    >
+        <image
+            class="cgp-icon-img"
+            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-share-2.png"
+        />
+        <button
+            class="cgp-icon"
+        >
+        </button>
+    </view>
+
+
+
 </view>

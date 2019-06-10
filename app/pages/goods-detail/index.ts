@@ -51,6 +51,9 @@ Page({
         // 展示管理入口
         showBtn: false,
 
+        // 正在展示海报
+        showingPoster: false,
+
         // 展示弹框
         showTips: 'hide',
 
@@ -363,6 +366,17 @@ Page({
                     })
                 }
             }
+        });
+    },
+
+    /** 海报开关 */
+    onPostToggle( e ) {
+        const val = e.detail;
+        this.setData!({
+            showingPoster: val
+        });
+        wx.setNavigationBarTitle({
+            title: val ? '分享商品' : '商品详情'
         });
     },
 
