@@ -12,6 +12,7 @@
         <!-- 画布 -->
         <view class="cgp-canvas-con">
             <canvas 
+                id="c1"
                 canvas-id='c1'
                 class="cgp-canvas"
                 style="height:{{ canvasHeight }}px"
@@ -34,7 +35,10 @@
                 </button>
             </view>
 
-            <view class="cgp-btn">
+            <view 
+                bindtap="save"
+                class="cgp-btn"
+            >
                 <image
                     class="cgp-btn-img"
                     src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-pengyouquan.png"

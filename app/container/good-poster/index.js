@@ -28,7 +28,10 @@ Component({
         goodMeta: null,
 
         // 画布高度
-        canvasHeight: 300
+        canvasHeight: 300,
+
+        // 加载
+        loading: true
     },
 
     /**
@@ -68,11 +71,6 @@ Component({
                             const canvasWidth = Number(( windowWidth * 0.9 ).toFixed( 0 ));
                             const maxWidth = Number(( windowWidth * 0.9 - 20 ).toFixed( 0 ));
 
-                            // 标题
-                            ctx.setFillStyle('#333');
-                            ctx.font = 'normal bold 20px sans-serif'
-                            ctx.fillText( goodMeta.title, 10, 40, maxWidth );
-
                             // 主图（网络图）
                             wx.getImageInfo({
                                 src: goodMeta.img[ 0 ],
@@ -83,11 +81,20 @@ Component({
                                     const imgHeight = Number(( imgWidth / proportion ).toFixed( 0 ));
                                     const canvasHeight = imgHeight + 200;
 
+                                    ctx.fillStyle = '#fff';
+                                    ctx.fillRect( 0, 0, canvasWidth, canvasHeight );
+
                                     // 调整画布高度
                                     this.setData({
                                         canvasHeight
                                     });
 
+                                    // 标题
+                                    ctx.setFillStyle('#333');
+                                    ctx.font = 'normal bold 20px sans-serif'
+                                    ctx.fillText( goodMeta.title, 10, 40, maxWidth );
+
+                                    // 首图
                                     ctx.drawImage( res.path, 10, 60, imgWidth, imgHeight )
 
                                     // 原价
@@ -133,11 +140,16 @@ Component({
                                         qrCodeImgSize
                                     );
 
-                                    ctx.draw( false );
+                                    ctx.draw( false, ( ) => {
+                                        this.setData({
+                                            loading: false
+                                        })
+                                    });
                                         
                                 },
                                 fail: e => {
                                     wx.showToast({ 
+                                        icon: 'none',
                                         title: '生成海报错误，请重试'
                                     });
                                 }
@@ -162,6 +174,48 @@ Component({
         },
 
         /** 保存canvas到本地图片 */
+        save( ) {
+            const { canvasHeight, loading } = this.data;
+
+            if ( loading ) { return; }
+
+            const err = ( ) => {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '保存失败，请重试'
+                })
+            };
+
+            wx.getSystemInfo({
+                success: system => {
+                    const { windowWidth } = system;
+                    const width = windowWidth * 0.9;
+                    wx.canvasToTempFilePath({
+                        x: 0,
+                        y: 0,
+                        width,
+                        height: canvasHeight,
+                        destWidth: width * 2.5,
+                        destHeight: canvasHeight * 2.5,
+                        canvasId: 'c1',
+                        success: res => {
+                            const tempFilePath = res.tempFilePath;
+                            wx.saveImageToPhotosAlbum({
+                                filePath: tempFilePath,
+                                fail: e => err( ),
+                                success: res => {
+                                    wx.showToast({
+                                        title: '保存图片成功！'
+                                    })
+                                }
+                            });
+                        },
+                        fail: e => err( )
+                    }, this );
+                }
+            });
+            
+        },
 
         preventTouchMove( ) {
         }
