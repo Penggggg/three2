@@ -1,7 +1,13 @@
-<view class="con-good-poster">
+<view 
+    class="con-good-poster"
+    catchtouchmove="preventTouchMove"
+>
 
     <!-- 画布 -->
-    <view class="cgp-canvas-block {{ !show ? 'hide' : '' }}">
+    <view 
+        catchtouchmove="preventTouchMove"
+        class="cgp-canvas-block {{ !show ? 'hide' : '' }}"
+    >
 
         <!-- 画布 -->
         <view class="cgp-canvas-con">

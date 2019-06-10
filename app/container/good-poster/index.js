@@ -71,7 +71,7 @@ Component({
                             // 标题
                             ctx.setFillStyle('#333');
                             ctx.font = 'normal bold 20px sans-serif'
-                            ctx.fillText( goodMeta.title, 10, 30, maxWidth );
+                            ctx.fillText( goodMeta.title, 10, 40, maxWidth );
 
                             // 主图（网络图）
                             wx.getImageInfo({
@@ -81,56 +81,59 @@ Component({
                                     const proportion = res.width / res.height;
                                     const imgWidth = maxWidth;
                                     const imgHeight = Number(( imgWidth / proportion ).toFixed( 0 ));
-                                    const canvasHeight = imgHeight + 170;
+                                    const canvasHeight = imgHeight + 200;
 
                                     // 调整画布高度
                                     this.setData({
                                         canvasHeight
                                     });
 
-                                    ctx.drawImage( res.path, 10, 50, imgWidth, imgHeight )
+                                    ctx.drawImage( res.path, 10, 60, imgWidth, imgHeight )
 
                                     // 原价
                                     const fadePriceText = `原价${goodMeta.fadePrice}元`;
                                     ctx.setFillStyle('#333');
                                     ctx.font = 'normal 16px sans-serif'
-                                    ctx.fillText( fadePriceText, 10, imgHeight + 75, maxWidth );
+                                    ctx.fillText( fadePriceText, 10, imgHeight + 85, maxWidth );
 
                                     // 原价删除线
                                     ctx.lineWidth = 1;
-                                    ctx.moveTo ( 8, imgHeight + 71 );       
-                                    ctx.lineTo ( fadePriceText.length * 15, imgHeight + 71 );
+                                    ctx.moveTo ( 8, imgHeight + 80 );       
+                                    ctx.lineTo ( fadePriceText.length * 15, imgHeight + 80 );
                                     ctx.setStrokeStyle('#333')
                                     ctx.stroke( );
 
                                     // 拼团价
-                                    const { hasPin, hasActivity, lowest_price$ } = decorateGood;
+                                    let lowest_price$ = decorateGood.lowest_price$;
+                                    lowest_price$ = String( lowest_price$ ).replace(/\.00/g, '');
+                                    const { hasPin, hasActivity } = decorateGood;
                                     const pinText = hasActivity ?
-                                        `限时特价 低至${lowest_price$}元` :
+                                        `限时特价 低至${lowest_price$}${lowest_price$.length >=4 ? '' : '元'}` :
                                         hasPin ? 
-                                            `拼团特惠 低至${lowest_price$}元` :
-                                            `好物推荐 低至${lowest_price$}元`
+                                            `拼团特惠 低至${lowest_price$}${lowest_price$.length >=4 ? '' : '元'}` :
+                                            `好物推荐 低至${lowest_price$}${lowest_price$.length >=4 ? '' : '元'}`
                                     ctx.setFillStyle('#c22c3e');
                                     ctx.font = 'normal bold 20px sans-serif'
-                                    ctx.fillText( pinText, 10, imgHeight + 105, maxWidth );
+                                    ctx.fillText( pinText, 10, imgHeight + 115, maxWidth );
 
                                     // logo
                                     const logoText = '长按图片 识别二维码';
                                     ctx.setFillStyle('#333');
                                     ctx.font = 'normal 17px sans-serif'
-                                    ctx.fillText( logoText, 10, imgHeight + 150, maxWidth );
+                                    ctx.fillText( logoText, 10, imgHeight + 170, maxWidth );
 
 
                                     // 小程序二维码
-                                    const qrCodeImgSize = 90;
+                                    const qrCodeImgSize = lowest_price$.length >=3 ? 80 : 90;
                                     ctx.drawImage( 
                                         qrCode, 
-                                        canvasWidth - qrCodeImgSize,
-                                        canvasHeight - qrCodeImgSize - 10, 
-                                        qrCodeImgSize, qrCodeImgSize
+                                        canvasWidth - qrCodeImgSize - 10,
+                                        canvasHeight - qrCodeImgSize - 20, 
+                                        qrCodeImgSize, 
+                                        qrCodeImgSize
                                     );
 
-                                    ctx.draw( );
+                                    ctx.draw( false );
                                         
                                 },
                                 fail: e => {
@@ -156,7 +159,13 @@ Component({
                 this.onDraw( );
             }
             this.triggerEvent('toggle', !show );
+        },
+
+        /** 保存canvas到本地图片 */
+
+        preventTouchMove( ) {
         }
+
     },
 
     attached: function( ) {
