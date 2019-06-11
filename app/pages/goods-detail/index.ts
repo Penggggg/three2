@@ -51,6 +51,9 @@ Page({
         // 展示管理入口
         showBtn: false,
 
+        // 正在展示海报
+        showingPoster: false,
+
         // 展示弹框
         showTips: 'hide',
 
@@ -258,6 +261,9 @@ Page({
 
     /** 拉取当前商品的购物请单信息 */
     fetchShopping( pid, tid ) {
+
+        if ( !pid || !tid ) { return; }
+
         http({
             url: 'shopping-list_pin',
             data: {
@@ -275,6 +281,27 @@ Page({
                         sid: x.sid
                     }))
                 });
+            }
+        })
+    },
+
+    /** 拉取两个最新行程 */
+    fetchLast( ) {
+        const { id } = this.data;
+        http({
+            data: { },
+            url: `trip_enter`,
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                if ( !!data[ 0 ]) {
+                    const tid = data[ 0 ]._id
+                    this.setData!({
+                        tid: data[ 0 ]._id
+                    });
+                    this.fetchShopping( id, tid );
+                }
             }
         })
     },
@@ -366,16 +393,35 @@ Page({
         });
     },
 
+    /** 海报开关 */
+    onPostToggle( e ) {
+        const val = e.detail;
+        this.setData!({
+            showingPoster: val
+        });
+        wx.setNavigationBarTitle({
+            title: val ? '分享商品' : '商品详情'
+        });
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+
+        const scene = decodeURIComponent( options!.scene || '' )
+        
         this.watchRole( );
         this.runComputed( );
+
+
+        if ( !options!.tid ) {
+            this.fetchLast( );
+        }
         
-        if ( !options!.id ) { return; }
+        if ( !options!.id && !scene ) { return; }
         this.setData!({
-            id: options!.id,
+            id: options!.id || scene,
             tid: options!.tid
         });
     },
@@ -455,7 +501,7 @@ Page({
         return {
             title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
                         activities.length === 0 ?
-                            `一起买！一起省${priceGap}元！` :
+                            `一起买！一起省${String( priceGap ).replace(/\.00/g, '')}元！` :
                             '限时特价超实惠！' : 
                         '给你看看这宝贝！'
                 }${detail.title}`,

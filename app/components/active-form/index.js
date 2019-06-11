@@ -95,14 +95,6 @@ Component({
       const { type } =  e.currentTarget.dataset;
       const formItemKey = e.currentTarget.dataset.key;
       let value = e.detail.value;
-      
-      // if ( type === 'number' && value === '' ) {
-      //   value = null
-
-      // } else if ( type === 'number' && value !== '' ) {
-      //   value = Number( value );
-      // }
-
       this.setData({
         formData: Object.assign({ }, this.data.formData, {
           [ formItemKey ]: value 
@@ -112,17 +104,40 @@ Component({
       this.onTrigger( )
     },
 
-    /** select输入 */
+    /** 
+     * select输入
+     * !之前返回的是值
+     * !现在返回了下标
+     * 请用selectChange2
+     */
     selectChange( e ) {
       const value = e.detail.value;
       const formItemKey = e.currentTarget.dataset.formkey;
       const formItem = this.data.meta.find( x => x.key === formItemKey );
+
+      // this.setData({
+      //   formData: Object.assign({ }, this.data.formData, {
+      //     [ formItemKey ]: value 
+      //   }),
+      //   selectFormItemIndex: Object.assign({ }, this.data.selectFormItemIndex, {
+      //     [ formItemKey ]: formItem.options.findIndex( x => x.value === value )
+      //   })
+      // })
+      // this.validateItem( formItemKey );
+      // this.onTrigger( )
+    },
+
+    selectChange2( e ) {
+      const index = Number( e.detail.value );
+      const formItemKey = e.currentTarget.dataset.formkey;
+      const formItem = this.data.meta.find( x => x.key === formItemKey );
+
       this.setData({
         formData: Object.assign({ }, this.data.formData, {
-          [ formItemKey ]: value 
+          [ formItemKey ]: formItem.options[ index ]['value']
         }),
         selectFormItemIndex: Object.assign({ }, this.data.selectFormItemIndex, {
-          [ formItemKey ]: formItem.options.findIndex( x => x.value === value )
+          [ formItemKey ]: index
         })
       })
       this.validateItem( formItemKey );
@@ -209,9 +224,11 @@ Component({
           // 处理formData
           obj = Object.assign({ }, obj, {
             [ formItem.key ]: 
-              Array.isArray( formItem.value) ?
-                [ ...formItem.value ] : 
-                typeof formItem.value === 'object' && typeof formItem.value.getTime !== 'function' ?
+              Array.isArray( formItem.value ) ?
+                !!obj[ formItem.key ] && obj[ formItem.key ].length > formItem.value.length ?
+                obj[ formItem.key ]: 
+                formItem.value :
+                typeof formItem.value === 'object' && !!formItem.value && formItem.type !== 'switch' && typeof formItem.value.getTime !== 'function' ?
                   Object.assign({ }, formItem.value ) :
                   formItem.type === 'switch' ?
                     formItem.value :
@@ -234,10 +251,10 @@ Component({
     },
 
     /** 处理本地formData */
-    dealFormData( ) {
+    dealFormData( meta ) {
       let theObj = Object.assign({ }, this.data.formData );
-      
       const { obj, selectTypeIndex } = this.dealFormData2( theObj );
+
       this.setData({
         formData: obj,
         selectFormItemIndex: selectTypeIndex
@@ -361,7 +378,9 @@ Component({
         formData: Object.assign({ }, this.data.formData, { ...obj })
       });
       Object.keys( obj ).map( k => this.validateItem( k ));
-      this.onTrigger( )
+      setTimeout(( ) => {
+        this.onTrigger( )
+      }, 20 );
     },
     
     // 外部方法：重置表单

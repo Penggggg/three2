@@ -57,11 +57,14 @@ const delayeringGood = x => {
     // 重新排序价格和库存
     allPriceArr = allPriceArr.sort(( x, y ) => x - y );
     allStockArr = allStockArr.sort(( x, y ) => x - y );
-
+    
 
     return Object.assign({ }, x, {
 
         pid: x._id,
+
+        // 是否有拼团
+        hasPin: hasPin( x ),
 
         // 库存区间
         stock$: allStockArr.length === 0 ?
@@ -99,6 +102,13 @@ const delayeringGood = x => {
     })
 
 };
+
+const hasPin = good => {
+    const { activities, standards, groupPrice } = good;
+    const piningStandards = standards.filter( x => !!x.groupPrice );
+    const piningActivies = !!activities ? activities.filter( x => !!x.ac_groupPrice ) : [ ];
+    return !!groupPrice || piningStandards.length > 0 || piningActivies.length > 0;
+}
 
 /** 处理商品的拼团差价，返回拼团列表和拼团差价区间（含特价） */
 const dealGoodPin = good => {
