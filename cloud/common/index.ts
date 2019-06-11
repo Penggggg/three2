@@ -768,11 +768,17 @@ export const main = async ( event, context ) => {
     /** 
      * @description
      * 生成二维码
+     * {
+     *     page
+     *     scene
+     * }
      */
     app.router('create-qrcode', async( ctx, next ) => {
         try {
+            const { page, scene } = event.data;
             const result = await cloud.openapi.wxacode.getUnlimited({
-                scene: 'a=1'
+                page,
+                scene: scene || ''
             });
 
             if ( result.errCode !== 0 ) {

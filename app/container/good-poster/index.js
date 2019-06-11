@@ -48,7 +48,10 @@ Component({
         /** 画画 */
         onDraw( ) {
             http({
-                data: { },
+                data: {
+                    page: 'pages/goods-detail/index',
+                    scene: this.data.good._id
+                },
                 url: `common_create-qrcode`,
                 success: res => {
                     const { goodMeta } = this.data;

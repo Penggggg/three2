@@ -408,20 +408,20 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+
+        const scene = decodeURIComponent( options!.scene || '' )
+        
         this.watchRole( );
         this.runComputed( );
 
-        this.setData!({
-            id: '1a2751ef5caf49a6046f440808e620d1'
-        });
 
         if ( !options!.tid ) {
             this.fetchLast( );
         }
         
-        if ( !options!.id ) { return; }
+        if ( !options!.id && !scene ) { return; }
         this.setData!({
-            id: options!.id,
+            id: options!.id || scene,
             tid: options!.tid
         });
     },
