@@ -205,7 +205,7 @@ Component({
                                 fail: e => err( ),
                                 success: res => {
                                     wx.showToast({
-                                        title: '保存图片成功！'
+                                        title: '保存图片成功！请查看相册'
                                     })
                                 }
                             });

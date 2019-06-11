@@ -5,7 +5,6 @@
 
     <!-- 画布 -->
     <view 
-        catchtouchmove="preventTouchMove"
         class="cgp-canvas-block {{ !show ? 'hide' : '' }}"
     >
 
@@ -25,9 +24,8 @@
             <view class="cgp-btn mr">
                 <image
                     class="cgp-btn-img"
-                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-wechat.png"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-wechat2.png"
                 />
-                发送到朋友/群
                 <button
                     open-type="share"
                     class="cgp-share-btn"
@@ -37,27 +35,27 @@
 
             <view 
                 bindtap="save"
-                class="cgp-btn"
+                class="cgp-btn mr"
             >
                 <image
                     class="cgp-btn-img"
-                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-pengyouquan.png"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-pengyouquan2.png"
                 />
-                保存图片,转发朋友圈
+            </view>
+
+            <!-- 关闭按钮 -->
+            <view 
+                bindtap="toggle"
+                class="cgp-close-btn"
+            >
+                <image
+                    class="cgp-btn-img small"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-close2.png"
+                />
             </view>
 
         </view>
 
-        <!-- 关闭按钮 -->
-        <view 
-            bindtap="toggle"
-            class="cgp-close-btn"
-        >
-            <image
-                class="cgp-btn-img small"
-                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-close2.png"
-            />
-        </view>
 
     </view>
 

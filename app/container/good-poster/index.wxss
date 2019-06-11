@@ -65,13 +65,15 @@
 
 .cgp-btn-block {
     display: flex;
-    padding: 0 20rpx 175rpx;
+    left: 50%;
+    bottom: 20rpx;
+    position: absolute;
+    transform: translate( -50%, -50% );
 }
 
 .cgp-btn-img {
-    height: 68rpx;
-    width: 68rpx;
-    margin-right: 15rpx;
+    height: 75rpx;
+    width: 75rpx;
 }
 
 .cgp-btn-img.small {
@@ -85,17 +87,15 @@
     color: #666;
     display: flex;
     align-items: center;
-    font-size: 24rpx;
     text-align: center;
     background: #fff;
-    border-radius: 30px;
-    padding: 20rpx 10rpx;
+    border-radius: 50%;
     position: relative;
     box-shadow: 3px 3px 25px rgba( 0, 0, 0, 0.15 );
 }
 
 .cgp-btn.mr {
-    margin-right: 30rpx;
+    margin-right: 40rpx;
 }
 
 .cgp-share-btn {
@@ -108,15 +108,16 @@
 }
 
 .cgp-close-btn {
-    left: 50%;
+    /* left: 50%; */
     display: flex;
     align-items: center;
     justify-content: center;
-    bottom: 20rpx;
-    width: 68rpx;
-    height: 68rpx;
+    /* bottom: 20rpx; */
+    width: 75rpx;
+    height: 75rpx;
     border-radius: 50%;
-    position: absolute;
+    /* position: absolute; */
+    background: #fff;
     box-shadow: 3px 3px 25px rgba( 0, 0, 0, 0.15 );
-    transform: translate( -50%, -50% );
+    /* transform: translate( -50%, -50% ); */
 }

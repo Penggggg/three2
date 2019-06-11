@@ -225,7 +225,9 @@ Component({
           obj = Object.assign({ }, obj, {
             [ formItem.key ]: 
               Array.isArray( formItem.value ) ?
-                obj[ formItem.key ] : 
+                !!obj[ formItem.key ] && obj[ formItem.key ].length > formItem.value.length ?
+                obj[ formItem.key ]: 
+                formItem.value :
                 typeof formItem.value === 'object' && !!formItem.value && formItem.type !== 'switch' && typeof formItem.value.getTime !== 'function' ?
                   Object.assign({ }, formItem.value ) :
                   formItem.type === 'switch' ?
@@ -241,7 +243,7 @@ Component({
           }
         }
       });
-    
+
       return {
         obj,
         selectTypeIndex
@@ -249,9 +251,8 @@ Component({
     },
 
     /** 处理本地formData */
-    dealFormData( ) {
+    dealFormData( meta ) {
       let theObj = Object.assign({ }, this.data.formData );
-
       const { obj, selectTypeIndex } = this.dealFormData2( theObj );
 
       this.setData({
