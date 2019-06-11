@@ -123,7 +123,7 @@
           range-key="label"
           disabled="{{ item.disabled }}"
           range="{{ item.options }}"
-          bindchange="selectChange"
+          bindchange="selectChange2"
           data-formkey="{{ item.key }}"
           value='{{ selectFormItemIndex[ item.key ] }}'
         >
