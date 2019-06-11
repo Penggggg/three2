@@ -95,14 +95,6 @@ Component({
       const { type } =  e.currentTarget.dataset;
       const formItemKey = e.currentTarget.dataset.key;
       let value = e.detail.value;
-      
-      // if ( type === 'number' && value === '' ) {
-      //   value = null
-
-      // } else if ( type === 'number' && value !== '' ) {
-      //   value = Number( value );
-      // }
-
       this.setData({
         formData: Object.assign({ }, this.data.formData, {
           [ formItemKey ]: value 
@@ -112,17 +104,40 @@ Component({
       this.onTrigger( )
     },
 
-    /** select输入 */
+    /** 
+     * select输入
+     * !之前返回的是值
+     * !现在返回了下标
+     * 请用selectChange2
+     */
     selectChange( e ) {
       const value = e.detail.value;
       const formItemKey = e.currentTarget.dataset.formkey;
       const formItem = this.data.meta.find( x => x.key === formItemKey );
+
+      // this.setData({
+      //   formData: Object.assign({ }, this.data.formData, {
+      //     [ formItemKey ]: value 
+      //   }),
+      //   selectFormItemIndex: Object.assign({ }, this.data.selectFormItemIndex, {
+      //     [ formItemKey ]: formItem.options.findIndex( x => x.value === value )
+      //   })
+      // })
+      // this.validateItem( formItemKey );
+      // this.onTrigger( )
+    },
+
+    selectChange2( e ) {
+      const index = Number( e.detail.value );
+      const formItemKey = e.currentTarget.dataset.formkey;
+      const formItem = this.data.meta.find( x => x.key === formItemKey );
+
       this.setData({
         formData: Object.assign({ }, this.data.formData, {
-          [ formItemKey ]: value 
+          [ formItemKey ]: formItem.options[ index ]['value']
         }),
         selectFormItemIndex: Object.assign({ }, this.data.selectFormItemIndex, {
-          [ formItemKey ]: formItem.options.findIndex( x => x.value === value )
+          [ formItemKey ]: index
         })
       })
       this.validateItem( formItemKey );
@@ -210,8 +225,8 @@ Component({
           obj = Object.assign({ }, obj, {
             [ formItem.key ]: 
               Array.isArray( formItem.value ) ?
-                 obj[ formItem.key ] : 
-                typeof formItem.value === 'object' && typeof formItem.value.getTime !== 'function' ?
+                obj[ formItem.key ] : 
+                typeof formItem.value === 'object' && !!formItem.value && formItem.type !== 'switch' && typeof formItem.value.getTime !== 'function' ?
                   Object.assign({ }, formItem.value ) :
                   formItem.type === 'switch' ?
                     formItem.value :
@@ -226,7 +241,7 @@ Component({
           }
         }
       });
-      console.log('====', JSON.parse( JSON.stringify( theObj )), obj )
+    
       return {
         obj,
         selectTypeIndex
