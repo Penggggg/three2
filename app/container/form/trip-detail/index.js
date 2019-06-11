@@ -159,22 +159,13 @@ Component({
 
         // 表单数据3
         meta3( ) {
-            const { postageFullFree, postage, payment, published, tid } = this.data;
+            // const { postageFullFree, postage } = this.data;
+            const { payment, published, tid } = this.data;
             const meta = [
                 {
                     title: '其他资费',
                     desc: ''
-                },
-                // {
-                //     key: 'postage',
-                //     label: '邮费类型',
-                //     type: 'select',
-                //     placeholder: '请选择类型',
-                //     value: postage,
-                //     disabled: published && !!tid,
-                //     options: this.data.dic['postage'] || [ ]
-                // },
-                {
+                }, {
                     key: 'payment',
                     label: '付款类型',
                     type: 'select',
@@ -182,28 +173,17 @@ Component({
                     value: payment,
                     disabled: published && !!tid,
                     options: this.data.dic['payment'] || [ ]
-                }, {
+                }
+            ];
+
+            if ( !tid ) {
+                meta.push({
                     key: 'published',
                     label: '立即发布',
                     type: 'switch',
                     shadow: true,
                     disabled: published && !!tid,
                     value: false
-                }
-            ];
-
-            if ( postageFullFree ) {
-                meta.splice( 2, 0, {
-                    key: 'postagefree_atleast',
-                    label: '免邮门槛',
-                    type: 'number',
-                    placeholder: '达到指定消费金额才免邮',
-                    value: undefined,
-                    disabled: published && !!tid,
-                    rules: [{
-                      validate: val => !!val,
-                      message: '请填写免邮门槛'
-                    }]
                 });
             }
 
@@ -521,12 +501,12 @@ Component({
         /** 邮费监听 */
         onPostageChange( e ) {
             const { postage, payment, published } = e.detail;
-            this.setData({
-                postage: postage || null,
-                payment: payment || null,
-                published: published,
-                postageFullFree: postage === '0'
-            });
+            // this.setData({
+                // postage: postage || null,
+                // payment: payment || null,
+                // published: published,
+                // postageFullFree: postage === '0'
+            // });
         },
 
         /** 表单提交 */

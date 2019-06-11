@@ -289,8 +289,7 @@
         </view>
 
         <!-- 分享按钮 -->
-        <view class="gd-share-btn">
-            <!-- animation="{{ animationMiddleHeaderItem }}" -->
+        <!-- <view class="gd-share-btn">
             <image
                 class="invite-icon-img"
                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-share-2.png"
@@ -300,7 +299,7 @@
                 class="invite-icon"
             >
             </button>
-        </view>
+        </view> -->
 
         <!-- 商品下面的栏 -->
         <my-goods-detail-bar
@@ -313,9 +312,15 @@
 
     </view> 
 
+    <!-- 海报 -->
+    <my-good-poster
+        good="{{ detail }}"
+        bindtoggle="onPostToggle"
+    />
+
     <!-- 商品管理页面入口 -->
     <view
-        wx:if="{{ showBtn }}"
+        wx:if="{{ showBtn && !showingPoster }}"
         class="gd-btn-entry"
         bindtap="goManager"
     >
