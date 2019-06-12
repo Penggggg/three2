@@ -530,31 +530,12 @@ export const main = async ( event, context ) => {
 
             // 查询条数
             const limit = 10;
+            let bjpConfig: any = null;
+            const openid = event.userInfo.openId;
             const { search, page, category } = event.data;
 
             let query: any = null;
 
-            if ( !!search ) {
-
-                /**
-                 * 搜索纬度：
-                 * 商品标题
-                 * 详情
-                 *! 标签（未实现）
-                */
-                query = _.or([
-                    {
-                        visiable: true,
-                        isDelete: _.neq( true ),
-                        title: new RegExp( search.replace( /\s+/g, '' ), 'i' )
-                    }, {
-                        visiable: true,
-                        isDelete: _.neq( true ),
-                        detail: new RegExp( search.replace( /\s+/g, '' ), 'i' )
-                    }
-                ]);
-
-            }
 
             if ( !!category ) {
                 query = _.or([
@@ -569,6 +550,53 @@ export const main = async ( event, context ) => {
                     }
                 ]);
             }
+
+            // 保健品配置
+            const bjpConfig$ = await db.collection('app-config')
+                    .where({
+                        type: 'app-bjp-visible'
+                    })
+                    .get( );
+            bjpConfig = bjpConfig$.data[ 0 ];
+
+            // 搜索也要屏蔽保健品
+            // 非管理人员才屏蔽
+            if ( !!search ) {
+
+                const adminCheck = await db.collection('manager-member')
+                    .where({
+                        openid
+                    })
+                    .count( );
+
+                let categoryFilter = _.neq('9999');
+
+                if ( !!bjpConfig && !bjpConfig.value && adminCheck.total === 0 ) {
+                    categoryFilter = _.neq('4')
+                }
+
+                /**
+                 * 搜索纬度：
+                 * 商品标题
+                 * 详情
+                 *! 标签（未实现）
+                */
+                query = _.or([
+                    {
+                        visiable: true,
+                        isDelete: _.neq( true ),
+                        category: categoryFilter,
+                        title: new RegExp( search.replace( /\s+/g, '' ), 'i' )
+                    }, {
+                        visiable: true,
+                        isDelete: _.neq( true ),
+                        category: categoryFilter,
+                        detail: new RegExp( search.replace( /\s+/g, '' ), 'i' )
+                    }
+                ]);
+
+            }
+
 
             // 获取总数
             const total$ = await db.collection('goods')
