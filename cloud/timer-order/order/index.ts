@@ -171,3 +171,34 @@ export const priceFix = async ( ) => {
         return { status: 500 }
     }
 }
+
+/**
+ * 订单4：所有成功支付尾款的订单，把base_status设为3
+ */
+export const payLastFix = async ( ) => {
+    try {
+        
+        const orders$ = await db.collection('order')
+            .where({
+                pay_status: '2',
+                base_status: _.or( _.eq('0'), _.eq('1'))
+            })
+            .get( );
+
+        await Promise.all(
+            orders$.data.map( order => {
+                return db.collection('order')
+                    .doc( String( order._id ))
+                    .update({
+                        data: {
+                            base_status: '3'
+                        }
+                    })
+            })
+        )
+        
+    } catch ( e ) {
+        console.log('!!!!定时器订单payLastFix错误',)
+        return { status: 500 }
+    }
+}
