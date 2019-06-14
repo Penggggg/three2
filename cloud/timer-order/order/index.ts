@@ -181,7 +181,7 @@ export const payLastFix = async ( ) => {
         const orders$ = await db.collection('order')
             .where({
                 pay_status: '2',
-                base_status: _.or( _.eq('0'), _.eq('1'))
+                base_status: _.or( _.eq('0'), _.eq('1'),  _.eq('2'))
             })
             .get( );
 
