@@ -1,5 +1,5 @@
 import * as cloud from 'wx-server-sdk';
-import { overtime, payedFix, priceFix } from './order';
+import { overtime, payedFix, priceFix, payLastFix } from './order';
 import { catchLostOrders, removeUselessOrders } from './shopping-list';
 import { overtimeTrip } from './trip';
 
@@ -23,6 +23,7 @@ export const main = async ( event, context ) => {
         await overtime( );
         await payedFix( );
         await priceFix( );
+        await payLastFix( );
         await overtimeTrip( );
         await catchLostOrders( );
         await removeUselessOrders( );
