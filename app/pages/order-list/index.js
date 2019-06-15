@@ -781,7 +781,9 @@ Page({
 
                             img: order.img[ 0 ],
 
-                            desc: `${order.name} ${order.standername !== '默认型号' && !!order.standername ? order.standername : ''}`,
+                            // desc: `${order.name} ${order.standername !== '默认型号' && !!order.standername ? order.standername : ''}`,
+
+                            desc: `邀请他人拼团购买，立减${Number(( price * order.count).toFixed( 1 ))}元`,
 
                             share: {
                                 title: `省${order.allocatedGroupPrice ?
