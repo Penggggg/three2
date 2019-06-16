@@ -448,6 +448,17 @@ Page({
         navTo(`/pages/trip-detail/index?id=${current._id}`)
     },
 
+    /** 跳到拼团商品详情 */
+    goGoodDetail({ currentTarget }) {
+        const { current } = this.data;
+        const { item } = currentTarget.dataset;
+        let path = `/pages/goods-detail/index?id=${item.detail.good._id}`;
+        if ( !!current ) {
+            path += `&tid=${current._id}`
+        }
+        navTo( path );
+    },
+
     /** 展示立减大红包 */
     showBigLijian( ) {
         this.setData({

@@ -44,7 +44,6 @@
                     <!-- 顶部logo -->
                     <view
                         class="te-header"
-                        bindtap="goTripDetail"
                     >
 
                         <image
@@ -55,7 +54,9 @@
 
                         <!-- 本期拼团王 -->
                         <view
+                            data-item="{{ pinest }}"
                             class="te-pinest-block"
+                            bindtap="goGoodDetail"
                             wx:if="{{ pinest && pinestImgWidth }}"
                         >
                             <view
@@ -81,6 +82,7 @@
                         <view
                             wx:if="{{ pinest }}"
                             class="te-tips-btn-block"
+                            bindtap="goTripDetail"
                         >
                             <view class="te-tips-btn">
                                 Show More
@@ -188,10 +190,11 @@
                         >
                             <view class="te-pin-goods-list">
                                 <view
-                                    wx:for="{{ allShoppinglist }}"
+                                    data-item="{{ item }}"
                                     wx:key="{{ index }}"
-                                    bindtap="goTripDetail"
+                                    wx:for="{{ allShoppinglist }}"
                                     class="te-pin-goods-img-con"
+                                    bindtap="goGoodDetail"
                                 >
                                     <image 
                                         mode="aspectFill"
