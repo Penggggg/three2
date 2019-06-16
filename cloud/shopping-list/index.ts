@@ -698,7 +698,7 @@ export const main = async ( event, context ) => {
      *    limit
      *    detail: boolean 是否带回商品详情（默认带回）
      *    showUser: boolean 是否需要用户头像等信息（默认不带回）
-     *    type: undefined | 'wait' | 'pin' // 等待拼团，已拼团，均有
+     *    type:  'wait' | 'pin' | 'all' // 等待拼团、已拼团、等待拼团+已拼团、所有购物清淡
      * }
      */
     app.router('pin', async( ctx, next ) => {
@@ -746,8 +746,10 @@ export const main = async ( event, context ) => {
                 } else if ( type === 'wait' ) {
                     return ( !!s.adjustGroupPrice || !!s.groupPrice ) && s.uids.length === 1;
 
-                } else {
+                } else if ( type === undefined ) {
                     return ( !!s.adjustGroupPrice || !!s.groupPrice );
+                } else {
+                    return true;
                 }
             });
 

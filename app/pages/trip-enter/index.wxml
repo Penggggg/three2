@@ -23,16 +23,6 @@
                 <!-- 中间滚动信息 -->
                 <view class="te-content">
 
-                    <!-- 顶部公告 -->
-                    <!-- <wxc-notice
-                        wx:if="{{ notice }}"
-                        scroll="{{ true }}"
-                        show-icon="{{ true }}"
-                        notice="{{ notice }}"
-                        class="te-notice"
-                        wx:if="{{ notice === '暂无下一趟行程 T.T' }}"
-                    /> -->
-
                     <!-- 行程基本信息 -->
                     <view class="te-trip-info">
                         <view class="trip-decorate">
@@ -66,9 +56,12 @@
                         <!-- 本期拼团王 -->
                         <view
                             class="te-pinest-block"
-                            wx:if="{{ pinest }}"
+                            wx:if="{{ pinest && pinestImgWidth }}"
                         >
-                            <view class="te-pinest-img-con">
+                            <view
+                                class="te-pinest-img-con"
+                                style="width: {{ pinestImgWidth }}rpx"
+                            >
                                 <image
                                     mode="aspectFill"
                                     class="te-pinest-img"
@@ -117,11 +110,11 @@
                     <!-- 仙女购物单版本2 -->
                     <view
                         bindtap="goTripDetail"
-                        wx:if="{{ fairyList$.length !== 0 || allPin.length !== 0 }}"
+                        wx:if="{{ fairyList$.length !== 0 || allShoppinglist.length !== 0 }}"
                         class="te-fairy-simple-title-block te-block"
                     >
                         <view class="te-fairy-simple-title te-block-title">
-                            越拼·越省
+                            拼团·就省
                         </view>
                         <view
                             class="te-fairy-simple-entry"
@@ -132,7 +125,7 @@
 
                     <view
                         class="te-pin-info-block"
-                        wx:if="{{ fairyList$.length !== 0 || allPin.length !== 0 }}"
+                        wx:if="{{ fairyList$.length !== 0 || allShoppinglist.length !== 0 }}"
                     >
                         <swiper
                             autoplay="{{ true }}"
@@ -195,7 +188,7 @@
                         >
                             <view class="te-pin-goods-list">
                                 <view
-                                    wx:for="{{ allPin }}"
+                                    wx:for="{{ allShoppinglist }}"
                                     wx:key="{{ index }}"
                                     bindtap="goTripDetail"
                                     class="te-pin-goods-img-con"
@@ -207,6 +200,7 @@
                                     />
                                     <view
                                         class="te-tag-block"
+                                        wx:if="{{ !!item.adjustGroupPrice }}"
                                     >
                                         <image
                                             mode="widthFix"
@@ -216,6 +210,11 @@
                                         <view class="te-tag-text">
                                             拼团
                                         </view>
+                                    </view>
+                                    <view
+                                        class="te-pin-good-title-con"
+                                    >
+                                        {{ item.detail.good.title }}
                                     </view>
                                 </view>
                             </view>

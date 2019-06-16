@@ -66,8 +66,14 @@ Page({
         /** 本期拼团王产品 */
         pinest: null,
 
+        /** 拼团王图片宽度 */
+        pinestImgWidth: 0,
+
         /** 所有的拼团列表（待拼、可拼） */
-        allPin: [ ]
+        allPin: [ ],
+
+        /** 所有的购物清单 */
+        allShoppinglist: [ ]
     },
 
     /** 设置computed */
@@ -252,7 +258,7 @@ Page({
                 }
 
                 this.setData({
-                    showLijianTips: t_lijian === 'half',
+                    showLijian: t_lijian === 'half',
                     showManjian: t_manjian === false
                 });
 
@@ -270,15 +276,57 @@ Page({
         http({
             data: {
                 tid,
-                // type: 'pin', 等待拼团，已拼团，均有
+                type: 'all',
                 showUser: false
             },
             url: 'shopping-list_pin',
             success: res => {
                 const { status, data } = res;
+
+                // 所有等待拼团，已拼团的商品
+                const allCanPin = data.filter( x => !!x.adjustGroupPrice );
+                // 这趟所有的购物清淡列表
+                const allShoppinglist = data.map( x => Object.assign({ }, x ));
+
+                // 如果【等待拼团，已拼团】只有一件商品，就不展示在“拼团之星”的位置了
+                if ( allCanPin.length === 1 ) {
+                    this.setData({
+                        allShoppinglist
+                    });
+                } else {
+                    let pinest = null;
+                    if ( allCanPin.length !== 0 ) {
+                        const pinestIndex = allShoppinglist.findIndex( x => x._id === allCanPin[ 0 ]._id );
+                        allShoppinglist.splice( pinestIndex, 1 );
+                    }
+
+                    if ( allCanPin.length !== 0 ) {
+                        pinest = allCanPin[ 0 ]
+                    }
+
+                    this.setData({
+                        pinest,
+                        allShoppinglist
+                    });
+                }
+
+                this.configPinest( );
+            }
+        });
+    },
+
+    /** 设置拼团之星的网络图片 */
+    configPinest( ) {
+        const { pinest } = this.data;
+        if ( !pinest ) { return; }
+        wx.getImageInfo({
+            src: pinest.detail.img,
+            success: res => {
+                // 在.wxss文件设置了 height:225rpx;
+                const proportion = res.width / res.height;
+                const imgWidth = 225 / proportion;
                 this.setData({
-                    pinest: data[ 0 ] || null,
-                    allPin: data.map( x => Object.assign({ }, x )).splice( 1 )
+                    pinestImgWidth: imgWidth
                 });
             }
         });
@@ -300,7 +348,8 @@ Page({
             url: 'coupon_create',
             success: res => {
                 this.setData({
-                    showLijianTips: true
+                    showLijian: true,
+                    // showLijianTips: true
                 });
                 setTimeout(( ) => {
                     this.vibrateShort( );
