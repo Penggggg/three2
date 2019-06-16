@@ -281,7 +281,12 @@ Page({
             },
             url: 'shopping-list_pin',
             success: res => {
-                const { status, data } = res;
+                let data = res.data;
+                const { status } = res;
+
+                data = data.map( x => Object.assign({ }, x, {
+                    delta: !x.adjustGroupPrice ? 0 : (x.adjustPrice - x.adjustGroupPrice).toFixed( 0 )
+                }));
 
                 // 所有等待拼团，已拼团的商品
                 const allCanPin = data.filter( x => !!x.adjustGroupPrice );

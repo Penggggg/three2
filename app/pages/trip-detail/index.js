@@ -45,73 +45,28 @@ Page({
         });
     },
 
-    /** 拉取等待拼团 */
-    fetchWaitPin( tid ) {
-        return new Promise(( resolve, reject ) => {
+    /** 拉取所有购物清单 */
+    fetchAllShoppinglist( tid ) {
+        http({
+            data: {
+                tid,
+                type: 'all',
+                showUser: true
+            },
+            url: 'shopping-list_pin',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
 
-            const { waitPin } = this.data;
-            if ( waitPin.length > 0 ) { return resolve( );}
-
-            http({
-                data: {
-                    tid,
-                    type: 'wait',
-                    showUser: true
-                },
-                url: 'shopping-list_pin',
-                success: res => {
-                    const { status, data } = res;
-                    if ( status !== 200 ) {
-                        return reject( );
-                    }
-                    this.setData({ 
-                        waitPin: data
-                    });
-                    resolve( );
-                }
-            });
-        })
-    },
-
-    /** 拉取已经拼团成功的商品列表 */
-    fetchPin( tid ) {
-        return new Promise(( resolve, reject ) => {
-
-            const { pingList } = this.data;
-            if ( pingList.length > 0 ) { return resolve( );}
-
-            http({
-                data: {
-                    tid,
-                    type: 'pin',
-                    showUser: true
-                },
-                url: 'shopping-list_pin',
-                success: res => {
-                    const { status, data } = res;
-                    if ( status !== 200 ) {
-                        return reject( );
-                    }
-                    this.setData({ 
-                        pingList: data
-                    });
-                    resolve( );
-                }
-            });
-        });
-    },
-
-    /** 拉取拼团、等待拼团 */
-    fetchAllPin( tid ) {
-        Promise.all([
-            this.fetchPin( tid ),
-            this.fetchWaitPin( tid )
-        ]).then(( ) => {
-            this.setData({
-                loading: false
-            })
-        }).catch( e => {
-
+                const noPin = data.filter( x => !x.adjustGroupPrice );
+                const waitPin = data.filter( x => !!x.adjustGroupPrice && x.uids.length === 1 );
+                const pingList = data.filter( x => !!x.adjustGroupPrice && x.uids.length > 1 );
+                this.setData({
+                    waitPin,
+                    pingList,
+                    loading: false
+                });
+            }
         });
     },
 
@@ -136,12 +91,12 @@ Page({
     onLoad: function (options) {
 
         this.runComputed( );
-        const tid = options.id;
+        const tid = options.id || '281fb4bf5d04a99f01c43e504a1421fd';
         if ( tid ) { 
             this.setData({
                 tid
             });
-            this.fetchAllPin( tid )
+            this.fetchAllShoppinglist( tid );
         }
     },
 
