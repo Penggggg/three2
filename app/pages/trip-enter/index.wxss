@@ -542,9 +542,9 @@
 }
 
 .te-fairy-simple-user-img {
-    width: 130rpx;
-    height: 130rpx;
-    border-radius: 3px;
+    width: 110rpx;
+    height: 110rpx;
+    border-radius: 5px;
     margin-right: 15rpx;
     /* border: 2px solid #fff; */
     box-shadow: 3px 3px 10px rgba( 0, 0, 0, 0.1 );
@@ -615,7 +615,8 @@
 }
 
 .te-pinest-img-con {
-    width:190rpx;
+    /* width:190rpx; */
+    width: 0rpx;
     height:225rpx;
     overflow: hidden;
 }
@@ -623,7 +624,7 @@
 .te-pinest-img {
     width: 100%;
     border-radius: 2px;
-    height: 300rpx;
+    height: 100%;
 }
 
 .te-pinest-text-block {
@@ -639,7 +640,7 @@
     color: #333;
     font-size: 24rpx;
     font-weight: bold;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
 }
 
 .te-pinest-icon {
@@ -657,7 +658,7 @@
 }
 
 .te-pin-users {
-    width: 38vw;
+    width: 35vw;
     height: 150rpx;
 }
 
@@ -674,8 +675,8 @@
 }
 
 .te-pin-goods-img {
-    width: 110rpx;
-    height: 110rpx;
+    width: 120rpx;
+    height: 120rpx;
     border-radius: 3px;
     border: 2px solid #fff;
     box-shadow: 0 0 10px rgba( 0, 0, 0, 0.15 );
@@ -686,6 +687,23 @@
     position: relative;
     margin-right: 25rpx;
     display: inline-block;
+}
+
+.te-pin-good-title-con {
+    left: 0;
+    bottom: 0;
+    height: 30rpx;
+    width: 100%;
+    position: absolute;
+    font-size: 18rpx;
+    color: rgba( 0, 0, 0, 0.5 );
+    background: rgba( 255, 255, 255, 1 );
+    overflow:hidden; 
+    display:-webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;
 }
 
 .te-tag-block {
