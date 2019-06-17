@@ -239,12 +239,46 @@
                         <view
                             class="ptd-price-block"
                         >
+                            <view
+                                class="ptd-origin-text"
+                                wx:if="{{ !!item.adjustGroupPrice }}"
+                            >
+                                <wxc-price
+                                    icon="sub"
+                                    decimal="small"
+                                    class="ptd-origin-price"
+                                > 
+                                    {{ item.adjustGroupPrice }}
+                                </wxc-price>
 
-                            <!-- 原价 -->
+                                <wxc-price
+                                    icon="sub"
+                                    status="del"
+                                    decimal="small"
+                                    class="ptd-origin-price small"
+                                > 
+                                    {{ item.adjustPrice }}
+                                </wxc-price>
+                            </view>
+
+                            <!-- 按钮1 拼团 -->
                             <view
                                 class="ptd-pin-btn"
+                                wx:if="{{ !!item.adjustGroupPrice }}"
                             >
-                                <view class="ptd-pin-btn-text">原价</view>
+                                <view class="ptd-pin-btn-text">
+                                    参加拼团
+                                </view>
+                            </view>
+
+                            <!-- 按钮2 原价 -->
+                            <view
+                                class="ptd-pin-btn"
+                                wx:if="{{ !item.adjustGroupPrice }}"
+                            >
+                                <view class="ptd-pin-btn-text small">
+                                    原价
+                                </view>
                                 <wxc-price
                                     icon="sub"
                                     decimal="small"
