@@ -284,6 +284,7 @@ export const main = async ( event, context ) => {
     /**
      * @description
      * 由订单创建购物清单
+     * openId
      * list: {
      *    tid,
      *    pid,
