@@ -202,6 +202,9 @@ Component({
                     skuSelectType: e.currentTarget.dataset.type
                 });
             }
+            // 处理formid
+            const { formId } = e.detail;
+            this.createFormId( formId );
         },
         /** 关闭sku */
         onCloseSku( e ) {
@@ -400,6 +403,20 @@ Component({
                 this.batchSettle( );
             });
         },
+        // 添加一个formid
+        createFormId( formid ) {
+            http({
+                data: {
+                    formid
+                },
+                url: 'common_create-formid',
+                success: res => {
+                    const { status, data } = res;
+                    if ( status === 200 ) { return; }
+                    
+                }
+            })
+        }
     },
 
     attached: function( ) {

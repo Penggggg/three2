@@ -414,7 +414,9 @@ Page({
         this.watchRole( );
         this.runComputed( );
 
-
+        this.setData!({
+            id: '71f2cd945cab4fc10261232b3f358619'
+        })
         if ( !options!.tid ) {
             this.fetchLast( );
         }
