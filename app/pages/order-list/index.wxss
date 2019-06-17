@@ -6,7 +6,7 @@
 }
 
 .pol-scroll-view {
-    height: 100vh;
+    /* height: 100vh; */
     overflow-y: scroll;
     box-sizing: border-box;
     padding: 10rpx 30rpx 0rpx;
@@ -79,7 +79,7 @@
     background: #fff;
     border-radius: 10px;
     padding-bottom: 10rpx;
-    margin-bottom: 40rpx;
+    margin-bottom: 60rpx;
     box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.08);
 }
 
@@ -985,4 +985,21 @@ to {transform: translate( -50%,  -20% ) rotate( 180deg );}
 
 .inline {
     display: inline;
+}
+
+.pol-toggle-tips {
+    display: flex;
+    color: #bfbfbf;
+    font-size: 24rpx;
+    text-align: center;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 40rpx;
+}
+
+.pol-toggle-icon {
+    width: 25rpx;
+    height: 25rpx;
+    display: inline-block;
+    margin-left: 10rpx;
 }

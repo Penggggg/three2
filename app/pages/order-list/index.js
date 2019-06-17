@@ -72,16 +72,593 @@ Page({
         fromDetail: false,
         // 列表
         loadingList: false,
+        // 展示其他行程的订单
+        showALlTrip: false
     },
 
     /** 设置computed */
     runComputed( ) {
         computed( this, {
-            // 展示顶部的优惠信息
+
+            // 如果有当前行程的订单
+            // 则展示顶部的优惠信息
             showDataBar$: function( ) {
-                const { tid, tripOrders } = this.data;
-                return !!tripOrders[ 0 ] && tripOrders[ 0 ].tid === tid
+                const { tid, metaList } = this.data;
+                return !!metaList.find( x => x.tid === tid );
+            },
+
+            // 行程订单
+            tripOrders$: function( ) {
+                /**
+                 * type orderObj = {
+                 *   [ key: string ]: {
+                 *     tid
+                 *     tripName
+                 *     tripTime
+                 *     tripStatusCN
+                 *     meta: metaOrder[ ]
+                 *  }
+                 * 
+                 *  {
+                 *     整体订单状态：some P0 （待付订金）、all P1 + B2/B4（待付尾款）、all P2（已付款）、all P2 + D0 未发货、all P2 + D1 已发货
+                 *  }
+                 * 
+                 *  {
+                 *     订单item状态：P0（待付订金）、P1+B0（购买中）、P1+B1（已购买，结算中）、P1+B2（已购买，待付款）、P1+B4（买不到，退款中）、P2+D1（未发货）、P2+D2（已发货）
+                 *  }
+                 */
+
+                const { tid, showALlTrip, isNew, metaList, pinList, deliverFees } = this.data;
+                const orderObj = { };
+
+                const fixNumber = n => {
+                    const str = Number( Number( n )).toFixed( 2 );
+                    if ( !str.includes('.00')) {
+                        return str;
+                    } else {
+                        return str.split('.')[ 0 ];
+                    }
+                };
+
+
+                // 计算当前可结算的商品数量 
+                const count$ = order => {
+                    const b = order.base_status;
+                    return b === '0' || b === '1' ?
+                            order.count :
+                            b === '2' || b === '3' ?
+                                order.allocatedCount:
+                                0;
+                }
+
+
+                // 计算当前订单的拼团 (可减免金额)
+                const pinCutoff$ = order => {
+                    let _cutoff = 0;
+                    const b = order.base_status;
+                    const { canGroup, allocatedCount, allocatedGroupPrice, allocatedPrice, count, groupPrice, price } = order;
+
+                    if (( b === '2' || b === '3' )) {
+
+                        if ( canGroup && allocatedGroupPrice ) {
+                            _cutoff = allocatedCount * ( allocatedPrice - allocatedGroupPrice );
+
+                        } else {
+                            _cutoff = 0;
+                        }
+                    } else if (( b === '0' || b === '1' )) {
+
+                        /**
+                         * 这里不用预测
+                        */
+                    if ( allocatedGroupPrice ) {
+                            _cutoff = ( allocatedCount || count ) * ( allocatedPrice - allocatedGroupPrice );
+                    } else if ( groupPrice ) {
+                            _cutoff = count * ( price - groupPrice );
+                        } else {
+                            _cutoff = 0;
+                        }
+
+                    } else {
+                        _cutoff = 0
+                    }
+                    return Number( _cutoff.toFixed( 2 ));
+                }
+
+
+                // 计算当前订单是否处于拼团状态（含预测）
+                const pining$ = order => {
+                    
+                    const b = order.base_status;
+                    if (( b === '2' || b === '3' )) {
+                        return order.canGroup;
+
+                    } else if (( b === '0' || b === '1' )) {
+                        return !!pinList.find( shopping => shopping.sid === order.sid && shopping.pid === order.pid )
+
+                    } else {
+                        return false;
+                    }
+                }
+
+
+                // 处理单个订单 状态
+                metaList.map( order => {
+
+                    let isNeedPrePay = true;
+                    const { isNew } = this.data;
+                    const payment = order.trip.payment;
+                    const { count, depositPrice, allocatedCount, allocatedGroupPrice, allocatedPrice, canGroup } = order;
+
+                    if ( isNew && payment === '0' ) {
+                        isNeedPrePay = true;
+
+                    } else if ( isNew && payment === '1' ) {
+                        isNeedPrePay = true;
+
+                    } else if ( isNew && payment === '2' ) {
+                        isNeedPrePay = false;
+
+                    }  else if ( !isNew && payment === '0' ) {
+                        isNeedPrePay = false;
+
+                    }  else if ( !isNew && payment === '1' ) {
+                        isNeedPrePay = true;
+
+                    }  else if ( !isNew && payment === '2' ) {
+                        isNeedPrePay = false;
+
+                    }  else {
+                        isNeedPrePay = true;
+                    } 
+
+                    if ( !depositPrice ) {
+                        isNeedPrePay = false;
+                    }
+
+                    // 处理单个订单 状态
+                    const decorateOrder = ( order, isNeedPrePay ) => {
+                        let statusCN = [ ];
+                        const p = order.pay_status;
+                        const b = order.base_status;
+                        const d = order.deliver_status;
+
+                        if ( isNeedPrePay && p === '0' && b === '5' ) {
+                            statusCN = [ '支付过期' ];
+
+                        } else if ( isNeedPrePay && p === '0' && b !== '5' && b !== '4' ) {
+                            statusCN = [ '待付订金' ]
+
+                        } else if ( p === '1' && b === '0' ) {
+                            statusCN = [ '购买中' ]
+
+                        } else if ( p === '1' && b === '1' ) {
+                            statusCN = [ '结算中' ] 
+
+                        } else if ( p === '1' && b === '2' && !!allocatedCount ) {
+                            statusCN = [ '待付款' ]
+
+                        } else if ( p === '1' && b === '2' && !allocatedCount ) {
+                            statusCN = [ '退订金' ]
+
+                        } else if ( p === '1' && b === '4' ) {
+                            statusCN = [ '已取消' ]
+
+                        } else if ( p === '2' && d === '0' ) {
+                            statusCN = [ '未发货' ]
+                            
+                        } else if ( p === '2' && d === '2' ) {
+                            statusCN = [ '已发货' ]
+                        } 
+
+                        if (( b === '1' || b === '2') && count - allocatedCount > 0 ) {
+                            const index = statusCN.findIndex( x => x === '结算中');
+                            statusCN.splice( index, 1, '货源不足');
+                        }
+
+                        if ( statusCN[ 0 ] === '待付款' && allocatedGroupPrice && canGroup ) {
+                            statusCN = ['拼团成功']
+                        }
+
+                        return Object.assign({ }, order, {
+                            p,
+                            b,
+                            statusCN,
+                            isNeedPrePay,
+                            pining: pining$( order ), // 是否处于拼团状态
+                            pin_cutoff: pinCutoff$( order ), // 拼团减免（预测）
+                            retreat: b === '2' && allocatedCount < count ? // 退还订金
+                                !!depositPrice ?
+                                    (count - allocatedCount) * depositPrice :
+                                    0 :
+                                0,
+                        })
+                    };
+
+                    // 创建一个新的 行程键值对
+                    if ( !orderObj[ order.tid ]) {
+                        const d = new Date( order.trip.start_date );
+                        const d2 = new Date( order.trip.end_date );
+                        orderObj[ order.tid ] = {
+                            tid: order.tid,
+                            isClosed: order.trip.isClosed,
+                            tripPostage: order.trip.postage,
+                            tripPostagefree_atleast: order.trip.postagefree_atleast,
+                            tripName: order.trip.title,
+                            tripPayment: order.trip.payment,
+                            tripTime: order.trip.isClosed ?
+                                '已结束' :
+                                new Date( ).getTime( ) >= order.trip.start_date ?
+                                    `${d2.getMonth( )+1}月${d2.getDate( )}结束` :
+                                    `${d.getMonth( )+1}月${d.getDate( )}出发`,
+                            meta: [ decorateOrder( order, isNeedPrePay )]
+                        };
+
+                    // 在行程键值对插入新的订单信息
+                    } else {
+                        orderObj[ order.tid ] = Object.assign({ }, orderObj[ order.tid ], {
+                            meta: [ ...orderObj[ order.tid ].meta, decorateOrder( order, isNeedPrePay )]
+                        });
+                    }
+
+                }); 
+
+                // 处理订单整体状态、合计信息 tripStatusCN
+                Object.keys( orderObj ).map( tid => {
+
+                    let tripStatusCN = '';
+                    const tripOrders = orderObj[ tid ];
+                    const orders = tripOrders.meta;
+
+
+                    //  处理订单整体状态
+                    if ( orders.filter( x => x.b !== '4' && x.b !== '5').some( x => x.statusCN[ 0 ] === '待付订金' )) {
+                        tripStatusCN = '待付订金';
+
+                    } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '1' && ( x.b === '0' || x.b === '1' ))) {
+                        tripStatusCN = '购买中';
+
+                    } else if ( orders.filter( x => x.b !== '4' && x.b !== '5' && !!x.allocatedCount ).length > 0 &&
+                        orders.filter( x => x.b !== '4' && x.b !== '5' && !!x.allocatedCount )
+                            .every( x => x.p === '1' && x.b === '2' )) {
+                                tripStatusCN = '待付尾款';
+
+                    } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
+                        && orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.d === '0')) {
+                        tripStatusCN = '待发货';
+
+                    } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
+                        && orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.d === '1')) {
+                        tripStatusCN = '已发货';
+
+                    } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
+                        && orders.some( x => x.d === '0') && orders.some( x => x.d === '1')) {
+                        tripStatusCN = '部分发货';
+                    }
+
+                    // 退款
+
+                    tripOrders['tripStatusCN'] = tripStatusCN;
+        
+
+                    /** 是否处于可以结算的状态 */
+                    const canSettle = tripOrders.tripStatusCN === '待付尾款';
+                    tripOrders['canSettle'] = canSettle;
+
+            
+                    // 行程是否已经付过尾款
+                    const hasPay = orders.every( x => x.b !== '0' && x.b !== '1' && x.b !== '2' );
+                    tripOrders['hasPay'] = hasPay;
+
+
+                    // 是否展示更多
+                    tripOrders['showMore'] = !!hasPay || false;
+
+
+                    // 处理订单商品数量
+                    const sum = orders.reduce(( x, y ) => {
+                        // return x + count$( y );
+                        return x + y.count
+                    }, 0 );
+                    tripOrders['sum'] = sum;
+
+
+                    // 应付全款（不含优惠券）
+                    let wholePriceNotDiscount = orders.reduce(( x, y ) => {
+                        let currentPrice = 0;
+                        const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
+                        if ( canSettle ) {
+                            currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * count$( y );
+                        } else {
+                            currentPrice = count$( y ) * price;
+                        }
+                        return x + currentPrice;
+                    }, 0 );
+                    
+
+                    // 邮费
+                    const userDeliverFeeMeta = deliverFees.find( x => x.tid === tripOrders.tid );
+                    const userDeliverFee = userDeliverFeeMeta ? userDeliverFeeMeta.fee : null;
+
+                    if ( userDeliverFee ) {
+                        wholePriceNotDiscount += userDeliverFee;
+                    }
+                    tripOrders['userDeliverFee'] = userDeliverFee;
+                    tripOrders['wholePriceNotDiscount'] = wholePriceNotDiscount;
+                    
+
+                    // 优惠券
+                    const { coupons } = this.data;
+                    const coupons_manjian = coupons.find( x => x.type === 't_manjian' && x.tid === tid );
+                    const coupons_lijian = coupons.find( x => x.type === 't_lijian' && x.tid === tid );
+                    const coupons_daijin = coupons.find( x => x.type === 't_daijin' && (( !x.isUsed && x.canUseInNext ) || ( !!x.isUsed && x.usedBy === tid )));
+        
+
+                    // 处理满减
+                    const t_manjian = !coupons_manjian ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
+                        // 处理真的已用，和即将要用的情况
+                        isUsed: coupons_manjian.isUsed || coupons_manjian.atleast <= wholePriceNotDiscount,
+                        id: coupons_manjian._id,
+                        value: coupons_manjian.value ,
+                        atleast: coupons_manjian.atleast,
+                        canUsed: coupons_manjian.atleast <= wholePriceNotDiscount || !coupons_manjian.atleast
+                    };
+                    tripOrders['t_manjian'] = t_manjian;
+                
+
+                    // 处理立减
+                    const t_lijian = !coupons_lijian ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
+                        isUsed: true,
+                        canUsed: true,
+                        id: coupons_lijian._id,
+                        value: coupons_lijian.value,
+                        atleast: coupons_lijian.atleast,
+                    };
+                    tripOrders['t_lijian'] = t_lijian;
+
+
+                    // 处理代金券
+                    const t_daijin = !coupons_daijin ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
+                        // 处理真的已用，和即将要用的情况
+                        isUsed: coupons_daijin.isUsed || coupons_daijin.atleast <= wholePriceNotDiscount,
+                        id: coupons_daijin._id,
+                        value: coupons_daijin.value,
+                        atleast: coupons_daijin.atleast,
+                        canUsed: coupons_daijin.atleast <= wholePriceNotDiscount || !coupons_daijin.atleast
+                    };
+                    tripOrders['t_daijin'] = t_daijin;
+
+
+                    // 应付全款（含优惠券、拼团折扣）
+                    let wholePriceByDiscount = wholePriceNotDiscount;
+                    if ( t_manjian.canUsed ) {
+                        wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_manjian.value ).toFixed( 2 ));
+                    }
+                    if ( t_lijian.canUsed ) {
+                        wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_lijian.value ).toFixed( 2 ));
+                    } 
+                    if ( t_daijin.canUsed ) {
+                        wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_daijin.value ).toFixed( 2 ));
+                    }
+
+                    tripOrders['wholePriceByDiscount'] = wholePriceByDiscount;
+
+                    // 剩余订金、未付订金列表
+                    const notPayDepositOrders = [ ];
+                    const lastDepositPrice = orders.reduce(( x, y ) => {
+                        let currentDepositPrice = ( y.p === '0' && !!y.depositPrice ) ? y.depositPrice : 0;
+                        if ( !!currentDepositPrice ) {
+                            notPayDepositOrders.push( y._id )
+                        }
+                        return x + currentDepositPrice * count$( y );;
+                    }, 0 );
+                    tripOrders['lastDepositPrice'] = lastDepositPrice;
+                    tripOrders['notPayDepositOrders'] = notPayDepositOrders;
+
+
+                    // 已付订金
+                    const hasPayDepositPrice = orders.reduce(( x, y ) => {
+                        const depositPrice = String( y.pay_status ) !== '0' ?
+                            y.depositPrice || 0 : 0;
+                        return Number(Number( x + Number(Number( depositPrice * y.count ).toFixed( 2 ))).toFixed( 2 ));
+                    }, 0 )
+                    tripOrders['hasPayDepositPrice'] = hasPayDepositPrice;
+
+
+                    // 剩余尾款
+                    // 注意，这里应该计算好因为货存不足，带来多付订金的情况。
+                    let lastPrice = wholePriceByDiscount;
+                    orders.map( y => {
+                        const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
+                        lastPrice -= count * ( y.depositPrice || 0 );
+                    });
+                    tripOrders['lastPrice'] = Number( lastPrice.toFixed( 2 ));
+
+
+                    // 目前的总可减免，除了优惠券类，
+                    let cutoff = 0;
+                    if ( t_manjian.isUsed ) {
+                        cutoff += Number( t_manjian.value );
+                    }
+                    if ( t_lijian.isUsed ) {
+                        cutoff += Number( t_lijian.value );
+                    }
+                    if ( t_daijin.isUsed ) {
+                        cutoff += Number( t_daijin.value );
+                    }
+
+                    orders.map( order => {
+                        if ( pinList.find( shopping =>
+                            shopping.pid === order.pid && shopping.sid === order.sid )) {
+                                cutoff += order.pin_cutoff;
+                        }
+                    });
+
+                    tripOrders['cutoff'] = fixNumber( cutoff );
+
+
+                    /**
+                    * ! 处理邮费
+                    */
+
+                    /** 总减免，包含所有商品都成功拼团的情况 */
+                    let total_cutoff = 0;
+                    total_cutoff += Number( t_manjian.value ); // 满减
+                    total_cutoff += Number( t_daijin.value ); // 代金券
+                    total_cutoff += orders[ 0 ].trip.reduce_price || 0 ; // 立减
+                
+                    orders.map( order => { // 成功拼团的情况
+                        const { groupPrice, price, allocatedGroupPrice, allocatedPrice } = order;
+                        if ( !!groupPrice || !!allocatedGroupPrice ) {
+                            const good_cutoff = allocatedGroupPrice ?
+                                allocatedPrice - allocatedGroupPrice:
+                                price - groupPrice;
+                            total_cutoff += good_cutoff * count$( order );
+                        }
+                    });
+
+                    tripOrders['total_cutoff'] = total_cutoff;
+
+
+                    /** 总减免 和 目前减免的差值 */
+                    tripOrders['cutoff_delta'] = fixNumber( total_cutoff - cutoff );
+
+
+                    /** 总减免 和 目前减免的比例 */
+                    tripOrders['cutoff_percent'] = Math.floor( Number(Number( cutoff / total_cutoff ).toFixed( 2 )) * 100);
+
+                    
+                    /** 任务列表 */
+                    const task = [ ];
+                    orders
+                        .filter( order => order.base_status !== '4' && order.base_status !== '5')
+                        .map( order => {
+                            if ( !!order.groupPrice || !!order.allocatedGroupPrice ) {
+
+                                const price = order.allocatedGroupPrice ?
+                                    order.allocatedPrice - order.allocatedGroupPrice :
+                                    order.price - order.groupPrice;
+
+                                task.push({
+                                    type: 'good',
+
+                                    price: Number(( price * order.count).toFixed( 2 )),
+
+                                    title: '拼团',
+
+                                    img: order.img[ 0 ],
+
+                                    // desc: `${order.name} ${order.standername !== '默认型号' && !!order.standername ? order.standername : ''}`,
+
+                                    desc: `邀请他人拼团购买，立减${Number(( price * order.count).toFixed( 1 ))}元`,
+
+                                    share: {
+                                        title: `省${order.allocatedGroupPrice ?
+                                            ( order.allocatedPrice - order.allocatedGroupPrice ).toFixed( 2 ) :
+                                            ( order.price - order.groupPrice ).toFixed( 2 )}元！${order.name}`,
+                                        path: `/pages/goods-detail/index?id=${order.pid}&tid=${this.data.tid}`,
+                                        imageUrl: order.img[ 0 ]
+                                    },
+
+                                    // 处理真正拼团跟预测拼团
+                                    finished: !!pinList.find( shopping => {
+                                        return shopping.pid === order.pid && shopping.sid === order.sid
+                                    })
+                                })
+                            }
+                        });
+
+                    
+                    ['t_lijian', 't_manjian', 't_daijin'].map( quan => {
+                        const target = tripOrders[ quan ];
+                        if ((( quan === 't_manjian' || quan === 't_daijin' ) && !!target.value ) || ( quan === 't_lijian' && !!orders[ 0 ].trip.reduce_price )) {
+                            
+                            task.push({
+
+                                type: quan,
+
+                                price: quan === 't_lijian' ?
+                                    target.value < orders[ 0 ].trip.reduce_price ?
+                                    fixNumber( orders[ 0 ].trip.reduce_price - target.value ) :
+                                        fixNumber( target.value ):
+                                        fixNumber( target.value ),
+
+                                title: quan === 't_lijian' ?
+                                    '立减券' :
+                                    quan === 't_manjian' ?
+                                        '满减券' : '代金券',
+
+                                desc: quan === 't_lijian' ?
+                                    '转发即可获得。马上分享行程给闺蜜吧～' :
+                                    quan === 't_manjian' ?
+                                    target.atleast ? `满${target.atleast}元即可自动使用` : `无门槛满减券` :
+                                    target.atleast ? `满${target.atleast}元即可自动使用` : `无门槛代金券`,
+
+                                share: ( quan === 't_lijian' &&
+                                    !!orders[ 0 ].trip.reduce_price &&
+                                    target.value < orders[ 0 ].trip.reduce_price ) ? {
+                                        title: '[有人@你]跟我一起来拔草～',
+                                        path: '/pages/trip-enter/index',
+                                        imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+                                    } : null,
+
+                                finished: quan === 't_lijian' ?
+                                    (!!orders[ 0 ].trip.reduce_price &&
+                                        target.value >= orders[ 0 ].trip.reduce_price ) :
+                                        quan === 't_manjian' ?
+                                            tripOrders.wholePriceNotDiscount >= Number( target.atleast ) || tripOrders.wholePriceByDiscount >= Number( target.atleast ):
+                                            tripOrders.wholePriceNotDiscount >= Number( target.atleast ) || tripOrders.wholePriceByDiscount >= Number( target.atleast )
+                            });
+                        }
+                    });
+
+                    tripOrders['task'] = task;
+
+                    /** 结算后的合计 */
+                    let total = orders.reduce(( x, y ) => {
+                        return x + ( y.final_price || 0 ) * ( y.allocatedCount || 0 );
+                    }, 0 );
+
+                    if ( t_manjian.isUsed ) {
+                        total = Number( Number( total - t_manjian.value ).toFixed( 2 ));
+                    }
+                    if ( t_lijian.isUsed ) {
+                        total = Number( Number( total - t_lijian.value ).toFixed( 2 ));
+                    }
+                    if ( t_daijin.isUsed ) {
+                        total = Number( Number( total - t_daijin.value ).toFixed( 2 ));
+                    }
+
+                    tripOrders['total'] = total;
+
+                    // 应退订金 ( 已付订金 > 应付 )
+                    const retreat = hasPayDepositPrice > wholePriceByDiscount ?
+                        (hasPayDepositPrice - wholePriceByDiscount).toFixed( 2 ) : 0;
+                    tripOrders['retreat'] = retreat;
+
+                    if ( retreat > 0 && orderObj[ tid ].isClosed ) {
+                        tripOrders['tripStatusCN'] = '需退款';
+                    }
+
+                    if ( hasPay ) {
+                        tripOrders['tripStatusCN'] = '已付款';
+                    }
+
+                });
+
+                const allTripOrders = Object.keys( orderObj ).map( tid => orderObj[ tid ]);
+
+                // 如果没有当前行程的订单，则展示全部
+                // 如果有，则先展示当前行程的订单
+                const hasCurrentTripOrder = !!metaList.find( x => x.tid === tid );
+
+                if ( hasCurrentTripOrder && !showALlTrip ) {
+                    return allTripOrders.filter( x => x.tid === tid );
+                } else {
+                    return allTripOrders;
+                }
             }
+
         })
     },
 
@@ -125,7 +702,6 @@ Page({
                     this.setData({
                         pinList: res.data
                     });
-                    this.data.metaList.length > 0 && this.covertOrder( );
                 }
             }
         });
@@ -144,6 +720,7 @@ Page({
                 if ( status === 200 && !!data[ 0 ]) {
                     !!cb && cb( data[ 0 ]._id );
                     this.setData({
+                        loading: false,
                         tid: data[ 0 ]._id
                     });
                 } else {
@@ -263,7 +840,6 @@ Page({
                 this.setData({
                     coupons: data
                 });
-                this.data.metaList.length > 0 && this.covertOrder( );
             }
         })
     },
@@ -275,7 +851,6 @@ Page({
             this.setData({
                 loadingList: false
             })
-            this.covertOrder( );
         }
 
         if ( !tids ) {
@@ -320,571 +895,6 @@ Page({
         }
     },
 
-    /** 转换订单列表，为行程订单列表 */
-    covertOrder( ) {
-        /**
-         * type orderObj = {
-         *   [ key: string ]: {
-         *     tid
-         *     tripName
-         *     tripTime
-         *     tripStatusCN
-         *     meta: metaOrder[ ]
-         *  }
-         * 
-         *  {
-         *     整体订单状态：some P0 （待付订金）、all P1 + B2/B4（待付尾款）、all P2（已付款）、all P2 + D0 未发货、all P2 + D1 已发货
-         *  }
-         * 
-         *  {
-         *     订单item状态：P0（待付订金）、P1+B0（购买中）、P1+B1（已购买，结算中）、P1+B2（已购买，待付款）、P1+B4（买不到，退款中）、P2+D1（未发货）、P2+D2（已发货）
-         *  }
-         */
-
-        const { metaList, pinList, deliverFees } = this.data;
-        const orderObj = { };
-
-        const fixNumber = n => {
-            const str = Number( Number( n )).toFixed( 2 );
-            if ( !str.includes('.00')) {
-                return str;
-            } else {
-                return str.split('.')[ 0 ];
-            }
-        };
-
-
-        // 计算当前可结算的商品数量 
-        const count$ = order => {
-            const b = order.base_status;
-            return b === '0' || b === '1' ?
-                    order.count :
-                    b === '2' || b === '3' ?
-                        order.allocatedCount:
-                        0;
-        }
-
-
-        // 计算当前订单的拼团 (可减免金额)
-        const pinCutoff$ = order => {
-            let _cutoff = 0;
-            const b = order.base_status;
-            const { canGroup, allocatedCount, allocatedGroupPrice, allocatedPrice, count, groupPrice, price } = order;
-
-            if (( b === '2' || b === '3' )) {
-
-                if ( canGroup && allocatedGroupPrice ) {
-                    _cutoff = allocatedCount * ( allocatedPrice - allocatedGroupPrice );
-
-                } else {
-                    _cutoff = 0;
-                }
-            } else if (( b === '0' || b === '1' )) {
-
-                /**
-                 * 这里不用预测
-                */
-               if ( allocatedGroupPrice ) {
-                    _cutoff = ( allocatedCount || count ) * ( allocatedPrice - allocatedGroupPrice );
-               } else if ( groupPrice ) {
-                    _cutoff = count * ( price - groupPrice );
-                } else {
-                    _cutoff = 0;
-                }
-
-            } else {
-                _cutoff = 0
-            }
-            return Number( _cutoff.toFixed( 2 ));
-        }
-
-
-        // 计算当前订单是否处于拼团状态（含预测）
-        const pining$ = order => {
-            
-            const b = order.base_status;
-            if (( b === '2' || b === '3' )) {
-                return order.canGroup;
-
-            } else if (( b === '0' || b === '1' )) {
-                return !!pinList.find( shopping => shopping.sid === order.sid && shopping.pid === order.pid )
-
-            } else {
-                return false;
-            }
-        }
-
-
-        // 处理单个订单 状态
-        metaList.map( order => {
-
-            let isNeedPrePay = true;
-            const { isNew } = this.data;
-            const payment = order.trip.payment;
-            const { count, depositPrice, allocatedCount, allocatedGroupPrice, allocatedPrice, canGroup } = order;
-
-            if ( isNew && payment === '0' ) {
-                isNeedPrePay = true;
-
-            } else if ( isNew && payment === '1' ) {
-                isNeedPrePay = true;
-
-            } else if ( isNew && payment === '2' ) {
-                isNeedPrePay = false;
-
-            }  else if ( !isNew && payment === '0' ) {
-                isNeedPrePay = false;
-
-            }  else if ( !isNew && payment === '1' ) {
-                isNeedPrePay = true;
-
-            }  else if ( !isNew && payment === '2' ) {
-                isNeedPrePay = false;
-
-            }  else {
-                isNeedPrePay = true;
-            } 
-
-            if ( !depositPrice ) {
-                isNeedPrePay = false;
-            }
-
-            // 处理单个订单 状态
-            const decorateOrder = ( order, isNeedPrePay ) => {
-                let statusCN = [ ];
-                const p = order.pay_status;
-                const b = order.base_status;
-                const d = order.deliver_status;
-
-                if ( isNeedPrePay && p === '0' && b === '5' ) {
-                    statusCN = [ '支付过期' ];
-
-                } else if ( isNeedPrePay && p === '0' && b !== '5' && b !== '4' ) {
-                    statusCN = [ '待付订金' ]
-
-                } else if ( p === '1' && b === '0' ) {
-                    statusCN = [ '购买中' ]
-
-                } else if ( p === '1' && b === '1' ) {
-                    statusCN = [ '结算中' ] 
-
-                } else if ( p === '1' && b === '2' && !!allocatedCount ) {
-                    statusCN = [ '待付款' ]
-
-                } else if ( p === '1' && b === '2' && !allocatedCount ) {
-                    statusCN = [ '退订金' ]
-
-                } else if ( p === '1' && b === '4' ) {
-                    statusCN = [ '已取消' ]
-
-                } else if ( p === '2' && d === '0' ) {
-                    statusCN = [ '未发货' ]
-                    
-                } else if ( p === '2' && d === '2' ) {
-                    statusCN = [ '已发货' ]
-                } 
-
-                if (( b === '1' || b === '2') && count - allocatedCount > 0 ) {
-                    const index = statusCN.findIndex( x => x === '结算中');
-                    statusCN.splice( index, 1, '货源不足');
-                }
-
-                if ( statusCN[ 0 ] === '待付款' && allocatedGroupPrice && canGroup ) {
-                    statusCN = ['拼团成功']
-                }
-
-                return Object.assign({ }, order, {
-                    p,
-                    b,
-                    statusCN,
-                    isNeedPrePay,
-                    pining: pining$( order ), // 是否处于拼团状态
-                    pin_cutoff: pinCutoff$( order ), // 拼团减免（预测）
-                    retreat: b === '2' && allocatedCount < count ? // 退还订金
-                        !!depositPrice ?
-                            (count - allocatedCount) * depositPrice :
-                            0 :
-                        0,
-                })
-            };
-
-            // 创建一个新的 行程键值对
-            if ( !orderObj[ order.tid ]) {
-                const d = new Date( order.trip.start_date );
-                const d2 = new Date( order.trip.end_date );
-                orderObj[ order.tid ] = {
-                    tid: order.tid,
-                    isClosed: order.trip.isClosed,
-                    tripPostage: order.trip.postage,
-                    tripPostagefree_atleast: order.trip.postagefree_atleast,
-                    tripName: order.trip.title,
-                    tripPayment: order.trip.payment,
-                    tripTime: order.trip.isClosed ?
-                        '已结束' :
-                        new Date( ).getTime( ) >= order.trip.start_date ?
-                            `${d2.getMonth( )+1}月${d2.getDate( )}结束` :
-                            `${d.getMonth( )+1}月${d.getDate( )}出发`,
-                    meta: [ decorateOrder( order, isNeedPrePay )]
-                };
-
-            // 在行程键值对插入新的订单信息
-            } else {
-                orderObj[ order.tid ] = Object.assign({ }, orderObj[ order.tid ], {
-                    meta: [ ...orderObj[ order.tid ].meta, decorateOrder( order, isNeedPrePay )]
-                });
-            }
-
-        }); 
-
-        // 处理订单整体状态、合计信息 tripStatusCN
-        Object.keys( orderObj ).map( tid => {
-
-            let tripStatusCN = '';
-            const tripOrders = orderObj[ tid ];
-            const orders = tripOrders.meta;
-
-
-            //  处理订单整体状态
-            if ( orders.filter( x => x.b !== '4' && x.b !== '5').some( x => x.statusCN[ 0 ] === '待付订金' )) {
-                tripStatusCN = '待付订金';
-
-            } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '1' && ( x.b === '0' || x.b === '1' ))) {
-                tripStatusCN = '购买中';
-
-            } else if ( orders.filter( x => x.b !== '4' && x.b !== '5' && !!x.allocatedCount ).length > 0 &&
-                orders.filter( x => x.b !== '4' && x.b !== '5' && !!x.allocatedCount )
-                    .every( x => x.p === '1' && x.b === '2' )) {
-                        tripStatusCN = '待付尾款';
-
-            } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
-                && orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.d === '0')) {
-                tripStatusCN = '待发货';
-
-            } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
-                && orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.d === '1')) {
-                tripStatusCN = '已发货';
-
-            } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
-                && orders.some( x => x.d === '0') && orders.some( x => x.d === '1')) {
-                tripStatusCN = '部分发货';
-            }
-
-            // 退款
-
-            tripOrders['tripStatusCN'] = tripStatusCN;
-   
-
-            /** 是否处于可以结算的状态 */
-            const canSettle = tripOrders.tripStatusCN === '待付尾款';
-            tripOrders['canSettle'] = canSettle;
-
-    
-            // 行程是否已经付过尾款
-            const hasPay = orders.every( x => x.b !== '0' && x.b !== '1' && x.b !== '2' );
-            tripOrders['hasPay'] = hasPay;
-
-
-            // 是否展示更多
-            tripOrders['showMore'] = !!hasPay || false;
-
-
-            // 处理订单商品数量
-            const sum = orders.reduce(( x, y ) => {
-                // return x + count$( y );
-                return x + y.count
-            }, 0 );
-            tripOrders['sum'] = sum;
-
-
-            // 应付全款（不含优惠券）
-            let wholePriceNotDiscount = orders.reduce(( x, y ) => {
-                let currentPrice = 0;
-                const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
-                if ( canSettle ) {
-                    currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * count$( y );
-                } else {
-                    currentPrice = count$( y ) * price;
-                }
-                return x + currentPrice;
-            }, 0 );
-            
-
-            // 邮费
-            const userDeliverFeeMeta = deliverFees.find( x => x.tid === tripOrders.tid );
-            const userDeliverFee = userDeliverFeeMeta ? userDeliverFeeMeta.fee : null;
-
-            if ( userDeliverFee ) {
-                wholePriceNotDiscount += userDeliverFee;
-            }
-            tripOrders['userDeliverFee'] = userDeliverFee;
-            tripOrders['wholePriceNotDiscount'] = wholePriceNotDiscount;
-            
-
-            // 优惠券
-            const { coupons } = this.data;
-            const coupons_manjian = coupons.find( x => x.type === 't_manjian' && x.tid === tid );
-            const coupons_lijian = coupons.find( x => x.type === 't_lijian' && x.tid === tid );
-            const coupons_daijin = coupons.find( x => x.type === 't_daijin' && (( !x.isUsed && x.canUseInNext ) || ( !!x.isUsed && x.usedBy === tid )));
-   
-
-            // 处理满减
-            const t_manjian = !coupons_manjian ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
-                // 处理真的已用，和即将要用的情况
-                isUsed: coupons_manjian.isUsed || coupons_manjian.atleast <= wholePriceNotDiscount,
-                id: coupons_manjian._id,
-                value: coupons_manjian.value ,
-                atleast: coupons_manjian.atleast,
-                canUsed: coupons_manjian.atleast <= wholePriceNotDiscount || !coupons_manjian.atleast
-            };
-            tripOrders['t_manjian'] = t_manjian;
-           
-
-            // 处理立减
-            const t_lijian = !coupons_lijian ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
-                isUsed: true,
-                canUsed: true,
-                id: coupons_lijian._id,
-                value: coupons_lijian.value,
-                atleast: coupons_lijian.atleast,
-            };
-            tripOrders['t_lijian'] = t_lijian;
-
-
-            // 处理代金券
-            const t_daijin = !coupons_daijin ? { value: 0, canUsed: false, isUsed: false, atleast: 0 } : {
-                // 处理真的已用，和即将要用的情况
-                isUsed: coupons_daijin.isUsed || coupons_daijin.atleast <= wholePriceNotDiscount,
-                id: coupons_daijin._id,
-                value: coupons_daijin.value,
-                atleast: coupons_daijin.atleast,
-                canUsed: coupons_daijin.atleast <= wholePriceNotDiscount || !coupons_daijin.atleast
-            };
-            tripOrders['t_daijin'] = t_daijin;
-
-
-            // 应付全款（含优惠券、拼团折扣）
-            let wholePriceByDiscount = wholePriceNotDiscount;
-            if ( t_manjian.canUsed ) {
-                wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_manjian.value ).toFixed( 2 ));
-            }
-            if ( t_lijian.canUsed ) {
-                wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_lijian.value ).toFixed( 2 ));
-            } 
-            if ( t_daijin.canUsed ) {
-                wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_daijin.value ).toFixed( 2 ));
-            }
-
-            tripOrders['wholePriceByDiscount'] = wholePriceByDiscount;
-
-            // 剩余订金、未付订金列表
-            const notPayDepositOrders = [ ];
-            const lastDepositPrice = orders.reduce(( x, y ) => {
-                let currentDepositPrice = ( y.p === '0' && !!y.depositPrice ) ? y.depositPrice : 0;
-                if ( !!currentDepositPrice ) {
-                    notPayDepositOrders.push( y._id )
-                }
-                return x + currentDepositPrice * count$( y );;
-            }, 0 );
-            tripOrders['lastDepositPrice'] = lastDepositPrice;
-            tripOrders['notPayDepositOrders'] = notPayDepositOrders;
-
-
-            // 已付订金
-            const hasPayDepositPrice = orders.reduce(( x, y ) => {
-                const depositPrice = String( y.pay_status ) !== '0' ?
-                    y.depositPrice || 0 : 0;
-                return Number(Number( x + Number(Number( depositPrice * y.count ).toFixed( 2 ))).toFixed( 2 ));
-            }, 0 )
-            tripOrders['hasPayDepositPrice'] = hasPayDepositPrice;
-
-
-            // 剩余尾款
-            // 注意，这里应该计算好因为货存不足，带来多付订金的情况。
-            let lastPrice = wholePriceByDiscount;
-            orders.map( y => {
-                const count = y.b === '0' || y.b === '1' || y.b === '2' ?  y.count : 0;
-                lastPrice -= count * ( y.depositPrice || 0 );
-            });
-            tripOrders['lastPrice'] = Number( lastPrice.toFixed( 2 ));
-
-
-            // 目前的总可减免，除了优惠券类，
-            let cutoff = 0;
-            if ( t_manjian.isUsed ) {
-                cutoff += Number( t_manjian.value );
-            }
-            if ( t_lijian.isUsed ) {
-                cutoff += Number( t_lijian.value );
-            }
-            if ( t_daijin.isUsed ) {
-                cutoff += Number( t_daijin.value );
-            }
-
-            orders.map( order => {
-                if ( pinList.find( shopping =>
-                    shopping.pid === order.pid && shopping.sid === order.sid )) {
-                        cutoff += order.pin_cutoff;
-                }
-            });
-
-            tripOrders['cutoff'] = fixNumber( cutoff );
-
-
-            /**
-             * ! 处理邮费
-             */
-
-            /** 总减免，包含所有商品都成功拼团的情况 */
-            let total_cutoff = 0;
-            total_cutoff += Number( t_manjian.value ); // 满减
-            total_cutoff += Number( t_daijin.value ); // 代金券
-            total_cutoff += orders[ 0 ].trip.reduce_price || 0 ; // 立减
-        
-            orders.map( order => { // 成功拼团的情况
-                const { groupPrice, price, allocatedGroupPrice, allocatedPrice } = order;
-                if ( !!groupPrice || !!allocatedGroupPrice ) {
-                    const good_cutoff = allocatedGroupPrice ?
-                        allocatedPrice - allocatedGroupPrice:
-                        price - groupPrice;
-                    total_cutoff += good_cutoff * count$( order );
-                }
-            });
-
-            tripOrders['total_cutoff'] = total_cutoff;
-
-
-            /** 总减免 和 目前减免的差值 */
-            tripOrders['cutoff_delta'] = fixNumber( total_cutoff - cutoff );
-
-
-            /** 总减免 和 目前减免的比例 */
-            tripOrders['cutoff_percent'] = Math.floor( Number(Number( cutoff / total_cutoff ).toFixed( 2 )) * 100);
-
-            
-            /** 任务列表 */
-            const task = [ ];
-            orders
-                .filter( order => order.base_status !== '4' && order.base_status !== '5')
-                .map( order => {
-                    if ( !!order.groupPrice || !!order.allocatedGroupPrice ) {
-
-                        const price = order.allocatedGroupPrice ?
-                            order.allocatedPrice - order.allocatedGroupPrice :
-                            order.price - order.groupPrice;
-
-                        task.push({
-                            type: 'good',
-
-                            price: Number(( price * order.count).toFixed( 2 )),
-
-                            title: '拼团',
-
-                            img: order.img[ 0 ],
-
-                            // desc: `${order.name} ${order.standername !== '默认型号' && !!order.standername ? order.standername : ''}`,
-
-                            desc: `邀请他人拼团购买，立减${Number(( price * order.count).toFixed( 1 ))}元`,
-
-                            share: {
-                                title: `省${order.allocatedGroupPrice ?
-                                    ( order.allocatedPrice - order.allocatedGroupPrice ).toFixed( 2 ) :
-                                    ( order.price - order.groupPrice ).toFixed( 2 )}元！${order.name}`,
-                                path: `/pages/goods-detail/index?id=${order.pid}&tid=${this.data.tid}`,
-                                imageUrl: order.img[ 0 ]
-                            },
-
-                            // 处理真正拼团跟预测拼团
-                            finished: !!pinList.find( shopping => {
-                                return shopping.pid === order.pid && shopping.sid === order.sid
-                            })
-                        })
-                    }
-                });
-
-            
-            ['t_lijian', 't_manjian', 't_daijin'].map( quan => {
-                const target = tripOrders[ quan ];
-                if ((( quan === 't_manjian' || quan === 't_daijin' ) && !!target.value ) || ( quan === 't_lijian' && !!orders[ 0 ].trip.reduce_price )) {
-                       
-                    task.push({
-
-                        type: quan,
-
-                        price: quan === 't_lijian' ?
-                            target.value < orders[ 0 ].trip.reduce_price ?
-                            fixNumber( orders[ 0 ].trip.reduce_price - target.value ) :
-                                fixNumber( target.value ):
-                                fixNumber( target.value ),
-
-                        title: quan === 't_lijian' ?
-                            '立减券' :
-                            quan === 't_manjian' ?
-                                '满减券' : '代金券',
-
-                        desc: quan === 't_lijian' ?
-                            '转发即可获得。马上分享行程给闺蜜吧～' :
-                            quan === 't_manjian' ?
-                            target.atleast ? `满${target.atleast}元即可自动使用` : `无门槛满减券` :
-                            target.atleast ? `满${target.atleast}元即可自动使用` : `无门槛代金券`,
-
-                        share: ( quan === 't_lijian' &&
-                            !!orders[ 0 ].trip.reduce_price &&
-                            target.value < orders[ 0 ].trip.reduce_price ) ? {
-                                title: '[有人@你]跟我一起来拔草～',
-                                path: '/pages/trip-enter/index',
-                                imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
-                            } : null,
-
-                        finished: quan === 't_lijian' ?
-                            (!!orders[ 0 ].trip.reduce_price &&
-                                target.value >= orders[ 0 ].trip.reduce_price ) :
-                                quan === 't_manjian' ?
-                                    tripOrders.wholePriceNotDiscount >= Number( target.atleast ) || tripOrders.wholePriceByDiscount >= Number( target.atleast ):
-                                    tripOrders.wholePriceNotDiscount >= Number( target.atleast ) || tripOrders.wholePriceByDiscount >= Number( target.atleast )
-                    });
-                }
-            });
-
-            tripOrders['task'] = task;
-
-            /** 结算后的合计 */
-            let total = orders.reduce(( x, y ) => {
-                return x + ( y.final_price || 0 ) * ( y.allocatedCount || 0 );
-            }, 0 );
-
-            if ( t_manjian.isUsed ) {
-                total = Number( Number( total - t_manjian.value ).toFixed( 2 ));
-            }
-            if ( t_lijian.isUsed ) {
-                total = Number( Number( total - t_lijian.value ).toFixed( 2 ));
-            }
-            if ( t_daijin.isUsed ) {
-                total = Number( Number( total - t_daijin.value ).toFixed( 2 ));
-            }
-
-            tripOrders['total'] = total;
-
-            // 应退订金 ( 已付订金 > 应付 )
-            const retreat = hasPayDepositPrice > wholePriceByDiscount ?
-                (hasPayDepositPrice - wholePriceByDiscount).toFixed( 2 ) : 0;
-            tripOrders['retreat'] = retreat;
-
-            if ( retreat > 0 && orderObj[ tid ].isClosed ) {
-                tripOrders['tripStatusCN'] = '需退款';
-            }
-
-            if ( hasPay ) {
-                tripOrders['tripStatusCN'] = '已付款';
-            }
-
-        });
-
-        this.setData({
-            loading: false,
-            tripOrders: Object.keys( orderObj ).map( tid => orderObj[ tid ])
-        })
-    },
-
     /** 补齐立减券 */
     fixLiJian({ currentTarget }) {
         const { tid } = currentTarget.dataset;
@@ -917,7 +927,7 @@ Page({
                 isNew: val
             });
             if (val !== this.data.isNew && this.data.metaList.length > 0 ) {
-                this.covertOrder( )
+
             }
         });
     },
@@ -1061,6 +1071,14 @@ Page({
         const { showDaijin } = this.data;
         this.setData({
             showDaijin: showDaijin === 'hide' ? 'show' : 'hide'
+        });
+    },
+
+    /** 展示全部 */
+    toggleAll( ) {
+        const { showALlTrip } = this.data;
+        this.setData({
+            showALlTrip: !showALlTrip
         });
     },
 
