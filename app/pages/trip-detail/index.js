@@ -19,7 +19,10 @@ Page({
         waitPin: [ ],
 
         /** 拼团列表 */
-        pingList: [ ]
+        pingList: [ ],
+
+        /** 等待拼团 + 拼团列表 + 普通 */
+        allShoppinglist: [ ]
 
     },
 
@@ -41,7 +44,18 @@ Page({
                 return pingList.sort(( x, y ) => {
                     return x.detail.saled - y.detail.saled;
                 });
-            }
+            },
+
+            allShoppinglist$: function( ) {
+                const { allShoppinglist } = this.data;
+                return allShoppinglist
+                    .map( x => Object.assign({ }, x, {
+                        delta: !x.adjustGroupPrice ? 0 : ( x.adjustPrice - x.adjustGroupPrice ).toFixed( 0 )
+                    }))
+                    .sort(( x, y ) => {
+                        return x.detail.saled - y.detail.saled;
+                    });
+            },
         });
     },
 
@@ -61,10 +75,12 @@ Page({
                 const noPin = data.filter( x => !x.adjustGroupPrice );
                 const waitPin = data.filter( x => !!x.adjustGroupPrice && x.uids.length === 1 );
                 const pingList = data.filter( x => !!x.adjustGroupPrice && x.uids.length > 1 );
+
                 this.setData({
                     waitPin,
                     pingList,
-                    loading: false
+                    loading: false,
+                    allShoppinglist: [ ...waitPin, ...pingList,...noPin  ]
                 });
             }
         });
