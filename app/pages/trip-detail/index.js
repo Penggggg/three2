@@ -107,7 +107,7 @@ Page({
     onLoad: function (options) {
 
         this.runComputed( );
-        const tid = options.id || '281fb4bf5d04a99f01c43e504a1421fd';
+        const tid = options.id;
         if ( tid ) { 
             this.setData({
                 tid

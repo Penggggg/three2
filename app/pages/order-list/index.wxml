@@ -562,7 +562,9 @@
                     </wxc-price>
 
                     <!-- 按钮 -->
-                    <view class="pol-task-action">
+                    <view
+                        class="pol-task-action {{ !item.finished ? 'shine' : '' }}"
+                    >
                         <button
                             open-type="share"
                             class="pol-task-btn"
