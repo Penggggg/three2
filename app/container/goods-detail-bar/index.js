@@ -203,8 +203,7 @@ Component({
                 });
             }
             // 处理formid
-            const { formId } = e.detail;
-            this.createFormId( formId );
+            this.createFormId( e.detail.formId );
         },
         /** 关闭sku */
         onCloseSku( e ) {
@@ -405,16 +404,13 @@ Component({
         },
         // 添加一个formid
         createFormId( formid ) {
+            if ( !formid ) { return; }
             http({
                 data: {
                     formid
                 },
+                loadingMsg: 'none',
                 url: 'common_create-formid',
-                success: res => {
-                    const { status, data } = res;
-                    if ( status === 200 ) { return; }
-                    
-                }
             })
         }
     },

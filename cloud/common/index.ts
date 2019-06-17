@@ -807,6 +807,7 @@ export const main = async ( event, context ) => {
      * form-ids: {
      *      openid,
      *      formid,
+     *      createTime,
      *      type: 'manager' | 'normal'
      * }
      */
@@ -816,7 +817,8 @@ export const main = async ( event, context ) => {
             const { formid } = event.data; 
             const find$ = await db.collection('manager-member')
                 .where({
-                    openid
+                    openid,
+                    createTime: new Date( ).getTime( )
                 })
                 .count( );
             
