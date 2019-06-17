@@ -798,6 +798,46 @@ export const main = async ( event, context ) => {
         }
     });
 
+    /** 
+     * @description
+     * 创建一个form-id
+     * {
+     *     formid
+     * }
+     * form-ids: {
+     *      openid,
+     *      formid,
+     *      type: 'manager' | 'normal'
+     * }
+     */
+    app.router('create-formid', async( ctx, next ) => {
+        try {
+            const openid = event.userInfo.openId;
+            const { formid } = event.data; 
+            const find$ = await db.collection('manager-member')
+                .where({
+                    openid
+                })
+                .count( );
+            
+            const create$ = await db.collection('form-ids')
+                .add({
+                    data: {
+                        openid,
+                        formid,
+                        type: find$.total > 0 ? 'manager' : 'normal'
+                    }
+                });
+            ctx.body = {
+                status: 200
+            }
+        } catch ( e ) {
+            ctx.body = {
+                status: 200
+            }
+        }
+    });
+
     return app.serve( );
 
 }

@@ -42,6 +42,7 @@ export const collections = [
     'deliver',
     'authpsw',
     'manager-member',
+    'form-ids'
 ];
 
 /** 权限模块 */
