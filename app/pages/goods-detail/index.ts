@@ -422,8 +422,13 @@ Page({
         if ( !options!.id && !scene ) { return; }
         this.setData!({
             id: options!.id || scene,
-            tid: options!.tid
         });
+
+        if ( !!(options as any).tid ) {
+            this.setData!({
+                tid: options!.tid
+            })
+        }
     },
   
     /**
