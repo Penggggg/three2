@@ -257,19 +257,6 @@ export const main = async ( event, context ) => {
             const timeStamp = parseInt(String( Date.now() / 1000 )) + '';
             const out_trade_no = "otn" + nonce_str + timeStamp;
 
-            // const body = '香猪测试';
-            // const mch_id = '1521522781';
-            // const attach = 'anything';
-            // const appid = event.userInfo.appId;
-            // const notify_url = 'https://whatever.com/notify';
-            // const key = 'a92006250b4ca9247c02edce69f6a21a';
-            // const total_fee = event.data.total_fee;
-            // const spbill_create_ip = '118.89.40.200';
-            // const openid = event.userInfo.openId;
-            // const nonce_str = Math.random().toString(36).substr(2, 15);
-            // const timeStamp = parseInt(String( Date.now() / 1000 )) + '';
-            // const out_trade_no = "otn" + nonce_str + timeStamp;
-
             const paysign = ({ ...args }) => {
                 const sa: any = [ ]
                 for ( let k in args ) {
@@ -426,6 +413,16 @@ export const main = async ( event, context ) => {
      */
     app.router('mypage-info', async( ctx, next ) => {
         try {
+
+            let coupons = 0;
+            const trips$ = await cloud.callFunction({
+                data: {
+                    $url: 'enter'
+                },
+                name: 'trip'
+            });
+            const trips = trips$.result.data;
+            const trip = trips[ 0 ];
             
             // 订单数
             const orders$ = await db.collection('order')
@@ -435,17 +432,21 @@ export const main = async ( event, context ) => {
                 })
                 .count( );
 
-            // 卡券数
-            const coupons$ = await db.collection('coupon')
-                .where({
-                    openid: event.userInfo.openId
-                })
-                .count( );
+            if ( !!trip ) {
+                // 卡券数( 过滤掉只剩当前的trip卡券 )
+                const coupons$ = await db.collection('coupon')
+                    .where({
+                        tid: trip._id,
+                        openid: event.userInfo.openId
+                    })
+                    .count( );
+                coupons = coupons$.total;
+            }
             
             return ctx.body = {
                 status: 200,
                 data: {
-                    coupons: coupons$.total,
+                    coupons,
                     orders: orders$.total
                 }
             }
