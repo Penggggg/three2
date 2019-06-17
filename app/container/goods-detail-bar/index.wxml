@@ -81,13 +81,6 @@
                         立即购买
                     </button>
                 </form>
-                <!-- <view
-                    data-type="buy"
-                    bindtap="toggleSku"
-                    class="gbs-btn-special-item morepink"
-                >   
-                    立即购买
-                </view> -->
             </view>
             
 
