@@ -17,6 +17,7 @@ export const push_template = {
     buyPin: {
         desc: '拼团成功通知：拼团状态、成团条件',
         example: '拼团成功！恭喜您省了xx元！;您和其他人买了同一款拼团商品，点击查看',
+        example2: '恭喜拼团成功！您买的商品自动减x元！;有人买了和你一样的商品，点击查看',
         value: 'aONKtxqum1Jn15jKVOVGqNzCSfA0f_n6j_0BLASYCDg'
     },
     waitPin: {
