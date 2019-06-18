@@ -845,7 +845,7 @@ export const main = async ( event, context ) => {
      * 模板推送服务，消费form-ids
      * {
      *      openid
-     *      type: 'buyPin' | 'buy' | 'getMoney'
+     *      type: 'buyPin' | 'buy' | 'getMoney' | 'waitPin'
      *      texts: [ 'xx', 'yy' ]
      *      ?page
      *      ?prepay_id
@@ -891,7 +891,7 @@ export const main = async ( event, context ) => {
                 page,
                 data: textData,
                 formId: formid,
-                templateId: CONFIG.push_template[ type ]
+                templateId: CONFIG.push_template[ type ].value
             };
 
             const send$ = await cloud.openapi.uniformMessage.send({
@@ -899,7 +899,6 @@ export const main = async ( event, context ) => {
                 weappTemplateMsg
             });
 
-            console.log('????', send$ );
             if ( String( send$.errCode ) !== '0' ) {
                 throw send$.errMsg;
             }
