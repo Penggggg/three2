@@ -817,8 +817,7 @@ export const main = async ( event, context ) => {
             const { formid } = event.data; 
             const find$ = await db.collection('manager-member')
                 .where({
-                    openid,
-                    createTime: new Date( ).getTime( )
+                    openid
                 })
                 .count( );
             
@@ -827,6 +826,7 @@ export const main = async ( event, context ) => {
                     data: {
                         openid,
                         formid,
+                        createTime: new Date( ).getTime( ),
                         type: find$.total > 0 ? 'manager' : 'normal'
                     }
                 });
