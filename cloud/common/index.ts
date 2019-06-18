@@ -502,7 +502,7 @@ export const main = async ( event, context ) => {
      * 消息推送 - 催款
      * {
      *     touser ( openid )
-     *     form_id
+     *     form_id （ 或者是 prepay_id ）
      *     page?: string
      *     data: { 
      *         
@@ -839,6 +839,89 @@ export const main = async ( event, context ) => {
             }
         }
     });
+
+    /**
+     * @description
+     * 模板推送服务，消费form-ids
+     * {
+     *      openid
+     *      type: 'buyPin' | 'buy' | 'getMoney'
+     *      texts: [ 'xx', 'yy' ]
+     *      ?page
+     *      ?prepay_id
+     * }
+     */
+    app.router('push-template', async( ctx, next ) => {
+        try {
+
+            let formid_id: any = '';
+            let formid = event.data.prepay_id;
+            const { openid, type, texts } = event.data;
+            const page = event.data.page || 'pages/order-list/index';
+
+            // 如果没有prepay_id, 就去拿该用户的form_id
+            if ( !formid ) {
+                const find$ = await db.collection('form-ids')
+                    .where({
+                        openid
+                    })
+                    .limit( 1 )
+                    .get( );
+
+                if ( !find$.data[ 0 ]) {
+                    throw `该用户${openid}没有formid、prepay_id`;
+                }
+
+                formid = find$.data[ 0 ].formid;
+                formid_id = find$.data[ 0 ]._id;
+            }
+
+            let textData = { };
+            texts.map(( text, index ) => {
+                const keyText = `keyword${index + 1}`;
+                textData = Object.assign({ }, textData, {
+                    [ keyText ] : {
+                        value: text
+                    }
+                })
+            });
+
+            const weappTemplateMsg = {
+                page,
+                data: textData,
+                formId: formid,
+                templateId: CONFIG.push_template[ type ]
+            };
+
+            const send$ = await cloud.openapi.uniformMessage.send({
+                touser: openid,
+                weappTemplateMsg
+            });
+
+            console.log('????', send$ );
+            if ( String( send$.errCode ) !== '0' ) {
+                throw send$.errMsg;
+            }
+
+            // 删除该条form-id
+            if ( !!formid_id ) {
+                await db.collection('form-ids')
+                    .doc( formid_id )
+                    .remove( );
+            }
+
+            return ctx.body = {
+                status: 200
+            };
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500,
+                message: typeof e === 'string' ? e : JSON.stringify( e )
+            }
+        }
+    })
+
 
     return app.serve( );
 

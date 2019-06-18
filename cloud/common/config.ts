@@ -12,6 +12,22 @@ export const notification_template = {
     getMoney3: 'fCvCrY8_5l60svPglMvQdO1sulAZQUTcOt3hdtrDIsw'// 业务受理通知
 }
 
+/** 推送模板服务 */
+export const push_template = {
+    buyPin: {
+        desc: '拼团成功通知：拼团状态、参团时间',
+        value: 'aONKtxqum1Jn15jKVOVGqKUXPOgIz_jQegD7105cwe0'
+    },
+    buy: {
+        desc: '购买成功通知：备注、时间',
+        value: 'fWj6ya_Jn8LNb7W2Du35ZcsWwBveAy2pjgzx8xChjhk'
+    },
+    getMoney: {
+        desc: '尾款支付提醒：温馨提示、截止时间',
+        value: 'qKwF8caYQADJ6lTcnETexy0hqi11Sq1dhksNOHBqOdQ'
+    }
+};
+
 /** 微信支付 */
 export const wxPay = {
     mch_id: '1521522781', // 商户号
