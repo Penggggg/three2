@@ -406,9 +406,11 @@ export const main = async ( event, context ) => {
 
     /**
      * 批量更新，订单为已支付，并且增加到购物清单
-     * orderIds: "123,234,345"
-     * form_id,
-     * prepay_id
+     * {
+     *      orderIds: "123,234,345"
+     *      form_id,
+     *      prepay_id
+     * }
      */
     app.router('upadte-to-payed', async( ctx, next ) => {
         try {

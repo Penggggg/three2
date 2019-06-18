@@ -322,11 +322,12 @@ export const main = async ( event, context ) => {
                     .where( query )
                     .get( );
 
+                // 创建采购单
                 if ( find$.data.length === 0 ) {
 
                     const meta = Object.assign({ }, query,{
                         acid: acid || undefined
-                    },{
+                    }, {
                         oids: [ oid ],
                         uids: [ openId ],
                         purchase: 0,
