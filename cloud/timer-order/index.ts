@@ -1,7 +1,8 @@
 import * as cloud from 'wx-server-sdk';
+import { overtimeTrip } from './trip';
+import { clearFormIds } from './form-ids';
 import { overtime, payedFix, priceFix, payLastFix } from './order';
 import { catchLostOrders, removeUselessOrders } from './shopping-list';
-import { overtimeTrip } from './trip';
 
 cloud.init({
     env: process.env.cloud
@@ -27,6 +28,7 @@ export const main = async ( event, context ) => {
         await overtimeTrip( );
         await catchLostOrders( );
         await removeUselessOrders( );
+        await clearFormIds( );
         
         return {
             status: 200
