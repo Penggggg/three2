@@ -146,7 +146,7 @@
         >
 
             <!-- 拼团文案 -->
-            <view class="info-block-item" wx:if="{{ priceGap }}">
+            <view class="info-block-item" wx:if="{{ priceGap && priceGap !== '0' }}">
 
                 <view class="info-block-item-label">
                     拼团：

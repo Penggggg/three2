@@ -98,7 +98,7 @@ Page({
                     return ''
                 } else {
                     const result = delayeringGood( detail );
-                    return result ? result.goodPins.eachPriceRound.replace(/\.00/g, '') : '';
+                    return result ? String( result.goodPins.eachPriceRound ).replace(/\.00/g, '') : '';
                 }
             },
 

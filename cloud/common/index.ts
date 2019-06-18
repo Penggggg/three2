@@ -856,7 +856,8 @@ export const main = async ( event, context ) => {
 
             let formid_id: any = '';
             let formid = event.data.prepay_id;
-            const { openid, type, texts } = event.data;
+            const { type, texts } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
             const page = event.data.page || 'pages/order-list/index';
 
             // 如果没有prepay_id, 就去拿该用户的form_id
