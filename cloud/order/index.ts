@@ -448,8 +448,7 @@ export const main = async ( event, context ) => {
                 }
             });
 
-            // 这里本来不需要同步等待购物清单的创建，但是不加await貌似没有被执行到
-            await cloud.callFunction({
+            const create$ = await cloud.callFunction({
                 name: 'shopping-list',
                 data: {
                     $url: 'create',
@@ -458,7 +457,86 @@ export const main = async ( event, context ) => {
                         openId
                     }
                 }
-            })
+            });
+
+            // 处理推送
+            if ( create$.result.status === 200 ) {
+                const { buyer, others } = create$.result.data;
+
+                // 买家推送
+                const pushMe$ = await cloud.callFunction({
+                    name: 'common',
+                    data: {
+                        $url: 'push-template',
+                        data: {
+                            type: buyer.type,
+                            openid: buyer.openid,
+                            texts: getTextByPushType( 
+                                buyer.type === 'buyPin' ? 'buyPin1' : buyer.type,
+                                buyer.delta )
+                        }
+                    }
+                });
+
+                // 其他人拼团成功的推送
+                const othersOrders$: any = await Promise.all(
+                    others.map( 
+                        other => db.collection('order')
+                            .where({
+                                openid: other.openid,
+                                acid: other.acid,
+                                sid: other.sid,
+                                pid: other.pid,
+                                tid: other.tid,
+                                pay_status: '1',
+                                base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
+                            })
+                            .field({
+                                count: true
+                            })
+                            .get( )
+                    )
+                );
+
+                // 整合delta + count
+                const othersMore = others.map(( other, key ) => {
+                    return {
+                        ...other,
+                        count: othersOrders$[ key ].data.reduce(( x, y ) => y.count + x, 0 )
+                    }
+                });
+
+                let othersPush = { };
+
+                othersMore.map( other => {
+                    if ( !othersPush[ other.openid ]) {
+                        othersPush = Object.assign({ }, othersPush, {
+                            [ other.openid ]: other.delta * other.count
+                        });
+                    } else {
+                        othersPush = Object.assign({ }, othersPush, {
+                            [ other.openid ]: othersPush[ other.openid ] + other.delta * other.count
+                        });
+                    }
+                });
+
+                await Promise.all(
+                    Object.keys( othersPush ).map(
+                        otherOpenid => cloud.callFunction({
+                            name: 'common',
+                            data: {
+                                $url: 'push-template',
+                                data: {
+                                    type: 'buyPin',
+                                    openid: otherOpenid,
+                                    texts: getTextByPushType( 'buyPin2', othersPush[ otherOpenid ])
+                                }
+                            }
+                        })
+                    )
+                )
+
+            }
 
             return ctx.body = {
                 status: 200
@@ -1123,4 +1201,44 @@ export const main = async ( event, context ) => {
  
    return app.serve( );
 
+}
+
+/** 根据类型，返回推送文案 */
+function getTextByPushType( type: 'buyPin1' | 'buyPin2' | 'waitPin' | 'buy' | 'getMoney', delta ) {
+
+    const now = new Date( );
+    const month = now.getMonth( ) + 1;
+    const date = now.getDate( );
+    const hour = now.getHours( );
+    const minutes = now.getMinutes( );
+
+    const fixZero = s => String( s ).length === 1 ? `0${s}` : s; 
+
+    if ( type === 'buy' ) {
+        return [
+            `下单成功！会尽快采购～`, 
+            `${month}月${date}日 ${hour}:${fixZero( minutes )}`
+        ];
+    } else if ( type === 'buyPin1' ) {
+        return [
+            `恭喜您省了${delta}元！`,
+            `您和其他人买了同款拼团商品，查看`
+        ]
+    } else if ( type === 'buyPin2' ) {
+        return [
+            `恭喜！您买的商品减了${delta}元!`,
+            `有人购买了同款拼团的商品，查看`
+        ]
+    } else if ( type === 'waitPin' ) {
+        return [
+            `您的商品可参加拼团！`,
+            `参加拼团，可以再省${delta}元！`
+        ]
+    } else if ( type === 'getMoney' ) {
+        return [
+            `支付尾款，立即发货哦`,
+            `越快越好`
+        ]
+    }
+    return []
 }

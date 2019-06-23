@@ -294,9 +294,33 @@ export const main = async ( event, context ) => {
      *    groupPrice,
      *!   acid
      * }[ ]
+     * 
+     * 并返回购买推送通知的数据结构
+     * {
+     *      当前的买家
+     *      buyer: {
+     *          delta,
+     *          openid,
+     *          type: 'buy' | 'buyPin' | 'waitPin' ( 权重越来越高 )
+     *      }
+     *      拼团成功的其他买家
+     *      others: [
+     *            openid
+     *            acid
+     *            sid
+     *            pid
+     *            tid
+     *            delta
+     *      ]
+     * }
      */
     app.router('create', async( ctx, next ) => {
         try {
+
+            let others: any = [ ];
+            let buyer: any = null;
+            let buyerBuyPinDelta = 0;
+            let buyerWaitPinDelta = 0;
 
             const { list, openId } = event.data;
  
@@ -325,7 +349,23 @@ export const main = async ( event, context ) => {
                 // 创建采购单
                 if ( find$.data.length === 0 ) {
 
-                    const meta = Object.assign({ }, query,{
+                    // 处理推送：buyer
+                    if ( !buyer && !groupPrice ) {
+                        buyer = {
+                            openid: openId,
+                            type: 'buy',
+                            delta: 0
+                        };
+                    } else if ( !buyer || !!buyer ) {
+                        buyerWaitPinDelta += Number(( price - groupPrice ).toFixed( 0 ));
+                        buyer = {
+                            openid: openId,
+                            type: 'waitPin',
+                            delta: buyerWaitPinDelta
+                        };
+                    }
+
+                    const meta = Object.assign({ }, query, {
                         acid: acid || undefined
                     }, {
                         oids: [ oid ],
@@ -338,7 +378,7 @@ export const main = async ( event, context ) => {
                         createTime: new Date( ).getTime( )
                     });
      
-                    const creaet$ = await db.collection('shopping-list')
+                    const create$ = await db.collection('shopping-list')
                         .add({
                             data: meta
                         });
@@ -351,6 +391,35 @@ export const main = async ( event, context ) => {
                     if ( !metaShoppingList.oids.find( x => x === oid )) {
                         const lastOids = metaShoppingList.oids;
                         const lastUids = metaShoppingList.uids;
+                        const lastAdjustPrice = metaShoppingList.adjustPrice;
+                        const lastAdjustGroupPrice = metaShoppingList.adjustGroupPrice;
+
+                        // 处理推送：buyer、others
+                        if ( !!lastAdjustGroupPrice ) {
+
+                            const currentDelta = Number(( lastAdjustPrice - lastAdjustGroupPrice ).toFixed( 0 ));
+                            buyerBuyPinDelta += currentDelta;
+
+                            if ( !buyer || ( !!buyer && buyer.type === 'buy' )) {
+                                buyer = {
+                                    openid: openId,
+                                    type: 'buyPin',
+                                    delta: buyerBuyPinDelta
+                                }
+                            }
+
+                            if ( !lastUids.find( x => x === openId ) && lastUids.length === 1 ) {
+                                others.push({
+                                    pid,
+                                    tid,
+                                    sid: sid || undefined,
+                                    acid: acid || undefined,
+                                    openid: lastUids[ 0 ],
+                                    delta: currentDelta,
+                                })
+                            }
+                        }
+
 
                         // 插入到头部，最新的已支付订单就在上面
                         lastOids.unshift( oid );
@@ -374,7 +443,11 @@ export const main = async ( event, context ) => {
             }));
 
             return ctx.body = {
-                status: 200
+                status: 200,
+                data: {
+                    buyer,
+                    others
+                }
             }
 
         } catch ( e ) { return ctx.body = { status: 500 }}
