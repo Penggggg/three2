@@ -83,7 +83,6 @@ Component({
 
         /** 地址跳转 */
         navigate( e ) {
-            console.log( e );
             createFormId( e.detail.formId );
             navTo(e.currentTarget.dataset.url);
         }

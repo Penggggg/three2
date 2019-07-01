@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { createFormId } = require('../../util/form-id');
 
 Page({
 
@@ -26,7 +27,10 @@ Page({
     },
 
     /** 切换tab */
-    onTabChange({ currentTarget }) {
+    onTabChange({ currentTarget, detail }) {
+        
+        createFormId( detail.formId );
+
         const { index } = currentTarget.dataset;
         this.setData({
             active: index
@@ -51,6 +55,9 @@ Page({
      */
     onLoad: function (options) {
         wx.hideShareMenu( );
+        this.setData({
+            id: '94b1e1fc5d0edbd1065d25e97f14c9b7'
+        })
         if ( !options.id ) { return }
         this.setData({
             id: options.id
