@@ -932,7 +932,43 @@ export const main = async ( event, context ) => {
         try {
 
             // 0、判断是否在那几个时间戳之内
-            
+            const now = new Date( );
+            const y = now.getFullYear( );
+            const m = now.getMonth( ) + 1;
+            const d = now.getDate( );
+
+            const range = [
+                [
+                    // 9点
+                    new Date(`${y}/${m}/${d} 8:59:00`),
+                    new Date(`${y}/${m}/${d} 9:01:00`),
+                ], [
+                    // 12点半
+                    new Date(`${y}/${m}/${d} 12:29:00`),
+                    new Date(`${y}/${m}/${d} 12:31:00`),
+                ], [
+                    // 18点
+                    new Date(`${y}/${m}/${d} 17:59:00`),
+                    new Date(`${y}/${m}/${d} 18:01:00`),
+                ], [
+                    // 凌晨12
+                    new Date(`${y}/${m}/${d} 23:59:00`),
+                    new Date( new Date(`${y}/${m}/${d} 23:59:00`).getTime( ) + 2 * 60 * 1000 ),
+                ]
+            ];
+
+            const isInRange = range.some( x => {
+                const t = now.getTime( );
+                if ( x[ 0 ].getTime( ) <= t && x[ 1 ].getTime( ) >= t ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+
+            if ( !isInRange ) { 
+                return ctx.body = { status: 200 };
+            }
 
             // 1、获取current trip
             const trips$ = await cloud.callFunction({

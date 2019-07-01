@@ -202,3 +202,164 @@ export const payLastFix = async ( ) => {
         return { status: 500 }
     }
 }
+
+/**
+ * 订单4：新订单推送
+ */
+export const pushNew = async ( ) => {
+    try {
+
+        // 0、判断是否在那几个时间戳之内
+        const checkIsInRange = now => {
+            const y = now.getFullYear( );
+            const m = now.getMonth( ) + 1;
+            const d = now.getDate( );
+
+            const range = [
+                [
+                    // 9点
+                    new Date(`${y}/${m}/${d} 8:59:00`),
+                    new Date(`${y}/${m}/${d} 9:01:00`),
+                ], [
+                    // 12点半
+                    new Date(`${y}/${m}/${d} 12:29:00`),
+                    new Date(`${y}/${m}/${d} 12:31:00`),
+                ], [
+                    // 18点
+                    new Date(`${y}/${m}/${d} 17:59:00`),
+                    new Date(`${y}/${m}/${d} 18:01:00`),
+                ], [
+                    // 凌晨12
+                    new Date(`${y}/${m}/${d} 23:59:00`),
+                    new Date( new Date(`${y}/${m}/${d} 23:59:00`).getTime( ) + 2 * 60 * 1000 ),
+                ]
+            ];
+
+            return range.some( x => {
+                const t = now.getTime( );
+                if ( x[ 0 ].getTime( ) <= t && x[ 1 ].getTime( ) >= t ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        }
+
+        if ( !checkIsInRange( new Date( ))) { 
+            return { status: 200 };
+        }
+
+        // 1、获取current trip
+        const trips$ = await cloud.callFunction({
+            data: {
+                $url: 'enter'
+            },
+            name: 'trip'
+        });
+        const trips = trips$.result.data;
+        const trip = trips[ 0 ];
+
+        // 2、获取 push: true 的管理员
+        const members = await db.collection('manager-member')
+            .where({
+                push: true
+            })
+            .get( );
+
+        if ( !trip || members.data.length === 0 ) {
+            return { status: 200 };
+        }
+
+        await Promise.all(
+            members.data.map( async member => {
+                let count = 0;
+                const { openid } = member
+
+                // 3、获取上次浏览订单的时间戳
+                const config$ = await db.collection('analyse-data')
+                    .where({
+                        openid,
+                        tid: trip._id,
+                        type: 'manager-trip-order-visit'
+                    })
+                    .get( );
+                const config = config$.data[ 0 ];
+
+                let query: any = {
+                    tid: trip._id,
+                    pay_status: _.neq('0'),
+                    base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
+                };
+
+                if ( !!config ) {
+                    query = Object.assign({ }, query, {
+                        createTime: _.gte( config.value )
+                    });
+                }
+
+                // 4、调用推送
+                const count$ = await db.collection('order')
+                        .where( query )
+                        .count( );
+                count = count$.total;
+
+                if ( count === 0 ) { 
+                    return;
+                }
+
+                // 4、调用推送
+                const push$ = await cloud.callFunction({
+                    name: 'common',
+                    data: {
+                        $url: 'push-template',
+                        data: {
+                            openid,
+                            type: 'newOrder',
+                            page: 'pages/manager-trip-list/index',
+                            texts: [`你有${count}条新订单`, `点击查看`]
+                        }
+                    }
+                });
+
+                // 5、更新、创建配置
+                if ( push$.result.status === 200 ) {
+
+                    if ( !!config ) {
+                        // 更新一下此条配置
+                        await db.collection('analyse-data')
+                            .doc( String( config._id ))
+                            .update({
+                                data: {
+                                    value: new Date( ).getTime( )
+                                }
+                            });
+                    } else {
+                        // 创建一下配置
+                        await db.collection('analyse-data')
+                            .add({
+                                data: {
+                                    openid,
+                                    tid: trip._id,
+                                    type: 'manager-trip-order-visit',
+                                    value: new Date( ).getTime( )
+                                }
+                            });
+                    }
+                }
+
+                return;
+
+            })
+        );
+        
+        return {
+            status: 200
+        };
+
+    } catch ( e ) {
+        return {
+            status: 500,
+            message: typeof e === 'string' ? e : JSON.stringify( e )
+        }
+    }
+}
