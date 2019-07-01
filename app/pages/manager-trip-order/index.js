@@ -55,9 +55,6 @@ Page({
      */
     onLoad: function (options) {
         wx.hideShareMenu( );
-        this.setData({
-            id: '94b1e1fc5d0edbd1065d25e97f14c9b7'
-        })
         if ( !options.id ) { return }
         this.setData({
             id: options.id
