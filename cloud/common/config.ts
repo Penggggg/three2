@@ -34,6 +34,11 @@ export const push_template = {
         desc: '尾款支付提醒：温馨提示、截止时间',
         example: '支付尾款，立即发货哦；越快越好',
         value: 'qKwF8caYQADJ6lTcnETexy0hqi11Sq1dhksNOHBqOdQ'
+    }, 
+    newOrder: {
+        desc: '新订单通知：订单详情、订单状态',
+        example: '你有x条新订单；点击查看',
+        value: 'TQmlCntkDc1a8CuoEP9gNDDAhOJVf4QTPpcfWLf0svQ'
     }
 };
 
@@ -67,7 +72,8 @@ export const collections = [
     'deliver',
     'authpsw',
     'manager-member',
-    'form-ids'
+    'form-ids',
+    'analyse-data'
 ];
 
 /** 权限模块 */

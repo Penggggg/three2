@@ -845,7 +845,7 @@ export const main = async ( event, context ) => {
      * 模板推送服务，消费form-ids
      * {
      *      openid
-     *      type: 'buyPin' | 'buy' | 'getMoney' | 'waitPin'
+     *      type: 'buyPin' | 'buy' | 'getMoney' | 'waitPin' | 'newOrder'
      *      texts: [ 'xx', 'yy' ]
      *      ?page
      *      ?prepay_id
@@ -912,6 +912,131 @@ export const main = async ( event, context ) => {
                     .remove( );
             }
 
+            return ctx.body = {
+                status: 200
+            };
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500,
+                message: typeof e === 'string' ? e : JSON.stringify( e )
+            }
+        }
+    });
+
+    /**
+     * @description
+     * 自动推送新订单通知
+     */
+    app.router('test', async( ctx, next ) => {
+        try {
+
+            // 0、判断是否在那几个时间戳之内
+            
+
+            // 1、获取current trip
+            const trips$ = await cloud.callFunction({
+                data: {
+                    $url: 'enter'
+                },
+                name: 'trip'
+            });
+            const trips = trips$.result.data;
+            const trip = trips[ 0 ];
+
+            // 2、获取 push: true 的管理员
+            const members = await db.collection('manager-member')
+                .where({
+                    push: true
+                })
+                .get( );
+
+            if ( !trip || members.data.length === 0 ) {
+                return ctx.body = { status: 200 };
+            }
+
+            await Promise.all(
+                members.data.map( async member => {
+                    let count = 0;
+                    const { openid } = member
+
+                    // 3、获取上次浏览订单的时间戳
+                    const config$ = await db.collection('analyse-data')
+                        .where({
+                            openid,
+                            tid: trip._id,
+                            type: 'manager-trip-order-visit'
+                        })
+                        .get( );
+                    const config = config$.data[ 0 ];
+
+                    let query: any = {
+                        tid: trip._id,
+                        pay_status: _.neq('0'),
+                        base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
+                    };
+
+                    if ( !!config ) {
+                        query = Object.assign({ }, query, {
+                            createTime: _.gte( config.value )
+                        });
+                    }
+
+                    // 4、调用推送
+                    const count$ = await db.collection('order')
+                            .where( query )
+                            .count( );
+                    count = count$.total;
+
+                    if ( count === 0 ) { 
+                        return;
+                    }
+
+                    // 4、调用推送
+                    const push$ = await cloud.callFunction({
+                        name: 'common',
+                        data: {
+                            $url: 'push-template',
+                            data: {
+                                openid,
+                                type: 'newOrder',
+                                page: 'pages/manager-trip-list/index',
+                                texts: [`你有${count}条新订单`, `点击查看`]
+                            }
+                        }
+                    });
+
+                    // 5、更新、创建配置
+                    if ( push$.result.status === 200 ) {
+
+                        if ( !!config ) {
+                            // 更新一下此条配置
+                            await db.collection('analyse-data')
+                                .doc( String( config._id ))
+                                .update({
+                                    data: {
+                                        value: new Date( ).getTime( )
+                                    }
+                                });
+                        } else {
+                            // 创建一下配置
+                            await db.collection('analyse-data')
+                                .add({
+                                    data: {
+                                        openid,
+                                        tid: trip._id,
+                                        type: 'manager-trip-order-visit',
+                                        value: new Date( ).getTime( )
+                                    }
+                                });
+                        }
+                    }
+
+                    return;
+
+                })
+            );
+            
             return ctx.body = {
                 status: 200
             };
