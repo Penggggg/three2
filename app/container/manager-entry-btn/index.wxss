@@ -1,5 +1,9 @@
 /* container/manager-entry-btn/index.wxss */
 
+.con-manager-entry-btn-form {
+  padding: 0;
+  border-radius: 50%;
+}
 
 .con-manager-entry-btn-container {
   right: 50rpx;
@@ -7,6 +11,7 @@
   position: fixed;
   border-radius: 50%;
   z-index: 10;
+  padding: 0;
   box-shadow: 3px 3px 10px rgba(0,0,0,0.20);
 }
 
@@ -44,7 +49,17 @@
 
 .con-manager-entry-btn-list-check {
   display: flex;
-  align-items: center
+  align-items: center;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  outline:none;
+  border:none;
+  list-style: none;
+}
+
+.con-manager-entry-btn-list-check:after {
+  border:none;
 }
 
 .con-manager-entry-btn-list-image {
