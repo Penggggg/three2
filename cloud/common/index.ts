@@ -894,6 +894,8 @@ export const main = async ( event, context ) => {
                 templateId: CONFIG.push_template[ type ].value
             };
 
+            console.log('===推送', weappTemplateMsg );
+
             const send$ = await cloud.openapi.uniformMessage.send({
                 touser: openid,
                 weappTemplateMsg

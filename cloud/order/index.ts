@@ -876,24 +876,38 @@ export const main = async ( event, context ) => {
                 const target = orders.find( order => order.openid === openid &&
                     (!!order.prepay_id || !!order.form_id ));
 
+                // return cloud.callFunction({
+                //     data: {
+                //         data: {
+                //             touser: openid,
+                //             data: {
+                //                 title: canGroupUserMapCount[ String( openid )] ?
+                //                     // `拼团${ canGroupUserMapCount[ String( openid )]}件！您购买的商品已到货` :
+                //                     // '您购买的商品已到货',
+                //                     '到货啦！付尾款，立即发货' : 
+                //                     '到货啦！付尾款，立即发货',
+                //                 time: `[行程]${trip.title}`
+                //             },
+                //             form_id: target.prepay_id || target.form_id
+                //         },
+                //         $url: 'notification-getmoney'
+                //     },
+                //     name: 'common'
+                // });
+
                 return cloud.callFunction({
                     data: {
                         data: {
-                            touser: openid,
-                            data: {
-                                title: canGroupUserMapCount[ String( openid )] ?
-                                    // `拼团${ canGroupUserMapCount[ String( openid )]}件！您购买的商品已到货` :
-                                    // '您购买的商品已到货',
-                                    '到货啦！付尾款，立即发货' : 
-                                    '到货啦！付尾款，立即发货',
-                                time: `[行程]${trip.title}`
-                            },
-                            form_id: target.prepay_id || target.form_id
+                            openid,
+                            type: 'getMoney',
+                            prepay_id: target.prepay_id,
+                            texts: ['支付尾款，立即发货哦','越快越好']
                         },
-                        $url: 'notification-getmoney'
+                        $url: 'push-template'
                     },
                     name: 'common'
-                })
+                });
+
             }));
  
             // 更新行程
