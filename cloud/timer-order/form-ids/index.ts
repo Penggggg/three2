@@ -9,6 +9,11 @@ const _ = db.command;
 
 const FORM_ID_OVERTIME = 7 * 24 * 60 * 60 * 1000;
 
+/** 转换格林尼治时区 +8时区 */
+const getNow = ( ) => {
+    return new Date( Date.now( ) + 8 * 60 * 60 * 1000 )
+}
+
 /**
  * @description
  * form-ids1: 所有超过7天的formid是无效的，自动删除掉
@@ -18,7 +23,7 @@ export const clearFormIds = async ( ) => {
 
         const find$ = await db.collection('form-ids')
             .where({
-                creatTime: _.lte( new Date( ).getTime( ) - FORM_ID_OVERTIME )
+                creatTime: _.lte( getNow( ).getTime( ) - FORM_ID_OVERTIME )
             })
             .get( );
 

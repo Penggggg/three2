@@ -7,6 +7,11 @@ cloud.init({
 const db: DB.Database = cloud.database( );
 const _ = db.command;
 
+/** 转换格林尼治时区 +8时区 */
+const getNow = ( ) => {
+    return new Date( Date.now( ) + 8 * 60 * 60 * 1000 )
+}
+
 /**
  * 订单1: 所有应该支付，但是没有支付（支付超时30分钟）的订单，释放原来的库存，订单重置为已过时
  */
@@ -17,7 +22,7 @@ export const overtime = async ( ) => {
             .where({
                 pay_status: '0',
                 base_status: '0',
-                createTime: _.lte( new Date( ).getTime( ) - 30 * 60 * 1000 )
+                createTime: _.lte( getNow( ).getTime( ) - 30 * 60 * 1000 )
             })
             .get( );
         
@@ -210,26 +215,25 @@ export const pushNew = async ( ) => {
     try {
         
         // 0、判断是否在那几个时间戳之内
-        const checkIsInRange = ( ts: number ) => {
-            console.log( ts );
-            const now = new Date( ts );
+        const checkIsInRange = ( now: Date ) => {
+
             const range = [
                 7,
                 12,
-                22,
+                23,
                 0,
             ];
 
-            console.log('===', ts, now.getTime( ), now.toLocaleString( ));
+            console.log('===', now.getTime( ), now.toLocaleString( ));
             return range.some( x => {
                 const h = now.getHours( );
                 console.log( x, h, now.getMinutes( ))
-                return x === h && now.getMinutes( ) === 30;
+                return x === h && now.getMinutes( ) === 10;
             });
         }
 
         console.log('!!!!! 新订单推送' );
-        if ( !checkIsInRange( Date.now( ))) { 
+        if ( !checkIsInRange( getNow( ))) { 
             return { status: 200 };
         }
 
@@ -326,7 +330,7 @@ export const pushNew = async ( ) => {
                             .doc( String( config._id ))
                             .update({
                                 data: {
-                                    value: new Date( ).getTime( )
+                                    value: getNow( ).getTime( )
                                 }
                             });
                     } else {
@@ -337,7 +341,7 @@ export const pushNew = async ( ) => {
                                     openid,
                                     tid: trip._id,
                                     type: 'manager-trip-order-visit',
-                                    value: new Date( ).getTime( )
+                                    value: getNow( ).getTime( )
                                 }
                             });
                     }
