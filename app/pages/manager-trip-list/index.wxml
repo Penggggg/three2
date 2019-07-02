@@ -36,8 +36,8 @@
             report-submit="{{ true }}"
         >
             <button
-                class='pmgl-list-item fix-btn'
                 form-type="submit"
+                class='pmgl-list-item fix-btn'
             >
                 <view
                     class="pmgl-img"
@@ -63,24 +63,34 @@
 
                     <view class="pmgl-action">
 
-                        <view
+                        <!-- 按钮 -->
+                        <form
+                            bindsubmit="goOrder"
                             data-tid="{{ item._id }}"
-                            catchtap="goOrder"
-                            class="pmgl-important"
+                            report-submit="{{ true }}"
+                            class="pmgl-btn-form"
                         >
-                            <wxc-price
-                                icon="sub"
-                                decimal="small"
-                                class="pmgl-red-price"
-                            > 
-                                {{ item.sales_volume }}
-                            </wxc-price>
-                            <view
-                                class="pmgl-small-label"
+                            <button
+                                form-type="submit"
+                                class="pmgl-important fix-btn"
                             >
-                                {{ item.orders ? '订单：' + item.orders : '暂无订单' }}
-                            </view>
-                        </view>
+                                <wxc-price
+                                    icon="sub"
+                                    decimal="small"
+                                    class="pmgl-red-price"
+                                > 
+                                    {{ item.sales_volume }}
+                                </wxc-price>
+                                <view
+                                    class="pmgl-small-label"
+                                >
+                                    {{ item.orders ? '订单：' + item.orders : '暂无订单' }}
+                                </view>
+                            </button>
+                        </form>
+
+                        <!-- 不能删除这个 -->
+                        <view></view>
 
                         <view
                             class=""

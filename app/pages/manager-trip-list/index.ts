@@ -1,6 +1,7 @@
 
 import { http } from '../../util/http';
 import { navTo } from '../../util/route.js';
+import { createFormId } from '../../util/form-id';
 
 // app/pages/manager-goods-detail/index.js
 Page({
@@ -174,14 +175,16 @@ Page({
     },
 
     /** 点击详情 */
-    onTab({ currentTarget }) {
+    onTab({ currentTarget, detail }) {
+        createFormId( detail.formId );
         const { tid } = currentTarget.dataset;
         navTo(`/pages/manager-trip-detail/index?id=${tid}`);
     },
 
     /** 跳动详情的订单 */
-    goOrder({ currentTarget }) {
+    goOrder({ currentTarget, detail }) {
         const { tid } = currentTarget.dataset;
+        createFormId( detail.formId );
         navTo(`/pages/manager-trip-order/index?id=${tid}`);
     },
   

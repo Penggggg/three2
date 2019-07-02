@@ -104,6 +104,17 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
+  }
+
+  .pmgl-btn-form {
+    left: 0;
+    bottom: 0;
+    position: absolute;
+  }
+  
+  .pmgl-important {
+    height: 80rpx;
   }
 
   .pmgl-red-price {
@@ -205,6 +216,7 @@
   padding: 4rpx 20rpx;
   letter-spacing: 0.02em;
   display: inline-block;
+  line-height: 40rpx;
 }
 
 .pmgl-nomore {

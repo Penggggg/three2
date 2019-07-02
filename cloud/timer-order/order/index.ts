@@ -210,46 +210,26 @@ export const pushNew = async ( ) => {
     try {
         
         // 0、判断是否在那几个时间戳之内
-        const checkIsInRange = now => {
-            const y = now.getFullYear( );
-            const m = now.getMonth( ) + 1;
-            const d = now.getDate( );
-
-            console.log('===', now.getTime( ));
-
+        const checkIsInRange = ( ts: number ) => {
+            console.log( ts );
+            const now = new Date( ts );
             const range = [
-                [
-                    // 9点
-                    new Date(`${y}/${m}/${d} 8:59:00`),
-                    new Date(`${y}/${m}/${d} 9:01:00`),
-                ], [
-                    // 15点半
-                    new Date(`${y}/${m}/${d} 15:29:00`),
-                    new Date(`${y}/${m}/${d} 15:31:00`),
-                ], [
-                    // 18点
-                    new Date(`${y}/${m}/${d} 17:59:00`),
-                    new Date(`${y}/${m}/${d} 18:01:00`),
-                ], [
-                    // 凌晨12
-                    new Date(`${y}/${m}/${d} 23:59:00`),
-                    new Date( new Date(`${y}/${m}/${d} 23:59:00`).getTime( ) + 2 * 60 * 1000 ),
-                ]
+                7,
+                12,
+                22,
+                0,
             ];
 
+            console.log('===', ts, now.getTime( ), now.toLocaleString( ));
             return range.some( x => {
-                const t = now.getTime( );
-                console.log(  x[ 0 ].getTime( ), x[ 1 ].getTime( ), x[ 0 ].getTime( ) <= t && x[ 1 ].getTime( ) >= t )
-                if ( x[ 0 ].getTime( ) <= t && x[ 1 ].getTime( ) >= t ) {
-                    return true;
-                } else {
-                    return false;
-                }
+                const h = now.getHours( );
+                console.log( x, h, now.getMinutes( ))
+                return x === h && now.getMinutes( ) === 30;
             });
         }
 
         console.log('!!!!! 新订单推送' );
-        if ( !checkIsInRange( new Date( ))) { 
+        if ( !checkIsInRange( Date.now( ))) { 
             return { status: 200 };
         }
 
