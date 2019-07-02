@@ -356,7 +356,7 @@ export const main = async ( event, context ) => {
                             type: 'buy',
                             delta: 0
                         };
-                    } else if ( !buyer || !!buyer ) {
+                    } else {
                         buyerWaitPinDelta += Number(( price - groupPrice ).toFixed( 0 ));
                         buyer = {
                             openid: openId,
@@ -398,16 +398,31 @@ export const main = async ( event, context ) => {
                         if ( !!lastAdjustGroupPrice ) {
 
                             const currentDelta = Number(( lastAdjustPrice - lastAdjustGroupPrice ).toFixed( 0 ));
-                            buyerBuyPinDelta += currentDelta;
+                            
 
-                            if ( !buyer || ( !!buyer && buyer.type === 'buy' )) {
+                            // buyer拼团成功
+                            if ( lastUids.length > 0 &&  !lastUids.find( x => x === openId )) {
+
+                                buyerBuyPinDelta += currentDelta;
+                                if ( !buyer || ( !!buyer && buyer.type === 'buy' )) {
+                                    buyer = {
+                                        openid: openId,
+                                        type: 'buyPin',
+                                        delta: buyerBuyPinDelta
+                                    }
+                                }
+                            // buyer待拼
+                            } else {
+                                buyerWaitPinDelta += currentDelta;
                                 buyer = {
                                     openid: openId,
-                                    type: 'buyPin',
-                                    delta: buyerBuyPinDelta
+                                    type: 'waitPin',
+                                    delta: buyerWaitPinDelta
                                 }
+
                             }
 
+                            // 处理 other
                             if ( !lastUids.find( x => x === openId ) && lastUids.length === 1 ) {
                                 others.push({
                                     pid,
@@ -418,8 +433,15 @@ export const main = async ( event, context ) => {
                                     delta: currentDelta,
                                 })
                             }
+                        } else {
+                            if ( !buyer ) {
+                                buyer = {
+                                    openid: openId,
+                                    type: 'buy',
+                                    delta: 0
+                                };
+                            }
                         }
-
 
                         // 插入到头部，最新的已支付订单就在上面
                         lastOids.unshift( oid );
