@@ -74,7 +74,7 @@
   .pmgl-list-item {
     display: flex;
     box-sizing: border-box;
-    padding: 20rpx 25rpx;
+    padding: 20rpx 25rpx !important;
     position: relative;
     margin-bottom: 30rpx;
     margin: 0 20rpx 30rpx;
@@ -100,6 +100,7 @@
   }
 
   .pmgl-action {
+    height: 45rpx;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -182,6 +183,7 @@
     text-overflow: ellipsis;
     -webkit-box-orient: vertical;
     margin-bottom: 5rpx;
+    line-height: 32rpx;
 }
 
 .pmgl-item-time {
@@ -235,4 +237,17 @@
   content: '';
   background: rgba( 0, 0, 0, 0.15 );
   transform: translate( 0, -50% ) scaleY( 0.5 );
+}
+
+.fix-btn {
+  background: transparent;
+  outline:none;
+  border:none;
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+
+.fix-btn:after {
+  border:none;
 }

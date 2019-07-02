@@ -208,12 +208,14 @@ export const payLastFix = async ( ) => {
  */
 export const pushNew = async ( ) => {
     try {
-
+        
         // 0、判断是否在那几个时间戳之内
         const checkIsInRange = now => {
             const y = now.getFullYear( );
             const m = now.getMonth( ) + 1;
             const d = now.getDate( );
+
+            console.log('===', now.getTime( ));
 
             const range = [
                 [
@@ -221,9 +223,9 @@ export const pushNew = async ( ) => {
                     new Date(`${y}/${m}/${d} 8:59:00`),
                     new Date(`${y}/${m}/${d} 9:01:00`),
                 ], [
-                    // 12点半
-                    new Date(`${y}/${m}/${d} 12:29:00`),
-                    new Date(`${y}/${m}/${d} 12:31:00`),
+                    // 15点半
+                    new Date(`${y}/${m}/${d} 15:29:00`),
+                    new Date(`${y}/${m}/${d} 15:31:00`),
                 ], [
                     // 18点
                     new Date(`${y}/${m}/${d} 17:59:00`),
@@ -237,6 +239,7 @@ export const pushNew = async ( ) => {
 
             return range.some( x => {
                 const t = now.getTime( );
+                console.log(  x[ 0 ].getTime( ), x[ 1 ].getTime( ), x[ 0 ].getTime( ) <= t && x[ 1 ].getTime( ) >= t )
                 if ( x[ 0 ].getTime( ) <= t && x[ 1 ].getTime( ) >= t ) {
                     return true;
                 } else {
@@ -245,6 +248,7 @@ export const pushNew = async ( ) => {
             });
         }
 
+        console.log('!!!!! 新订单推送' );
         if ( !checkIsInRange( new Date( ))) { 
             return { status: 200 };
         }
@@ -259,6 +263,8 @@ export const pushNew = async ( ) => {
         const trips = trips$.result.data;
         const trip = trips[ 0 ];
 
+        console.log('!!!!! trip', trip );
+
         // 2、获取 push: true 的管理员
         const members = await db.collection('manager-member')
             .where({
@@ -269,6 +275,8 @@ export const pushNew = async ( ) => {
         if ( !trip || members.data.length === 0 ) {
             return { status: 200 };
         }
+
+        console.log('!!!!! members.data', members.data );
 
         await Promise.all(
             members.data.map( async member => {
@@ -284,6 +292,8 @@ export const pushNew = async ( ) => {
                     })
                     .get( );
                 const config = config$.data[ 0 ];
+
+                console.log('!!!!! config', config );
 
                 let query: any = {
                     tid: trip._id,
@@ -303,6 +313,8 @@ export const pushNew = async ( ) => {
                         .count( );
                 count = count$.total;
 
+                console.log('!!!!! count', count );
+
                 if ( count === 0 ) { 
                     return;
                 }
@@ -321,10 +333,14 @@ export const pushNew = async ( ) => {
                     }
                 });
 
+                console.log( '==== push', push$.result )
+
                 // 5、更新、创建配置
                 if ( push$.result.status === 200 ) {
 
                     if ( !!config ) {
+
+                        console.log( '=======' )
                         // 更新一下此条配置
                         await db.collection('analyse-data')
                             .doc( String( config._id ))
