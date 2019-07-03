@@ -31,6 +31,7 @@ const getNow = ( ts = false ): any => {
  * _id
  * openid,
  * createtime
+ * paytime
  * tid,
  * pid,
  * cid (可为空)
@@ -991,6 +992,7 @@ export const main = async ( event, context ) => {
                                 base_status: '3',
                                 pay_status: '2',
                                 final_price: order.final_price,
+                                paytime: getNow( true )
                             }
                         }),
                     db.collection('goods')

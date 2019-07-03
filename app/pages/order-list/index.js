@@ -693,6 +693,7 @@ Page({
         http({
             url: 'shopping-list_pin',
             data: {
+                tid,
                 detail: false,
                 type: 'pin'
             },
