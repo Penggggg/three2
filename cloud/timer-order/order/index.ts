@@ -224,32 +224,15 @@ export const pushNew = async ( ) => {
     try {
         
         const nowDate = getNow( );
-        console.log( 
-            '...', 
-            getNow( true ),
-            nowDate.toLocaleString( ),
-            Date.now( ),
-            new Date( ).toLocaleString( )
-        );
         
         // 0、判断是否在那几个时间戳之内
         const checkIsInRange = ( now: Date ) => {
 
-            console.log( 
-                now,
-                now.toLocaleString( ),
-                now.getTime( ),
-                now.getHours( )
-            )
-
             const range = [ 6, 12, 18, 0 ];
-
             const result = range.some( x => {
                 const h = now.getHours( );
                 return x === h && now.getMinutes( ) === 0;
             });
-
-            console.log('==,,,,', result )
             return result;
         }
 
@@ -291,7 +274,7 @@ export const pushNew = async ( ) => {
                         type: 'manager-trip-order-visit'
                     })
                     .get( );
-                const config = config$.data[ 0 ];
+                const tripOrderVisitConfig = config$.data[ 0 ];
 
                 let query: any = {
                     tid: trip._id,
@@ -299,9 +282,9 @@ export const pushNew = async ( ) => {
                     base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
                 };
 
-                if ( !!config ) {
+                if ( !!tripOrderVisitConfig ) {
                     query = Object.assign({ }, query, {
-                        createTime: _.gte( config.value )
+                        createTime: _.gte( tripOrderVisitConfig.value )
                     });
                 }
 
@@ -313,7 +296,7 @@ export const pushNew = async ( ) => {
 
 
                 if ( count === 0 ) { 
-                    return;
+                    return { staus: 200 };
                 }
 
                 // 4、调用推送
@@ -335,11 +318,11 @@ export const pushNew = async ( ) => {
                 // 5、更新、创建配置
                 if ( push$.result.status === 200 ) {
 
-                    if ( !!config ) {
+                    if ( !!tripOrderVisitConfig ) {
 
                         // 更新一下此条配置
                         await db.collection('analyse-data')
-                            .doc( String( config._id ))
+                            .doc( String( tripOrderVisitConfig._id ))
                             .update({
                                 data: {
                                     value: getNow( true )
@@ -374,4 +357,125 @@ export const pushNew = async ( ) => {
             message: typeof e === 'string' ? e : JSON.stringify( e )
         }
     }
+}
+
+/** 
+ * 订单5: 尾款推送
+ */
+export const pushLastPay = async ( ) => {
+
+    // 0、是否为0点
+    const nowDate = getNow( );
+    if ( nowDate.getHours( ) !== 0 && nowDate.getMinutes( ) !== 0 ) {
+        return { status: 200 };
+    }
+
+    // 1、获取上一趟trip
+    // 按结束日期倒叙序，获取最多1条 已结束的行程
+    const trip$ = await db.collection('trip')
+        .where({
+            isClosed: true
+        })
+        .limit( 1 )
+        .orderBy('end_date', 'desc')
+        .get( );
+
+    // 2、获取 push: true 的管理员
+    const members = await db.collection('manager-member')
+        .where({
+            push: true
+        })
+        .get( );
+    
+    if ( trip$.data.length === 0 || members.data.length === 0 ) {
+        return { status: 200 };
+    }
+
+    await Promise.all(
+        members.data.map( async member => {
+
+            const { openid } = member;
+
+            // 3、获取上次浏览尾款的时间戳
+            const config$ = await db.collection('analyse-data')
+                    .where({
+                        openid,
+                        tid: trip$.data[ 0 ]._id,
+                        type: 'manager-pay-last-visit'
+                    })
+                    .get( );
+
+            const config = config$.data[ 0 ];
+
+            // 3、查询
+            let query: any = {
+                pay_status: '2',
+                tid: trip$.data[ 0 ]._id,
+            };
+
+            if ( config ) {
+                query = {
+                    ...query,
+                    paytime: _.gte( config.value )
+                };
+            }
+            
+            const orders$ = await db.collection('order')
+                .where( query )
+                .get( );
+
+            const count = Array.from(
+                new Set(
+                    orders$.data.map( x => x.openid )
+                )
+            ).length;
+
+            if ( count === 0 ) {
+                return { staus: 200 };
+            }
+
+            // 4、调用推送
+            const push$ = await cloud.callFunction({
+                name: 'common',
+                data: {
+                    $url: 'push-template-cloud',
+                    data: {
+                        openid,
+                        type: 'getMoney',
+                        page: 'pages/manager-trip-list/index',
+                        texts: [`${count}人付了尾款`, `今天`]
+                    }
+                }
+            });
+
+            console.log( '==== push', push$.result )
+            // 5、更新、创建配置
+            if ( push$.result.status === 200 ) {
+
+                if ( !!config ) {
+
+                    // 更新一下此条配置
+                    await db.collection('analyse-data')
+                        .doc( String( config._id ))
+                        .update({
+                            data: {
+                                value: getNow( true )
+                            }
+                        });
+                } else {
+                    // 创建一下配置
+                    await db.collection('analyse-data')
+                        .add({
+                            data: {
+                                openid,
+                                tid: trip$.data[ 0 ]._id,
+                                type: 'manager-pay-last-visit',
+                                value: getNow( true )
+                            }
+                        });
+                }
+            }
+        })
+    );
+
 }

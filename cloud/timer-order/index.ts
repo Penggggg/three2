@@ -1,7 +1,7 @@
 import * as cloud from 'wx-server-sdk';
 import { overtimeTrip } from './trip';
 import { clearFormIds } from './form-ids';
-import { overtime, payedFix, priceFix, payLastFix, pushNew } from './order';
+import { overtime, payedFix, priceFix, payLastFix, pushNew, pushLastPay } from './order';
 import { catchLostOrders, removeUselessOrders } from './shopping-list';
 
 cloud.init({
@@ -22,6 +22,7 @@ export const main = async ( event, context ) => {
     try {
         
         await pushNew( );
+        await pushLastPay( );
         await overtime( );
         await payedFix( );
         await priceFix( );
