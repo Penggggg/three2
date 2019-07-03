@@ -146,7 +146,7 @@
         >
 
             <!-- 拼团文案 -->
-            <view class="info-block-item" wx:if="{{ priceGap }}">
+            <view class="info-block-item" wx:if="{{ priceGap && priceGap !== '0' }}">
 
                 <view class="info-block-item-label">
                     拼团：
@@ -159,7 +159,20 @@
                             hasStanders$ ?
                                 '有' + pinCount$ + '个型号可拼团，' :
                                 '此商品可拼团 '
-                    }}<text wx:if="priceGap" class="red bigger nobold" bindtap="toggleTips">拼团省{{ priceGap }}元【详情】</text>
+                    }}
+                    <form
+                        wx:if="{{ priceGap }}"
+                        bindsubmit="toggleTips"
+                        class="red bigger nobold"
+                        report-submit="{{ true }}"
+                    >
+                        <button
+                            form-type="submit"
+                            class="red bigger nobold formid-btn"
+                        >   
+                            拼团省{{ priceGap }}元【详情】
+                        </button>
+                    </form>
                 </view>
 
             </view>
@@ -288,18 +301,6 @@
             </view>
         </view>
 
-        <!-- 分享按钮 -->
-        <!-- <view class="gd-share-btn">
-            <image
-                class="invite-icon-img"
-                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-share-2.png"
-            />
-            <button
-                open-type="share"
-                class="invite-icon"
-            >
-            </button>
-        </view> -->
 
         <!-- 商品下面的栏 -->
         <my-goods-detail-bar
@@ -399,12 +400,18 @@
                 </block>
             </swiper>
 
-            <view
+            <form
                 class="gd-pin-close"
-                bindtap="toggleTips"
+                bindsubmit="toggleTips"
+                report-submit="{{ true }}"
             >
-                <wxc-icon size="40" type="no" color="rgba(0,0,0,0.1)"></wxc-icon>
-            </view>
+                <button
+                    form-type="submit"
+                    class="formid-btn"
+                >   
+                    <wxc-icon size="40" type="no" color="rgba(0,0,0,0.1)"></wxc-icon>
+                </button>
+            </form>
 
         </view>
     </wxc-mask>

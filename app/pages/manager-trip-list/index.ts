@@ -1,6 +1,7 @@
 
 import { http } from '../../util/http';
 import { navTo } from '../../util/route.js';
+import { createFormId } from '../../util/form-id';
 
 // app/pages/manager-goods-detail/index.js
 Page({
@@ -40,6 +41,7 @@ Page({
 
     /** 跳页 */
     navigate( e ) {
+        createFormId( e.detail.formId );
         navTo('/pages/manager-trip-detail/index');
     },
 
@@ -101,6 +103,7 @@ Page({
                                 this.dealListText( data.data ):
                             [ ...this.data.list, ...this.dealListText( data.data )];
 
+
                         this.setData!({
                             list: meta
                         });
@@ -135,7 +138,7 @@ Page({
          * ! 注意，时间对比。开始时间是 指定日期的早上8点；结束日期是 指定日期的晚上24:00
          */
         const meta = list.map(( x, k ) => {
-            const { _id, title, sales_volume, start_date, published, end_date, orders, isClosed } = x;
+            const { _id, title, sales_volume, start_date, published, end_date, orders, isClosed, clients, notPayAllClients } = x;
 
             const state$ = !published ?
                 '未发布' :
@@ -154,6 +157,9 @@ Page({
                 bg: k % 7,
                 sales_volume,
                 state: state$,
+                isClosed,
+                clients,
+                notPayAllClients,
                 ing: state$ === '进行中',
                 endDate: simpleTime( end_date ),
                 startDate: simpleTime( start_date ),
@@ -174,14 +180,16 @@ Page({
     },
 
     /** 点击详情 */
-    onTab({ currentTarget }) {
+    onTab({ currentTarget, detail }) {
+        createFormId( detail.formId );
         const { tid } = currentTarget.dataset;
         navTo(`/pages/manager-trip-detail/index?id=${tid}`);
     },
 
     /** 跳动详情的订单 */
-    goOrder({ currentTarget }) {
+    goOrder({ currentTarget, detail }) {
         const { tid } = currentTarget.dataset;
+        createFormId( detail.formId );
         navTo(`/pages/manager-trip-order/index?id=${tid}`);
     },
   

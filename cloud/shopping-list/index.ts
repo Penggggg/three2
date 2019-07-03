@@ -9,6 +9,20 @@ cloud.init({
 const db: DB.Database = cloud.database( );
 const _ = db.command;
 
+/** 
+ * 转换格林尼治时区 +8时区
+ * Date().now() / new Date().getTime() 是时不时正常的+8
+ * Date.toLocalString( ) 好像是一直是+0的
+ * 先拿到 +0，然后+8
+ */
+const getNow = ( ts = false ): any => {
+    if ( ts ) {
+        return Date.now( );
+    }
+    const time_0 = new Date( new Date( ).toLocaleString( ));
+    return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
+}
+
 /**
  * @description 行程清单模块
  * --------- 字段 ----------
@@ -112,7 +126,7 @@ export const main = async ( event, context ) => {
                 .doc( String( tid ))
                 .get( );
 
-            if ( trip$.data.isClosed || new Date( ).getTime( ) > trip$.data.end_date ) {
+            if ( trip$.data.isClosed || getNow( true ) > trip$.data.end_date ) {
                 return ctx.body = getErr('暂无购物行程～');
             }
 
@@ -284,6 +298,7 @@ export const main = async ( event, context ) => {
     /**
      * @description
      * 由订单创建购物清单
+     * openId
      * list: {
      *    tid,
      *    pid,
@@ -293,9 +308,33 @@ export const main = async ( event, context ) => {
      *    groupPrice,
      *!   acid
      * }[ ]
+     * 
+     * 并返回购买推送通知的数据结构
+     * {
+     *      当前的买家
+     *      buyer: {
+     *          delta,
+     *          openid,
+     *          type: 'buy' | 'buyPin' | 'waitPin' ( 权重越来越高 )
+     *      }
+     *      拼团成功的其他买家
+     *      others: [
+     *            openid
+     *            acid
+     *            sid
+     *            pid
+     *            tid
+     *            delta
+     *      ]
+     * }
      */
     app.router('create', async( ctx, next ) => {
         try {
+
+            let others: any = [ ];
+            let buyer: any = null;
+            let buyerBuyPinDelta = 0;
+            let buyerWaitPinDelta = 0;
 
             const { list, openId } = event.data;
  
@@ -321,11 +360,28 @@ export const main = async ( event, context ) => {
                     .where( query )
                     .get( );
 
+                // 创建采购单
                 if ( find$.data.length === 0 ) {
 
-                    const meta = Object.assign({ }, query,{
+                    // 处理推送：buyer
+                    if ( !buyer && !groupPrice ) {
+                        buyer = {
+                            openid: openId,
+                            type: 'buy',
+                            delta: 0
+                        };
+                    } else {
+                        buyerWaitPinDelta += Number(( price - groupPrice ).toFixed( 0 ));
+                        buyer = {
+                            openid: openId,
+                            type: 'waitPin',
+                            delta: buyerWaitPinDelta
+                        };
+                    }
+
+                    const meta = Object.assign({ }, query, {
                         acid: acid || undefined
-                    },{
+                    }, {
                         oids: [ oid ],
                         uids: [ openId ],
                         purchase: 0,
@@ -333,10 +389,10 @@ export const main = async ( event, context ) => {
                         base_status: '0',
                         adjustPrice: price,
                         adjustGroupPrice: groupPrice,
-                        createTime: new Date( ).getTime( )
+                        createTime: getNow( true )
                     });
      
-                    const creaet$ = await db.collection('shopping-list')
+                    const create$ = await db.collection('shopping-list')
                         .add({
                             data: meta
                         });
@@ -349,6 +405,57 @@ export const main = async ( event, context ) => {
                     if ( !metaShoppingList.oids.find( x => x === oid )) {
                         const lastOids = metaShoppingList.oids;
                         const lastUids = metaShoppingList.uids;
+                        const lastAdjustPrice = metaShoppingList.adjustPrice;
+                        const lastAdjustGroupPrice = metaShoppingList.adjustGroupPrice;
+
+                        // 处理推送：buyer、others
+                        if ( !!lastAdjustGroupPrice ) {
+
+                            const currentDelta = Number(( lastAdjustPrice - lastAdjustGroupPrice ).toFixed( 0 ));
+                            
+
+                            // buyer拼团成功
+                            if ( lastUids.filter( x => x !== openId ).length > 0 ) {
+
+                                buyerBuyPinDelta += currentDelta;
+                                if ( !buyer || ( !!buyer && buyer.type === 'buy' )) {
+                                    buyer = {
+                                        openid: openId,
+                                        type: 'buyPin',
+                                        delta: buyerBuyPinDelta
+                                    }
+                                }
+                            // buyer待拼
+                            } else {
+                                buyerWaitPinDelta += currentDelta;
+                                buyer = {
+                                    openid: openId,
+                                    type: 'waitPin',
+                                    delta: buyerWaitPinDelta
+                                }
+
+                            }
+
+                            // 处理 other
+                            if ( !lastUids.find( x => x === openId ) && lastUids.length === 1 ) {
+                                others.push({
+                                    pid,
+                                    tid,
+                                    sid: sid || undefined,
+                                    acid: acid || undefined,
+                                    openid: lastUids[ 0 ],
+                                    delta: currentDelta,
+                                })
+                            }
+                        } else {
+                            if ( !buyer ) {
+                                buyer = {
+                                    openid: openId,
+                                    type: 'buy',
+                                    delta: 0
+                                };
+                            }
+                        }
 
                         // 插入到头部，最新的已支付订单就在上面
                         lastOids.unshift( oid );
@@ -362,7 +469,7 @@ export const main = async ( event, context ) => {
                                 data: {
                                     oids: lastOids,
                                     uids: lastUids,
-                                    updateTime: new Date( ).getTime( )
+                                    updateTime: getNow( true )
                                 }
                             })
                     }
@@ -372,7 +479,11 @@ export const main = async ( event, context ) => {
             }));
 
             return ctx.body = {
-                status: 200
+                status: 200,
+                data: {
+                    buyer,
+                    others
+                }
             }
 
         } catch ( e ) { return ctx.body = { status: 500 }}
@@ -577,7 +688,7 @@ export const main = async ( event, context ) => {
                 adjustGroupPrice,
                 base_status: '1',
                 buy_status: purchase < needBuyTotal ? '2' : '1',
-                updateTime: new Date( ).getTime( )
+                updateTime: getNow( true )
             });
 
             delete temp['_id'];

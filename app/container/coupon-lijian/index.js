@@ -1,4 +1,5 @@
 
+const { http } = require('../../util/http.js');
 
 Component({
     /**
@@ -96,8 +97,18 @@ Component({
             }, 30 );
         },
 
-        /** 转发分享 */
-        
+        /** formid */
+        createFormId( e ) {
+            const formid = e.detail.formId;
+            if ( !formid ) { return; }
+            http({
+                data: {
+                    formid
+                },
+                loadingMsg: 'none',
+                url: 'common_create-formid',
+            })
+        },
 
     },
 

@@ -1,4 +1,5 @@
 const app = getApp( );
+const { createFormId } = require('../../util/form-id');
 const { navTo } = require('../../util/route.js');
 
 // container/manager-entry-btn/index.js
@@ -73,14 +74,16 @@ Component({
         },
 
         /** 弹窗开关 */
-        toggleDrawer( ) {
+        toggleDrawer( e ) {
             this.setData({
                 showDrawer: !this.data.showDrawer
-            })
+            });
+            createFormId( e.detail.formId );
         },
 
         /** 地址跳转 */
         navigate( e ) {
+            createFormId( e.detail.formId );
             navTo(e.currentTarget.dataset.url);
         }
         

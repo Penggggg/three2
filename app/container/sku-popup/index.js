@@ -1,5 +1,6 @@
 const app = getApp( );
-// container/sku-popup/index.js
+const { http } = require('../../util/http.js');
+
 Component({
     /**
      * 组件的属性列表
@@ -137,6 +138,7 @@ Component({
         },
         /** 确认 */
         confirmSelect( e ) {
+
             app.getWxUserInfo(( ) => {
                 const { selectdSkuCount, selectedSku, skuItems } = this.data;
                 this.triggerEvent('confirm', {
@@ -147,6 +149,8 @@ Component({
                 }, null );
                 this.triggerEvent('close', false, null );
             });
+
+            this.createFormId( e.detail.formId );
         },
         /** 关闭弹窗 */
         close( ) {
@@ -166,6 +170,17 @@ Component({
                 // 进行确认
                 this.confirmSelect( );
             });
+        },
+        // 添加一个formid
+        createFormId( formid ) {
+            if ( !formid ) { return; }
+            http({
+                data: {
+                    formid
+                },
+                loadingMsg: 'none',
+                url: 'common_create-formid',
+            })
         }
     },
 

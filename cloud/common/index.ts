@@ -12,6 +12,19 @@ cloud.init({
 const db: DB.Database = cloud.database( );
 const _ = db.command;
 
+/** 
+ * 转换格林尼治时区 +8时区
+ * Date().now() / new Date().getTime() 是时不时正常的+8
+ * Date.toLocalString( ) 好像是一直是+0的
+ * 先拿到 +0，然后+8
+ */
+const getNow = ( ts = false ): any => {
+    if ( ts ) {
+        return Date.now( );
+    }
+    const time_0 = new Date( new Date( ).toLocaleString( ));
+    return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
+}
 /**
  * @description 
  * 公共模块
@@ -257,19 +270,6 @@ export const main = async ( event, context ) => {
             const timeStamp = parseInt(String( Date.now() / 1000 )) + '';
             const out_trade_no = "otn" + nonce_str + timeStamp;
 
-            // const body = '香猪测试';
-            // const mch_id = '1521522781';
-            // const attach = 'anything';
-            // const appid = event.userInfo.appId;
-            // const notify_url = 'https://whatever.com/notify';
-            // const key = 'a92006250b4ca9247c02edce69f6a21a';
-            // const total_fee = event.data.total_fee;
-            // const spbill_create_ip = '118.89.40.200';
-            // const openid = event.userInfo.openId;
-            // const nonce_str = Math.random().toString(36).substr(2, 15);
-            // const timeStamp = parseInt(String( Date.now() / 1000 )) + '';
-            // const out_trade_no = "otn" + nonce_str + timeStamp;
-
             const paysign = ({ ...args }) => {
                 const sa: any = [ ]
                 for ( let k in args ) {
@@ -426,6 +426,16 @@ export const main = async ( event, context ) => {
      */
     app.router('mypage-info', async( ctx, next ) => {
         try {
+
+            let coupons = 0;
+            const trips$ = await cloud.callFunction({
+                data: {
+                    $url: 'enter'
+                },
+                name: 'trip'
+            });
+            const trips = trips$.result.data;
+            const trip = trips[ 0 ];
             
             // 订单数
             const orders$ = await db.collection('order')
@@ -435,17 +445,21 @@ export const main = async ( event, context ) => {
                 })
                 .count( );
 
-            // 卡券数
-            const coupons$ = await db.collection('coupon')
-                .where({
-                    openid: event.userInfo.openId
-                })
-                .count( );
+            if ( !!trip ) {
+                // 卡券数( 过滤掉只剩当前的trip卡券 )
+                const coupons$ = await db.collection('coupon')
+                    .where({
+                        tid: trip._id,
+                        openid: event.userInfo.openId
+                    })
+                    .count( );
+                coupons = coupons$.total;
+            }
             
             return ctx.body = {
                 status: 200,
                 data: {
-                    coupons: coupons$.total,
+                    coupons,
                     orders: orders$.total
                 }
             }
@@ -501,7 +515,7 @@ export const main = async ( event, context ) => {
      * 消息推送 - 催款
      * {
      *     touser ( openid )
-     *     form_id
+     *     form_id （ 或者是 prepay_id ）
      *     page?: string
      *     data: { 
      *         
@@ -600,7 +614,7 @@ export const main = async ( event, context ) => {
             
             const [ c_timestamp, c_appid, c_content, c_max ] = result.split('-');
 
-            if ( new Date( ).getTime( ) - Number( c_timestamp ) > 30 * 60 * 1000 ) {
+            if ( getNow( true ) - Number( c_timestamp ) > 30 * 60 * 1000 ) {
                 return ctx.body = getErr('密钥已过期，请联系客服');
             }
 
@@ -672,7 +686,7 @@ export const main = async ( event, context ) => {
                         data: {
                             openid,
                             content: c_content,
-                            createTime: new Date( ).getTime( )
+                            createTime: getNow( true )
                         }
                     })
             }
@@ -796,6 +810,234 @@ export const main = async ( event, context ) => {
             }
         }
     });
+
+    /** 
+     * @description
+     * 创建一个form-id
+     * {
+     *     formid
+     * }
+     * form-ids: {
+     *      openid,
+     *      formid,
+     *      createTime,
+     *      type: 'manager' | 'normal'
+     * }
+     */
+    app.router('create-formid', async( ctx, next ) => {
+        try {
+            const openid = event.userInfo.openId;
+            const { formid } = event.data; 
+            const find$ = await db.collection('manager-member')
+                .where({
+                    openid
+                })
+                .count( );
+            
+            const create$ = await db.collection('form-ids')
+                .add({
+                    data: {
+                        openid,
+                        formid,
+                        createTime: getNow( true ),
+                        type: find$.total > 0 ? 'manager' : 'normal'
+                    }
+                });
+            ctx.body = {
+                status: 200
+            }
+        } catch ( e ) {
+            ctx.body = {
+                status: 200
+            }
+        }
+    });
+
+    /**
+     * @description
+     * 模板推送服务，消费form-ids
+     * {
+     *      openid
+     *      type: 'buyPin' | 'buy' | 'getMoney' | 'waitPin' | 'newOrder'
+     *      texts: [ 'xx', 'yy' ]
+     *      ?page
+     *      ?prepay_id
+     * }
+     */
+    app.router('push-template', async( ctx, next ) => {
+        try {
+
+            let formid_id: any = '';
+            let formid = event.data.prepay_id;
+            const { type, texts } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const page = event.data.page || 'pages/order-list/index';
+
+            // 如果没有prepay_id, 就去拿该用户的form_id
+            if ( !formid ) {
+                const find$ = await db.collection('form-ids')
+                    .where({
+                        openid
+                    })
+                    .limit( 1 )
+                    .get( );
+
+                if ( !find$.data[ 0 ]) {
+                    throw `该用户${openid}没有formid、prepay_id`;
+                }
+
+                formid = find$.data[ 0 ].formid;
+                formid_id = find$.data[ 0 ]._id;
+            }
+
+            let textData = { };
+            texts.map(( text, index ) => {
+                const keyText = `keyword${index + 1}`;
+                textData = Object.assign({ }, textData, {
+                    [ keyText ] : {
+                        value: text
+                    }
+                })
+            });
+
+            const weappTemplateMsg = {
+                page,
+                data: textData,
+                formId: formid,
+                templateId: CONFIG.push_template[ type ].value
+            };
+
+            console.log('===推送', weappTemplateMsg );
+
+            const send$ = await cloud.openapi.uniformMessage.send({
+                touser: openid,
+                weappTemplateMsg
+            });
+
+            if ( String( send$.errCode ) !== '0' ) {
+                throw send$.errMsg;
+            }
+
+            // 删除该条form-id
+            if ( !!formid_id ) {
+                try {
+                    await db.collection('form-ids')
+                        .doc( formid_id )
+                        .remove( );
+                } catch ( e ) { }
+            }
+
+            return ctx.body = {
+                status: 200
+            };
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500,
+                message: typeof e === 'string' ? e : JSON.stringify( e )
+            }
+        }
+    });
+
+    /** 
+     * @description
+     * 同上，云开发用
+     */
+    app.router('push-template-cloud', async( ctx, next ) => {
+        try {
+            console.log('===========>push-template-cloud')
+            // 获取token
+            const result = await (axios as any)({
+                method: 'get',
+                url: `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${CONFIG.app.id}&secret=${CONFIG.app.secrect}`
+            });
+            
+            const { access_token, errcode } = result.data;
+
+            if ( errcode ) {
+                throw '生成access_token错误'
+            }
+
+            let formid_id: any = '';
+            let formid = event.data.prepay_id;
+            const { type, texts } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const page = event.data.page || 'pages/order-list/index';
+
+            // 如果没有prepay_id, 就去拿该用户的form_id
+            if ( !formid ) {
+                const find$ = await db.collection('form-ids')
+                    .where({
+                        openid
+                    })
+                    .limit( 1 )
+                    .get( );
+
+                if ( !find$.data[ 0 ]) {
+                    throw `该用户${openid}没有formid、prepay_id`;
+                }
+
+                formid = find$.data[ 0 ].formid;
+                formid_id = find$.data[ 0 ]._id;
+            }
+
+            let textData = { };
+            texts.map(( text, index ) => {
+                const keyText = `keyword${index + 1}`;
+                textData = Object.assign({ }, textData, {
+                    [ keyText ] : {
+                        value: text
+                    }
+                })
+            });
+
+            const weapp_template_msg = {
+                page,
+                data: textData,
+                form_id: formid,
+                template_id: CONFIG.push_template[ type ].value
+            };
+
+            console.log('===推送', weapp_template_msg );
+
+            const reqData = {
+                touser: openid,
+                weapp_template_msg
+            }
+
+            // 发送推送
+            const send = await (axios as any)({
+                data: reqData,
+                method: 'post',
+                url: `https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token=${access_token}`
+            });
+
+            if ( String( send.data.errcode ) !== '0' ) {
+                throw send.data.errmsg;
+            }
+
+            // 删除该条form-id
+            if ( !!formid_id ) {
+                try {
+                    await db.collection('form-ids')
+                        .doc( formid_id )
+                        .remove( );
+                } catch ( e ) { }
+            }
+        
+            return ctx.body = {
+                data: send.data,
+                status: 200
+            }
+
+            
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500,
+                message: typeof e === 'string' ? e : JSON.stringify( e )
+            }
+        }
+    })
 
     return app.serve( );
 

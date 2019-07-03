@@ -43,13 +43,20 @@
                 </view>
 
                 <!-- 分享按钮 -->
-                <button
-                    open-type="share"
-                    class="con-lj-share"
-                    animation="{{ animationMiddleHeaderItem }}"
+                <form
+                    bindsubmit="createFormId"
+                    class="cgp-toggle-btn"
+                    report-submit="{{ true }}"
                 >
-                    分享
-                </button>
+                    <button
+                        open-type="share"
+                        form-type="submit"
+                        class="formid-btn con-lj-share"
+                        animation="{{ animationMiddleHeaderItem }}"
+                    >   
+                        分享
+                    </button>
+                </form>
 
             </view>
 

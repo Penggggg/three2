@@ -55,20 +55,32 @@
                 wx:else
                 class="gbs-btn-special-item"
             >
-                <view
+                <form
                     data-type="cart"
-                    bindtap="toggleSku"
-                    class="gbs-btn-special-item pink"
-                >   
-                    加入购物车
-                </view>
-                <view
+                    bindsubmit="toggleSku"
+                    report-submit="{{ true }}"
+                    class="gbs-btn-form-btn flex"
+                >
+                    <button
+                        form-type="submit"
+                        class="gbs-btn-special-item pink"
+                    >   
+                        加入购物车
+                    </button>
+                </form>
+                <form
                     data-type="buy"
-                    bindtap="toggleSku"
-                    class="gbs-btn-special-item morepink"
-                >   
-                    立即购买
-                </view>
+                    bindsubmit="toggleSku"
+                    report-submit="{{ true }}"
+                    class="gbs-btn-form-btn flex"
+                >
+                    <button
+                        form-type="submit"
+                        class="gbs-btn-special-item morepink"
+                    >   
+                        立即购买
+                    </button>
+                </form>
             </view>
             
 

@@ -2,17 +2,23 @@
 <view class='con-manager-entry-btn'>
 
   <!-- 可视按钮 -->
-  <view
-    wx:if='{{ showBtn }}'
-    class='con-manager-entry-btn-container'
+  <form
+      wx:if='{{ showBtn }}'
+      bindsubmit="toggleDrawer"
+      report-submit="{{ true }}"
+      class="fon-manager-entry-btn-form"
   >
-      <view 
-        class="manager-entry-btn"
-        bindtap='toggleDrawer'
-      >
-        <wxc-icon color="#fff" size="45" type="add" /> 
-      </view>
-  </view>
+    <button
+      form-type="submit"
+      class='con-manager-entry-btn-container'
+    >
+        <view 
+          class="manager-entry-btn"
+        >
+          <wxc-icon color="#fff" size="45" type="add" /> 
+        </view>
+    </button>
+  </form>
 
   <!-- 弹框 -->
   <i-drawer
@@ -24,14 +30,18 @@
       class="con-manager-entry-drawer"
     >
       <view class="con-manager-entry-btn-list">
-        <view 
+        <form 
           wx:key="{{ index }}"
           wx:for="{{ list }}"
           data-url="{{ item.url }}"
+          report-submit="{{ true }}"
+          bindsubmit='navigate'
           class="con-manager-entry-btn-list-item"
-          bindtap='navigate'
         >
-          <view class="con-manager-entry-btn-list-check">
+          <button 
+            form-type="submit"
+            class="con-manager-entry-btn-list-check"
+          >
             <image
               mode="aspectFill"
               src="{{ item.img }}"
@@ -42,8 +52,8 @@
               detail="{{ item.desc }}"
               class="con-manager-entry-btn-item"
             />
-          </view>
-        </view>
+          </button>
+        </form>
       </view>
 
       <view class="con-manager-entry-btn-small-list">

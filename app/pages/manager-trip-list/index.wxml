@@ -28,87 +28,117 @@
         bindscrolltolower="fetchData"
         class="pmgl-list-container" 
     >
-
-        <view
+        <form
             wx:for="{{ list }}"
             wx:key="{{ index }}"
+            bindsubmit="onTab"
             data-tid="{{ item._id }}"
-            class='pmgl-list-item'
-            bindtap="onTab"
+            report-submit="{{ true }}"
         >
-            <view
-                class="pmgl-img"
-                style="{{ bgs[ item.bg ]}}"
+            <button
+                form-type="submit"
+                class='pmgl-list-item fix-btn'
             >
-            </view>
-            <view class="pmgl-info">
-
-                <view class="pmgl-base">
-
-                    <view class="pmgl-item-title">{{ item.title }}</view>
-                    <view
-                        class="pmgl-item-time {{ item.red ? 'red' : '' }}"
-                    >
-                        {{ 
-                            item.ing ?
-                                item.endDate + '结束' :
-                                item.state
-                        }}
-                    </view>
-
+                <view
+                    class="pmgl-img"
+                    style="{{ bgs[ item.bg ]}}"
+                >
                 </view>
+                <view class="pmgl-info">
 
-                <view class="pmgl-action">
+                    <view class="pmgl-base">
 
-                    <view
-                        data-tid="{{ item._id }}"
-                        catchtap="goOrder"
-                        class="pmgl-important"
-                    >
-                        <wxc-price
-                            icon="sub"
-                            decimal="small"
-                            class="pmgl-red-price"
-                        > 
-                            {{ item.sales_volume }}
-                        </wxc-price>
+                        <view class="pmgl-item-title">{{ item.title }}</view>
                         <view
-                            class="pmgl-small-label"
+                            class="pmgl-item-time {{ item.red ? 'red' : '' }}"
                         >
-                            {{ item.orders ? '订单：' + item.orders : '暂无订单' }}
+                            {{ 
+                                item.ing ?
+                                    item.endDate + '结束' :
+                                    item.state
+                            }}
                         </view>
+
                     </view>
 
-                    <view
-                        class=""
-                    >
-                        <view class="pmgl-small-label {{ item.ing ? 'mr' : '' }}">
-                            {{ item.startDate2 }}~{{ item.endDate2 }}
-                        </view>
-                        <view
-                            class="pmgl-ing"
-                            wx:if="{{ item.ing }}"
+                    <view class="pmgl-action">
+
+                        <!-- 按钮 -->
+                        <form
+                            bindsubmit="goOrder"
+                            data-tid="{{ item._id }}"
+                            report-submit="{{ true }}"
+                            class="pmgl-btn-form"
                         >
-                            进行中
+                            <button
+                                form-type="submit"
+                                class="pmgl-important fix-btn"
+                            >
+                                <wxc-price
+                                    icon="sub"
+                                    decimal="small"
+                                    class="pmgl-red-price"
+                                > 
+                                    {{ item.sales_volume }}
+                                </wxc-price>
+
+                                <view
+                                    class="pmgl-small-label"
+                                    wx:if="{{ !item.isClosed  }}"
+                                >
+                                    {{ item.orders ? '订单：' + item.orders : '暂无订单' }}
+                                </view>
+                                <view
+                                    class="pmgl-small-label"
+                                    wx:elif="{{ item.notPayAllClients }}"
+                                >
+                                    {{ item.notPayAllClients }}人未付尾款
+                                </view>
+                                <view
+                                    wx:else
+                                    class="pmgl-small-label"
+                                >
+                                    尾款收齐
+                                </view>
+                            </button>
+                        </form>
+
+                        <!-- 不能删除这个 -->
+                        <view></view>
+
+                        <view
+                            class=""
+                        >
+                            <view class="pmgl-small-label {{ item.ing ? 'mr' : '' }}">
+                                {{ item.startDate2 }}~{{ item.endDate2 }}
+                            </view>
+                            <view
+                                class="pmgl-ing"
+                                wx:if="{{ item.ing }}"
+                            >
+                                进行中
+                            </view>
                         </view>
                     </view>
+                    
+                    
                 </view>
-                
-                
-            </view>
-        </view>
+            </button>
+        </form>
     </scroll-view>
 
     <!-- 可视按钮 -->
-    <view
-        class='pmgl-entry-btn-container'
+    <form
+        bindsubmit="navigate"
+        report-submit="{{ true }}"
+        class="pmgl-entry-btn-container"
     >
-        <view 
-            class="pmgl-entry-btn"
-            bindtap='navigate'
+        <button
+            form-type="submit"
+            class='pmgl-entry-btn fix-btn'
         >
             <wxc-icon color="#fff" size="45" type="add" /> 
-        </view>
-    </view>
+        </button>
+    </form>
 
 </view>

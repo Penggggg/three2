@@ -121,3 +121,21 @@
     box-shadow: 3px 3px 25px rgba( 0, 0, 0, 0.15 );
     /* transform: translate( -50%, -50% ); */
 }
+
+.formid-btn {
+    padding: 0;
+    display: inline;
+    font-size: 25rpx;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+    text-decoration: none;
+    box-sizing: border-box;
+    background: transparent;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.formid-btn::after {
+    border: none;
+    background: transparent;
+}

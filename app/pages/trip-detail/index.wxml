@@ -12,7 +12,7 @@
     >
 
         <!-- 等待拼团 -->
-        <view
+        <!-- <view
             class="ptd-pin-title-block"
             wx:if="{{ waitPin$.length > 0 }}"
         >
@@ -22,10 +22,10 @@
             <view class="ptd-pin-tips">
                 Cheap cost
             </view>
-        </view>
+        </view> -->
 
         <!-- 等待拼团 -->
-        <swiper
+        <!-- <swiper
             autoplay="{{ true }}"
             circular="{{ true }}"
             duration="{{ 1000 }}"
@@ -95,43 +95,43 @@
                     </view>
                 </swiper-item>
             </block>
-        </swiper>
+        </swiper> -->
 
-        <!-- 热门拼团 -->
+        <!-- 等待拼团 + 热门拼团 + 普通 -->
         <view
             class="ptd-pin-title-block"
-            wx:if="{{ pingList$.length > 0 }}"
+            wx:if="{{ allShoppinglist$.length > 0 }}"
         >
             <view class="ptd-pin-title">
-                热门拼团
+                大家·买了啥
             </view>
             <view class="ptd-pin-tips">
-                Hot Pin
+                Buy Some
             </view>
         </view>
 
-        <!-- 热门拼团 -->
+        <!-- 等待拼团 + 热门拼团 + 普通 -->
         <view
             class="ptd-pin-list"
-            wx:if="{{ pingList$.length > 0 }}"
+            wx:if="{{ allShoppinglist$.length > 0 }}"
         >
             <view
                 class="ptd-pin-item"
                 wx:key="{{ index }}"
-                wx:for="{{ pingList$ }}"
+                wx:for="{{ allShoppinglist$ }}"
             >
                 <!-- 主图：只有主体商品 -->
                 <view
                     wx:if="{{ !item.sid }}"
                     class="ptd-pin-img-block only-p"
+                    data-data="{{ item }}"
+                    bindtap="goDetail"
                 >
                     <image 
                         mode="widthFix"
                         lazy-load="{{ true }}"
                         class="ptd-pin-img-only-p"
                         src="{{ item.detail.img }}"
-                        data-img="{{ item.detail.img }}"
-                        bindtap="priviewSingle"
                     />
                     <view class="ptd-pin-title-only-p-block">
                         <view class="ptd-pin-title-only-p">
@@ -144,14 +144,14 @@
                 <view
                     wx:else
                     class="ptd-pin-img-block with-standar"
+                    data-data="{{ item }}"
+                    bindtap="goDetail"
                 >
                     <image 
                         mode="aspectFill"
                         lazy-load="{{ true }}"
                         class="ptd-pin-img-standar"
                         src="{{ item.detail.img }}"
-                        data-img="{{ item.detail.img }}"
-                        bindtap="priviewSingle"
                     />
                     <view class="ptd-pin-img-small-con">
                         <image
@@ -159,19 +159,30 @@
                             lazy-load="{{ true }}"
                             class="ptd-pin-img-small"
                             src="{{ item.detail.good.img[ 0 ]}}"
-                            data-img="{{ item.detail.good.img[ 0 ] }}"
-                            bindtap="priviewSingle"
                         />
                     </view>
                 </view>
 
                 <!-- 商品详情 -->
-                <view class="ptd-pin-item-info-block">
+                <view
+                    data-data="{{ item }}"
+                    bindtap="goDetail"
+                    class="ptd-pin-item-info-block"
+                >
 
                     <!-- 显示参团人数 -->
                     <view class="ptd-pin-item-member-block">
-                        <view class="ptd-pin-item-member-title">
-                            {{ item.users.length }}人已拼团
+                        <view 
+                            class="ptd-pin-item-member-title big"
+                            wx:if="{{ !!item.adjustGroupPrice }}"
+                        >
+                            {{ item.users.length === 1 ? '可拼团' : item.users.length + '人已拼团' }}
+                        </view>
+                        <view 
+                            class="ptd-pin-item-member-title"
+                            wx:if="{{ !item.adjustGroupPrice }}"
+                        >
+                            {{ item.users.length === 1 ? '她' : '她们' }}已入手
                         </view>
                         <view class="ptd-pin-item-member-list">
                             <image
@@ -184,6 +195,13 @@
                                 src="{{ user.avatarUrl }}"
                                 class="ptd-pin-item-member-img"
                             />
+                            <view
+                                class="ptd-pop"
+                                wx:if="{{ !!item.adjustGroupPrice }}"
+                            >
+                                {{ item.users.length === 1 ? '跟我一起买' : '一起买' }}<view class="ptd-pop-delta">再减{{ item.delta }}元</view>
+                                <view class="ptd-pop-trangle"></view>
+                            </view>
                         </view>
                     </view>
 
@@ -214,22 +232,59 @@
                                 wx:for="{{ item.detail.good.img }}"
                                 data-img="{{ img }}"
                                 data-imgs="{{ item.detail.good.img }}"
-                                bindtap="priviewSingle"
+                                catchtap="priviewSingle"
+                                wx:if="{{ item.detail.good.img.length > 1 }}"
                             />
                         </view>
-                        <view>
+                        <view
+                            class="ptd-price-block"
+                        >
+                            <view
+                                class="ptd-origin-text"
+                                wx:if="{{ !!item.adjustGroupPrice }}"
+                            >
+                                <wxc-price
+                                    icon="sub"
+                                    decimal="small"
+                                    class="ptd-origin-price"
+                                > 
+                                    {{ item.adjustGroupPrice }}
+                                </wxc-price>
+
+                                <wxc-price
+                                    icon="sub"
+                                    status="del"
+                                    decimal="small"
+                                    class="ptd-origin-price small"
+                                > 
+                                    {{ item.adjustPrice }}
+                                </wxc-price>
+                            </view>
+
+                            <!-- 按钮1 拼团 -->
                             <view
                                 class="ptd-pin-btn"
-                                data-data="{{ item }}"
-                                bindtap="goDetail"
+                                wx:if="{{ !!item.adjustGroupPrice }}"
                             >
-                                <view class="ptd-pin-btn-text">拼团价</view>
+                                <view class="ptd-pin-btn-text">
+                                    参加拼团
+                                </view>
+                            </view>
+
+                            <!-- 按钮2 原价 -->
+                            <view
+                                class="ptd-pin-btn"
+                                wx:if="{{ !item.adjustGroupPrice }}"
+                            >
+                                <view class="ptd-pin-btn-text small">
+                                    原价
+                                </view>
                                 <wxc-price
                                     icon="sub"
                                     decimal="small"
                                     class="ptd-pin-btn-price"
                                 > 
-                                    {{ item.adjustGroupPrice }}
+                                    {{ item.adjustPrice }}
                                 </wxc-price>
                             </view>
                         </view>
@@ -241,9 +296,9 @@
 
         <view
             class="ptd-nomore"
-            wx:if="{{ pingList$.length === 0 && waitPin$.length === 0 }}"
+            wx:if="{{ allShoppinglist$.length === 0 }}"
         >
-            暂无拼团
+            暂无
         </view>
 
     </view>

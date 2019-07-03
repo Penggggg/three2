@@ -57,9 +57,39 @@
     border: 1px solid rgba( 255, 255, 255, 0.5 );
 }
 
+.fix-btn {
+    background: transparent;
+    outline:none;
+    border:none;
+    list-style: none;
+    padding: 0;
+}
+
+.fix-btn:after {
+    border:none;
+}
+
+.to-tab-icon:after {
+    border:none;
+}
+
 .to-tab-icon.active {
     color: #fff;
     border: 1px solid #fff;
+}
+
+.to-tab-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20rpx;
+    line-height: 25rpx;
+    display: inline-block;
+    color: rgba( 255, 255, 255, 0.5 );
+}
+
+.to-tab-text.active {
+    color: #fff;
 }
 
 .to-tabs-item.line.active:before {
