@@ -81,10 +81,24 @@
                                 > 
                                     {{ item.sales_volume }}
                                 </wxc-price>
+
                                 <view
                                     class="pmgl-small-label"
+                                    wx:if="{{ !item.isClosed  }}"
                                 >
                                     {{ item.orders ? '订单：' + item.orders : '暂无订单' }}
+                                </view>
+                                <view
+                                    class="pmgl-small-label"
+                                    wx:elif="{{ item.notPayAllClients }}"
+                                >
+                                    {{ item.notPayAllClients }}人未付尾款
+                                </view>
+                                <view
+                                    wx:else
+                                    class="pmgl-small-label"
+                                >
+                                    尾款收齐
                                 </view>
                             </button>
                         </form>

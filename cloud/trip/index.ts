@@ -156,6 +156,8 @@ export const main = async ( event, context ) => {
             }))
 
             const injectSalesVolume = salesVolume$.map(( o, k ) => {
+
+                // 销量
                 const salesVolume = o.data
                     .filter( x => x.pay_status !== '0' &&
                         (( x.base_status === '1' ) || ( x.base_status === '2' ) || ( x.base_status === '3' ))
@@ -163,7 +165,29 @@ export const main = async ( event, context ) => {
                     .reduce(( x, y ) => {
                         return x + ( y.allocatedPrice * ( y.allocatedCount || 0 ));
                     }, 0 );
+
+                // 总买家
+                const clients = Array.from(
+                    new Set( o.data
+                        .filter( x => 
+                            x.pay_status !== '0' &&
+                            x.base_status !== '4' && 
+                            x.base_status !== '5'
+                        )
+                        .map( x => x.openid )
+                )).length;
+
+                // 未付款买家
+                const notPayAllClients = Array.from(
+                    new Set( o.data
+                        .filter( x => x.pay_status === '1' )
+                        .map( x => x.openid )
+                )).length;
+
+
                 return Object.assign({ }, injectOrderCount[ k ], {
+                    clients,
+                    notPayAllClients,
                     sales_volume: salesVolume
                 });
             });

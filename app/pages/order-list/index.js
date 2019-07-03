@@ -941,6 +941,7 @@ Page({
     payLastDepositPrice({ currentTarget }) {
         const { lastDepositPrice, notPayDepositOrders } = currentTarget.dataset.data;
         wxPay( lastDepositPrice, ({ prepay_id }) => {
+            console.log('支付啦！！！')
             // 批量更新订单为已支付
             const pay = ( ) => http({
                 url: 'order_upadte-to-payed',
@@ -960,7 +961,9 @@ Page({
                             metaList: [ ],
                             tripOrders: [ ],
                         });
-                        this.fetchList( this.data.active );
+                        setTimeout(( ) => {
+                            this.fetchList( this.data.active );
+                        }, 20 );
                     } else {
                         wx.showToast({
                             icon: 'none',
@@ -1023,13 +1026,16 @@ Page({
                     if ( res.status === 200 ) {
 
                         this.setData({
+                            page: 0,
                             skip: 0,
-                            page: 0
-                        })
+                            canloadMore: true,
+                            metaList: [ ],
+                            tripOrders: [ ],
+                        });
                         setTimeout(( ) => {
                             this.fetchCoupons( true );
                             this.fetchList( this.data.active );
-                        }, 0 );
+                        }, 20 );
                     
                         wx.showToast({
                             title: '支付成功'
