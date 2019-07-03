@@ -415,7 +415,7 @@ export const main = async ( event, context ) => {
                             
 
                             // buyer拼团成功
-                            if ( lastUids.length > 0 &&  !lastUids.find( x => x === openId )) {
+                            if ( lastUids.filter( x => x !== openId ).length > 0 ) {
 
                                 buyerBuyPinDelta += currentDelta;
                                 if ( !buyer || ( !!buyer && buyer.type === 'buy' )) {
