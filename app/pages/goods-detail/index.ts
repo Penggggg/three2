@@ -98,7 +98,7 @@ Page({
                     return ''
                 } else {
                     const result = delayeringGood( detail );
-                    return result ? result.goodPins.eachPriceRound : '';
+                    return result ? String( result.goodPins.eachPriceRound ).replace(/\.00/g, '') : '';
                 }
             },
 
@@ -307,11 +307,12 @@ Page({
     },
 
     // 展开提示
-    toggleTips( ) {
+    toggleTips( e ) {
         const { showTips } = this.data;
         this.setData!({
             showTips: showTips === 'show' ? 'hide' : 'show'
         });
+        this.createFormId( e.detail.formId );
     },
 
     // 进入商品管理
@@ -404,6 +405,17 @@ Page({
         });
     },
 
+    createFormId( formid ) {
+        if ( !formid ) { return; }
+        http({
+            data: {
+                formid
+            },
+            loadingMsg: 'none',
+            url: 'common_create-formid',
+        })
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
@@ -414,7 +426,6 @@ Page({
         this.watchRole( );
         this.runComputed( );
 
-
         if ( !options!.tid ) {
             this.fetchLast( );
         }
@@ -422,8 +433,13 @@ Page({
         if ( !options!.id && !scene ) { return; }
         this.setData!({
             id: options!.id || scene,
-            tid: options!.tid
         });
+
+        if ( !!(options as any).tid ) {
+            this.setData!({
+                tid: options!.tid
+            })
+        }
     },
   
     /**

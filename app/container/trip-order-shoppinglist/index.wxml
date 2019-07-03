@@ -20,26 +20,28 @@
                 </wxc-price>
             </view>
 
-            <view>
-                <view
-                    class="tos-order-count"
+            <form
+                bindsubmit="goAllOrder"
+                report-submit="{{ true }}"
+            >
+                <button
+                    form-type="submit"
+                    class="fix-btn tos-order-count"
                 >
                     总订单{{ count }}条
                     <view
                         wx:if="{{ unread }}"
-                        bindtap="goAllOrder"
                         class="tos-order-entry"
                     >
                         New {{ unread }}
                     </view>
                     <view
                         wx:else
-                        bindtap="goAllOrder"
                         class="tos-order-entry normal"
                     >   查看
                     </view>
-                </view>
-            </view>
+                </button>
+            </form>
 
         </view>
 

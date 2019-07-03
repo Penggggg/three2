@@ -176,7 +176,7 @@ Component({
                 }
             ];
 
-            if ( !tid ) {
+            if ( !tid ||( !!tid && !published )) {
                 meta.push({
                     key: 'published',
                     label: '立即发布',

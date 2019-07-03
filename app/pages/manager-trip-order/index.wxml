@@ -2,18 +2,24 @@
     {{ active }}
     <!-- 上方tab -->
     <view class="to-tabs">
-        <view
+        <form
             wx:for="{{ tabs }}"
-            data-index="{{ index }}"
             wx:key="{{ index }}"
             data-index="{{ index }}"
-            bindtap="onTabChange"
+            bindsubmit="onTabChange"
+            report-submit="{{ true }}"
             class="to-tabs-item {{ active === index ? 'active' : '' }} {{ active === index ? 'current' : '' }} {{ index === 2 || index === 1 ? 'line' : '' }}"
         >
-            <view class="to-tab-icon {{ active === index ? 'active' : '' }}">
-                {{ index + 1 }}
-            </view>{{ item.label }}
-        </view>
+            <button 
+                form-type="submit"
+                class="fix-btn to-tab-text {{ active === index ? 'active' : '' }}"
+            >
+                <view class="to-tab-icon {{ active === index ? 'active' : '' }}">
+                    {{ index + 1 }}
+                </view>
+                {{ item.label }}
+            </button>
+        </form>
     </view>
 
     <!-- 下方内容层 -->

@@ -60,19 +60,21 @@
     </view>
 
     <!-- 分享按钮 -->
-    <view 
-        bindtap="toggle"
+    <form
         class="cgp-toggle-btn"
+        bindsubmit="toggle"
+        report-submit="{{ true }}"
     >
-        <image
-            class="cgp-icon-img"
-            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-share-2.png"
-        />
         <button
-            class="cgp-icon"
-        >
+            form-type="submit"
+            class="formid-btn"
+        >   
+           <image
+                class="cgp-icon-img"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-share-2.png"
+            />
         </button>
-    </view>
+    </form>
 
 
 

@@ -19,7 +19,10 @@ Page({
         waitPin: [ ],
 
         /** 拼团列表 */
-        pingList: [ ]
+        pingList: [ ],
+
+        /** 等待拼团 + 拼团列表 + 普通 */
+        allShoppinglist: [ ]
 
     },
 
@@ -41,77 +44,45 @@ Page({
                 return pingList.sort(( x, y ) => {
                     return x.detail.saled - y.detail.saled;
                 });
+            },
+
+            allShoppinglist$: function( ) {
+                const { allShoppinglist } = this.data;
+                return allShoppinglist
+                    .map( x => Object.assign({ }, x, {
+                        delta: !x.adjustGroupPrice ? 0 : ( x.adjustPrice - x.adjustGroupPrice ).toFixed( 0 )
+                    }))
+                    .sort(( x, y ) => {
+                        return x.detail.saled - y.detail.saled;
+                    });
+            },
+        });
+    },
+
+    /** 拉取所有购物清单 */
+    fetchAllShoppinglist( tid ) {
+        http({
+            data: {
+                tid,
+                type: 'all',
+                showUser: true
+            },
+            url: 'shopping-list_pin',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                const noPin = data.filter( x => !x.adjustGroupPrice );
+                const waitPin = data.filter( x => !!x.adjustGroupPrice && x.uids.length === 1 );
+                const pingList = data.filter( x => !!x.adjustGroupPrice && x.uids.length > 1 );
+
+                this.setData({
+                    waitPin,
+                    pingList,
+                    loading: false,
+                    allShoppinglist: [ ...waitPin, ...pingList,...noPin  ]
+                });
             }
-        });
-    },
-
-    /** 拉取等待拼团 */
-    fetchWaitPin( tid ) {
-        return new Promise(( resolve, reject ) => {
-
-            const { waitPin } = this.data;
-            if ( waitPin.length > 0 ) { return resolve( );}
-
-            http({
-                data: {
-                    tid,
-                    type: 'wait',
-                    showUser: true
-                },
-                url: 'shopping-list_pin',
-                success: res => {
-                    const { status, data } = res;
-                    if ( status !== 200 ) {
-                        return reject( );
-                    }
-                    this.setData({ 
-                        waitPin: data
-                    });
-                    resolve( );
-                }
-            });
-        })
-    },
-
-    /** 拉取已经拼团成功的商品列表 */
-    fetchPin( tid ) {
-        return new Promise(( resolve, reject ) => {
-
-            const { pingList } = this.data;
-            if ( pingList.length > 0 ) { return resolve( );}
-
-            http({
-                data: {
-                    tid,
-                    type: 'pin',
-                    showUser: true
-                },
-                url: 'shopping-list_pin',
-                success: res => {
-                    const { status, data } = res;
-                    if ( status !== 200 ) {
-                        return reject( );
-                    }
-                    this.setData({ 
-                        pingList: data
-                    });
-                    resolve( );
-                }
-            });
-        });
-    },
-
-    /** 拉取拼团、等待拼团 */
-    fetchAllPin( tid ) {
-        Promise.all([
-            this.fetchPin( tid ),
-            this.fetchWaitPin( tid )
-        ]).then(( ) => {
-            this.setData({
-                loading: false
-            })
-        }).catch( e => {
-
         });
     },
 
@@ -141,7 +112,7 @@ Page({
             this.setData({
                 tid
             });
-            this.fetchAllPin( tid )
+            this.fetchAllShoppinglist( tid );
         }
     },
 

@@ -8,8 +8,21 @@ cloud.init({
 });
 
 const db: DB.Database = cloud.database( );
-
 const _ = db.command;
+
+/** 
+ * 转换格林尼治时区 +8时区
+ * Date().now() / new Date().getTime() 是时不时正常的+8
+ * Date.toLocalString( ) 好像是一直是+0的
+ * 先拿到 +0，然后+8
+ */
+const getNow = ( ts = false ): any => {
+    if ( ts ) {
+        return Date.now( );
+    }
+    const time_0 = new Date( new Date( ).toLocaleString( ));
+    return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
+}
 
 /**
  * 
@@ -18,6 +31,7 @@ const _ = db.command;
  * _id
  * openid,
  * createtime
+ * paytime
  * tid,
  * pid,
  * cid (可为空)
@@ -100,7 +114,7 @@ export const main = async ( event, context ) => {
             if ( trips$.status !== 200
                     || !trips$.data 
                     || ( !!trips$.data && trips$.data.isClosed ) 
-                    || ( !!trips$.data && new Date( ).getTime( ) >= trips$.data.end_date )) {
+                    || ( !!trips$.data && getNow( true ) >= trips$.data.end_date )) {
                 throw '暂无行程计划，暂时不能购买～'
             }
 
@@ -198,7 +212,7 @@ export const main = async ( event, context ) => {
                     deliver_status: '0', 
                     base_status: '0',
                     pay_status: !meta.depositPrice ? '1' : pay_status , // 商品订金额度为0
-                    createTime: new Date( ).getTime( ),
+                    createTime: getNow( true ),
                     type: !!meta.depositPrice ? meta.type : 'normal'
                 });
                 delete t['address'];
@@ -406,9 +420,11 @@ export const main = async ( event, context ) => {
 
     /**
      * 批量更新，订单为已支付，并且增加到购物清单
-     * orderIds: "123,234,345"
-     * form_id,
-     * prepay_id
+     * {
+     *      orderIds: "123,234,345"
+     *      form_id,
+     *      prepay_id
+     * }
      */
     app.router('upadte-to-payed', async( ctx, next ) => {
         try {
@@ -446,8 +462,7 @@ export const main = async ( event, context ) => {
                 }
             });
 
-            // 这里本来不需要同步等待购物清单的创建，但是不加await貌似没有被执行到
-            await cloud.callFunction({
+            const create$ = await cloud.callFunction({
                 name: 'shopping-list',
                 data: {
                     $url: 'create',
@@ -456,7 +471,86 @@ export const main = async ( event, context ) => {
                         openId
                     }
                 }
-            })
+            });
+
+            // 处理推送
+            if ( create$.result.status === 200 ) {
+                const { buyer, others } = create$.result.data;
+
+                // 买家推送
+                const pushMe$ = await cloud.callFunction({
+                    name: 'common',
+                    data: {
+                        $url: 'push-template',
+                        data: {
+                            type: buyer.type,
+                            openid: buyer.openid,
+                            texts: getTextByPushType( 
+                                buyer.type === 'buyPin' ? 'buyPin1' : buyer.type,
+                                buyer.delta )
+                        }
+                    }
+                });
+
+                // 其他人拼团成功的推送
+                const othersOrders$: any = await Promise.all(
+                    others.map( 
+                        other => db.collection('order')
+                            .where({
+                                openid: other.openid,
+                                acid: other.acid,
+                                sid: other.sid,
+                                pid: other.pid,
+                                tid: other.tid,
+                                pay_status: '1',
+                                base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
+                            })
+                            .field({
+                                count: true
+                            })
+                            .get( )
+                    )
+                );
+
+                // 整合delta + count
+                const othersMore = others.map(( other, key ) => {
+                    return {
+                        ...other,
+                        count: othersOrders$[ key ].data.reduce(( x, y ) => y.count + x, 0 )
+                    }
+                });
+
+                let othersPush = { };
+
+                othersMore.map( other => {
+                    if ( !othersPush[ other.openid ]) {
+                        othersPush = Object.assign({ }, othersPush, {
+                            [ other.openid ]: other.delta * other.count
+                        });
+                    } else {
+                        othersPush = Object.assign({ }, othersPush, {
+                            [ other.openid ]: othersPush[ other.openid ] + other.delta * other.count
+                        });
+                    }
+                });
+
+                await Promise.all(
+                    Object.keys( othersPush ).map(
+                        otherOpenid => cloud.callFunction({
+                            name: 'common',
+                            data: {
+                                $url: 'push-template',
+                                data: {
+                                    type: 'buyPin',
+                                    openid: otherOpenid,
+                                    texts: getTextByPushType( 'buyPin2', othersPush[ otherOpenid ])
+                                }
+                            }
+                        })
+                    )
+                )
+
+            }
 
             return ctx.body = {
                 status: 200
@@ -734,7 +828,7 @@ export const main = async ( event, context ) => {
             const trip = trip$.data;
 
             // 未结束，且未手动关闭
-            if ( new Date( ).getTime( ) < trip.end_date && !trip.isClosed ) {
+            if ( getNow( true ) < trip.end_date && !trip.isClosed ) {
                 return getWrong('行程未结束，请手动关闭当前行程');
 
             } else if ( trip.callMoneyTimes &&  trip.callMoneyTimes >= 3 ) {
@@ -796,22 +890,38 @@ export const main = async ( event, context ) => {
                 const target = orders.find( order => order.openid === openid &&
                     (!!order.prepay_id || !!order.form_id ));
 
+                // return cloud.callFunction({
+                //     data: {
+                //         data: {
+                //             touser: openid,
+                //             data: {
+                //                 title: canGroupUserMapCount[ String( openid )] ?
+                //                     // `拼团${ canGroupUserMapCount[ String( openid )]}件！您购买的商品已到货` :
+                //                     // '您购买的商品已到货',
+                //                     '到货啦！付尾款，立即发货' : 
+                //                     '到货啦！付尾款，立即发货',
+                //                 time: `[行程]${trip.title}`
+                //             },
+                //             form_id: target.prepay_id || target.form_id
+                //         },
+                //         $url: 'notification-getmoney'
+                //     },
+                //     name: 'common'
+                // });
+
                 return cloud.callFunction({
                     data: {
                         data: {
-                            touser: openid,
-                            data: {
-                                title: canGroupUserMapCount[ String( openid )] ?
-                                    `拼团${ canGroupUserMapCount[ String( openid )]}件！您购买的商品已到货` :
-                                    '您购买的商品已到货',
-                                time: `[行程]${trip.title}`
-                            },
-                            form_id: target.prepay_id || target.form_id
+                            openid,
+                            type: 'getMoney',
+                            prepay_id: target.prepay_id,
+                            texts: ['支付尾款，立即发货哦','越快越好']
                         },
-                        $url: 'notification-getmoney'
+                        $url: 'push-template'
                     },
                     name: 'common'
-                })
+                });
+
             }));
  
             // 更新行程
@@ -882,6 +992,7 @@ export const main = async ( event, context ) => {
                                 base_status: '3',
                                 pay_status: '2',
                                 final_price: order.final_price,
+                                paytime: getNow( true )
                             }
                         }),
                     db.collection('goods')
@@ -1119,4 +1230,44 @@ export const main = async ( event, context ) => {
  
    return app.serve( );
 
+}
+
+/** 根据类型，返回推送文案 */
+function getTextByPushType( type: 'buyPin1' | 'buyPin2' | 'waitPin' | 'buy' | 'getMoney', delta ) {
+
+    const now = getNow( );
+    const month = now.getMonth( ) + 1;
+    const date = now.getDate( );
+    const hour = now.getHours( );
+    const minutes = now.getMinutes( );
+
+    const fixZero = s => String( s ).length === 1 ? `0${s}` : s; 
+
+    if ( type === 'buy' ) {
+        return [
+            `下单成功！会尽快采购～`, 
+            `${month}月${date}日 ${hour}:${fixZero( minutes )}`
+        ];
+    } else if ( type === 'buyPin1' ) {
+        return [
+            `恭喜您省了${delta}元！`,
+            `您和其他人买了同款拼团商品，查看`
+        ]
+    } else if ( type === 'buyPin2' ) {
+        return [
+            `恭喜！您买的商品减了${delta}元!`,
+            `有人购买了同款拼团的商品，查看`
+        ]
+    } else if ( type === 'waitPin' ) {
+        return [
+            `您的商品可参加拼团！`,
+            `参加拼团，可以再省${delta}元！`
+        ]
+    } else if ( type === 'getMoney' ) {
+        return [
+            `支付尾款，立即发货哦`,
+            `越快越好`
+        ]
+    }
+    return []
 }

@@ -77,6 +77,19 @@
                                     src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-star-3.png"
                                 />
                             </view>
+                            <view
+                                class="te-tag-block big"
+                                wx:if="{{ !!pinest.adjustGroupPrice }}"
+                            >
+                                <image
+                                    mode="widthFix"
+                                    class="gd-activity-icon"
+                                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                                />
+                                <view class="te-tag-text big">
+                                    可省 {{ pinest.delta }}元
+                                </view>
+                            </view>
                         </view>
 
                         <view
@@ -116,7 +129,7 @@
                         class="te-fairy-simple-title-block te-block"
                     >
                         <view class="te-fairy-simple-title te-block-title">
-                            拼团·就省
+                            一起·拔草
                         </view>
                         <view
                             class="te-fairy-simple-entry"
@@ -211,7 +224,7 @@
                                             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
                                         />
                                         <view class="te-tag-text">
-                                            拼团
+                                            可省 {{ item.delta }}元
                                         </view>
                                     </view>
                                     <view

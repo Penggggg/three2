@@ -1,4 +1,5 @@
 const { http } = require('../../util/http.js');
+const { createFormId } = require('../../util/form-id');
 
 Page({
 
@@ -26,7 +27,10 @@ Page({
     },
 
     /** 切换tab */
-    onTabChange({ currentTarget }) {
+    onTabChange({ currentTarget, detail }) {
+        
+        createFormId( detail.formId );
+
         const { index } = currentTarget.dataset;
         this.setData({
             active: index
@@ -104,7 +108,7 @@ Page({
      */
     onShareAppMessage: function ( ) {
         return {
-            title: '[有人@你]商品已到货',
+            title: '商品已到货',
             path: `/pages/trip-deliver/index?id=${this.data.id}`,
             imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
         }

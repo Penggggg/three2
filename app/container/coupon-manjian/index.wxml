@@ -1,33 +1,39 @@
-<view
+<form
+    report-submit="{{ true }}"
     class="con-manjian"
-    bindtap="getReduce"
+    bindsubmit="createFormId"
 >
 
-    <!-- 图片 -->
-    <view class="mj-img-block">
+    <button
+        form-type="submit"
+        class="formid-btn"
+    >   
+        <view class="mj-img-block">
 
-        <!-- 图片 -->
-        <image
-            mode="widthFix"
-            class="cmj-img"
-            animation="{{ animationMiddleHeaderItem }}"
-            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/manjian.png"
-        />
-
-        <!-- 文字 -->
-        <view class="mj-text-block">
-            <view class="mj-text-atleast">
-                满{{ atleast }}元可用
-            </view>
-            <view class="mj-text-money">
-                <view
-                    class="mj-animate"
-                >
-                    ¥{{ money }}
+            <!-- 图片 -->
+            <image
+                mode="widthFix"
+                class="cmj-img"
+                animation="{{ animationMiddleHeaderItem }}"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/manjian.png"
+            />
+            
+            <!-- 文字 -->
+            <view class="mj-text-block">
+                <view class="mj-text-atleast">
+                    满{{ atleast }}元可用
                 </view>
-                元优惠券
+                <view class="mj-text-money">
+                    <view
+                        class="mj-animate"
+                    >
+                        ¥{{ money }}
+                    </view>
+                    元优惠券
+                </view>
             </view>
-        </view>
-    </view>
 
-</view>
+        </view>
+    </button>
+
+</form>

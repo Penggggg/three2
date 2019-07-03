@@ -165,7 +165,7 @@ Component({
         },
 
         /** 展开画布 */
-        toggle( ) {
+        toggle( e ) {
             const { show } = this.data;
             this.setData({
                 show: !show
@@ -174,6 +174,7 @@ Component({
                 this.onDraw( );
             }
             this.triggerEvent('toggle', !show );
+            this.createFormId( e.detail.formId );
         },
 
         /** 保存canvas到本地图片 */
@@ -221,7 +222,18 @@ Component({
         },
 
         preventTouchMove( ) {
-        }
+        },
+
+        createFormId( formid ) {
+            if ( !formid ) { return; }
+            http({
+                data: {
+                    formid
+                },
+                loadingMsg: 'none',
+                url: 'common_create-formid',
+            })
+        },
 
     },
 
