@@ -12,6 +12,19 @@ cloud.init({
 const db: DB.Database = cloud.database( );
 const _ = db.command;
 
+/** 
+ * 转换格林尼治时区 +8时区
+ * Date().now() / new Date().getTime() 是时不时正常的+8
+ * Date.toLocalString( ) 好像是一直是+0的
+ * 先拿到 +0，然后+8
+ */
+const getNow = ( ts = false ): any => {
+    if ( ts ) {
+        return Date.now( );
+    }
+    const time_0 = new Date( new Date( ).toLocaleString( ));
+    return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
+}
 /**
  * @description 
  * 公共模块
@@ -601,7 +614,7 @@ export const main = async ( event, context ) => {
             
             const [ c_timestamp, c_appid, c_content, c_max ] = result.split('-');
 
-            if ( new Date( ).getTime( ) - Number( c_timestamp ) > 30 * 60 * 1000 ) {
+            if ( getNow( true ) - Number( c_timestamp ) > 30 * 60 * 1000 ) {
                 return ctx.body = getErr('密钥已过期，请联系客服');
             }
 
@@ -673,7 +686,7 @@ export const main = async ( event, context ) => {
                         data: {
                             openid,
                             content: c_content,
-                            createTime: new Date( ).getTime( )
+                            createTime: getNow( true )
                         }
                     })
             }
@@ -826,7 +839,7 @@ export const main = async ( event, context ) => {
                     data: {
                         openid,
                         formid,
-                        createTime: new Date( ).getTime( ),
+                        createTime: getNow( true ),
                         type: find$.total > 0 ? 'manager' : 'normal'
                     }
                 });
@@ -907,9 +920,11 @@ export const main = async ( event, context ) => {
 
             // 删除该条form-id
             if ( !!formid_id ) {
-                await db.collection('form-ids')
-                    .doc( formid_id )
-                    .remove( );
+                try {
+                    await db.collection('form-ids')
+                        .doc( formid_id )
+                        .remove( );
+                } catch ( e ) { }
             }
 
             return ctx.body = {
@@ -924,159 +939,98 @@ export const main = async ( event, context ) => {
         }
     });
 
-    /**
+    /** 
      * @description
-     * 自动推送新订单通知
+     * 同上，云开发用
      */
-    app.router('test', async( ctx, next ) => {
+    app.router('push-template-cloud', async( ctx, next ) => {
         try {
-
-            // 0、判断是否在那几个时间戳之内
-            const now = new Date( );
-            const y = now.getFullYear( );
-            const m = now.getMonth( ) + 1;
-            const d = now.getDate( );
-
-            const range = [
-                [
-                    // 9点
-                    new Date(`${y}/${m}/${d} 8:59:00`),
-                    new Date(`${y}/${m}/${d} 9:01:00`),
-                ], [
-                    // 12点半
-                    new Date(`${y}/${m}/${d} 12:29:00`),
-                    new Date(`${y}/${m}/${d} 12:31:00`),
-                ], [
-                    // 18点
-                    new Date(`${y}/${m}/${d} 17:59:00`),
-                    new Date(`${y}/${m}/${d} 18:01:00`),
-                ], [
-                    // 凌晨12
-                    new Date(`${y}/${m}/${d} 23:59:00`),
-                    new Date( new Date(`${y}/${m}/${d} 23:59:00`).getTime( ) + 2 * 60 * 1000 ),
-                ]
-            ];
-
-            const isInRange = range.some( x => {
-                const t = now.getTime( );
-                if ( x[ 0 ].getTime( ) <= t && x[ 1 ].getTime( ) >= t ) {
-                    return true;
-                } else {
-                    return false;
-                }
+            console.log('===========>push-template-cloud')
+            // 获取token
+            const result = await (axios as any)({
+                method: 'get',
+                url: `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${CONFIG.app.id}&secret=${CONFIG.app.secrect}`
             });
-
-            if ( !isInRange ) { 
-                return ctx.body = { status: 200 };
-            }
-
-            // 1、获取current trip
-            const trips$ = await cloud.callFunction({
-                data: {
-                    $url: 'enter'
-                },
-                name: 'trip'
-            });
-            const trips = trips$.result.data;
-            const trip = trips[ 0 ];
-
-            // 2、获取 push: true 的管理员
-            const members = await db.collection('manager-member')
-                .where({
-                    push: true
-                })
-                .get( );
-
-            if ( !trip || members.data.length === 0 ) {
-                return ctx.body = { status: 200 };
-            }
-
-            await Promise.all(
-                members.data.map( async member => {
-                    let count = 0;
-                    const { openid } = member
-
-                    // 3、获取上次浏览订单的时间戳
-                    const config$ = await db.collection('analyse-data')
-                        .where({
-                            openid,
-                            tid: trip._id,
-                            type: 'manager-trip-order-visit'
-                        })
-                        .get( );
-                    const config = config$.data[ 0 ];
-
-                    let query: any = {
-                        tid: trip._id,
-                        pay_status: _.neq('0'),
-                        base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
-                    };
-
-                    if ( !!config ) {
-                        query = Object.assign({ }, query, {
-                            createTime: _.gte( config.value )
-                        });
-                    }
-
-                    // 4、调用推送
-                    const count$ = await db.collection('order')
-                            .where( query )
-                            .count( );
-                    count = count$.total;
-
-                    if ( count === 0 ) { 
-                        return;
-                    }
-
-                    // 4、调用推送
-                    const push$ = await cloud.callFunction({
-                        name: 'common',
-                        data: {
-                            $url: 'push-template',
-                            data: {
-                                openid,
-                                type: 'newOrder',
-                                page: 'pages/manager-trip-list/index',
-                                texts: [`你有${count}条新订单`, `点击查看`]
-                            }
-                        }
-                    });
-
-                    // 5、更新、创建配置
-                    if ( push$.result.status === 200 ) {
-
-                        if ( !!config ) {
-                            // 更新一下此条配置
-                            await db.collection('analyse-data')
-                                .doc( String( config._id ))
-                                .update({
-                                    data: {
-                                        value: new Date( ).getTime( )
-                                    }
-                                });
-                        } else {
-                            // 创建一下配置
-                            await db.collection('analyse-data')
-                                .add({
-                                    data: {
-                                        openid,
-                                        tid: trip._id,
-                                        type: 'manager-trip-order-visit',
-                                        value: new Date( ).getTime( )
-                                    }
-                                });
-                        }
-                    }
-
-                    return;
-
-                })
-            );
             
-            return ctx.body = {
-                status: 200
+            const { access_token, errcode } = result.data;
+
+            if ( errcode ) {
+                throw '生成access_token错误'
+            }
+
+            let formid_id: any = '';
+            let formid = event.data.prepay_id;
+            const { type, texts } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const page = event.data.page || 'pages/order-list/index';
+
+            // 如果没有prepay_id, 就去拿该用户的form_id
+            if ( !formid ) {
+                const find$ = await db.collection('form-ids')
+                    .where({
+                        openid
+                    })
+                    .limit( 1 )
+                    .get( );
+
+                if ( !find$.data[ 0 ]) {
+                    throw `该用户${openid}没有formid、prepay_id`;
+                }
+
+                formid = find$.data[ 0 ].formid;
+                formid_id = find$.data[ 0 ]._id;
+            }
+
+            let textData = { };
+            texts.map(( text, index ) => {
+                const keyText = `keyword${index + 1}`;
+                textData = Object.assign({ }, textData, {
+                    [ keyText ] : {
+                        value: text
+                    }
+                })
+            });
+
+            const weapp_template_msg = {
+                page,
+                data: textData,
+                form_id: formid,
+                template_id: CONFIG.push_template[ type ].value
             };
 
+            console.log('===推送', weapp_template_msg );
+
+            const reqData = {
+                touser: openid,
+                weapp_template_msg
+            }
+
+            // 发送推送
+            const send = await (axios as any)({
+                data: reqData,
+                method: 'post',
+                url: `https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token=${access_token}`
+            });
+
+            if ( String( send.data.errcode ) !== '0' ) {
+                throw send.data.errmsg;
+            }
+
+            // 删除该条form-id
+            if ( !!formid_id ) {
+                try {
+                    await db.collection('form-ids')
+                        .doc( formid_id )
+                        .remove( );
+                } catch ( e ) { }
+            }
+        
+            return ctx.body = {
+                data: send.data,
+                status: 200
+            }
+
+            
         } catch ( e ) {
             return ctx.body = {
                 status: 500,
@@ -1084,7 +1038,6 @@ export const main = async ( event, context ) => {
             }
         }
     })
-
 
     return app.serve( );
 

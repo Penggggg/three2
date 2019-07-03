@@ -7,9 +7,18 @@ cloud.init({
 const db: DB.Database = cloud.database( );
 const _ = db.command;
 
-/** 转换格林尼治时区 +8时区 */
-const getNow = ( ) => {
-    return new Date( Date.now( ) + 8 * 60 * 60 * 1000 )
+/** 
+ * 转换格林尼治时区 +8时区
+ * Date().now() / new Date().getTime() 是时不时正常的+8
+ * Date.toLocalString( ) 好像是一直是+0的
+ * 先拿到 +0，然后+8
+ */
+const getNow = ( ts = false ): any => {
+    if ( ts ) {
+        return Date.now( );
+    }
+    const time_0 = new Date( new Date( ).toLocaleString( ));
+    return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
 }
 
 /**
@@ -22,7 +31,7 @@ export const overtime = async ( ) => {
             .where({
                 pay_status: '0',
                 base_status: '0',
-                createTime: _.lte( getNow( ).getTime( ) - 30 * 60 * 1000 )
+                createTime: _.lte( getNow( true ) - 30 * 60 * 1000 )
             })
             .get( );
         
@@ -214,26 +223,37 @@ export const payLastFix = async ( ) => {
 export const pushNew = async ( ) => {
     try {
         
+        const nowDate = getNow( );
+        console.log( 
+            '...', 
+            getNow( true ),
+            nowDate.toLocaleString( ),
+            Date.now( ),
+            new Date( ).toLocaleString( )
+        );
+        
         // 0、判断是否在那几个时间戳之内
         const checkIsInRange = ( now: Date ) => {
 
-            const range = [
-                7,
-                12,
-                23,
-                0,
-            ];
+            console.log( 
+                now,
+                now.toLocaleString( ),
+                now.getTime( ),
+                now.getHours( )
+            )
 
-            console.log('===', now.getTime( ), now.toLocaleString( ));
-            return range.some( x => {
+            const range = [ 6, 12, 18, 0 ];
+
+            const result = range.some( x => {
                 const h = now.getHours( );
-                console.log( x, h, now.getMinutes( ))
-                return x === h && now.getMinutes( ) === 10;
+                return x === h && now.getMinutes( ) === 0;
             });
+
+            console.log('==,,,,', result )
+            return result;
         }
 
-        console.log('!!!!! 新订单推送' );
-        if ( !checkIsInRange( getNow( ))) { 
+        if ( !checkIsInRange( nowDate )) { 
             return { status: 200 };
         }
 
@@ -247,8 +267,6 @@ export const pushNew = async ( ) => {
         const trips = trips$.result.data;
         const trip = trips[ 0 ];
 
-        console.log('!!!!! trip', trip );
-
         // 2、获取 push: true 的管理员
         const members = await db.collection('manager-member')
             .where({
@@ -259,8 +277,6 @@ export const pushNew = async ( ) => {
         if ( !trip || members.data.length === 0 ) {
             return { status: 200 };
         }
-
-        console.log('!!!!! members.data', members.data );
 
         await Promise.all(
             members.data.map( async member => {
@@ -276,8 +292,6 @@ export const pushNew = async ( ) => {
                     })
                     .get( );
                 const config = config$.data[ 0 ];
-
-                console.log('!!!!! config', config );
 
                 let query: any = {
                     tid: trip._id,
@@ -297,7 +311,6 @@ export const pushNew = async ( ) => {
                         .count( );
                 count = count$.total;
 
-                console.log('!!!!! count', count );
 
                 if ( count === 0 ) { 
                     return;
@@ -307,7 +320,7 @@ export const pushNew = async ( ) => {
                 const push$ = await cloud.callFunction({
                     name: 'common',
                     data: {
-                        $url: 'push-template',
+                        $url: 'push-template-cloud',
                         data: {
                             openid,
                             type: 'newOrder',
@@ -324,13 +337,12 @@ export const pushNew = async ( ) => {
 
                     if ( !!config ) {
 
-                        console.log( '=======' )
                         // 更新一下此条配置
                         await db.collection('analyse-data')
                             .doc( String( config._id ))
                             .update({
                                 data: {
-                                    value: getNow( ).getTime( )
+                                    value: getNow( true )
                                 }
                             });
                     } else {
@@ -341,7 +353,7 @@ export const pushNew = async ( ) => {
                                     openid,
                                     tid: trip._id,
                                     type: 'manager-trip-order-visit',
-                                    value: getNow( ).getTime( )
+                                    value: getNow( true )
                                 }
                             });
                     }

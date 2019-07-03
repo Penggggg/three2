@@ -7,6 +7,22 @@ cloud.init({
 
 const db: DB.Database = cloud.database( );
 
+
+/** 
+ * 转换格林尼治时区 +8时区
+ * Date().now() / new Date().getTime() 是时不时正常的+8
+ * Date.toLocalString( ) 好像是一直是+0的
+ * 先拿到 +0，然后+8
+ */
+const getNow = ( ts = false ): any => {
+    if ( ts ) {
+        return Date.now( );
+    }
+    const time_0 = new Date( new Date( ).toLocaleString( ));
+    return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
+}
+
+
 /**
  *
  * @description 卡券模块
@@ -53,7 +69,7 @@ export const main = async ( event, context ) => {
                 isUsed: false,
                 fromtid: event.data.fromtid || event.data.tid,
                 reduce_type: event.data.reduce_type || 'yuan',
-                createTime: new Date( ).getTime( )
+                createTime: getNow( true )
             });
 
             const add$ = await db.collection('coupon')
@@ -112,7 +128,7 @@ export const main = async ( event, context ) => {
                             canUseInNext: false,
                             title: '行程立减优惠券',
                             reduce_type: 'yuan',
-                            createTime: new Date( ).getTime( )
+                            createTime: getNow( true )
                         }
                     })
             }

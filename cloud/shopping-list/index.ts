@@ -9,6 +9,20 @@ cloud.init({
 const db: DB.Database = cloud.database( );
 const _ = db.command;
 
+/** 
+ * 转换格林尼治时区 +8时区
+ * Date().now() / new Date().getTime() 是时不时正常的+8
+ * Date.toLocalString( ) 好像是一直是+0的
+ * 先拿到 +0，然后+8
+ */
+const getNow = ( ts = false ): any => {
+    if ( ts ) {
+        return Date.now( );
+    }
+    const time_0 = new Date( new Date( ).toLocaleString( ));
+    return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
+}
+
 /**
  * @description 行程清单模块
  * --------- 字段 ----------
@@ -112,7 +126,7 @@ export const main = async ( event, context ) => {
                 .doc( String( tid ))
                 .get( );
 
-            if ( trip$.data.isClosed || new Date( ).getTime( ) > trip$.data.end_date ) {
+            if ( trip$.data.isClosed || getNow( true ) > trip$.data.end_date ) {
                 return ctx.body = getErr('暂无购物行程～');
             }
 
@@ -375,7 +389,7 @@ export const main = async ( event, context ) => {
                         base_status: '0',
                         adjustPrice: price,
                         adjustGroupPrice: groupPrice,
-                        createTime: new Date( ).getTime( )
+                        createTime: getNow( true )
                     });
      
                     const create$ = await db.collection('shopping-list')
@@ -455,7 +469,7 @@ export const main = async ( event, context ) => {
                                 data: {
                                     oids: lastOids,
                                     uids: lastUids,
-                                    updateTime: new Date( ).getTime( )
+                                    updateTime: getNow( true )
                                 }
                             })
                     }
@@ -674,7 +688,7 @@ export const main = async ( event, context ) => {
                 adjustGroupPrice,
                 base_status: '1',
                 buy_status: purchase < needBuyTotal ? '2' : '1',
-                updateTime: new Date( ).getTime( )
+                updateTime: getNow( true )
             });
 
             delete temp['_id'];

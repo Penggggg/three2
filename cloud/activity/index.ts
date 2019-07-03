@@ -8,6 +8,20 @@ cloud.init({
 const db: DB.Database = cloud.database( );
 const _ = db.command;
 
+/** 
+ * 转换格林尼治时区 +8时区
+ * Date().now() / new Date().getTime() 是时不时正常的+8
+ * Date.toLocalString( ) 好像是一直是+0的
+ * 先拿到 +0，然后+8
+ */
+const getNow = ( ts = false ): any => {
+    if ( ts ) {
+        return Date.now( );
+    }
+    const time_0 = new Date( new Date( ).toLocaleString( ));
+    return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
+}
+
 /**
  *
  * @description 商品活动模块
@@ -51,8 +65,8 @@ export const main = async ( event, context ) => {
                 isClosed: true,
                 isDeleted: false,
                 type: 'good_discount',
-                updatedTime: new Date( ).getTime( ),
-                createdTime: new Date( ).getTime( )
+                updatedTime: getNow( true ),
+                createdTime: getNow( true )
             }));
 
             // 错误定义
@@ -97,7 +111,7 @@ export const main = async ( event, context ) => {
                         .doc( meta.pid )
                         .update({
                             data: {
-                                updateTime: new Date( ).getTime( )
+                                updateTime: getNow( true )
                             }
                         })
                 ])
@@ -205,7 +219,7 @@ export const main = async ( event, context ) => {
 
             if ( !!filterPass ) {
                 where$ = Object.assign({ }, where$, {
-                    endTime: _.gt( new Date( ).getTime( ))
+                    endTime: _.gt( getNow( true ))
                 });
             }
 
@@ -340,7 +354,7 @@ export const main = async ( event, context ) => {
                 .doc( acid )
                 .update({
                     data: Object.assign({ }, updateBody, {
-                        updatedTime: new Date( ).getTime( )
+                        updatedTime: getNow( true )
                     })
                 });
 
@@ -348,7 +362,7 @@ export const main = async ( event, context ) => {
                 .doc( pid )
                 .update({
                     data: {
-                        updateTime: new Date( ).getTime( )
+                        updateTime: getNow( true )
                     }
                 });
 

@@ -8,8 +8,21 @@ cloud.init({
 });
 
 const db: DB.Database = cloud.database( );
-
 const _ = db.command;
+
+/** 
+ * 转换格林尼治时区 +8时区
+ * Date().now() / new Date().getTime() 是时不时正常的+8
+ * Date.toLocalString( ) 好像是一直是+0的
+ * 先拿到 +0，然后+8
+ */
+const getNow = ( ts = false ): any => {
+    if ( ts ) {
+        return Date.now( );
+    }
+    const time_0 = new Date( new Date( ).toLocaleString( ));
+    return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
+}
 
 /**
  * 
@@ -100,7 +113,7 @@ export const main = async ( event, context ) => {
             if ( trips$.status !== 200
                     || !trips$.data 
                     || ( !!trips$.data && trips$.data.isClosed ) 
-                    || ( !!trips$.data && new Date( ).getTime( ) >= trips$.data.end_date )) {
+                    || ( !!trips$.data && getNow( true ) >= trips$.data.end_date )) {
                 throw '暂无行程计划，暂时不能购买～'
             }
 
@@ -198,7 +211,7 @@ export const main = async ( event, context ) => {
                     deliver_status: '0', 
                     base_status: '0',
                     pay_status: !meta.depositPrice ? '1' : pay_status , // 商品订金额度为0
-                    createTime: new Date( ).getTime( ),
+                    createTime: getNow( true ),
                     type: !!meta.depositPrice ? meta.type : 'normal'
                 });
                 delete t['address'];
@@ -814,7 +827,7 @@ export const main = async ( event, context ) => {
             const trip = trip$.data;
 
             // 未结束，且未手动关闭
-            if ( new Date( ).getTime( ) < trip.end_date && !trip.isClosed ) {
+            if ( getNow( true ) < trip.end_date && !trip.isClosed ) {
                 return getWrong('行程未结束，请手动关闭当前行程');
 
             } else if ( trip.callMoneyTimes &&  trip.callMoneyTimes >= 3 ) {
@@ -1220,7 +1233,7 @@ export const main = async ( event, context ) => {
 /** 根据类型，返回推送文案 */
 function getTextByPushType( type: 'buyPin1' | 'buyPin2' | 'waitPin' | 'buy' | 'getMoney', delta ) {
 
-    const now = new Date( );
+    const now = getNow( );
     const month = now.getMonth( ) + 1;
     const date = now.getDate( );
     const hour = now.getHours( );
