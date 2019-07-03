@@ -41,6 +41,7 @@ Page({
 
     /** 跳页 */
     navigate( e ) {
+        createFormId( e.detail.formId );
         navTo('/pages/manager-trip-detail/index');
     },
 

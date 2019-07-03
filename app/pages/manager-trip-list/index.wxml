@@ -114,15 +114,17 @@
     </scroll-view>
 
     <!-- 可视按钮 -->
-    <view
-        class='pmgl-entry-btn-container'
+    <form
+        bindsubmit="navigate"
+        report-submit="{{ true }}"
+        class="pmgl-entry-btn-container"
     >
-        <view 
-            class="pmgl-entry-btn"
-            bindtap='navigate'
+        <button
+            form-type="submit"
+            class='pmgl-entry-btn fix-btn'
         >
             <wxc-icon color="#fff" size="45" type="add" /> 
-        </view>
-    </view>
+        </button>
+    </form>
 
 </view>
