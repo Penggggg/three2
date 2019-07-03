@@ -74,7 +74,7 @@
   .pmgl-list-item {
     display: flex;
     box-sizing: border-box;
-    padding: 20rpx 25rpx;
+    padding: 20rpx 25rpx !important;
     position: relative;
     margin-bottom: 30rpx;
     margin: 0 20rpx 30rpx;
@@ -100,9 +100,21 @@
   }
 
   .pmgl-action {
+    height: 45rpx;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
+  }
+
+  .pmgl-btn-form {
+    left: 0;
+    bottom: 0;
+    position: absolute;
+  }
+  
+  .pmgl-important {
+    height: 80rpx;
   }
 
   .pmgl-red-price {
@@ -161,8 +173,8 @@
     height:100rpx;
     line-height:100rpx;
     background: #ff8787; 
-    background: -webkit-linear-gradient(to bottom, #ff61ab, #ff8787); 
-    background: linear-gradient(to bottom, #ff61ab, #ff8787); 
+    background: -webkit-linear-gradient(to bottom, #ff61ab, #ff8787) !important; 
+    background: linear-gradient(to bottom, #ff61ab, #ff8787) !important; 
     
   }
 
@@ -182,6 +194,7 @@
     text-overflow: ellipsis;
     -webkit-box-orient: vertical;
     margin-bottom: 5rpx;
+    line-height: 32rpx;
 }
 
 .pmgl-item-time {
@@ -203,6 +216,7 @@
   padding: 4rpx 20rpx;
   letter-spacing: 0.02em;
   display: inline-block;
+  line-height: 40rpx;
 }
 
 .pmgl-nomore {
@@ -235,4 +249,17 @@
   content: '';
   background: rgba( 0, 0, 0, 0.15 );
   transform: translate( 0, -50% ) scaleY( 0.5 );
+}
+
+.fix-btn {
+  background: transparent;
+  outline:none;
+  border:none;
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+
+.fix-btn:after {
+  border:none;
 }

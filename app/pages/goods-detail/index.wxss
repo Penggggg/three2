@@ -386,7 +386,7 @@
 }
 
 .gd-pin-close {
-    top: 30rpx;
+    top: 10rpx;
     right: 30rpx;
     position: fixed;
     text-align: center;
@@ -610,4 +610,22 @@
     letter-spacing: 0.02em;
     z-index: 1000;
     background: rgba( 0, 0, 0, 0.35 );
+}
+
+.formid-btn {
+    padding: 0;
+    display: inline;
+    font-size: 25rpx;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+    text-decoration: none;
+    box-sizing: border-box;
+    background: transparent;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.formid-btn::after {
+    border: none;
+    background: transparent;
 }

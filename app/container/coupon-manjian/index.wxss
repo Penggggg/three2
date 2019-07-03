@@ -1,4 +1,5 @@
 .con-manjian {
+    display: block;
     padding: 0 20rpx;
     position: relative;
     box-sizing: border-box;
@@ -18,7 +19,10 @@
 .mj-text-block {
     top: 18%;
     left: 15%;
+    display: flex;
     position: absolute;
+    align-items: center;
+    flex-direction: column;
 }
 
 .mj-text-atleast {
@@ -32,6 +36,28 @@
 }
 
 .mj-text-money {
+    display:block;
+    display:flex;
+    align-items:center;
+    height:30rpx;
     color: #dc7788;
     font-size: 24rpx;
+}
+
+.formid-btn {
+    padding: 0;
+    display: inline;
+    font-size: 25rpx;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+    text-decoration: none;
+    box-sizing: border-box;
+    background: transparent;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.formid-btn::after {
+    border: none;
+    background: transparent;
 }

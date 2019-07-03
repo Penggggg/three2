@@ -281,7 +281,12 @@ Page({
             },
             url: 'shopping-list_pin',
             success: res => {
-                const { status, data } = res;
+                let data = res.data;
+                const { status } = res;
+
+                data = data.map( x => Object.assign({ }, x, {
+                    delta: !x.adjustGroupPrice ? 0 : (x.adjustPrice - x.adjustGroupPrice).toFixed( 0 )
+                }));
 
                 // 所有等待拼团，已拼团的商品
                 const allCanPin = data.filter( x => !!x.adjustGroupPrice );
@@ -549,13 +554,13 @@ Page({
             return {
                 title: '分享给你一个良心超值代购～',
                 path: '/pages/trip-enter/index',
-                imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+                // imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
             }
         } else {
             return {
                 title: `${current.title}在${current.start_date$}开始！来瞧瞧大家拔草了什么～`,
                 path: '/pages/trip-enter/index',
-                imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+                // imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
             }
         }
     }

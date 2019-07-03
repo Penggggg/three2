@@ -8,6 +8,19 @@ cloud.init({
 const db: DB.Database = cloud.database( );
 const _ = db.command;
 
+/** 
+ * 转换格林尼治时区 +8时区
+ * Date().now() / new Date().getTime() 是时不时正常的+8
+ * Date.toLocalString( ) 好像是一直是+0的
+ * 先拿到 +0，然后+8
+ */
+const getNow = ( ts = false ): any => {
+    if ( ts ) {
+        return Date.now( );
+    }
+    const time_0 = new Date( new Date( ).toLocaleString( ));
+    return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
+}
 
 /**
  *
@@ -51,7 +64,7 @@ export const main = async ( event, context ) => {
                 .where({
                     isClosed: false,
                     published: true,
-                    end_date: _.gt( new Date( ).getTime( ))
+                    end_date: _.gt( getNow( true ))
                 })
                 .limit( 2 )
                 .orderBy('start_date', 'asc')
@@ -143,6 +156,8 @@ export const main = async ( event, context ) => {
             }))
 
             const injectSalesVolume = salesVolume$.map(( o, k ) => {
+
+                // 销量
                 const salesVolume = o.data
                     .filter( x => x.pay_status !== '0' &&
                         (( x.base_status === '1' ) || ( x.base_status === '2' ) || ( x.base_status === '3' ))
@@ -150,7 +165,29 @@ export const main = async ( event, context ) => {
                     .reduce(( x, y ) => {
                         return x + ( y.allocatedPrice * ( y.allocatedCount || 0 ));
                     }, 0 );
+
+                // 总买家
+                const clients = Array.from(
+                    new Set( o.data
+                        .filter( x => 
+                            x.pay_status !== '0' &&
+                            x.base_status !== '4' && 
+                            x.base_status !== '5'
+                        )
+                        .map( x => x.openid )
+                )).length;
+
+                // 未付款买家
+                const notPayAllClients = Array.from(
+                    new Set( o.data
+                        .filter( x => x.pay_status === '1' )
+                        .map( x => x.openid )
+                )).length;
+
+
                 return Object.assign({ }, injectOrderCount[ k ], {
+                    clients,
+                    notPayAllClients,
                     sales_volume: salesVolume
                 });
             });
@@ -256,7 +293,7 @@ export const main = async ( event, context ) => {
 
                 let where$ = {
                     isClosed: false,
-                    start_date: _.lt( new Date( ).getTime( )),
+                    start_date: _.lt( getNow( true )),
                     end_date: _.gte( event.data.start_date )
                 };
 
@@ -313,7 +350,7 @@ export const main = async ( event, context ) => {
                 const temp = Object.assign({ }, origin, {
                     ...event.data,
                     callMoneyTimes: event.data['end_date'] > origin['end_date'] ? 0 : origin['callMoneyTimes'],
-                    isClosed: new Date( ).getTime( ) >= Number( end_date ) 
+                    isClosed: getNow( true ) >= Number( end_date ) 
                 })
     
                 await db.collection('trip')

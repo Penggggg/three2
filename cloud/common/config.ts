@@ -12,6 +12,36 @@ export const notification_template = {
     getMoney3: 'fCvCrY8_5l60svPglMvQdO1sulAZQUTcOt3hdtrDIsw'// 业务受理通知
 }
 
+/** 推送模板服务 */
+export const push_template = {
+    buyPin: {
+        desc: '拼团成功通知：拼团状态、成团条件',
+        example: '拼团成功！恭喜您省了xx元！;您和其他人买了同款拼团商品，点击查看',
+        example2: '恭喜拼团成功！您购买的商品可减${delta}元!有人与你买了同款拼团的商品，点击查看',
+        value: 'aONKtxqum1Jn15jKVOVGqNzCSfA0f_n6j_0BLASYCDg'
+    },
+    waitPin: {
+        desc: '拼团待成团提醒：	备注、温馨提示',
+        example: '您购买的商品可参加拼团！；立即参加拼团，可以再省xx元！',
+        value: 'mtTLIp2C-FQ87yn46jpY3cH9ilGIzL434N2QlUS0MH0'
+    },
+    buy: {
+        desc: '购买成功通知：备注、时间',
+        example: '下单成功！会尽快采购～；x月x日 15:00',
+        value: 'fWj6ya_Jn8LNb7W2Du35ZcsWwBveAy2pjgzx8xChjhk'
+    },
+    getMoney: {
+        desc: '尾款支付提醒：温馨提示、截止时间',
+        example: '支付尾款，立即发货哦；越快越好',
+        value: 'qKwF8caYQADJ6lTcnETexy0hqi11Sq1dhksNOHBqOdQ'
+    }, 
+    newOrder: {
+        desc: '新订单通知：订单详情、订单状态',
+        example: '你有x条新订单；点击查看',
+        value: 'TQmlCntkDc1a8CuoEP9gNDDAhOJVf4QTPpcfWLf0svQ'
+    }
+};
+
 /** 微信支付 */
 export const wxPay = {
     mch_id: '1521522781', // 商户号
@@ -42,6 +72,8 @@ export const collections = [
     'deliver',
     'authpsw',
     'manager-member',
+    'form-ids',
+    'analyse-data'
 ];
 
 /** 权限模块 */
