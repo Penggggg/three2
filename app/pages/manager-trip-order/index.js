@@ -108,7 +108,7 @@ Page({
      */
     onShareAppMessage: function ( ) {
         return {
-            title: '[有人@你]商品已到货',
+            title: '商品已到货',
             path: `/pages/trip-deliver/index?id=${this.data.id}`,
             imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
         }

@@ -904,6 +904,7 @@ to {transform: translate( -50%,  -20% ) rotate( 180deg );}
     -webkit-animation-delay: 0s;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-direction: normal;
+    pointer-events: none;
 }
 
 @keyframes ripple {
