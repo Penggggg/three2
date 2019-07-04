@@ -28,24 +28,28 @@
         bindscrolltolower="fetchData"
         class="pmgl-list-container" 
     >
-        <form
+        <view
+            class='pmgl-list-item'
             wx:for="{{ list }}"
             wx:key="{{ index }}"
-            bindsubmit="onTab"
-            data-tid="{{ item._id }}"
-            report-submit="{{ true }}"
         >
-            <button
-                form-type="submit"
-                class='pmgl-list-item fix-btn'
-            >
-                <view
-                    class="pmgl-img"
-                    style="{{ bgs[ item.bg ]}}"
-                >
-                </view>
-                <view class="pmgl-info">
 
+            <view
+                class="pmgl-img"
+                style="{{ bgs[ item.bg ]}}"
+            >
+            </view>
+
+            <form
+                bindsubmit="onTab"
+                data-tid="{{ item._id }}"
+                report-submit="{{ true }}"
+                class="flex-1"
+            >
+                <button
+                    form-type="submit"
+                    class='pmgl-info fix-btn'
+                >
                     <view class="pmgl-base">
 
                         <view class="pmgl-item-title">{{ item.title }}</view>
@@ -62,46 +66,6 @@
                     </view>
 
                     <view class="pmgl-action">
-
-                        <!-- 按钮 -->
-                        <form
-                            bindsubmit="goOrder"
-                            data-tid="{{ item._id }}"
-                            report-submit="{{ true }}"
-                            class="pmgl-btn-form"
-                        >
-                            <button
-                                form-type="submit"
-                                class="pmgl-important fix-btn"
-                            >
-                                <wxc-price
-                                    icon="sub"
-                                    decimal="small"
-                                    class="pmgl-red-price"
-                                > 
-                                    {{ item.sales_volume }}
-                                </wxc-price>
-
-                                <view
-                                    class="pmgl-small-label"
-                                    wx:if="{{ !item.isClosed  }}"
-                                >
-                                    {{ item.orders ? '订单：' + item.orders : '暂无订单' }}
-                                </view>
-                                <view
-                                    class="pmgl-small-label"
-                                    wx:elif="{{ item.notPayAllClients }}"
-                                >
-                                    {{ item.notPayAllClients }}人未付尾款
-                                </view>
-                                <view
-                                    wx:else
-                                    class="pmgl-small-label"
-                                >
-                                    尾款收齐
-                                </view>
-                            </button>
-                        </form>
 
                         <!-- 不能删除这个 -->
                         <view></view>
@@ -120,11 +84,50 @@
                             </view>
                         </view>
                     </view>
-                    
-                    
-                </view>
-            </button>
-        </form>
+                </button>
+            </form>
+
+            <!-- 按钮 -->
+            <form
+                bindsubmit="goOrder"
+                data-tid="{{ item._id }}"
+                report-submit="{{ true }}"
+                class="pmgl-btn-form"
+            >
+                <button
+                    form-type="submit"
+                    class="pmgl-important fix-btn"
+                >
+                    <wxc-price
+                        icon="sub"
+                        decimal="small"
+                        class="pmgl-red-price"
+                    > 
+                        {{ item.sales_volume }}
+                    </wxc-price>
+
+                    <view
+                        class="pmgl-small-label"
+                        wx:if="{{ !item.isClosed  }}"
+                    >
+                        {{ item.orders ? '订单：' + item.orders : '暂无订单' }}
+                    </view>
+                    <view
+                        class="pmgl-small-label"
+                        wx:elif="{{ item.notPayAllClients }}"
+                    >
+                        {{ item.notPayAllClients }}人未付尾款
+                    </view>
+                    <view
+                        wx:else
+                        class="pmgl-small-label"
+                    >
+                        尾款收齐
+                    </view>
+                </button>
+            </form>
+
+        </view>
     </scroll-view>
 
     <!-- 可视按钮 -->
