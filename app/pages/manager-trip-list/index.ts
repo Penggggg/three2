@@ -183,6 +183,7 @@ Page({
     onTab({ currentTarget, detail }) {
         createFormId( detail.formId );
         const { tid } = currentTarget.dataset;
+        if ( !tid ) { return; }
         navTo(`/pages/manager-trip-detail/index?id=${tid}`);
     },
 
