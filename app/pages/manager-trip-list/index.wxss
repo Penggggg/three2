@@ -95,8 +95,15 @@
   .pmgl-info {
     flex: 1;
     display: flex;
+    height: 100%;
+    width: 100%;
+    overflow: visible !important;
     flex-direction: column;
     justify-content: space-between;
+  }
+
+  .flex-1 {
+    flex: 1;
   }
 
   .pmgl-action {
@@ -108,8 +115,8 @@
   }
 
   .pmgl-btn-form {
-    left: 0;
-    bottom: 0;
+    left: 31%;
+    bottom: 20rpx;
     position: absolute;
   }
   
