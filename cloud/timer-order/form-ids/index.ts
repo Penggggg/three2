@@ -49,3 +49,29 @@ export const clearFormIds = async ( ) => {
         return { status: 500 }
     }
 };
+
+/**
+ * @description
+ * form-ids2: 把无用的formid去掉
+ */
+export const clearUseless = async ( ) => {
+    try {
+        const find$ = await db.collection('form-ids')
+            .where({
+                formid: "the formId is a mock one"
+            })
+            .get( );
+
+        await Promise.all(
+            find$.data.map( x => 
+                db.collection('form-ids')
+                    .doc( String( x._id ))
+                    .remove( )
+            )
+        );
+        return { status: 200 }
+    } catch ( e ) {
+        console.log('!!!!定时器clearUseless错误',)
+        return { status: 500 }
+    }
+}
