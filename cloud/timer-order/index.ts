@@ -1,6 +1,6 @@
 import * as cloud from 'wx-server-sdk';
 import { overtimeTrip } from './trip';
-import { clearFormIds } from './form-ids';
+import { clearFormIds, clearUseless } from './form-ids';
 import { overtime, payedFix, priceFix, payLastFix, pushNew, pushLastPay } from './order';
 import { catchLostOrders, removeUselessOrders } from './shopping-list';
 
@@ -31,6 +31,7 @@ export const main = async ( event, context ) => {
         await catchLostOrders( );
         await removeUselessOrders( );
         await clearFormIds( );
+        await clearUseless( );
         
         return {
             status: 200
