@@ -655,7 +655,16 @@ Page({
                 if ( hasCurrentTripOrder && !showALlTrip ) {
                     return allTripOrders.filter( x => x.tid === tid );
                 } else {
-                    return allTripOrders;
+                    if ( !showALlTrip ) {
+                        const notPay = allTripOrders.filter( x => x.hasPay === false );
+                        if ( notPay.length > 0 ) {
+                            return notPay
+                        } else {
+                            return allTripOrders;
+                        }
+                    } else {
+                        return allTripOrders;
+                    }
                 }
             }
 
