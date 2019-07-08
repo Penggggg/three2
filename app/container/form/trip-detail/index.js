@@ -1,5 +1,6 @@
 const { http } = require('../../../util/http.js');
 const { navTo } = require('../../../util/route.js');
+const { createFormId } = require('../../../util/form-id.js');
 
 // container/form/trip-detail/index.js
 Component({
@@ -510,7 +511,9 @@ Component({
         },
 
         /** 表单提交 */
-        submit( ) {
+        submit( e ) {
+
+            createFormId( e.detail.formId );
 
             const { tid } = this.data;
             const form1 = this.selectComponent('#form1');
@@ -579,8 +582,11 @@ Component({
         },
 
         /** 关闭行程 */
-        closeTrip( ) {
+        closeTrip( e ) {
+
+            createFormId( e.detail.formId );
             const { tid, hasNextTrip } = this.data;
+
             if ( !tid ) { return; }
             wx.showModal({
                 title: 'Tips',

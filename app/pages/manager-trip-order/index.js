@@ -55,10 +55,17 @@ Page({
      */
     onLoad: function (options) {
         wx.hideShareMenu( );
-        if ( !options.id ) { return }
+        const { id, ac } = options;
+        if ( !id ) { return }
         this.setData({
-            id: options.id
+            id
         })
+
+        if ( ac !== null && ac !== undefined ) {
+            this.setData({
+                active: Number( ac )
+            })
+        }
     },
 
     /**
