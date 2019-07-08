@@ -8,7 +8,7 @@
 .cgp-toggle-btn {
     height: 70rpx;
     width: 70rpx;
-    right: 50rpx;
+    right: 40rpx;
     bottom: 210rpx;
     position: fixed;
 }
@@ -138,4 +138,37 @@
 .formid-btn::after {
     border: none;
     background: transparent;
+}
+
+.cgp-tips {
+    opacity: 100;
+    top: -100rpx;
+    left: 60%;
+    color: #fff;
+    font-size: 24rpx;
+    padding: 12rpx 15rpx;
+    position: absolute;
+    border-radius: 30px;
+    width: 120rpx;
+    text-align: center;
+    background: rgba( 0, 0, 0, 0.325 );
+    transform: translate( -100%, -0% );
+    pointer-events: none;
+    transition: all ease 0.4s;
+}
+
+.cgp-tips:after {
+    bottom: -18rpx;
+    right: 20rpx;
+    content: '';
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 15rpx solid transparent;
+    border-right: 15rpx solid transparent;
+    border-top: 20rpx solid rgba( 0, 0, 0, 0.325 );
+}
+
+.cgp-tips.hide {
+    opacity: 0;
 }

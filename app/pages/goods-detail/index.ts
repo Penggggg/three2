@@ -6,6 +6,9 @@ import { navTo } from '../../util/route.js';
 
 const app = getApp( );
 
+// 打开拼团提示的key
+const storageKey = 'opened-pin-in-good';
+
 Page({
 
     // 动画
@@ -258,6 +261,8 @@ Page({
                     detail: res.data,
                     activities: activities$
                 });
+
+                this.checkOpenPin( );
             }
         });
     },
@@ -314,12 +319,12 @@ Page({
     },
 
     // 展开提示
-    toggleTips( e ) {
+    toggleTips( e? ) {
         const { showTips } = this.data;
         this.setData!({
             showTips: showTips === 'show' ? 'hide' : 'show'
         });
-        this.createFormId( e.detail.formId );
+        !!e && this.createFormId( e.detail.formId );
     },
 
     // 进入商品管理
@@ -361,6 +366,23 @@ Page({
             current: img,
             urls: [ img ],
         });
+    },
+
+    /** 检查是否有主动弹开过拼团 */
+    checkOpenPin( ) {
+        const { detail, tid } = this.data;
+        if ( !detail ) { return }
+
+        const result = delayeringGood( detail );
+        if ( result && tid ) {
+            const priceGap = String( result.goodPins.eachPriceRound ).replace(/\.00/g, '');
+            const openRecordTid = wx.getStorageSync( storageKey );
+
+            if ( !!priceGap && !!tid && openRecordTid !== tid ) {
+                wx.setStorageSync( storageKey, tid );
+                this.toggleTips( );
+            }
+        }
     },
 
     /** 设置“喜欢” */
