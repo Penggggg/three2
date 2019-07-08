@@ -67,7 +67,10 @@ Page({
         activities: [ ],
 
         // 本趟能够拼团的sku
-        canPinSku: [ ]
+        canPinSku: [ ],
+
+        // 当前的行程
+        trip: null
     },
 
     /** 设置computed */
@@ -297,10 +300,14 @@ Page({
 
                 if ( !!data[ 0 ]) {
                     const tid = data[ 0 ]._id
+
+                    if ( !this.data.tid ) {
+                        this.fetchShopping( id, tid );
+                    }
                     this.setData!({
-                        tid: data[ 0 ]._id
+                        tid: data[ 0 ]._id,
+                        trip: data[ 0 ]
                     });
-                    this.fetchShopping( id, tid );
                 }
             }
         })
@@ -426,9 +433,10 @@ Page({
         this.watchRole( );
         this.runComputed( );
 
-        if ( !options!.tid ) {
+        this.checkLike( );
+        // if ( !options!.tid ) {
             this.fetchLast( );
-        }
+        // }
         
         if ( !options!.id && !scene ) { return; }
         this.setData!({
@@ -476,7 +484,6 @@ Page({
     onShow: function ( ) {
         const { id, tid } = this.data;
 
-        this.checkLike( );
         this.fetDetail( id );
         this.fetchShopping( id, tid );
     },
@@ -513,13 +520,15 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( ) {
-        const { detail, pin$, activities, priceGap } = this.data;
+        const { detail, pin$, activities, priceGap, trip } = this.data;
         return {
             title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
                         activities.length === 0 ?
                             `一起买！一起省${String( priceGap ).replace(/\.00/g, '')}元！` :
                             '限时特价超实惠！' : 
-                        '给你看看这宝贝！'
+                        trip && trip.reduce_price ? 
+                            `立减${trip.reduce_price}元！` :
+                            '给你看看这宝贝！'
                 }${detail.title}`,
             path: `/pages/goods-detail/index?id=${detail._id}&tid=${this.data.tid}`,
             imageUrl: `${detail.img[ 0 ]}`
