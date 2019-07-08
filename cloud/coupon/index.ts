@@ -144,7 +144,19 @@ export const main = async ( event, context ) => {
                     });
             }
 
-            // 推送通知
+            // 4、调用推送
+            const push$ = await cloud.callFunction({
+                name: 'common',
+                data: {
+                    $url: 'push-template-cloud',
+                    data: {
+                        openid,
+                        type: 'hongbao',
+                        page: 'pages/trip-enter/index',
+                        texts: [`${reduce_price}元`, `趁早下单！无门槛立减${reduce_price}元`]
+                    }
+                }
+            });
 
             return ctx.body = {
                 status: 200
