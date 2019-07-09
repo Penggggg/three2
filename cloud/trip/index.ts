@@ -396,7 +396,7 @@ export const main = async ( event, context ) => {
                                     openid: member.openid,
                                     type: 'trip',
                                     page: 'pages/manager-trip-list/index',
-                                    texts: [`${title}`, `行程已推送给客户！开通了新订单推送`]
+                                    texts: [`${title}`, `新行程已推送客户,为你开通了订单推送`]
                                 }
                             }
                         });
