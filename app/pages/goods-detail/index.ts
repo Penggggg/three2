@@ -463,10 +463,10 @@ Page({
             this.fetchLast( );
         // }
 
-        this.setData!({
-            id: "71f2cd945cab4fc10261232b3f358619",
-            tid: "13dba11c5d23ebb203b421ff08f4b0af"
-        })
+        // this.setData!({
+        //     id: "71f2cd945cab4fc10261232b3f358619",
+        //     tid: "13dba11c5d23ebb203b421ff08f4b0af"
+        // })
         
         if ( !options!.id && !scene ) { return; }
         this.setData!({
