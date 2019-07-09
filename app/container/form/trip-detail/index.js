@@ -1,5 +1,6 @@
 const { http } = require('../../../util/http.js');
 const { navTo } = require('../../../util/route.js');
+const { createFormId } = require('../../../util/form-id.js');
 
 // container/form/trip-detail/index.js
 Component({
@@ -510,9 +511,11 @@ Component({
         },
 
         /** 表单提交 */
-        submit( ) {
+        submit( e ) {
 
-            const { tid } = this.data;
+            createFormId( e.detail.formId );
+
+            const { tid, published } = this.data;
             const form1 = this.selectComponent('#form1');
             const form2 = this.selectComponent('#form2');
             const form3 = this.selectComponent('#form3');
@@ -531,61 +534,75 @@ Component({
                 })
             }
 
-            let tripDetail = Object.assign({
-                ...r1.data,
-                ...r2.data,
-                ...r3.data,
-                sales_volume: 0,
-                fullreduce_atleast,
-                fullreduce_values,
-                cashcoupon_atleast,
-                cashcoupon_values,
-                selectedProductIds,
-                updateTime: new Date( ).getTime( ),
-            }, {
-                end_date: new Date( `${new Date( end_date ).toDateString( ).replace(/\-/g, '/')} 23:59:50` ).getTime( ),
-                start_date: new Date( `${new Date( start_date ).toDateString( ).replace(/\-/g, '/')} 08:00:00` ).getTime( )
-            });
-    
-            if ( !tid ) {
-                tripDetail = Object.assign({ }, tripDetail, {
-                    isClosed: false,
-                    createTime: new Date( ).getTime( )
-                });
-            } else {
-                tripDetail = Object.assign({ }, tripDetail, {
-                    _id: tid
+            if (( !tid && r3.data.published ) ||( !!tid && !published && !r3.data.published )) {
+                return wx.showModal({
+                    title: 'Tips',
+                    confirmText: '确认',
+                    content: `行程将推送给7天使用过商城的客户`,
+                    success: res => {
+                        if ( res.cancel ) { return; }
+
+                        let tripDetail = Object.assign({
+                            ...r1.data,
+                            ...r2.data,
+                            ...r3.data,
+                            sales_volume: 0,
+                            fullreduce_atleast,
+                            fullreduce_values,
+                            cashcoupon_atleast,
+                            cashcoupon_values,
+                            selectedProductIds,
+                            updateTime: new Date( ).getTime( ),
+                        }, {
+                            end_date: new Date( `${new Date( end_date ).toDateString( ).replace(/\-/g, '/')} 23:59:50` ).getTime( ),
+                            start_date: new Date( `${new Date( start_date ).toDateString( ).replace(/\-/g, '/')} 08:00:00` ).getTime( )
+                        });
+                
+                        if ( !tid ) {
+                            tripDetail = Object.assign({ }, tripDetail, {
+                                isClosed: false,
+                                createTime: new Date( ).getTime( )
+                            });
+                        } else {
+                            tripDetail = Object.assign({ }, tripDetail, {
+                                _id: tid
+                            });
+                        }
+            
+                        http({
+                            data: tripDetail,
+                            errMsg: '加载失败，请重试',
+                            loadingMsg: tid ? '更新中...' : '创建中..',
+                            url: `trip_edit`,
+                            success: res => {
+                                const { status, data } = res;
+                                if ( status === 200 ) {
+                                    wx.showToast({
+                                        title: tid ? '更新成功' : '创建成功！'
+                                    });
+                                    setTimeout(( ) => {
+                                        navTo(`/pages/manager-trip-list/index`);
+                                    }, 200 );
+                                }
+                            }
+                        });
+                    }
                 });
             }
-
-            http({
-                data: tripDetail,
-                errMsg: '加载失败，请重试',
-                loadingMsg: tid ? '更新中...' : '创建中..',
-                url: `trip_edit`,
-                success: res => {
-                    const { status, data } = res;
-                    if ( status === 200 ) {
-                        wx.showToast({
-                            title: tid ? '更新成功' : '创建成功！'
-                        });
-                        setTimeout(( ) => {
-                            navTo(`/pages/manager-trip-list/index`);
-                        }, 200 );
-                    }
-                }
-            });
 
         },
 
         /** 关闭行程 */
-        closeTrip( ) {
+        closeTrip( e ) {
+
+            createFormId( e.detail.formId );
             const { tid, hasNextTrip } = this.data;
+
             if ( !tid ) { return; }
             wx.showModal({
                 title: 'Tips',
                 confirmText: '确认关闭',
-                content: `1. 关闭行程后无法撤销${ !hasNextTrip ? '。2. 关闭后无下趟行程计划, 请尽快创建' : ''} `,
+                content: `关闭行程后无法撤销${ !hasNextTrip ? '、请尽快创建下一趟行程' : ''} `,
                 success: res => {
                     if ( res.cancel ) { return; }
                     http({

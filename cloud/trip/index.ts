@@ -274,9 +274,11 @@ export const main = async ( event, context ) => {
     app.router('edit', async( ctx, next ) => {
         try {
 
+            let trip: any = null;
             let _id = event.data._id;
             const tid = event.data._id;
-
+            const { published, title, start_date, end_date } = event.data;
+            
             const getErr = message => {
                 return ctx.body = {
                     status: 500,
@@ -289,7 +291,7 @@ export const main = async ( event, context ) => {
              * 如果行程选择“已发布”
              * 需要检查是否有 已发布行程的结束时间 大于等于 当前行程的开始时间
              */
-            if ( event.data.published ) {
+            if ( published ) {
 
                 let where$ = {
                     isClosed: false,
@@ -316,20 +318,27 @@ export const main = async ( event, context ) => {
              * 校验2:
              * 结束时间不能小于开始时间
              */
-            const { start_date, end_date } = event.data;
             if ( start_date >= end_date  ) {
                 return getErr('开始时间必须大于结束时间');
             }
 
-    
+            /** 获取目标trip */
+            if ( !!_id ) {
+                const result$ = await db.collection('trip')
+                    .doc( _id )
+                    .get( );
+                trip = result$.data;
+            }
+
             // 创建 
             if ( !_id ) {
     
-                const create$ = await db.collection('trip').add({
-                    data: Object.assign({ }, event.data, {
-                        callMoneyTimes: 0
-                    })
-                });
+                const create$ = await db.collection('trip')
+                    .add({
+                        data: Object.assign({ }, event.data, {
+                            callMoneyTimes: 0
+                        })
+                    });
                 _id = create$._id;
     
             // 编辑
@@ -358,6 +367,71 @@ export const main = async ( event, context ) => {
                         .set({
                             data: temp
                         });
+            }
+
+            /**
+             * 推送
+             * 创建时候的发布、
+             * 编辑的时候发布
+             */
+            if ((!tid && published ) || ( !!trip && !trip.published && !!published )) {
+
+                const time = new Date( start_date );
+
+                // 推送代购通知
+                const members = await db.collection('manager-member')
+                .where({
+                    push: true
+                })
+                .get( );
+            
+                await Promise.all(
+                    members.data.map( async member => {
+                        // 4、调用推送
+                        const push$ = await cloud.callFunction({
+                            name: 'common',
+                            data: {
+                                $url: 'push-template-cloud',
+                                data: {
+                                    openid: member.openid,
+                                    type: 'trip',
+                                    page: 'pages/manager-trip-list/index',
+                                    texts: [`${title}`, `行程已推送给客户！开通了新订单推送`]
+                                }
+                            }
+                        });
+                    })
+                );
+
+                // 推送客户通知
+                const users = await db.collection('user')
+                    .where({
+
+                    })
+                    .get( );
+
+                await Promise.all(
+                    users.data
+                        .filter( user => {
+                            return !members.data.find( member => member.openid === user.openid )
+                        })
+                        .map( async user => {
+                            // 4、调用推送
+                            const push$ = await cloud.callFunction({
+                                name: 'common',
+                                data: {
+                                    $url: 'push-template-cloud',
+                                    data: {
+                                        openid: user.openid,
+                                        type: 'trip',
+                                        page: 'pages/trip-enter/index',
+                                        texts: [`${title}`, `代购在${time.getMonth( )+1}月${time.getDate( )}日开始！快来看看吧`]
+                                    }
+                                }
+                            });
+                        })
+                );
+
             }
 
             return ctx.body = {
@@ -548,6 +622,35 @@ export const main = async ( event, context ) => {
                         }
                     })
             }));
+
+            const trip$ = await db.collection('trip')
+                .doc( tid )
+                .get( );
+
+            // 推送代购通知
+            const members = await db.collection('manager-member')
+                .where({
+                    push: true
+                })
+                .get( );
+        
+            await Promise.all(
+                members.data.map( async member => {
+                    // 4、调用推送
+                    const push$ = await cloud.callFunction({
+                        name: 'common',
+                        data: {
+                            $url: 'push-template-cloud',
+                            data: {
+                                openid: member.openid,
+                                type: 'trip',
+                                page: `pages/manager-trip-order/index?id=${tid}&ac=${1}`,
+                                texts: [`${trip$.data.title}`, `关闭成功！一键收款功能已开启`]
+                            }
+                        }
+                    });
+                })
+            );
 
             return ctx.body = { status: 200 };
 

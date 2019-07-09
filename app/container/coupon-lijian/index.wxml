@@ -44,7 +44,7 @@
 
                 <!-- 分享按钮 -->
                 <form
-                    bindsubmit="createFormId"
+                    bindsubmit="onShare"
                     class="cgp-toggle-btn"
                     report-submit="{{ true }}"
                 >
