@@ -1,5 +1,6 @@
 
 const { http } = require('../../util/http.js');
+const { createFormId } = require('../../util/form-id');
 
 Component({
     /**
@@ -98,16 +99,8 @@ Component({
         },
 
         /** formid */
-        createFormId( e ) {
-            const formid = e.detail.formId;
-            if ( !formid ) { return; }
-            http({
-                data: {
-                    formid
-                },
-                loadingMsg: 'none',
-                url: 'common_create-formid',
-            })
+        onShare( e ) {
+            createFormId( e.detail.formId )
         },
 
     },

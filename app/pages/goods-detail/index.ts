@@ -6,6 +6,9 @@ import { navTo } from '../../util/route.js';
 
 const app = getApp( );
 
+// 打开拼团提示的key
+const storageKey = 'opened-pin-in-good';
+
 Page({
 
     // 动画
@@ -67,7 +70,10 @@ Page({
         activities: [ ],
 
         // 本趟能够拼团的sku
-        canPinSku: [ ]
+        canPinSku: [ ],
+
+        // 当前的行程
+        trip: null
     },
 
     /** 设置computed */
@@ -255,6 +261,8 @@ Page({
                     detail: res.data,
                     activities: activities$
                 });
+
+                this.checkOpenPin( );
             }
         });
     },
@@ -297,22 +305,26 @@ Page({
 
                 if ( !!data[ 0 ]) {
                     const tid = data[ 0 ]._id
+
+                    if ( !this.data.tid ) {
+                        this.fetchShopping( id, tid );
+                    }
                     this.setData!({
-                        tid: data[ 0 ]._id
+                        tid: data[ 0 ]._id,
+                        trip: data[ 0 ]
                     });
-                    this.fetchShopping( id, tid );
                 }
             }
         })
     },
 
     // 展开提示
-    toggleTips( e ) {
+    toggleTips( e? ) {
         const { showTips } = this.data;
         this.setData!({
             showTips: showTips === 'show' ? 'hide' : 'show'
         });
-        this.createFormId( e.detail.formId );
+        !!e && this.createFormId( e.detail.formId );
     },
 
     // 进入商品管理
@@ -354,6 +366,23 @@ Page({
             current: img,
             urls: [ img ],
         });
+    },
+
+    /** 检查是否有主动弹开过拼团 */
+    checkOpenPin( ) {
+        const { detail, tid } = this.data;
+        if ( !detail ) { return }
+
+        const result = delayeringGood( detail );
+        if ( result && tid ) {
+            const priceGap = String( result.goodPins.eachPriceRound ).replace(/\.00/g, '');
+            const openRecordTid = wx.getStorageSync( storageKey );
+
+            if ( !!priceGap && !!tid && openRecordTid !== tid ) {
+                wx.setStorageSync( storageKey, tid );
+                this.toggleTips( );
+            }
+        }
     },
 
     /** 设置“喜欢” */
@@ -426,9 +455,10 @@ Page({
         this.watchRole( );
         this.runComputed( );
 
-        if ( !options!.tid ) {
+        this.checkLike( );
+        // if ( !options!.tid ) {
             this.fetchLast( );
-        }
+        // }
         
         if ( !options!.id && !scene ) { return; }
         this.setData!({
@@ -476,7 +506,6 @@ Page({
     onShow: function ( ) {
         const { id, tid } = this.data;
 
-        this.checkLike( );
         this.fetDetail( id );
         this.fetchShopping( id, tid );
     },
@@ -513,13 +542,15 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( ) {
-        const { detail, pin$, activities, priceGap } = this.data;
+        const { detail, pin$, activities, priceGap, trip } = this.data;
         return {
             title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
                         activities.length === 0 ?
                             `一起买！一起省${String( priceGap ).replace(/\.00/g, '')}元！` :
                             '限时特价超实惠！' : 
-                        '给你看看这宝贝！'
+                        trip && trip.reduce_price ? 
+                            `立减${trip.reduce_price}元！` :
+                            '给你看看这宝贝！'
                 }${detail.title}`,
             path: `/pages/goods-detail/index?id=${detail._id}&tid=${this.data.tid}`,
             imageUrl: `${detail.img[ 0 ]}`

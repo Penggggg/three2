@@ -43,6 +43,11 @@ Component({
         canPinSku: {
             type: Array,
             value: [ ]
+        },
+        /** 是否有sku可以拼团 */
+        someCanPin: {
+            type: Boolean,
+            value: false
         }
     },
 
