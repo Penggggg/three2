@@ -14,11 +14,13 @@ App<MyApp>({
         // 是否已经授权用户信息
         isUserAuth: false,
         // 用户信息
-        userInfo: null,
+        userInfo: { },
         /** 是否是新客户 */
         isNew: true,
         /** 编辑中的商品数据 */
-        editingGood: null
+        editingGood: { },
+        /** app配置 */
+        appConfig: { }
     },
 
     /** 全局store */
@@ -28,7 +30,8 @@ App<MyApp>({
         isUserAuth: false,
         userInfo: null,
         isNew: true,
-        editingGood: null
+        editingGood: null,
+        appConfig: null
     },
 
     /** 监听函数的对象数组 */
@@ -96,6 +99,19 @@ App<MyApp>({
             success: res => {
                 this.setGlobalData({
                     isNew: res.data
+                });
+            }
+        })
+    },
+
+    /** 获取app配置 */
+    getAppConfig( ) {
+        http({
+            url: 'common_check-app-config',
+            success: res => {
+                if ( res.status !== 200 ) { return; }
+                this.setGlobalData({
+                    appConfig: res.data
                 });
             }
         })
@@ -181,6 +197,7 @@ App<MyApp>({
             .then(( ) => {
                 this.getUserInfo( );
                 this.getIsNewCustom( );
+                this.getAppConfig( );
             })
             .catch( e => {
                 wx.showToast({
@@ -202,6 +219,7 @@ export interface MyApp {
     watchingKeys: string[ ]
     init: ( ) => void
     initCloud: ( ) => Promise<any>
+    getAppConfig: ( ) => void
     getUserInfo: ( cb?: () => void ) => void,
     getIsNewCustom:  ( ) => void,
     getWxUserInfo: ( cb?: ( ) => void ) => void,
@@ -220,4 +238,5 @@ type globalState = {
     isUserAuth: boolean,
     userInfo: any
     isNew: boolean
+    appConfig: any
 }

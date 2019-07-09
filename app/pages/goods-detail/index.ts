@@ -344,6 +344,9 @@ Page({
                 isNew: val
             });
         });
+        (app as any).watch$('appConfig', val => {
+            console.log('.....', val );
+        });
     },
     
     /** 预览图片 */
@@ -459,6 +462,11 @@ Page({
         // if ( !options!.tid ) {
             this.fetchLast( );
         // }
+
+        // this.setData!({
+        //     id: "71f2cd945cab4fc10261232b3f358619",
+        //     tid: "13dba11c5d23ebb203b421ff08f4b0af"
+        // })
         
         if ( !options!.id && !scene ) { return; }
         this.setData!({

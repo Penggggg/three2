@@ -14,10 +14,15 @@ Component({
             required: true,
             observer: 'onInit'
         },
+        // 是否可以立马拼团
         someCanPin: {
             type: Boolean,
             value: false,
-            observer: 'initTips'
+        },
+        // 是否有团购价
+        goodCanPin: {
+            type: Boolean,
+            value: false,
         }
     },
 
@@ -47,14 +52,18 @@ Component({
         // 文字拼团提示
         tips: [
             '发群求拼团',
-            '转发闺蜜',
+            '分享给朋友',
+            '转发获积分',
         ],
         
         // 是否转发提示
         showTips: false,
 
         // 当前文字拼团提示的下标
-        tipsIndex: null
+        tipsIndex: null,
+
+        // 当前的文字
+        tipsText: ''
 
     },
 
@@ -297,17 +306,16 @@ Component({
         },
 
         // 自动弹出转发提示
-        initTips( canPin ) {
-            if ( !canPin ) { return; }
+        initTips( ) {
+            const { goodCanPin, someCanPin } = this.data;
+            // if ( !canPin ) { return; }
             const time = setInterval(( ) => {
                 const { tips, tipsIndex, showTips } = this.data;
-                const allTips = tips.filter( x => {
-                    if ( canPin ) {
-                        return true;
-                    } else {
-                        return !x.includes('拼');
-                    }
-                });
+                const allTips = tips
+                    .filter( x => {
+                        return someCanPin ? !x.includes('发群求拼团') : true
+                    });
+
 
                 if ( tipsIndex >= allTips.length - 1 ) {
                     this.setData({
@@ -317,9 +325,11 @@ Component({
                 }
 
                 if ( !showTips ) {
+                    const index = tipsIndex === null ? 0 : tipsIndex + 1;
                     this.setData({
                         showTips: true,
-                        tipsIndex: tipsIndex === null ? 0 : tipsIndex + 1
+                        tipsIndex: index,
+                        tipsText: allTips[ index ]
                     });
                 } else {
                     this.setData({
@@ -333,5 +343,6 @@ Component({
 
     attached: function( ) {
         this.watchRole( );
+        setTimeout(( ) => this.initTips( ), 1000 );
     }
 })
