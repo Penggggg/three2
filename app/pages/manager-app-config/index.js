@@ -27,6 +27,17 @@ Page({
                     rules: [ ],
                     shadow: true,
                     value: config ? config['app-bjp-visible'] : false
+                },{
+                    title: '商品',
+                    desc: '相关设置'
+                }, {
+                    key: 'good-integral-share',
+                    label: '商品积分推广',
+                    type: 'switch',
+                    max: 1,
+                    rules: [ ],
+                    shadow: true,
+                    value: config ? config['good-integral-share'] : false
                 }];
 
                 return meta;

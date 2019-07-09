@@ -94,7 +94,7 @@
         <view
             class="cgp-tips {{ showTips && tipsIndex !== null ? '' : 'hide' }}"
         >
-            {{ tips[ tipsIndex ]}}
+            {{ tipsText }}
         </view>
     </form>
 
