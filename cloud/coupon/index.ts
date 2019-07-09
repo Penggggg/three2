@@ -153,7 +153,7 @@ export const main = async ( event, context ) => {
                         openid,
                         type: 'hongbao',
                         page: 'pages/trip-enter/index',
-                        texts: [`${reduce_price}元`, `趁早下单！无门槛立减${reduce_price}元`]
+                        texts: [`恭喜获得红包${reduce_price}元`, `趁早下单！无门槛立减${reduce_price}元`]
                     }
                 }
             });
