@@ -116,20 +116,34 @@
     <view
         class="ptd-btn-block"
     >
-        <view
-            class="ptd-btn"
-            bindtap="closeTrip"
+
+        <form
+            class="flex-1 btn-mr"
+            bindsubmit="closeTrip"
             wx:if="{{ canBeEnd }}"
+            report-submit="{{ true }}"
         >
-            结束行程( 收尾款 )
-        </view>
-        <view
-            bindtap="submit"
-            class="ptd-btn invert"
+            <button
+                form-type="submit"
+                class='fix-btn ptd-btn'
+            >
+                结束行程( 收尾款 )
+            </button>
+        </form>
+
+        <form
+            class="flex-1"
+            bindsubmit="submit"
             wx:if="{{ !isClosed }}"
+            report-submit="{{ true }}"
         >
-            {{ !!tid ? '更新' : '创建' }}
-        </view>
+            <button
+                form-type="submit"
+                class='fix-btn ptd-btn invert'
+            >
+                {{ !!tid ? '更新' : '创建' }}
+            </button>
+        </form>
     </view>
 
     <!-- 商品选择 -->

@@ -154,22 +154,32 @@
     margin-right: 30rpx;
 }
 
+.flex-1 {
+    flex: 1;
+}
+
+.btn-mr {
+    margin-right: 15rpx;
+}
+
 .ptd-btn {
     flex: 1;
+    width: 100%;
     color: #fff;
     font-size: 26rpx;
     text-align: center;
-    padding: 25rpx 0;
+    padding: 8rpx 0 !important;
     border-radius: 30px;
     border: 1px solid #fff;
     /* text-shadow: 0px 0px 5px rgba( 255, 255, 255, 0.25); */
     box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.20 );
     background: #fff;
     color: #f80759;
+    text-align: center !important;
 }
 
 .ptd-btn.invert {
-    width: 100rpx;
+    /* width: 100rpx; */
     color: #fff;
     border: none;
     background: #bc4e9c;
@@ -199,4 +209,17 @@
     top: 10rpx;
     right: -5px;
     
+  }
+
+  .fix-btn {
+    background: transparent;
+    outline:none;
+    border:none;
+    list-style: none;
+    padding: 0;
+    text-align: left;
+  }
+  
+  .fix-btn:after {
+    border:none;
   }

@@ -23,7 +23,7 @@
                 color="#fff"
                 bg-color="transparent"
                 scroll="{{ true }}"
-                notice="省！此商品可拼团"
+                notice="省！商品可拼团"
             />
         </view>
         
@@ -155,10 +155,10 @@
                 <view class="info-block-item-content">
                     {{
                         pinCount$ === 0 ?
-                            '行程中有Ta人购买，' :
+                            'Ta人购买,自动拼团' :
                             hasStanders$ ?
                                 '有' + pinCount$ + '个型号可拼团，' :
-                                '此商品可拼团 '
+                                '商品可拼团 '
                     }}
                     <form
                         wx:if="{{ priceGap }}"
@@ -168,7 +168,7 @@
                     >
                         <button
                             form-type="submit"
-                            class="red bigger nobold formid-btn"
+                            class="red formid-btn"
                         >   
                             拼团省{{ priceGap }}元【详情】
                         </button>
@@ -309,6 +309,7 @@
             detail="{{ detail }}"
             canPinSku="{{ canPinSku }}"
             activities="{{ activities }}"
+            someCanPin="{{ pinCount$ > 0 }}"
         />
 
     </view> 
@@ -317,6 +318,7 @@
     <my-good-poster
         good="{{ detail }}"
         bindtoggle="onPostToggle"
+        someCanPin="{{ pinCount$ > 0 }}"
     />
 
     <!-- 商品管理页面入口 -->
@@ -351,7 +353,7 @@
             </view>
 
             <view class="gd-pin-tips-content">
-                购买后，如有他人也买了同款商品，会"自动拼团”，并得到“拼团价”。如果闺蜜或者群友刚好也需要～那就邀请她们一起购买吧！
+                如果有他人也买了同款商品，会"自动拼团”，并得到更省钱的“拼团价”。如果闺蜜或者群友刚好也需要～那就邀请她们一起购买吧！
             </view>
 
             <!-- 行程清单 -->

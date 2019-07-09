@@ -60,12 +60,15 @@
     </view>
 
     <!-- 分享按钮 -->
+    <!-- animation="{{ animationMiddleHeaderItem }}" -->
     <form
         class="cgp-toggle-btn"
         bindsubmit="toggle"
         report-submit="{{ true }}"
     >
+        <!-- 管理员跳到海报 -->
         <button
+            wx:if="{{ isAdmin }}"
             form-type="submit"
             class="formid-btn"
         >   
@@ -74,6 +77,25 @@
                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-share-2.png"
             />
         </button>
+
+        <!-- 非管理员直接转发 -->
+        <button
+            wx:else
+            open-type="share"
+            class="formid-btn"
+        >   
+           <image
+                class="cgp-icon-img"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-share-2.png"
+            />
+        </button>
+
+        <!-- 文字提示 -->
+        <view
+            class="cgp-tips {{ showTips && tipsIndex !== null ? '' : 'hide' }}"
+        >
+            {{ tips[ tipsIndex ]}}
+        </view>
     </form>
 
 

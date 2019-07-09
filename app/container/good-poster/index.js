@@ -13,6 +13,11 @@ Component({
             type: Object,
             required: true,
             observer: 'onInit'
+        },
+        someCanPin: {
+            type: Boolean,
+            value: false,
+            observer: 'initTips'
         }
     },
 
@@ -31,13 +36,68 @@ Component({
         canvasHeight: 300,
 
         // 加载
-        loading: true
+        loading: true,
+
+        // 是否为管理员
+        isAdmin: false,
+
+        // 动画
+        animationMiddleHeaderItem: null,
+
+        // 文字拼团提示
+        tips: [
+            '发群求拼团',
+            '转发闺蜜',
+        ],
+        
+        // 是否转发提示
+        showTips: false,
+
+        // 当前文字拼团提示的下标
+        tipsIndex: null
+
     },
 
     /**
      * 组件的方法列表
      */
     methods: {
+
+        /** 监听全局管理员权限 */
+        watchRole( ) {
+            app.watch$('role', ( val ) => {
+                this.setData({
+                    isAdmin: val === 1
+                });
+            });
+        },
+
+        // 初始化动画
+        initAnimate( ) {
+            let circleCount = 0; 
+            const that = this;
+            // 心跳的外框动画 
+            that.animationMiddleHeaderItem = wx.createAnimation({ 
+                duration: 800, 
+                timingFunction: 'ease', 
+                transformOrigin: '15% 15%',
+            }); 
+            setInterval( function( ) { 
+                if (circleCount % 2 == 0) { 
+                    that.animationMiddleHeaderItem.scale( 1.0 ).rotate( 10 ).step( ); 
+                } else { 
+                    that.animationMiddleHeaderItem.scale( 1.0 ).rotate( -18 ).step( ); 
+                } 
+                that.setData({ 
+                    animationMiddleHeaderItem: that.animationMiddleHeaderItem.export( ) 
+                }); 
+                
+                if ( ++circleCount === 1000 ) { 
+                    circleCount = 0; 
+                } 
+            }.bind( this ), 1200 ); 
+        },
+
         // 初始化
         onInit( good ) {
             this.setData({
@@ -224,6 +284,7 @@ Component({
         preventTouchMove( ) {
         },
 
+        // 创建formid
         createFormId( formid ) {
             if ( !formid ) { return; }
             http({
@@ -235,9 +296,42 @@ Component({
             })
         },
 
+        // 自动弹出转发提示
+        initTips( canPin ) {
+            if ( !canPin ) { return; }
+            const time = setInterval(( ) => {
+                const { tips, tipsIndex, showTips } = this.data;
+                const allTips = tips.filter( x => {
+                    if ( canPin ) {
+                        return true;
+                    } else {
+                        return !x.includes('拼');
+                    }
+                });
+
+                if ( tipsIndex >= allTips.length - 1 ) {
+                    this.setData({
+                        showTips: false
+                    });
+                    return clearInterval( time );
+                }
+
+                if ( !showTips ) {
+                    this.setData({
+                        showTips: true,
+                        tipsIndex: tipsIndex === null ? 0 : tipsIndex + 1
+                    });
+                } else {
+                    this.setData({
+                        showTips: false
+                    });
+                }
+            }, 2500 );
+        }
+
     },
 
     attached: function( ) {
-        
+        this.watchRole( );
     }
 })

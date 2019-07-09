@@ -59,7 +59,10 @@
     color: #fff;
     font-size: 32rpx;
     text-align: center;
-    background: #ff5777;
+    /* background: #ff5777; */
+    background: #ff8787; 
+    background: -webkit-linear-gradient(to left, #ff61ab, #ff8787); 
+    background: linear-gradient(to left, #ff61ab, #ff8787); 
 }
 
 .gbs-btn-item-img {

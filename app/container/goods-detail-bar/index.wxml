@@ -55,7 +55,7 @@
                 wx:else
                 class="gbs-btn-special-item"
             >
-                <form
+                <!-- <form
                     data-type="cart"
                     bindsubmit="toggleSku"
                     report-submit="{{ true }}"
@@ -67,7 +67,7 @@
                     >   
                         加入购物车
                     </button>
-                </form>
+                </form> -->
                 <form
                     data-type="buy"
                     bindsubmit="toggleSku"
@@ -78,7 +78,7 @@
                         form-type="submit"
                         class="gbs-btn-special-item morepink"
                     >   
-                        立即购买
+                        {{ someCanPin ? '拼团购买' : '立即购买' }}
                     </button>
                 </form>
             </view>

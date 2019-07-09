@@ -39,6 +39,18 @@ export const push_template = {
         desc: '新订单通知：订单详情、订单状态',
         example: '你有x条新订单；点击查看',
         value: 'TQmlCntkDc1a8CuoEP9gNDDAhOJVf4QTPpcfWLf0svQ'
+    },
+    trip: {
+        desc: '行程提醒：行程名称、行程备注',
+        value: 'XoXY8XWf6EiymW7tYDPkHDD4Vcdh-BqP1ycXbPko-ZU',
+        example: '【名称】；发布成功，并开通新订单推送',
+        example2: '【名称】；关闭行程成功，一键收款功能已开启',
+        example3: '【名称】；【时间】开始采购，拼团越优惠'
+    },
+    hongbao: {
+        desc: '领取成功通知：领取金额、适用范围',
+        value: 'I_yZjUxTJklPGDVrB-btt82F5z687_2cpTx1Mie_t9A',
+        example: '【金额】元；趁早下单！无门槛立减【金额】元'
     }
 };
 
