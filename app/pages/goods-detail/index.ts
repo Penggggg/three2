@@ -353,7 +353,13 @@ Page({
     createShare( ) {
         const { id, canIntegrayShare, from, openid } = this.data;
         if ( !id || !canIntegrayShare || !from || !openid ) { return; }
-
+        http({
+            data: {
+                from,
+                pid: id,
+            },
+            url: 'common_create-share'
+        });
     },
 
     // 展开提示

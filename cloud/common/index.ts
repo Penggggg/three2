@@ -1039,6 +1039,58 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /**
+     * @description
+     * 创建一个分享记录
+     * 表结构 {
+     *      to
+     *      from
+     *      pid
+     *      createTime
+     * }
+     * 请求{
+     *     pid
+     *     from
+     * }
+     */
+    app.router('create-share', async( ctx, next ) => {
+        try {
+            const openid = event.userInfo.openId;
+            const { from, pid } = event.data;
+
+            // 防重复
+            const count$ = await db.collection('share-record')
+                .where({
+                    pid,
+                    from,
+                    openid
+                })
+                .count( );
+
+            if ( count$.total > 0 ) {
+                return ctx.body = { status: 200 };
+            }
+
+            // 创建
+            const create$ = await db.collection('share-record')
+                .add({
+                    data: {
+                        pid,
+                        from,
+                        openid,
+                        createTime: getNow( true )
+                    }
+                });
+
+            return ctx.body = { status: 200 };
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    })
+
     return app.serve( );
 
 }
