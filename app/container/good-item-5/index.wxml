@@ -1,44 +1,51 @@
-<view
-    class="good-item-5"
-    bindtap="goDetail"
+
+<form
+    bindsubmit="goDetail"
+    report-submit="{{ true }}"
+    class="good-item-5-form"
 >
-    <view class="gi5-img-block">
-        <image
-            class="gi5-img"
-            mode="aspectFill"
-            src="{{ good.img[ 0 ] }}"
-        />
-        <view
-            class="gi5-tag-block"
-            wx:if="{{ good.hasActivity }}"
-        >
+    <button
+        form-type="submit"
+        class="fix-btn good-item-5"
+    >
+        <view class="gi5-img-block">
             <image
-                mode="widthFix"
-                class="gd-activity-icon"
-                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                class="gi5-img"
+                mode="aspectFill"
+                src="{{ good.img[ 0 ] }}"
             />
-            <view class="gi5-tag-text">
-                活动
+            <view
+                class="gi5-tag-block"
+                wx:if="{{ good.hasActivity }}"
+            >
+                <image
+                    mode="widthFix"
+                    class="gd-activity-icon"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                />
+                <view class="gi5-tag-text">
+                    活动
+                </view>
             </view>
         </view>
-    </view>
 
-    <view class="gi5-info">
-        
-        <view class="gi5-title-block">
+        <view class="gi5-info">
             
-            <view class="gi5-icon">
-                推荐
+            <view class="gi5-title-block">
+                
+                <view class="gi5-icon">
+                    推荐
+                </view>
+                <view class="gi5-title">
+                    {{ good.title }}
+                </view>
             </view>
-            <view class="gi5-title">
-                {{ good.title }}
+
+            <view class="git-tag">
+                {{ tag }}
             </view>
-        </view>
 
-        <view class="git-tag">
-            {{ tag }}
         </view>
-
-    </view>
-    
-</view>
+        
+    </button>
+</form>
