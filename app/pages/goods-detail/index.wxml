@@ -146,7 +146,7 @@
         >
 
             <!-- 拼团文案 -->
-            <view class="info-block-item np" wx:if="{{ priceGap && priceGap !== '0' }}">
+            <view class="info-block-item np" wx:if="{{ !!priceGap }}">
 
                 <view class="info-block-item-label">
                     拼团：
@@ -202,7 +202,7 @@
             <!-- 保证，三个icon -->
             <view
                 class="info-block-item"
-                wx:if="{{ activities.length === 0 && !canIntegrayShare && !priceGap }}"
+                wx:if="{{ (activities.length === 0 && !canIntegrayShare) || (activities.length === 0 && !priceGap) || (activities.length === 0 && !priceGap)}}"
             >
                 <view class="info-block-item-label">
                     保证：
@@ -341,8 +341,8 @@
         wx:if="{{ !loading }}"
         good="{{ detail }}"
         bindtoggle="onPostToggle"
-        goodCanPin="{{ !!priceGap }}"
         someCanPin="{{ pinCount$ > 0 }}"
+        goodCanPin="{{ !!priceGap && priceGap !== '0' }}"
     />
 
     <!-- 商品管理页面入口 -->
@@ -469,7 +469,6 @@
             </view>
 
             <swiper
-                autoplay="{{ true }}"
                 circular="{{ true }}"
                 duration="{{ 1000 }}"
                 interval="{{ 2300 }}"
@@ -478,6 +477,7 @@
                 display-multiple-items="{{ 1 }}"
                 indicator-active-color="#535bf3"
                 indicator-color="rgba(0,0,0,0.1)"
+                autoplay="{{ showShareTips === 'hide' ? false : true }}"
             >
                 <block
                     wx:for="{{ shareTexts }}"

@@ -87,7 +87,13 @@ Page({
             '朋友购买',
             '获得积分',
             '当现金用'
-        ]
+        ],
+
+        // 当前账号的openid
+        openid: '',
+
+        // 分享人的openid
+        from: ''
     },
 
     /** 设置computed */
@@ -118,7 +124,9 @@ Page({
                     return ''
                 } else {
                     const result = delayeringGood( detail );
-                    return result ? String( result.goodPins.eachPriceRound ).replace(/\.00/g, '') : '';
+                    const gap = result ? String( result.goodPins.eachPriceRound ).replace(/\.00/g, '') : '';
+                    const meta = gap !== '0' && !!gap ? gap : '';
+                    return meta;
                 }
             },
 
@@ -293,7 +301,6 @@ Page({
 
     /** 拉取当前商品的购物请单信息 */
     fetchShopping( pid, tid ) {
-
         if ( !pid || !tid ) { return; }
 
         http({
@@ -330,16 +337,23 @@ Page({
                 if ( !!data[ 0 ]) {
                     const tid = data[ 0 ]._id
 
-                    if ( !this.data.tid ) {
+                    if ( !!tid ) {
                         this.fetchShopping( id, tid );
                     }
                     this.setData!({
-                        tid: data[ 0 ]._id,
+                        tid,
                         trip: data[ 0 ]
                     });
                 }
             }
         })
+    },
+
+    /** 创建分享记录 */
+    createShare( ) {
+        const { id, canIntegrayShare, from, openid } = this.data;
+        if ( !id || !canIntegrayShare || !from || !openid ) { return; }
+
     },
 
     // 展开提示
@@ -381,6 +395,13 @@ Page({
             this.setData!({
                 canIntegrayShare: !!(val || { })['good-integral-share']
             });
+            this.createShare( );
+        });
+        (app as any).watch$('openid', val => {
+            this.setData!({
+                openid: val
+            });
+            this.createShare( );
         });
     },
     
@@ -485,34 +506,36 @@ Page({
 
     /**
      * 生命周期函数--监听页面加载
+     * {
+     *    id || scene // 商品id
+     *    tid // 行程id
+     *    from // 分享人的id
+     * }
      */
     onLoad: function (options) {
 
         const scene = decodeURIComponent( options!.scene || '' )
         
-        this.watchRole( );
         this.runComputed( );
-
-        this.checkLike( );
-        // if ( !options!.tid ) {
-            this.fetchLast( );
-        // }
-
-        this.setData!({
-            id: "71f2cd945cab4fc10261232b3f358619",
-            tid: "13dba11c5d23ebb203b421ff08f4b0af"
-        })
         
-        if ( !options!.id && !scene ) { return; }
+        if ( !options!.id && !scene && !'71f2cd945cab4fc10261232b3f358619' ) { return; }
         this.setData!({
-            id: options!.id || scene,
+            from: 'oo-j94xgyyWoostWUIpR6akXJ_LE',
+            // 这里改一下就行 不要删
+            id: options!.id || scene || '71f2cd945cab4fc10261232b3f358619',
         });
 
-        if ( !!(options as any).tid ) {
+        if ( !!(options as any).from ) {
             this.setData!({
-                tid: options!.tid
+                from: options!.from
             })
         }
+        
+        setTimeout(( ) => {
+            this.watchRole( );
+            this.checkLike( );
+            this.fetchLast( );
+        }, 20 );
     },
   
     /**
@@ -585,7 +608,7 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( e ) {
-        const { detail, pin$, activities, priceGap, trip } = this.data;
+        const { detail, pin$, activities, priceGap, trip, openid } = this.data;
         return {
             title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
                         activities.length === 0 ?
@@ -595,7 +618,8 @@ Page({
                             `立减${trip.reduce_price}元！` :
                             '给你看看这宝贝！'
                 }${detail.title}`,
-            path: `/pages/goods-detail/index?id=${detail._id}&tid=${this.data.tid}`,
+            // 分享不应该带tid
+            path: `/pages/goods-detail/index?id=${detail._id}&from=${openid}`,
             imageUrl: `${detail.img[ 0 ]}`
         }
     }

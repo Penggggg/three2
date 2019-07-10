@@ -85,7 +85,8 @@ export const collections = [
     'authpsw',
     'manager-member',
     'form-ids',
-    'analyse-data'
+    'analyse-data',
+    'share-record'
 ];
 
 /** 权限模块 */
