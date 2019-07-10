@@ -146,7 +146,7 @@
         >
 
             <!-- 拼团文案 -->
-            <view class="info-block-item" wx:if="{{ priceGap && priceGap !== '0' }}">
+            <view class="info-block-item np" wx:if="{{ priceGap && priceGap !== '0' }}">
 
                 <view class="info-block-item-label">
                     拼团：
@@ -177,10 +177,32 @@
 
             </view>
 
+            <!-- 积分推广文案 -->
+            <view class="info-block-item np" wx:if="{{ canIntegrayShare }}">
+                <view class="info-block-item-label">
+                    赚钱：
+                </view>
+                <view class="info-block-item-content">
+                    分享此商品可获
+                    <form
+                        bindsubmit="toggleTips2"
+                        class="red bigger nobold"
+                        report-submit="{{ true }}"
+                    >
+                        <button
+                            form-type="submit"
+                            class="red formid-btn normal"
+                        >   
+                            ¥{{ integral$ }}抵现积分
+                        </button>
+                    </form>
+                </view>
+            </view>
+
             <!-- 保证，三个icon -->
             <view
                 class="info-block-item"
-                wx:if="{{ activities.length === 0 }}"
+                wx:if="{{ activities.length === 0 && !canIntegrayShare && !priceGap }}"
             >
                 <view class="info-block-item-label">
                     保证：
@@ -407,6 +429,82 @@
             <form
                 class="gd-pin-close"
                 bindsubmit="toggleTips"
+                report-submit="{{ true }}"
+            >
+                <button
+                    form-type="submit"
+                    class="formid-btn"
+                >   
+                    <wxc-icon size="40" type="no" color="rgba(0,0,0,0.1)"></wxc-icon>
+                </button>
+            </form>
+
+        </view>
+    </wxc-mask>
+
+    <!-- 积分提示弹框 -->
+    <wxc-mask
+        content-align="cc"
+        status="{{ showShareTips }}"
+        bindmasktap="toggleTips2"
+    >
+        <view class="gd-pin-tips-block">
+
+            <view class="gd-pin-tips-icon-block">
+                <view class="gd-pin-tips-icon-round">
+                    <image
+                        mode="widthFix"
+                        class="gd-pin-tips-icon"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-money-white.png"
+                    />
+                </view>
+            </view>
+
+            <view class="gd-pin-tips-title">
+                分享赚钱
+            </view>
+
+            <view class="gd-pin-tips-content">
+                如果朋友购买了你分享的商品，你就会获得“积分”。“积分”可以在消费时当现金抵扣使用
+            </view>
+
+            <swiper
+                autoplay="{{ true }}"
+                circular="{{ true }}"
+                duration="{{ 1000 }}"
+                interval="{{ 2300 }}"
+                class="gd-share-swiper"
+                indicator-dots="{{ true }}"
+                display-multiple-items="{{ 1 }}"
+                indicator-active-color="#535bf3"
+                indicator-color="rgba(0,0,0,0.1)"
+            >
+                <block
+                    wx:for="{{ shareTexts }}"
+                    wx:key="{{ index }}"
+                >
+                    <swiper-item class="swiper-visible">
+                        <view class="gd-share-swiper-item">
+                            <form
+                                class="gd-share-swiper-form"
+                                report-submit="{{ true }}"
+                            >
+                                <button
+                                    open-type="share"
+                                    class="formid-btn gd-share-swiper-btn"
+                                >   
+                                    {{ index + 1 }}. {{ item }}
+                                </button>
+                            </form>
+                        </view>
+                    </swiper-item>
+                </block>
+
+            </swiper>
+
+            <form
+                class="gd-pin-close"
+                bindsubmit="toggleTips2"
                 report-submit="{{ true }}"
             >
                 <button

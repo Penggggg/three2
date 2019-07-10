@@ -60,6 +60,9 @@ Page({
         // 展示弹框
         showTips: 'hide',
 
+        // 分享Tips
+        showShareTips: 'hide',
+
         // 拼团列表
         pin: [ ],
 
@@ -73,7 +76,18 @@ Page({
         canPinSku: [ ],
 
         // 当前的行程
-        trip: null
+        trip: null,
+
+        // 当前是否开启了积分推广
+        canIntegrayShare: false,
+
+        // 积分推广文案
+        shareTexts: [
+            '分享商品',
+            '朋友购买',
+            '获得积分',
+            '当现金用'
+        ]
     },
 
     /** 设置computed */
@@ -207,6 +221,16 @@ Page({
                 return !!standards && standards.length > 0 ;
             },
 
+            // 积分区间
+            integral$: function( ) {
+                const { detail } = this.data;
+                if ( !detail ) { 
+                    return '';
+                }
+                const result = delayeringGood( detail );
+                return result.integral$;
+            }
+
         })
     },
 
@@ -327,6 +351,15 @@ Page({
         !!e && this.createFormId( e.detail.formId );
     },
 
+    // 展开分享提示
+    toggleTips2( e? ) {
+        const { showShareTips } = this.data;
+        this.setData!({
+            showShareTips: showShareTips === 'show' ? 'hide' : 'show'
+        });
+        !!e && this.createFormId( e.detail.formId );
+    },
+
     // 进入商品管理
     goManager( ) {
         navTo(`/pages/manager-goods-detail/index?id=${this.data.id}`)
@@ -345,7 +378,9 @@ Page({
             });
         });
         (app as any).watch$('appConfig', val => {
-            console.log('.....', val );
+            this.setData!({
+                canIntegrayShare: !!(val || { })['good-integral-share']
+            });
         });
     },
     
@@ -463,10 +498,10 @@ Page({
             this.fetchLast( );
         // }
 
-        // this.setData!({
-        //     id: "71f2cd945cab4fc10261232b3f358619",
-        //     tid: "13dba11c5d23ebb203b421ff08f4b0af"
-        // })
+        this.setData!({
+            id: "71f2cd945cab4fc10261232b3f358619",
+            tid: "13dba11c5d23ebb203b421ff08f4b0af"
+        })
         
         if ( !options!.id && !scene ) { return; }
         this.setData!({
@@ -549,7 +584,7 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    onShareAppMessage: function ( ) {
+    onShareAppMessage: function ( e ) {
         const { detail, pin$, activities, priceGap, trip } = this.data;
         return {
             title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
