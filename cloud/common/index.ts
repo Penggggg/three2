@@ -968,7 +968,8 @@ export const main = async ( event, context ) => {
             if ( !formid ) {
                 const find$ = await db.collection('form-ids')
                     .where({
-                        openid
+                        openid,
+                        formid: _.neq('the formId is a mock one')
                     })
                     .limit( 1 )
                     .get( );
@@ -1043,10 +1044,12 @@ export const main = async ( event, context ) => {
      * @description
      * 创建一个分享记录
      * 表结构 {
-     *      to
-     *      from
+     *      to // 受推者
+     *      from // 推广者
      *      pid
-     *      createTime
+     *      createTime // 分享时间
+     *      isSuccess: boolean // 是否推广成功
+     *      successTime: // 推广成功的时间
      * }
      * 请求{
      *     pid
@@ -1058,16 +1061,36 @@ export const main = async ( event, context ) => {
             const openid = event.userInfo.openId;
             const { from, pid } = event.data;
 
-            // 防重复
+            // 规则1:防重复
+            // 如果A给B推广过商品1，则C给B推广商品1无效
             const count$ = await db.collection('share-record')
                 .where({
                     pid,
-                    from,
-                    openid
+                    openid,
+                    isSuccess: false
                 })
                 .count( );
 
             if ( count$.total > 0 ) {
+                return ctx.body = { status: 200 };
+            }
+
+            // 规则2: 不能自己推自己
+            if ( openid === from ) {
+                return ctx.body = { status: 200 };
+            }
+
+            // 规则3: 24h内不能重复推
+            const count2$ = await db.collection('share-record')
+                .where({
+                    pid,
+                    openid,
+                    isSuccess: true,
+                    successTime: _.gte( getNow( true ) - 24 * 60 * 60 * 1000 )
+                })
+                .count( );
+            
+            if ( count2$.total > 0 ) {
                 return ctx.body = { status: 200 };
             }
 
@@ -1078,6 +1101,7 @@ export const main = async ( event, context ) => {
                         pid,
                         from,
                         openid,
+                        isSuccess: false,
                         createTime: getNow( true )
                     }
                 });

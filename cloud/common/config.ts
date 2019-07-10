@@ -45,12 +45,13 @@ export const push_template = {
         value: 'XoXY8XWf6EiymW7tYDPkHDD4Vcdh-BqP1ycXbPko-ZU',
         example: '【名称】；发布成功，并开通新订单推送',
         example2: '【名称】；关闭行程成功，一键收款功能已开启',
-        example3: '【名称】；【时间】开始采购，拼团越优惠'
+        example3: '【名称】；【时间】开始采购，拼团越优惠',
     },
     hongbao: {
         desc: '领取成功通知：领取金额、适用范围',
         value: 'I_yZjUxTJklPGDVrB-btt82F5z687_2cpTx1Mie_t9A',
-        example: '【金额】元；趁早下单！无门槛立减【金额】元'
+        example: '恭喜获得红包【金额】元；趁早下单！无门槛立减【金额】元',
+        example4: '恭喜！获得【金额】现金积分；推广成功！有人购买了你分享的商品'
     }
 };
 

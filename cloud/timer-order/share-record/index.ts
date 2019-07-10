@@ -25,13 +25,14 @@ const getNow = ( ts = false ): any => {
 
 /**
  * @description
- * 1: 所有超过7天的分享是无效的，自动删除掉
+ * 1: 所有超过7天的无效分享要，自动删除掉
  */
 export const clearShareRecord = async ( ) => {
     try {
 
         const find$ = await db.collection('share-record')
             .where({
+                isSuccess: false,
                 createTime: _.lte( getNow( true ) - SHARE_OVERTIME )
             })
             .get( );
