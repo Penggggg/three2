@@ -1,56 +1,62 @@
 <!--container/good-item-3/index.wxml-->
-<view
-    class="good-item-3"
-    bindtap="goDetail"
+<form
+    bindsubmit="goDetail"
+    report-submit="{{ true }}"
+    class="good-item-3-form"
 >
-
-    <!-- 图片 -->
-    <image 
-        class="gi3-image"
-        mode="aspectFill"
-        lazy-load="{{ true }}"
-        src="{{ good.img[ 0 ]}}"
-    />
-
-    <!-- 标题 -->
-    <view class="gi3-title">
-        {{ good.title }}
-    </view>
-
-    <!-- 原价 -->
-    <view class="gi3-fadeprice">
-        市场售价:¥{{ good.fadePrice }}
-    </view>
-
-    <!-- 最低价 -->
-    <view class="gi3-price-block">
-        超值¥<view class="gi3-price">{{ good.lowest_price$ }}</view>
-    </view>
-
-    <!-- 标签 -->
-    <view class="gi3-label">
-        {{ tag }}
-    </view>
-
-    <!-- 标签2 -->
-    <view class="gi3-tips-label">
-        热销宝贝
-    </view>
-
-    <!-- 活动标签 -->
-    
-    <view
-        class="gi3-tag-block"
-        wx:if="{{ good.hasActivity }}"
+    <button
+        form-type="submit"
+        class="fix-btn good-item-3"
     >
-        <image
-            mode="widthFix"
-            class="gi3-activity-icon"
-            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
-        />
-        <view class="gi3-tag-text">
-            活动
-        </view>
-    </view>
 
-</view>
+        <!-- 图片 -->
+        <image 
+            class="gi3-image"
+            mode="aspectFill"
+            lazy-load="{{ true }}"
+            src="{{ good.img[ 0 ]}}"
+        />
+
+        <!-- 标题 -->
+        <view class="gi3-title">
+            {{ good.title }}
+        </view>
+
+        <!-- 原价 -->
+        <view class="gi3-fadeprice">
+            市场售价:¥{{ good.fadePrice }}
+        </view>
+
+        <!-- 最低价 -->
+        <view class="gi3-price-block">
+            超值¥<view class="gi3-price">{{ good.lowest_price$ }}</view>
+        </view>
+
+        <!-- 标签 -->
+        <view class="gi3-label">
+            {{ tag }}
+        </view>
+
+        <!-- 标签2 -->
+        <view class="gi3-tips-label">
+            热销宝贝
+        </view>
+
+        <!-- 活动标签 -->
+        
+        <view
+            class="gi3-tag-block"
+            wx:if="{{ good.hasActivity }}"
+        >
+            <image
+                mode="widthFix"
+                class="gi3-activity-icon"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+            />
+            <view class="gi3-tag-text">
+                活动
+            </view>
+        </view>
+
+    </button>
+</form>
