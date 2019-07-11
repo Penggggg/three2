@@ -42,8 +42,9 @@ export const overtimeTrip = async ( ) => {
                 })
         }));
 
-        // 推送代购通知
-        const members = await db.collection('manager-member')
+        if ( trips$.data.length > 0 ) {
+            // 推送代购通知
+            const members = await db.collection('manager-member')
             .where({
                 push: true
             })
@@ -66,6 +67,9 @@ export const overtimeTrip = async ( ) => {
                     });
                 })
             );
+        }
+
+        
 
     } catch ( e ) {
         console.log('!!!!overtimeTrip')
