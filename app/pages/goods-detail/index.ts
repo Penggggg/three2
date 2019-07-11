@@ -524,11 +524,10 @@ Page({
         
         this.runComputed( );
         
-        if ( !options!.id && !scene && !'71f2cd945cab4fc10261232b3f358619' ) { return; }
+        if ( !options!.id && !scene ) { return; }
         this.setData!({
-            from: 'oo-j94xgyyWoostWUIpR6akXJ_LE',
             // 这里改一下就行 不要删
-            id: options!.id || scene || '71f2cd945cab4fc10261232b3f358619',
+            id: options!.id || scene,
         });
 
         if ( !!(options as any).from ) {
