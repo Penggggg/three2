@@ -201,9 +201,14 @@ Component({
         },
         /** 展开/关闭 sku */
         toggleSku( e ) {
-            const { openSku } = this.data;
+            const { openSku, disabled } = this.data;
+
+            if ( disabled && !openSku ) {
+                return;
+            }
+
             this.setData({
-                openSku: !this.data.openSku
+                openSku: !openSku
             });
             if ( !openSku && e ) {
                 this.setData({
