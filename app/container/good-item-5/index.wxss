@@ -2,6 +2,7 @@
     width: 100%;
     display: flex;
     position: relative;
+    overflow: visible;
 }
 
 .good-item-5 {
@@ -81,6 +82,7 @@
 
 .gi5-img-block {
     position: relative;
+    overflow: visible;
 }
 
 .gi5-tag-block {

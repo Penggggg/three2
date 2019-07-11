@@ -286,7 +286,7 @@
                             wx:key="{{ index }}"
                             wx:for="{{ recommendGoods$ }}"
                         >
-                            <swiper-item>
+                            <swiper-item class="recommond-swiper-item">
                                 <my-good-item-5
                                     good="{{ item }}"
                                     tid="{{ current._id }}"

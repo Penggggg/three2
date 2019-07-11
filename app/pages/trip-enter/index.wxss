@@ -594,6 +594,12 @@
     position: relative;
 }
 
+.recommond-swiper-item {
+    overflow: visible;
+    display: flex;
+    align-items: center;
+}
+
 .recommond-swiper:before {
     top: -15rpx;
     left: 5%;
