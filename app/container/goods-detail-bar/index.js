@@ -365,13 +365,14 @@ Component({
                                         form_id
                                     },
                                     success: res => {
+
+                                        this.setData({
+                                            disabled: false
+                                        });
                         
                                         if ( res.status === 200 ) {
                                             total_fee && wx.showToast({
                                                 title: '支付成功'
-                                            });
-                                            this.setData({
-                                                disabled: false
                                             });
                                         } else {
                                             wx.showToast({
@@ -385,6 +386,9 @@ Component({
                             }
                             pay( );
                         }, ( ) => {
+                            this.setData({
+                                disabled: false
+                            });
                             // 失败/成功-订单列表
                             navTo('/pages/order-list/index');
                         });
