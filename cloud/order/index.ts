@@ -618,15 +618,16 @@ export const main = async ( event, context ) => {
                             })
                             .get( );
                         const user = user$.data[ 0 ];
+                        const userid = user._id;
                         delete user['_id'];
 
                         await db.collection('user')
-                            .doc( String( user._id ))
+                            .doc( String( userid ))
                             .set({
                                 data: {
                                     ...user,
                                     push_integral: user.push_integral ? 
-                                        Number((user.push_integra + integral).toFixed( 1 )) : 
+                                        Number((user.push_integral + integral).toFixed( 1 )) : 
                                         integral
                                 }
                             });

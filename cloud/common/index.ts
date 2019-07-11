@@ -965,12 +965,14 @@ export const main = async ( event, context ) => {
             const page = event.data.page || 'pages/order-list/index';
 
             // 如果没有prepay_id, 就去拿该用户的form_id
+            // 倒叙拿formid
             if ( !formid ) {
                 const find$ = await db.collection('form-ids')
                     .where({
                         openid,
                         formid: _.neq('the formId is a mock one')
                     })
+                    .orderBy('createTime', 'asc')
                     .limit( 1 )
                     .get( );
 
