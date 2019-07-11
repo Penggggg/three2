@@ -88,7 +88,10 @@ Component({
         isNew: true,
 
         // 是否需要付订金
-        shouldPrepay: true
+        shouldPrepay: true,
+
+        // 按钮禁止点击
+        disabled: false,
     },
 
     computed: {
@@ -283,10 +286,10 @@ Component({
         /** 立即购买 */
         buy( item, form_id ) {
 
-            const { tid, shouldPrepay, preview } = this.data;
+            const { tid, shouldPrepay, preview, disabled } = this.data;
             const { sid, pid, price, count, img, title, groupPrice, acid } = item;
 
-            if ( preview ) { return; }
+            if ( preview || disabled ) { return; }
 
             // 判断是否没有最新行程
             if ( !tid ) {
@@ -295,6 +298,10 @@ Component({
                     title: '暂无行程计划，暂时不能购买～'
                 });
             }
+
+            this.setData({
+                disabled: true
+            });
 
             // 地址选择
             wx.chooseAddress({
@@ -358,12 +365,15 @@ Component({
                                             total_fee && wx.showToast({
                                                 title: '支付成功'
                                             });
+                                            this.setData({
+                                                disabled: false
+                                            });
                                         } else {
                                             wx.showToast({
                                                 icon: 'none',
-                                                title: '支付成功，刷新失败，重试中...'
+                                                title: '刷新失败，请联系管理员'
                                             });
-                                            pay( );
+                                            // pay( );
                                         }
                                     }
                                 });
@@ -375,13 +385,15 @@ Component({
                         });
 
                     }, ( ) => {
-                        // this.setData({
-                        //     isSettling: false
-                        // });
+                        this.setData({
+                            disabled: false
+                        });
                     });
-
                 },
                 fail: res => {
+                    this.setData({
+                        disabled: false
+                    });
                 }
             });
             
