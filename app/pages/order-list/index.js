@@ -73,7 +73,9 @@ Page({
         // 列表
         loadingList: false,
         // 展示其他行程的订单
-        showALlTrip: false
+        showALlTrip: false,
+        // 推广积分
+        pushIntegral: 0
     },
 
     /** 设置computed */
@@ -887,6 +889,20 @@ Page({
         
     },
 
+    /** 获取当前人的推广积分 */
+    fetchPushIntegral( ) {
+        http({
+            url: 'common_push-integral',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setData({
+                    pushIntegral: data
+                });
+            }
+        })
+    },
+
     /** 跳到快递排行榜页面 */
     goDeliver({ currentTarget }) {
         navTo(`/pages/trip-deliver/index?id=${currentTarget.dataset.tid}`);
@@ -1135,6 +1151,7 @@ Page({
             page: 0
         })
         setTimeout(( ) => {
+            this.fetchPushIntegral( );
             this.fetchCoupons( );
             this.fetchList( this.data.active );
         }, 0 );

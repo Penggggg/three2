@@ -1117,6 +1117,30 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /** 
+     * @description
+     * 获取推广积分
+     */
+    app.router('push-integral', async ( ctx, next ) => {
+        try {
+            const openid = event.data.openId || event.userInfo.openId;
+            const user$ = await db.collection('user')
+                .where({
+                    openid
+                })
+                .get( );
+            const user = user$.data[ 0 ];
+
+            return ctx.body = {
+                status: 200,
+                data: !!user ? user.push_integral || 0 : 0
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        } 
+    })
+
     return app.serve( );
 
 }
