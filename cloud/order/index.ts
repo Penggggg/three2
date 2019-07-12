@@ -564,7 +564,7 @@ export const main = async ( event, context ) => {
                 .get( );
             const appConf = appConf$.data[ 0 ];
             
-            if ( appConf.value ) {
+            if ( !!appConf.value ) {
                 // 找出所有的推广记录
                 const pushers$: any = await Promise.all(
                     list.map( async( x, k ) => {
@@ -604,11 +604,19 @@ export const main = async ( event, context ) => {
                         }
                     });
 
+                const appConf2$ = await db.collection('app-config')
+                    .where({
+                        type: 'push-integral-get-rate'
+                    })
+                    .get( );
+                const appConf2 = appConf2$.data[ 0 ];
+                const integralRate = appConf2.value || 0.05;
+
                 await Promise.all(
                     pushers.map( async pusher => {
 
                         // 推广积分比例 5%
-                        const integralRate = 0.05;
+                        
                         const integral = Number(( pusher.price * integralRate ).toFixed( 1 ));
 
                         // 记录推广者积分
