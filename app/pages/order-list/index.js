@@ -75,7 +75,13 @@ Page({
         // 展示其他行程的订单
         showALlTrip: false,
         // 推广积分
-        pushIntegral: 0
+        pushIntegral: 0,
+        // 积分推广抵现比例
+        pushIntegralMoneyRate: 0.1,
+        // 是否展示结账
+        isShowSettle: false,
+        // 当前行程的订单
+        currentTripOrder: { }
     },
 
     /** 设置computed */
@@ -956,6 +962,12 @@ Page({
 
             }
         });
+        app.watch$('appConfig', val => {
+            const value = (val || { })['push-integral-money-rate'];
+            value !== undefined && this.setData({
+                pushIntegralMoneyRate: (val || { })['push-integral-money-rate']
+            });
+        });
     },
 
     /** 去联系代购 */
@@ -1006,8 +1018,15 @@ Page({
     /** 付尾款 */
     payLast({ currentTarget }) {
 
-        const coupons = [ ];
         const tripOrder = currentTarget.dataset.data;
+
+        return this.setData({
+            isShowSettle: true,
+            currentTripOrder: tripOrder
+        });
+
+        const coupons = [ ];
+        
         const { tid, meta, t_daijin, t_lijian, t_manjian, wholePriceByDiscount, lastPrice } = tripOrder;
 
         wxPay( lastPrice, ({ prepay_id }) => {

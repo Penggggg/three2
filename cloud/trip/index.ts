@@ -150,7 +150,7 @@ export const main = async ( event, context ) => {
                     .where({
                         tid: x._id,
                         pay_status: _.neq('0'),
-                        base_status: _.or( _.eq('1'), _.eq('2'), _.eq('3'))
+                        base_status: _.or( _.eq('0'),_.eq('1'), _.eq('2'), _.eq('3'))
                     })
                     .get( );
             }))

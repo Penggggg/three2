@@ -1,0 +1,101 @@
+<view 
+    wx:if="{{ show }}"
+    class="con-trip-settle"
+>
+    <!-- 顶部总金额 -->
+    <view class="cts-price-block">
+        <wxc-price
+            icon="sub"
+            decimal="small"
+            class="cts-total-price"
+        > 
+            {{ lastPrice$ }}
+        </wxc-price>
+        <view class="cts-title-tips">
+            总尾款
+            <wxc-price
+                icon="sub"
+                decimal="small"
+            > 
+                {{ lastPrice }}
+            </wxc-price>
+        </view>
+    </view>
+
+    <!-- 中间支付模块 -->
+    <view
+        class="cts-info-block"
+    >
+
+        <view
+            class="cts-info-con"
+        >
+            <view class="cts-info-line">
+                <view class="cts-line one"></view>
+                <view class="cts-line two green"></view>
+                <view class="cts-line three"></view>
+                <view class="cts-line four"></view>
+                <view class="cts-line five"></view>
+                <view class="cts-line six"></view>
+                <view class="cts-line seven"></view>
+            </view>
+            <view class="cts-push-integral-con">
+                <view class="cts-text-con">
+                    <wxc-price
+                        icon="sub"
+                        decimal="small"
+                        class="cts-push-integral"
+                    > 
+                        {{ deduction$ }}
+                    </wxc-price>
+                    <view class="cts-push-integral small">
+                        本次可抵现
+                        <view 
+                            class="cts-tips-toggle"
+                            bindtap="toggleTips"
+                        >
+                            ?
+                        </view>
+                    </view>
+                </view>
+                <view class="cts-push-integral-tips">
+                    你拥有抵现积分:
+                </view>
+                <wxc-price
+                    icon="sub"
+                    decimal="small"
+                    class="cts-push-integral-tips"
+                > 
+                    {{ totalPushIntegral }}
+                </wxc-price>
+            </view>
+            <view class="cts-settle-btn">
+                <image
+                    mode="widthFix"
+                    class="cts-settle-btn-img"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-right-white.png"
+                />
+            </view>
+        </view>
+
+    </view>
+
+    <!-- 底部使用积分选项 -->
+    <view
+        class="cts-confirm-block"
+    >
+        <checkbox-group bindchange="onCheckboxChange">
+            <view>
+                <checkbox value="{{ true }}" checked="{{ true }}" color="#3941e5"/> <view class="cts-opt-text">使用我的抵现积分</view>
+            </view>
+        </checkbox-group>
+    </view>
+
+     <!-- 积分提示弹框 -->
+    <my-share-integral
+        canShare="{{ false }}"
+        show="{{ showShareTips }}"
+        bind:toggle="toggleTips"
+    />
+
+</view>

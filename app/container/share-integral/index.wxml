@@ -1,0 +1,84 @@
+<view>
+    <!-- 积分提示弹框 -->
+    <wxc-mask
+        content-align="cc"
+        status="{{ showShareTips }}"
+        bindmasktap="toggleTips2"
+    >
+        <view class="gd-pin-tips-block">
+
+            <view class="gd-pin-tips-icon-block">
+                <view class="gd-pin-tips-icon-round">
+                    <image
+                        mode="widthFix"
+                        class="gd-pin-tips-icon"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-money-white.png"
+                    />
+                </view>
+            </view>
+
+            <view class="gd-pin-tips-title">
+                分享赚钱
+            </view>
+
+            <view class="gd-pin-tips-content">
+                如果朋友在7天内购买了你分享的商品，你就会获得“积分”。“积分”可以在消费时当现金抵扣使用
+            </view>
+
+            <swiper
+                circular="{{ true }}"
+                duration="{{ 1000 }}"
+                interval="{{ 2300 }}"
+                class="gd-share-swiper"
+                indicator-dots="{{ true }}"
+                display-multiple-items="{{ 1 }}"
+                indicator-active-color="#535bf3"
+                indicator-color="rgba(0,0,0,0.1)"
+                autoplay="{{ showShareTips === 'hide' ? false : true }}"
+            >
+                <block
+                    wx:for="{{ shareTexts }}"
+                    wx:key="{{ index }}"
+                >
+                    <swiper-item class="swiper-visible">
+                        <view class="gd-share-swiper-item">
+                            <form
+                                class="gd-share-swiper-form"
+                                report-submit="{{ true }}"
+                            >
+                                <button
+                                    wx:if="{{ canShare }}"
+                                    open-type="share"
+                                    class="formid-btn gd-share-swiper-btn"
+                                >   
+                                    {{ index + 1 }}. {{ item }}
+                                </button>
+                                <button
+                                    wx:else
+                                    class="formid-btn gd-share-swiper-btn"
+                                >   
+                                    {{ index + 1 }}. {{ item }}
+                                </button>
+                            </form>
+                        </view>
+                    </swiper-item>
+                </block>
+
+            </swiper>
+
+            <form
+                class="gd-pin-close"
+                bindsubmit="toggleTips2"
+                report-submit="{{ true }}"
+            >
+                <button
+                    form-type="submit"
+                    class="formid-btn"
+                >   
+                    <wxc-icon size="40" type="no" color="rgba(0,0,0,0.1)"></wxc-icon>
+                </button>
+            </form>
+
+        </view>
+    </wxc-mask>
+</view>

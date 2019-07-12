@@ -63,6 +63,9 @@ Page({
         // 分享Tips
         showShareTips: 'hide',
 
+        // 分享Tips2
+        showShareTips2: false,
+
         // 拼团列表
         pin: [ ],
 
@@ -80,14 +83,6 @@ Page({
 
         // 当前是否开启了积分推广
         canIntegrayShare: false,
-
-        // 积分推广文案
-        shareTexts: [
-            '分享商品',
-            '朋友购买',
-            '获得积分',
-            '当现金用'
-        ],
 
         // 当前账号的openid
         openid: '',
@@ -383,6 +378,14 @@ Page({
         !!e && this.createFormId( e.detail.formId );
     },
 
+    toggleTips3( e? ) {
+        const { showShareTips2 } = this.data;
+        this.setData!({
+            showShareTips2: !showShareTips2,
+        });
+        !!e && this.createFormId( e.detail.formId );
+    },
+
     // 进入商品管理
     goManager( ) {
         navTo(`/pages/manager-goods-detail/index?id=${this.data.id}`)
@@ -533,11 +536,12 @@ Page({
         //     id: options!.id || scene || '71f2cd945cab4fc10261232b3f358619',
         // });
 
-        if ( !options!.id && !scene ) { return; }
-        this.setData!({
-            id: options!.id || scene,
-        });
-
+        if ( options!.id || scene ) { 
+            this.setData!({
+                id: options!.id || scene,
+            });
+        }
+        
         if ( !!(options as any).from ) {
             this.setData!({
                 from: options!.from

@@ -61,7 +61,7 @@ export const overtimeTrip = async ( ) => {
                                 openid: member.openid,
                                 type: 'trip',
                                 page: `pages/manager-trip-list/index`,
-                                texts: [`行程已自动到期`, `一键收款功能已开启`]
+                                texts: [`行程已自动到期`, `请查看尾款情况`]
                             }
                         }
                     });

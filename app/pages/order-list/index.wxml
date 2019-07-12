@@ -628,6 +628,7 @@
 
     <!-- 结算获得代金券 -->
     <wxc-mask 
+        wx:if="{{ daijin.value }}"
         content-align="bl"
         status="{{ showDaijin }}"
         bindmasktap="toggleDaijin"
@@ -669,6 +670,12 @@
         </view>
     </wxc-mask>
 
-    
+    <!-- 结账组件 -->
+    <my-trip-settlement
+        show="{{ isShowSettle }}"
+        tripOrder="{{ currentTripOrder }}"
+        totalPushIntegral="{{ pushIntegral }}"
+        pushIntegralRate="{{ pushIntegralMoneyRate }}"
+    />
 
 </view>
