@@ -93,7 +93,10 @@ Page({
         openid: '',
 
         // 分享人的openid
-        from: ''
+        from: '',
+
+        // 积分推广获点比例
+        pushIntegralRate: 0.05
     },
 
     /** 设置computed */
@@ -231,11 +234,11 @@ Page({
 
             // 积分区间
             integral$: function( ) {
-                const { detail } = this.data;
+                const { detail, pushIntegralRate } = this.data;
                 if ( !detail ) { 
                     return '';
                 }
-                const result = delayeringGood( detail );
+                const result = delayeringGood( detail, pushIntegralRate );
                 return result.integral$;
             }
 
@@ -399,6 +402,7 @@ Page({
         });
         (app as any).watch$('appConfig', val => {
             this.setData!({
+                pushIntegralRate: (val || { })['push-integral-get-rate'],
                 canIntegrayShare: !!(val || { })['good-integral-share']
             });
             this.createShare( );
@@ -523,10 +527,14 @@ Page({
         const scene = decodeURIComponent( options!.scene || '' )
         
         this.runComputed( );
-        
+
+        // if ( !options!.id && !scene && !'71f2cd945cab4fc10261232b3f358619' ) { return; }
+        // this.setData!({
+        //     id: options!.id || scene || '71f2cd945cab4fc10261232b3f358619',
+        // });
+
         if ( !options!.id && !scene ) { return; }
         this.setData!({
-            // 这里改一下就行 不要删
             id: options!.id || scene,
         });
 
