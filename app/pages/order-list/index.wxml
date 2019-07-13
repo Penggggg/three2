@@ -115,7 +115,6 @@
 
             </view>
 
-
             <scroll-view
                 wx:else
                 scroll-y
@@ -676,6 +675,8 @@
         tripOrder="{{ currentTripOrder }}"
         totalPushIntegral="{{ pushIntegral }}"
         pushIntegralRate="{{ pushIntegralMoneyRate }}"
+        bind:toggle="onSettleToggle"
+        bind:ok="onPayLast"
     />
 
 </view>

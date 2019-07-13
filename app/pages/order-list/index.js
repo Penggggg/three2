@@ -44,8 +44,6 @@ Page({
         metaList: [ ],
         // 快递费用列表
         deliverFees: [ ],
-        // 以行程为基调的订单列表
-        tripOrders: [ ],
         // 是否新客户
         isNew: true,
         // 优惠券列表
@@ -776,7 +774,7 @@ Page({
     },
 
     /** 拉取订单数据 */
-    fetchList( index ) {
+    fetchList( index, reset = false ) {
         const { page, keyMapType, skip, canloadMore, metaList, tidParam, fromDetail, loadingList } = this.data;
         const type = typeof index !== 'object' ?
             keyMapType[ index ] :
@@ -815,7 +813,7 @@ Page({
                 this.setData({
                     page,
                     skip: current,
-                    metaList: [ ...metaList, ...data.data ],
+                    metaList: !reset ? [ ...metaList, ...data.data ] : [ ...data.data ],
                     canloadMore: total > current
                 });
 
@@ -997,7 +995,6 @@ Page({
                             skip: 0,
                             canloadMore: true,
                             metaList: [ ],
-                            tripOrders: [ ],
                         });
                         setTimeout(( ) => {
                             this.fetchList( this.data.active );
@@ -1024,79 +1021,38 @@ Page({
             isShowSettle: true,
             currentTripOrder: tripOrder
         });
+    },
 
-        const coupons = [ ];
-        
-        const { tid, meta, t_daijin, t_lijian, t_manjian, wholePriceByDiscount, lastPrice } = tripOrder;
+    /** 成功付尾款 */
+    onPayLast( e ) {
+        this.setData({
+            page: 0,
+            skip: 0,
+            canloadMore: true,
+        });
+        setTimeout(( ) => {
+            this.fetchCoupons( true );
+            this.fetchList( this.data.active, true );
+        }, 20 );
+    
+        wx.showToast({
+            title: '支付成功'
+        });
 
-        wxPay( lastPrice, ({ prepay_id }) => {
-
-            if ( wholePriceByDiscount <= 0 ) { return; }
-
-            if ( t_daijin.isUsed && t_daijin.id ) {
-                coupons.push( t_daijin.id )
-            } 
-            if ( t_lijian.isUsed && t_lijian.id ) {
-                coupons.push( t_lijian.id )
-            } 
-            if ( t_manjian.isUsed && t_manjian.id ) {
-                coupons.push( t_manjian.id )
-            } 
-
-            const orders = meta.map( order => {
-                const { _id, pid, sid, canGroup, allocatedGroupPrice, allocatedCount, allocatedPrice } = order;
-                const final_price = !!canGroup && allocatedGroupPrice ?
-                    allocatedCount * allocatedGroupPrice :
-                    allocatedCount * allocatedPrice;
-                return {
-                    pid,
-                    sid,
-                    oid: _id,
-                    final_price,
-                    allocatedCount,
-                }
+        // 如果领取了代金券
+        if ( !!e.detail && !!e.detail.value ) {
+            this.setData({
+                showDaijin: 'show',
+                daijin: e.detail
             });
+        };
+    },
 
-            const data = {
-                tid,
-                orders,
-                coupons,
-                integral: wholePriceByDiscount,
-            };
-
-            http({
-                data,
-                url: 'order_pay-last',
-                success: res => {
-                    if ( res.status === 200 ) {
-
-                        this.setData({
-                            page: 0,
-                            skip: 0,
-                            canloadMore: true,
-                            metaList: [ ],
-                            tripOrders: [ ],
-                        });
-                        setTimeout(( ) => {
-                            this.fetchCoupons( true );
-                            this.fetchList( this.data.active );
-                        }, 20 );
-                    
-                        wx.showToast({
-                            title: '支付成功'
-                        });
-
-                        // 如果领取了代金券
-                        if ( res.data && res.data.value ) {
-                            this.setData({
-                                showDaijin: 'show',
-                                daijin: res.data
-                            });
-                        }
-                    }
-                }
-            })
-        }, ( ) => { })
+    /** 关闭结账界面 */
+    onSettleToggle( e ) {
+        this.setData({
+            isShowSettle: e.detail
+        });
     },
 
     /** 展示任务弹框 */

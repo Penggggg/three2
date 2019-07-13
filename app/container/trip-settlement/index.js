@@ -1,5 +1,7 @@
+const { http } = require('../../util/http.js');
 const { computed } = require('../../lib/vuefy/index.js');
-// const { http } = require('../../util/http.js');
+const { createFormId } = require('../../util/form-id.js');
+const { wxPay } = require('../../util/pay.js');
 
 Component({
     /**
@@ -112,12 +114,74 @@ Component({
             })
         },
 
-        // 关闭弹窗
+        // 关闭积分推广提示弹窗
         toggleTips( e = null ) {
             const { showShareTips } = this.data;
             this.setData({
                 showShareTips: !showShareTips,
             });
+        },
+
+        // 关闭本窗口
+        onClose( ) {
+            this.triggerEvent('toggle', false );
+        },
+
+        // 开启结算
+        onSettle( e ) {
+            createFormId( e.detail.formId );
+
+            const coupons = [ ];
+            const { lastPrice$, tripOrder } = this.data;
+            const { tid, meta, t_daijin, t_lijian, t_manjian, wholePriceByDiscount } = tripOrder;
+
+            wxPay( lastPrice$, ({ prepay_id }) => {
+
+                if ( wholePriceByDiscount <= 0 ) { return; }
+
+                if ( t_daijin.isUsed && t_daijin.id ) {
+                    coupons.push( t_daijin.id )
+                } 
+                if ( t_lijian.isUsed && t_lijian.id ) {
+                    coupons.push( t_lijian.id )
+                } 
+                if ( t_manjian.isUsed && t_manjian.id ) {
+                    coupons.push( t_manjian.id )
+                } 
+
+                const orders = meta.map( order => {
+                    const { _id, pid, sid, canGroup, allocatedGroupPrice, allocatedCount, allocatedPrice } = order;
+                    const final_price = !!canGroup && allocatedGroupPrice ?
+                        allocatedCount * allocatedGroupPrice :
+                        allocatedCount * allocatedPrice;
+                    return {
+                        pid,
+                        sid,
+                        oid: _id,
+                        final_price,
+                        allocatedCount,
+                    }
+                });
+
+                const data = {
+                    tid,
+                    orders,
+                    coupons,
+                    integral: wholePriceByDiscount,
+                };
+
+                http({
+                    data,
+                    url: 'order_pay-last',
+                    success: res => {
+                        if ( res.status === 200 ) {
+                            this.onClose( );
+                            this.triggerEvent('ok', res.data );
+                        }
+                    }
+                });
+
+            }, ( ) => { });
         }
 
     },

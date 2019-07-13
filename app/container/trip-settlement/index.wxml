@@ -11,7 +11,10 @@
         > 
             {{ lastPrice$ }}
         </wxc-price>
-        <view class="cts-title-tips">
+        <view
+            class="cts-title-tips"
+            wx:if="{{ !!deduction$ }}"
+        >
             总尾款
             <wxc-price
                 icon="sub"
@@ -19,6 +22,12 @@
             > 
                 {{ lastPrice }}
             </wxc-price>
+        </view>
+        <view
+            wx:else
+            class="cts-title-tips"
+        >
+            付尾款
         </view>
     </view>
 
@@ -58,30 +67,58 @@
                         </view>
                     </view>
                 </view>
-                <view class="cts-push-integral-tips">
-                    你拥有抵现积分:
+                <view
+                    class="cts-push-integral-tips"
+                >
+                    {{ !!deduction$ ? '你拥有抵现积分:' : '暂无抵现积分' }}
                 </view>
                 <wxc-price
                     icon="sub"
                     decimal="small"
+                    wx:if="{{ !!deduction$ }}"
                     class="cts-push-integral-tips"
                 > 
                     {{ totalPushIntegral }}
                 </wxc-price>
             </view>
-            <view class="cts-settle-btn">
-                <image
-                    mode="widthFix"
-                    class="cts-settle-btn-img"
-                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-right-white.png"
-                />
+            <view
+                class="cts-btn-block"
+            >
+                <view 
+                    bindtap="onClose"
+                    class="cts-back-btn"
+                >
+                    <image
+                        mode="widthFix"
+                        class="cts-settle-btn-img small"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-left.png"
+                    />
+                </view>
+                <form
+                    bindsubmit="onSettle"
+                    report-submit="{{ true }}"
+                    class="pmgl-entry-btn-container"
+                >
+                    <button
+                        form-type="submit"
+                        class='cts-settle-btn fix-btn'
+                    >
+                        <image
+                            mode="widthFix"
+                            class="cts-settle-btn-img"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-right-white.png"
+                        />
+                    </button>
+                </form>
             </view>
+            
         </view>
 
     </view>
 
     <!-- 底部使用积分选项 -->
     <view
+        wx:if="{{ !!deduction$ }}"
         class="cts-confirm-block"
     >
         <checkbox-group bindchange="onCheckboxChange">
