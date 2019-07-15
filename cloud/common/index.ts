@@ -1157,6 +1157,48 @@ export const main = async ( event, context ) => {
         } 
     })
 
+    /**
+     * @description
+     * 获取积分使用记录
+     * {
+     *    tids: 'a,b,c'
+     *    type: 'push_integral' | ''
+     * }
+     */
+    app.router('push-integral-use', async ( ctx, next ) => {
+        try {
+            const { tids, type } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+
+            const find$: any = await Promise.all(
+                tids.split(',')
+                    .map( tid => {
+                        return db.collection('integral-use-record')
+                            .where({
+                                tid,
+                                type,
+                                openid
+                            })
+                            .get( );
+                    })
+            );
+
+            const meta = find$
+                .filter( x => !!x.data[ 0 ])
+                .map( x => x.data[ 0 ]);
+
+            return ctx.body = {
+                data: meta,
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    })
+
     return app.serve( );
 
 }

@@ -277,7 +277,7 @@ export const main = async ( event, context ) => {
             let trip: any = null;
             let _id = event.data._id;
             const tid = event.data._id;
-            const { published, title, start_date, end_date } = event.data;
+            const { published, title, start_date, end_date, reduce_price } = event.data;
             
             const getErr = message => {
                 return ctx.body = {
@@ -425,7 +425,7 @@ export const main = async ( event, context ) => {
                                         openid: user.openid,
                                         type: 'trip',
                                         page: 'pages/trip-enter/index',
-                                        texts: [`${title}`, `代购在${time.getMonth( )+1}月${time.getDate( )}日开始！快来看看吧`]
+                                        texts: [`${title}`, `代购在${time.getMonth( )+1}月${time.getDate( )}日开始！无门槛立减${reduce_price}元！`]
                                     }
                                 }
                             });

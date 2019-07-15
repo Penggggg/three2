@@ -79,7 +79,9 @@ Page({
         // 是否展示结账
         isShowSettle: false,
         // 当前行程的订单
-        currentTripOrder: { }
+        currentTripOrder: { },
+        // 推广积分使用记录表
+        pushIntegralFees: [ ]
     },
 
     /** 设置computed */
@@ -114,7 +116,7 @@ Page({
                  *  }
                  */
 
-                const { tid, showALlTrip, isNew, metaList, pinList, deliverFees } = this.data;
+                const { tid, showALlTrip, isNew, metaList, pinList, deliverFees, pushIntegralFees } = this.data;
                 const orderObj = { };
 
                 const fixNumber = n => {
@@ -386,9 +388,14 @@ Page({
                     const userDeliverFeeMeta = deliverFees.find( x => x.tid === tripOrders.tid );
                     const userDeliverFee = userDeliverFeeMeta ? userDeliverFeeMeta.fee : null;
 
+                    // 推广积分
+                    const pushIntegralFeesMeta = pushIntegralFees.find( x => x.tid === tripOrders.tid );
+                    const pushintegralFee = pushIntegralFeesMeta ? pushIntegralFeesMeta.value : null;
+
                     if ( userDeliverFee ) {
                         wholePriceNotDiscount += userDeliverFee;
                     }
+                    tripOrders['pushintegralFee'] = pushintegralFee;
                     tripOrders['userDeliverFee'] = userDeliverFee;
                     tripOrders['wholePriceNotDiscount'] = wholePriceNotDiscount;
                     
@@ -634,6 +641,9 @@ Page({
                     if ( t_daijin.isUsed ) {
                         total = Number( Number( total - t_daijin.value ).toFixed( 2 ));
                     }
+                    if ( !!pushintegralFee ) {
+                        total = Number( Number( total - pushintegralFee ).toFixed( 2 ));
+                    }
 
                     tripOrders['total'] = total;
 
@@ -810,10 +820,11 @@ Page({
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
                 const { page, current, totalPage, total } = data;
+                const metaData = !reset ? [ ...metaList, ...data.data ] : [ ...data.data ];
                 this.setData({
                     page,
                     skip: current,
-                    metaList: !reset ? [ ...metaList, ...data.data ] : [ ...data.data ],
+                    metaList: metaData,
                     canloadMore: total > current
                 });
 
@@ -821,13 +832,10 @@ Page({
                 if ( data.data.length !== 0 ) {
                     this.setNavBar( );
 
-                    const tidsArr = [ ];
-                    [ ...metaList, ...data.data ].map( o => {
-                        if ( tidsArr.findIndex( s => s === o.tid ) === -1 ) {
-                            tidsArr.push( o.tid )
-                        }
-                    });
+                    const tidsArr = metaData.map( x => x.tid );
+
                     this.fetchDeliverFee( tidsArr.join(','));
+                    this.fetchPushIntegralFee( tidsArr.join(','));
                     
                     this.fetchCurrentTrip( tid => this.fetchPinList( tid ));
                 // 无订单则显示默认文案
@@ -883,6 +891,40 @@ Page({
                 if ( status === 200 ) {
                     this.setData({
                         deliverFees: data
+                    });
+                    setTimeout(( ) => {
+                        action( );
+                    }, 20 );
+                }
+            }
+        })
+        
+    },
+
+    /** 拉取积分推广使用情况 */
+    fetchPushIntegralFee( tids ) {
+
+        const action = ( ) => {
+            this.setData({
+                loadingList: false
+            })
+        }
+
+        if ( !tids ) {
+            return action( );
+        }
+
+        http({
+            data: {
+                tids,
+                type: 'push_integral'
+            },
+            url: 'common_push-integral-use',
+            success: res => {
+                const { status, data } = res;
+                if ( status === 200 ) {
+                    this.setData({
+                        pushIntegralFees: data
                     });
                     setTimeout(( ) => {
                         action( );
