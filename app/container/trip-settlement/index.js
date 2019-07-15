@@ -132,7 +132,7 @@ Component({
             createFormId( e.detail.formId );
 
             const coupons = [ ];
-            const { lastPrice$, tripOrder } = this.data;
+            const { lastPrice$, tripOrder, deduction$, isUsePushIntegral } = this.data;
             const { tid, meta, t_daijin, t_lijian, t_manjian, wholePriceByDiscount } = tripOrder;
 
             wxPay( lastPrice$, ({ prepay_id }) => {
@@ -168,6 +168,7 @@ Component({
                     orders,
                     coupons,
                     integral: wholePriceByDiscount,
+                    push_integral: isUsePushIntegral ? deduction$ : 0
                 };
 
                 http({

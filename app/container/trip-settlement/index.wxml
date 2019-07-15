@@ -2,6 +2,19 @@
     wx:if="{{ show }}"
     class="con-trip-settle"
 >
+
+    <!-- 回退按钮 -->
+    <view 
+        bindtap="onClose"
+        class="cts-back-corner"
+    >
+        <image
+            mode="widthFix"
+            class="cts-settle-btn-img small"
+            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-left.png"
+        />
+    </view>
+
     <!-- 顶部总金额 -->
     <view class="cts-price-block">
         <wxc-price
@@ -84,7 +97,7 @@
             <view
                 class="cts-btn-block"
             >
-                <view 
+                <!-- <view 
                     bindtap="onClose"
                     class="cts-back-btn"
                 >
@@ -93,7 +106,7 @@
                         class="cts-settle-btn-img small"
                         src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-left.png"
                     />
-                </view>
+                </view> -->
                 <form
                     bindsubmit="onSettle"
                     report-submit="{{ true }}"

@@ -169,6 +169,21 @@
     box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.15 );
 }
 
+.cts-back-corner {
+    left: 30rpx;
+    top: 20rpx;
+    width: 70rpx;
+    height: 70rpx;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    margin-right: 30rpx;
+    align-items: center;
+    justify-content: center;
+    /* box-shadow: 0px 0px 15px rgba( 0, 0, 0, 0.1 ); */
+    position: absolute;
+}
+
 .cts-settle-btn {
     width: 100rpx;
     height: 100rpx;

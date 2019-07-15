@@ -428,6 +428,7 @@ export const main = async ( event, context ) => {
         try {
 
             let coupons = 0;
+            const openid = event.userInfo.openId;
             const trips$ = await cloud.callFunction({
                 data: {
                     $url: 'enter'
@@ -440,21 +441,36 @@ export const main = async ( event, context ) => {
             // 订单数
             const orders$ = await db.collection('order')
                 .where({
-                    openid: event.userInfo.openId,
+                    openid,
                     base_status: _.neq('5')
                 })
                 .count( );
 
+
+            // 卡券数( 过滤掉只剩当前的trip卡券 )
+            let coupons$: any = {
+                total: 0
+            };
+            
             if ( !!trip ) {
-                // 卡券数( 过滤掉只剩当前的trip卡券 )
-                const coupons$ = await db.collection('coupon')
+                coupons$ = await db.collection('coupon')
                     .where({
+                        openid,
                         tid: trip._id,
-                        openid: event.userInfo.openId
+                        type: _.neq('t_daijin'),
                     })
                     .count( );
-                coupons = coupons$.total;
             }
+
+            const coupons2$ = await db.collection('coupon')
+                .where({
+                    openid,
+                    isUsed: false,
+                    type: 't_daijin',
+                })
+                .count( );
+
+            coupons = coupons$.total + coupons2$.total;
             
             return ctx.body = {
                 status: 200,

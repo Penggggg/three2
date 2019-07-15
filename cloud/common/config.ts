@@ -87,7 +87,8 @@ export const collections = [
     'manager-member',
     'form-ids',
     'analyse-data',
-    'share-record'
+    'share-record',
+    'integral-use-record'
 ];
 
 /** 权限模块 */

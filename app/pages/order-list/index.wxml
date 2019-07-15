@@ -627,8 +627,8 @@
 
     <!-- 结算获得代金券 -->
     <wxc-mask 
-        wx:if="{{ daijin.value }}"
         content-align="bl"
+        wx:if="{{ daijin.value }}"
         status="{{ showDaijin }}"
         bindmasktap="toggleDaijin"
     >
@@ -657,6 +657,8 @@
                 </view>
             </view>
             <my-coupon-item-1
+                bind:close="toggleDaijin"
+                gotoTrip="{{ false }}"
                 showNext="{{ true }}"
                 transparent="{{ true }}"
                 type="{{ daijin.type }}"

@@ -1065,7 +1065,7 @@ export const main = async ( event, context ) => {
      * @description
      * 订单付尾款
      * {
-     *      tid // 领代金券
+     *      tid
      *      integral // 积分总额（user表）
      *      orders: [{  
      *          oid // 订单状态
@@ -1076,28 +1076,79 @@ export const main = async ( event, context ) => {
      *      coupons: [ // 卡券消费
      *          id1,
      *          id2...
-     *      ]
+     *      ],
+     *      push_integral // 使用的推广积分
      * }
      */
     app.router('pay-last', async( ctx, next ) => {
         try {
             const openid = event.userInfo.openId;
-            const { tid, integral, orders, coupons } = event.data;
+            const { tid, integral, orders, coupons, push_integral } = event.data;
 
             const user$ = await db.collection('user')
                 .where({
                     openid
                 })
                 .get( );
+            const user = user$.data[ 0 ];
+            const uid = user._id;
+
+            // 计算推广积分
+            const calculatePushIntegral = user.push_integral - push_integral > 0 ?
+                user.push_integral - push_integral : 
+                0;
+
+            const saveData = {
+                ...user,
+                integral: ( user.integral || 0 ) + ( integral || 0 ),
+                push_integral: !user.push_integral ?
+                    0 :
+                    calculatePushIntegral
+            };
+
+            delete saveData['_id'];
 
             // 增加积分总额
+            // 抵扣推广积分
             await db.collection('user')
-                .doc( String( user$.data[ 0 ]._id ))
-                .update({
-                    data: {
-                        integral: _.inc( integral )
-                    }
+                .doc( String( uid ))
+                .set({
+                    data: saveData
                 });
+
+            // 新增推广积分使用记录
+            if ( !!push_integral ) {
+                const record$ = await db.collection('integral-use-record')
+                    .where({
+                        data: {
+                            tid,
+                            openid,
+                            type: 'push_integral'
+                        }
+                    })
+                    .get( );
+                const record = record$.data[ 0 ];
+
+                if ( !!record && !!push_integral ) {
+                    await db.collection('integral-use-record')
+                        .doc( String( record._id ))
+                        .update({
+                            data: {
+                                value: _.inc( push_integral )
+                            }
+                        });
+                } else if ( !record && !!push_integral ) {
+                    await db.collection('integral-use-record')
+                        .add({
+                            data: {
+                                tid,
+                                openid,
+                                value: push_integral,
+                                type: 'push_integral'
+                            }
+                        });
+                }
+            }
 
             // 更新订单状态、商品销量
             await Promise.all( orders.map( order => {
