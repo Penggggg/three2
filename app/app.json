@@ -1,6 +1,7 @@
 {
   "pages": [
-    "pages/trip-enter/index", 
+    "pages/ground-push-integral/index",
+    "pages/trip-enter/index",
     "pages/order-list/index",
     "pages/coupon-list/index",
     "pages/my/index",
