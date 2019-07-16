@@ -57,7 +57,7 @@ Component({
 
             const meta = clientOders.map( x => {
                 
-                const { coupons, orders, deliverFee } = x;
+                const { coupons, orders, deliverFee, pushIntegral } = x;
 
                 // 应付全款（不含优惠券）
                 let wholePriceNotDiscount = orders.reduce(( x, y ) => {
@@ -75,6 +75,9 @@ Component({
 
                 // 邮费
                 const userDeliverFee = !!deliverFee ? Number( Number( deliverFee.fee ).toFixed( 2 )) : null;
+
+                // 推广积分使用情况
+                const userPushIntegral = pushIntegral;
 
                 if ( userDeliverFee ) {
                     wholePriceNotDiscount += userDeliverFee;
@@ -130,6 +133,10 @@ Component({
                     wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_daijin.value ).toFixed( 2 ));
                 }
 
+                // 推广积分
+                if ( userPushIntegral ) {
+                    wholePriceByDiscount = Number((wholePriceByDiscount - userPushIntegral).toFixed( 2 ));
+                }
 
                 // 已付订金
                 const hasPayDepositPrice = orders.reduce(( x, y ) => {
@@ -229,6 +236,8 @@ Component({
                 } 
 
                 return Object.assign({ }, x , {
+
+                    userPushIntegral,
 
                     userDeliverFee,
 

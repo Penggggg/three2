@@ -727,6 +727,21 @@ export const main = async ( event, context ) => {
                     .get( ))
             );
 
+            // 积分推广使用情况
+            const pushIntegral$ = await Promise.all(
+                Array.from( 
+                    new Set( orders$.data
+                        .map( x => x.openid )
+                ))
+                .map( uid => db.collection('integral-use-record')
+                    .where({
+                        tid,
+                        openid: uid,
+                        type: 'push_integral'
+                    })
+                    .get( ))
+            );
+
             // 地址信息
             let address$: any = [ ];
             if ( !!needAddress || needAddress === undefined ) {
@@ -786,13 +801,16 @@ export const main = async ( event, context ) => {
                         .filter( x => x.length > 0 && x[ 0 ].openid === user.openid ) :
                     undefined;
 
-                const deliverFee = deliverfees$[ k ].data[ 0 ] || null
+                const deliverFee = deliverfees$[ k ].data[ 0 ] || 0;
+
+                const pushIntegral = (pushIntegral$[ k ].data[ 0 ] || { }).value || 0;
 
                 return {
                     user,
                     orders,
                     address,
                     deliverFee,
+                    pushIntegral,
                     coupons: (!!coupons && coupons.length > 0 ) ? coupons[ 0 ] : [ ]
                 };
             });
