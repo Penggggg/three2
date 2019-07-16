@@ -1,0 +1,112 @@
+.p-groud-push-integral {
+    height: 100vh;
+    overflow-y: scroll;
+    background: #fbf9fc;
+    box-sizing: border-box;
+}
+
+.gpi-header-block {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20rpx 0 20rpx;
+    box-sizing: border-box;
+}
+
+.gpi-title {
+    color: #4b47a3;
+    font-size: 40rpx;
+    letter-spacing: 0.05em;
+}
+
+.gpi-tips {
+    font-size: 24rpx;
+    line-height: 36rpx;
+    margin-top: 15rpx;
+    color: rgba( 0, 0, 0, 0.3 );
+}
+
+.gpi-tips.mt {
+    margin-top: 45rpx;
+    color: rgba( 0, 0, 0, 0.3 );
+}
+
+.gpi-header-list {
+    position: relative;
+    margin-top: 170rpx;
+    min-height: 70vh;
+    background: #fff;
+    box-sizing: border-box;
+    padding: 170rpx 55rpx 20rpx;
+    border-radius: 30px 30px 0 0;
+    box-shadow: 0 -10px 15px rgba( 0, 0, 0, 0.03 );
+}
+
+
+.gpi-avatar {
+    top: -130rpx;
+    left: 50%;
+    overflow:hidden;  
+    display: block;  
+    width: 260rpx;  
+    height: 260rpx;  
+    border-radius: 50%;  
+    position: absolute;
+    /* border: 2px solid #fff;   */
+    transform: translate( -50%, -0% );
+    box-shadow: 5px 7px 25px rgba( 0, 0, 0, 0.25 );
+}
+
+.gpi-data-block {
+
+}
+
+.gpi-data-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gpi-data-title {
+    color: #333;
+    font-size: 30rpx;
+    line-height: 40rpx;
+    font-weight: bold;
+}
+
+.gpi-price {
+    color: #333;
+    font-size: 50rpx;
+    line-height: 60rpx;
+    font-weight: bold;
+}
+
+.gpi-price.mt {
+    margin-top: 20rpx;
+}
+
+.gpi-share-title {
+    color: #666;
+    background: #fff;
+    font-size: 28rpx;
+    letter-spacing: 0.05em;
+    display: inline-block;
+    border-radius: 6rpx;
+    position: relative;
+    font-weight: bold;
+    margin: 40rpx 0 40rpx -20rpx;
+    padding: 20rpx 100rpx 15rpx 25rpx;
+    box-shadow: 0px 3px 5px rgba( 0, 0, 0, 0.1 );
+}
+
+.gpi-share-title:after {
+    top: 50%;
+    width: 40rpx;
+    height: 45rpx;
+    right: -40rpx;
+    content: '';
+    position: absolute;
+    background: #77e4df;
+    transform: translate( 0, -50% );
+}
