@@ -64,4 +64,8 @@
 
     </view>
 
+    <!-- 底下导航条 -->
+    <my-ground-bar
+    />
+
 </scroll-view>

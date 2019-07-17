@@ -3,6 +3,7 @@
     overflow-y: scroll;
     background: #fbf9fc;
     box-sizing: border-box;
+    padding-bottom: 130rpx;
 }
 
 .gpi-header-block {
