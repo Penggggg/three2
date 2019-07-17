@@ -68,5 +68,10 @@
         class="fix-btn gi7-share-btn"
     >
         赚{{ good.integral2$ }}元
+        <image
+            mode="aspectFill"
+            class='gi7-share-img'
+            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-share-white.png"
+        />
     </button>
 </form>

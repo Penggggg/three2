@@ -159,6 +159,16 @@ Page({
      */
     onShareAppMessage: function ( event ) {
         const { _id, img, activities, priceGap, title } = event.target.dataset.share;
+
+        if ( event.from === 'button' ) {
+            setTimeout(( ) => {
+                wx.showToast({
+                    duration: 2000,
+                    title: '分享成功！'
+                });
+            }, 2000 );
+        }
+
         return {
             title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
                 activities.length === 0 ?
