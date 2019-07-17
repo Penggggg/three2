@@ -3,7 +3,7 @@ const { createFormId } = require('../../util/form-id.js');
 
 /**
  * @description
- * 沾满一行的商品框，推荐分享的商品列表
+ * 沾满一行的商品框，积分推广的商品列表
  */
 Component({
 
@@ -17,10 +17,10 @@ Component({
             type: Object,
             observer: 'dealDetail'
         },
-        // 当前行程
-        tid: {
-            type: String,
-            value: ''
+        // 能否分享
+        canShare: {
+            type: Boolean,
+            value: false
         }
     },
 

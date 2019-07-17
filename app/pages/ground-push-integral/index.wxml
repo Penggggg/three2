@@ -57,6 +57,7 @@
             >
                 <my-good-item-7
                     good="{{ item }}"
+                    canShare="{{ canShare }}"
                 />
             </view>
         </view>

@@ -29,7 +29,10 @@ Page({
         rank: [ ],
 
         // 当前人的推广积分
-        pushIntegral: 0
+        pushIntegral: 0,
+
+        // 能否分享
+        canShare: false
     },
 
     /**  */
@@ -47,7 +50,8 @@ Page({
     watchRole( ) {
         app.watch$('appConfig', val => {
             this.setData({
-                pushIntegralRate: (val || { })['push-integral-get-rate'] || 0
+                pushIntegralRate: (val || { })['push-integral-get-rate'] || 0,
+                canShare: (val || { })['good-integral-share'] || false
             });
         });
     },
