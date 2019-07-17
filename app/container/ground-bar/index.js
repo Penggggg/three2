@@ -28,14 +28,14 @@ Component({
         navList$( ) {
             const { tid } = this.data;
             const meta = [
-                {
-                    title: '拼团',
+                , {
+                    title: '省钱',
                     url: `/pages/trip-enter/index`,
                     img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-kouhong.png',
                     activeImg: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-kouhong-active.png'
                 }, {
-                    title: '省钱',
-                    url: `/pages/trip-enter/index`,
+                    title: '赚钱',
+                    url: `/pages/ground-push-integral/index`,
                     img: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-money.png",
                     activeImg: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-money-active.png"
                 }

@@ -1,9 +1,19 @@
-.p-groud-push-integral {
+.p-groud-push-integral-con {
+    display: flex;
     height: 100vh;
+    background: #fff;
+    flex-direction: column;
+}
+
+.p-groud-push-integral {
+    flex: 1;
     overflow-y: scroll;
     background: #fbf9fc;
     box-sizing: border-box;
-    padding-bottom: 130rpx;
+}
+
+.gpi-bar {
+    height: 130rpx;
 }
 
 .gpi-header-block {

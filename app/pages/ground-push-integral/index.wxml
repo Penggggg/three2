@@ -1,71 +1,79 @@
-<scroll-view 
-    scroll-y="{{ true }}"
-    lower-threshold="100"
-    bindscrolltolower="fetchRank"
-    class="p-groud-push-integral"
->
-    <!-- 头部标题、提示 -->
-    <view
-        class="gpi-header-block"
+
+<view class="p-groud-push-integral-con">
+
+    <!-- 列表 -->
+    <scroll-view 
+        scroll-y="{{ true }}"
+        lower-threshold="100"
+        bindscrolltolower="fetchRank"
+        class="p-groud-push-integral"
     >
-        <view class="gpi-title">分享赚钱</view>
-        <view class="gpi-tips mt">朋友购买了你分享的商品，就能获得积分</view>
-        <view class="gpi-tips">积分可以当现金抵扣使用</view>
-    </view>
-
-    <!-- 分享列表 -->
-    <view
-        class="gpi-header-list"
-    >
-        <!-- 头像 -->
-        <view class="gpi-avatar">
-            <open-data type="userAvatarUrl"></open-data>
+        <!-- 头部标题、提示 -->
+        <view
+            class="gpi-header-block"
+        >
+            <view class="gpi-title">分享赚钱</view>
+            <view class="gpi-tips mt">朋友购买了你分享的商品，就能获得积分</view>
+            <view class="gpi-tips">积分可以当现金抵扣使用</view>
         </view>
 
-        <!-- 数据展示 -->
-        <view class="gpi-data-block">
-            <view class="gpi-data-info">
-                <view class="gpi-data-title">
-                    我的总积分
+        <!-- 分享列表 -->
+        <view
+            class="gpi-header-list"
+        >
+            <!-- 头像 -->
+            <view class="gpi-avatar">
+                <open-data type="userAvatarUrl"></open-data>
+            </view>
+
+            <!-- 数据展示 -->
+            <view class="gpi-data-block">
+                <view class="gpi-data-info">
+                    <view class="gpi-data-title">
+                        我的总积分
+                    </view>
+                    <view class="gpi-tips">
+                        分享记录
+                    </view>
                 </view>
-                <view class="gpi-tips">
-                    分享记录
+                <view class="gpi-price mt">
+                    <wxc-price
+                        icon="sub"
+                        decimal="small"
+                        class="gi1-price"
+                    > 
+                        {{ pushIntegral }}
+                    </wxc-price>元
                 </view>
             </view>
-            <view class="gpi-price mt">
-                <wxc-price
-                    icon="sub"
-                    decimal="small"
-                    class="gi1-price"
-                > 
-                    {{ pushIntegral }}
-                </wxc-price>元
+
+            <!-- 标题 -->
+            <!-- <view class="gpi-share-title">
+                热门分享
+            </view> -->
+
+            <!-- 商品列表 -->
+            <view class="gpi-share-list">
+                <view
+                    class="gpi-list-item"
+                    wx:for="{{ rank$ }}"
+                    wx:key="{{ index }}"
+                >
+                    <my-good-item-7
+                        good="{{ item }}"
+                        canShare="{{ canShare }}"
+                    />
+                </view>
             </view>
+
         </view>
 
-        <!-- 标题 -->
-        <!-- <view class="gpi-share-title">
-            热门分享
-        </view> -->
-
-        <!-- 商品列表 -->
-        <view class="gpi-share-list">
-            <view
-                class="gpi-list-item"
-                wx:for="{{ rank$ }}"
-                wx:key="{{ index }}"
-            >
-                <my-good-item-7
-                    good="{{ item }}"
-                    canShare="{{ canShare }}"
-                />
-            </view>
-        </view>
-
-    </view>
+    </scroll-view>
 
     <!-- 底下导航条 -->
-    <my-ground-bar
-    />
+    <view class="gpi-bar">
+        <my-ground-bar
+        />
+    </view>
 
-</scroll-view>
+</view>
