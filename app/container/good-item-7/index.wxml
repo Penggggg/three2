@@ -1,0 +1,72 @@
+ 
+<form
+    bindsubmit="goDetail"
+    report-submit="{{ true }}"
+    class="good-item-7-form"
+>
+    <button
+        form-type="submit"
+        class="fix-btn good-item-7"
+    >
+        <view class="gi7-img-block">
+            <image
+                class="gi7-img"
+                mode="aspectFill"
+                src="{{ good.img[ 0 ] }}"
+            />
+            <view
+                class="gi7-tag-block"
+                wx:if="{{ good.hasActivity }}"
+            >
+                <image
+                    mode="widthFix"
+                    class="gd-activity-icon"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                />
+                <view class="gi7-tag-text">
+                    特价
+                </view>
+            </view>
+        </view>
+
+        <view class="gi7-info">
+            
+            <view class="gi7-title-block">
+                
+                <view class="gi7-icon">
+                    推荐
+                </view>
+                <view class="gi7-title">
+                    {{ good.title }}
+                </view>
+            </view>
+
+            <view class="git-tag">
+                {{ tag }}
+            </view>
+
+            <view class="git-action-block">
+
+                <view class="">
+                    <wxc-price
+                        icon="sub"
+                        decimal="small"
+                        class="gi7-price"
+                    > 
+                        {{ good.lowest_price$ }}
+                    </wxc-price>
+                </view>
+            </view>
+
+        </view>
+        
+    </button>
+
+    <button 
+        open-type="share"
+        data-share="{{ good }}"
+        class="fix-btn gi7-share-btn"
+    >
+        赚{{ good.integral2$ }}元
+    </button>
+</form>

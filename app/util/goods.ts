@@ -7,7 +7,7 @@ const pushIntegralRate = 0.05;
  * @param x 商品详情
  * @param pushIntegralRate 积分推广获点比例
  */
-const delayeringGood = ( x, pushIntegralRate = 0.05 ) => {
+const delayeringGood = ( x, pushIntegralRate = 0 ) => {
  
     if ( !x ) {
         return null
@@ -90,6 +90,9 @@ const delayeringGood = ( x, pushIntegralRate = 0.05 ) => {
                 allPriceArr[ 0 ] === allPriceArr[ allPriceArr.length - 1 ] ? 
                     (allPriceArr[ 0 ] * pushIntegralRate).toFixed( 1 ) :
                     `${(allPriceArr[ 0 ] * pushIntegralRate).toFixed( 1 )} ~ ${(allPriceArr[ allPriceArr.length - 1 ] * pushIntegralRate).toFixed( 1 )}`,
+
+        // 最大积分
+        integral2$: (allPriceArr[ allPriceArr.length - 1 ] * pushIntegralRate).toFixed( 1 ),
 
         // 最大幅度差价
         priceGap: allPriceArr.length === 0 ?

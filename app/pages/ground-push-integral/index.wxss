@@ -18,6 +18,7 @@
     color: #4b47a3;
     font-size: 40rpx;
     letter-spacing: 0.05em;
+    font-weight: bold;
 }
 
 .gpi-tips {
@@ -109,4 +110,12 @@
     position: absolute;
     background: #77e4df;
     transform: translate( 0, -50% );
+}
+
+.gpi-share-list {
+    margin-top: 100rpx;   
+}
+
+.gpi-list-item {
+    margin-bottom: 20rpx;
 }

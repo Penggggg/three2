@@ -1,5 +1,7 @@
 <scroll-view 
     scroll-y="{{ true }}"
+    lower-threshold="100"
+    bindscrolltolower="fetchRank"
     class="p-groud-push-integral"
 >
     <!-- 头部标题、提示 -->
@@ -36,14 +38,27 @@
                     decimal="small"
                     class="gi1-price"
                 > 
-                    59.4
+                    {{ pushIntegral }}
                 </wxc-price>元
             </view>
         </view>
 
         <!-- 标题 -->
-        <view class="gpi-share-title">
-            热卖单品
+        <!-- <view class="gpi-share-title">
+            热门分享
+        </view> -->
+
+        <!-- 商品列表 -->
+        <view class="gpi-share-list">
+            <view
+                class="gpi-list-item"
+                wx:for="{{ rank$ }}"
+                wx:key="{{ index }}"
+            >
+                <my-good-item-7
+                    good="{{ item }}"
+                />
+            </view>
         </view>
 
     </view>

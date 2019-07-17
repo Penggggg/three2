@@ -733,6 +733,91 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /**
+     * @description
+     * 推广积分商品的排行榜
+     * {
+     *      page
+     * }
+     */
+    app.router('push-integral-rank', async( ctx, next ) => {
+        try {
+
+            // 查询条数
+            const { page } = event.data;
+            const limit = event.data.limit || 20;
+
+            const where$ = {
+                isDelete: _.neq( true ),
+                category: _.or( _.eq('0'), _.eq('1'))
+            };
+
+            const total$ = await db.collection('goods')
+                .where( where$ )
+                .count( );
+
+            const data$ = await db.collection('goods')
+                .where( where$ )
+                .limit( limit )
+                .skip(( page - 1 ) * limit )
+                .orderBy( 'saled', 'desc')
+                .orderBy( 'fadePrice', 'desc')
+                .get( );
+
+                // 获取型号数据
+            const standards = await Promise.all( data$.data.map( x => {
+                return db.collection('standards')
+                    .where({
+                        pid: x._id,
+                        isDelete: false
+                    })
+                    .get( );
+            }));
+
+            const insertStandars = data$.data.map(( x, k ) => Object.assign({ }, x, {
+                standards: standards[ k ].data
+            }));
+
+            // 获取活动数据数据
+            const activities$ = await Promise.all(
+                data$.data.map( good => {
+                    return db.collection('activity')
+                        .where({
+                            pid: good._id,
+                            isClosed: false,
+                            isDeleted: false,
+                            type: 'good_discount',
+                            endTime: _.gt( getNow( true ))
+                        })
+                        .get( )
+                })
+            );
+
+            const insertActivity = insertStandars.map(( x, k ) => Object.assign({ }, x, {
+                activities: activities$[ k ].data
+            }));
+
+            return ctx.body = {
+                status: 200,
+                data: {
+                    data: insertActivity,
+                    pagenation: {
+                        page,
+                        pageSize: limit,
+                        total: total$.total,
+                        totalPage: Math.ceil( total$.total / limit )
+                    }
+                }
+            };
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    })
+
+
     return app.serve( );
 
 };

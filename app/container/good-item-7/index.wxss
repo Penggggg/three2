@@ -1,0 +1,160 @@
+.good-item-7-form {
+    width: 100%;
+    display: flex;
+    position: relative;
+    overflow: visible;
+}
+
+.good-item-7 {
+    width: 100%;
+    /* min-width: 87vw; */
+    display: flex;
+    box-sizing: border-box;
+    padding: 10rpx 20rpx;
+    position: relative;
+    text-align: left !important;
+}
+
+.good-item-7-form:before {
+    top: 5%;
+    right: 30rpx;
+    height: 90%;
+    width: 1px;
+    content: '';
+    position: absolute;
+    transform: scaleX( 0.5 );
+    /* background: rgba( 0, 0, 0, 0.1 ); */
+}
+
+.gi7-info {
+    flex: 1;
+    height: 100%;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: space-between;   */
+}
+
+.gi7-title-block {
+    display: flex;
+    align-items: flex-start;
+    /* overflow:hidden;
+    -webkit-line-clamp:1;
+    word-break:break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;   */
+}
+
+.gi7-icon {
+    color: #fff;
+    font-size: 20rpx;
+    padding: 2rpx 10rpx;
+    height: 30rpx;
+    border-radius: 5px;
+    margin-right: 10rpx;
+    background: #e3d2be;  
+    background: -webkit-linear-gradient(to right, #e3d2be, #d9c5a7);  
+    background: linear-gradient(to right, #e3d2be, #d9c5a7); 
+}
+
+.gi7-title {
+    flex: 1;
+    color: #333;
+    font-size: 22rpx;
+    overflow:hidden; 
+    display:-webkit-box; 
+    -webkit-line-clamp:2;
+    word-break: break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;
+}
+
+.git-tag {
+    color: #999;
+    font-size: 22rpx;
+    margin-top: 8rpx;
+}
+
+.gi7-img {
+    width: 200rpx;
+    height: 200rpx;
+    border-radius: 5px;
+    margin-right: 20rpx;
+    border: 1px solid #fff;
+    box-shadow: 0 0 10px rgba( 0, 0, 0, 0.1 );
+}
+
+.gi7-img-block {
+    position: relative;
+    overflow: visible;
+}
+
+.gi7-tag-block {
+    top: -8rpx;
+    left: 10rpx;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    border-radius: 3px;
+    padding: 3rpx 5rpx;
+    background: #ff8787; 
+    background: -webkit-linear-gradient(to right, #ff61ab, #ff8787); 
+    background: linear-gradient(to right, #ff61ab, #ff8787); 
+}
+
+.gd-activity-icon {
+    width: 20rpx;
+    max-height: 30rpx;
+    margin-right: 2rpx;
+    display: inline-block;
+}
+
+.gi7-tag-text {
+    color: #fff;
+    font-size: 17rpx;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+
+}
+
+.fix-btn {
+    background: transparent;
+    outline:none;
+    border:none;
+    list-style: none;
+    padding: 0;
+    line-height: normal;
+    overflow: visible;
+    /* text-align: left; */
+}
+
+.fix-btn:after {
+    border:none;
+}
+
+.git-action-block {
+    display: flex;
+    margin-top: 55rpx;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.gi7-price {
+    font-size: 30rpx;
+    color: rgba( 0, 0, 0, 0.5 );
+}
+
+.gi7-share-btn {
+    right: -20rpx;
+    bottom: 55rpx;
+    margin: 0;
+    color: #fff;
+    font-size: 30rpx;
+    border-radius: 6px;
+    padding: 10rpx 25rpx;
+    position: absolute;
+    pointer-events: auto;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+    box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.20 );
+    /* background-image: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%); */
+    /* background-image: linear-gradient(to right, #f78ca0 0%, #f9748f 19%, #fd868c 60%, #fe9a8b 100%); */
+    background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);
+}

@@ -91,7 +91,7 @@ Page({
         from: '',
 
         // 积分推广获点比例
-        pushIntegralRate: 0.05
+        pushIntegralRate: 0
     },
 
     /** 设置computed */
@@ -405,8 +405,8 @@ Page({
         });
         (app as any).watch$('appConfig', val => {
             this.setData!({
-                pushIntegralRate: (val || { })['push-integral-get-rate'],
-                canIntegrayShare: !!(val || { })['good-integral-share']
+                pushIntegralRate: (val || { })['push-integral-get-rate'] || 0,
+                canIntegrayShare: !!(val || { })['good-integral-share'] || false
             });
             this.createShare( );
         });

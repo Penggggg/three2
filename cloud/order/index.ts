@@ -649,7 +649,7 @@ export const main = async ( event, context ) => {
                                     type: 'hongbao',
                                     openid: pusher.from,
                                     // 积分页面
-                                    page: 'pages/trip-enter/index',
+                                    page: 'pages/ground-push-integral/index',
                                     texts: [`恭喜！获得${integral}元抵扣现金`,`推广成功！有人购买了你分享的商品`]
                                 }
                             }
