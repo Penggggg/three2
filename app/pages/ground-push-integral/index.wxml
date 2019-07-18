@@ -9,13 +9,13 @@
         class="p-groud-push-integral"
     >
         <!-- 头部标题、提示 -->
-        <view
+        <!-- <view
             class="gpi-header-block"
         >
             <view class="gpi-title">分享赚钱</view>
             <view class="gpi-tips mt">朋友购买了你分享的商品，就能获得积分</view>
             <view class="gpi-tips">积分可以当现金抵扣使用</view>
-        </view>
+        </view> -->
 
         <!-- 分享列表 -->
         <view
@@ -73,6 +73,16 @@
     <!-- 底下导航条 -->
     <view class="gpi-bar">
         <my-ground-bar
+        />
+    </view>
+
+    <!-- 提示弹框 -->
+    <view>
+        <my-common-confirm
+            title="分享赚钱"
+            open="{{ openTips }}"
+            bind:toggle="onToggle"
+            texts="{{[ '朋友购买了你分享的商品，就能获得积分', '积分可以当现金抵扣使用' ]}}"
         />
     </view>
 

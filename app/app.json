@@ -45,6 +45,7 @@
     "my-ground-bar": "./container/ground-bar/index",
     "my-good-poster": "./container/good-poster/index",
     "my-coupon-lijian": "./container/coupon-lijian/index",
+    "my-common-confirm": "./container/common-confirm/index",
     "my-coupon-manjian": "./container/coupon-manjian/index",
     "my-manager-entry-btn": "./container/manager-entry-btn/index",
     "my-social-trip-member": "./container/social-trip-member/index",

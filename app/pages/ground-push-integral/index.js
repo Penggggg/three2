@@ -32,7 +32,10 @@ Page({
         pushIntegral: 0,
 
         // 能否分享
-        canShare: false
+        canShare: false,
+
+        // 是否打开提示
+        openTips: true
     },
 
     /**  */
@@ -102,6 +105,13 @@ Page({
                     pushIntegral: data
                 });
             }
+        })
+    },
+
+    /** 提示弹框 */
+    onToggle( e ) {
+        this.setData({
+            openTips: e.detail
         })
     },
 
