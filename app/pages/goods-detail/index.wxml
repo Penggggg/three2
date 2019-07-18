@@ -331,13 +331,14 @@
             canPinSku="{{ canPinSku }}"
             activities="{{ activities }}"
             someCanPin="{{ pinCount$ > 0 }}"
+            bind:toggle="onSkuToggle"
         />
 
     </view> 
 
     <!-- 海报 -->
     <my-good-poster
-        wx:if="{{ !loading }}"
+        wx:if="{{ !loading && !openingSku }}"
         good="{{ detail }}"
         bindtoggle="onPostToggle"
         someCanPin="{{ pinCount$ > 0 }}"

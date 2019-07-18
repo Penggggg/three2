@@ -91,7 +91,10 @@ Page({
         from: '',
 
         // 积分推广获点比例
-        pushIntegralRate: 0
+        pushIntegralRate: 0,
+
+        // 是否展开sku
+        openingSku: false
     },
 
     /** 设置computed */
@@ -515,6 +518,13 @@ Page({
             loadingMsg: 'none',
             url: 'common_create-formid',
         })
+    },
+
+    /** sku选择弹框 */
+    onSkuToggle( e ) {
+        this.setData!({
+            openingSku: e.detail
+        });
     },
 
     /**

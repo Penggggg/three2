@@ -217,12 +217,16 @@ Component({
             }
             // 处理formid
             this.createFormId( e.detail.formId );
+
+            // 发布
+            this.triggerEvent('toggle', !openSku );
         },
         /** 关闭sku */
         onCloseSku( e ) {
             this.setData({
                 openSku: e.detail
-            })
+            });
+            this.triggerEvent('toggle', false );
         },
         /** 选择sku */
         onConfirmSku( e ) {
