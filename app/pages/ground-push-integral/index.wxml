@@ -75,6 +75,7 @@
             title="分享赚钱"
             open="{{ openTips }}"
             bind:toggle="onToggle"
+            storageKey="ground-push-integral"
             texts="{{[ '朋友购买了你分享的商品，就能获得积分', '积分可以当现金抵扣使用' ]}}"
         />
     </view>

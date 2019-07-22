@@ -10,6 +10,7 @@
     <view>
         <my-common-confirm
             title="拼团省钱"
+            storageKey="ground-pin"
             open="{{ openTips }}"
             bind:toggle="onToggle"
             texts="{{[ '大家一起购买同一件宝贝', '就能自动获得更便宜的拼团价' ]}}"

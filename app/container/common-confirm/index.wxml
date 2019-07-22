@@ -1,5 +1,5 @@
 <view
-    wx:if="{{ open }}"
+    wx:if="{{ open && canShow }}"
     bindtap="toggle"
     class="con-common-confirm"
 >
