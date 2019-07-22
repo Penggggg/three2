@@ -1,7 +1,16 @@
 .page-ground-pin {
-    
+    display: flex;
+    height: 100vh;
+    background: #fff;
+    flex-direction: column;
 }
 
 .gp-bar {
     height: 130rpx;
+}
+
+.p-groud-pin {
+    flex: 1;
+    overflow-y: scroll;
+    box-sizing: border-box;
 }

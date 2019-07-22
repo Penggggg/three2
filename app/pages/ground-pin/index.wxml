@@ -1,5 +1,14 @@
 <view class="page-ground-pin">
 
+    <!-- 列表 -->
+    <scroll-view 
+        scroll-y="{{ true }}"
+        lower-threshold="100"
+        bindscrolltolower="fetchPin"
+        class="p-groud-pin"
+    >
+    </scroll-view>
+
     <!-- 底下导航条 -->
     <view class="gp-bar">
         <my-ground-bar

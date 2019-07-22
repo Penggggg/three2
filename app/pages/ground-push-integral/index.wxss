@@ -85,6 +85,23 @@
     font-size: 30rpx;
     line-height: 40rpx;
     font-weight: bold;
+    position: relative;
+}
+
+.gpi-tips-toggle {
+    top: -2rpx;
+    display: flex;
+    right: -50rpx;
+    width: 38rpx;
+    height: 38rpx;
+    color: #fff;
+    font-size: 28rpx;
+    border-radius: 50%;
+    position: absolute;
+    background: #6a6fd3;
+    text-align: center;
+    justify-content: center;
+    box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.15 );
 }
 
 .gpi-price {

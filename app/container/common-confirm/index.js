@@ -23,6 +23,12 @@ Component({
         storageKey: {
             type: String,
             value: ''
+        },
+        /** 再次打开的时间 */
+        openTime: {
+            type: Number,
+            value: 0,
+            observer: 'onOpen'
         }
     },
 
@@ -54,15 +60,27 @@ Component({
             if ( !storageKey || 
                 ( !!storageKey && !lastTime ) || 
                 ( !!storageKey && !!lastTime && Date.now( ) - lastTime >= GAP )) {
+
                     this.setData({
                         canShow: true
                     });
+
+                    // 如果有storageKey就存一下本次打开的时间 
+                    if ( !!storageKey ) {
+                        wx.setStorageSync( storageKey, String( Date.now( )));
+                    }
             }
 
-            // 如果有storageKey就存一下本次打开的时间 
-            if ( !!storageKey ) {
-                wx.setStorageSync( storageKey, String( Date.now( )));
-            }
+        },
+        /** 手动打开 */
+        onOpen( val ) {
+            if ( !val ) { return; }
+            const { storageKey } = this.data;
+
+            wx.setStorageSync( storageKey, String( val ));
+            this.setData({
+                canShow: true
+            });
         }
     },
 

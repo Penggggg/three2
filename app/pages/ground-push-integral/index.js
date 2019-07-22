@@ -35,7 +35,10 @@ Page({
         canShare: false,
 
         // 是否打开提示
-        openTips: true
+        openTips: true,
+
+        // 手动打开的时间
+        openTime: 0
     },
 
     /**  */
@@ -105,6 +108,14 @@ Page({
                     pushIntegral: data
                 });
             }
+        })
+    },
+
+    /** 手动打开 */
+    sureOpen( ) {
+        this.setData({
+            openTips: true,
+            openTime: Date.now( )
         })
     },
 

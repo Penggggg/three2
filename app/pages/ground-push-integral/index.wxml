@@ -23,6 +23,12 @@
                 <view class="gpi-data-info">
                     <view class="gpi-data-title">
                         我的总积分
+                        <view 
+                            bindtap="sureOpen"
+                            class="gpi-tips-toggle"
+                        >
+                            ?
+                        </view>
                     </view>
                     <view class="gpi-tips">
                         分享记录
@@ -74,6 +80,7 @@
         <my-common-confirm
             title="分享赚钱"
             open="{{ openTips }}"
+            openTime="{{ openTime }}"
             bind:toggle="onToggle"
             storageKey="ground-push-integral"
             texts="{{[ '朋友购买了你分享的商品，就能获得积分', '积分可以当现金抵扣使用' ]}}"
