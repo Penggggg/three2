@@ -133,7 +133,6 @@ export const main = async ( event, context ) => {
      *      page: 页数
      *      search: 搜索
      *      category: 商品类目
-     *      filterBjp: false | true | undefined （ 是否过滤保健品 ）
      * }
      * ---------- 返回 --------
      * {
@@ -242,6 +241,110 @@ export const main = async ( event, context ) => {
             }
         }
     });
+
+    /** 
+     * @description
+     * 拼团广场的可拼团列表
+     *  -------- 请求 ----------
+     * {
+     *      page: 页数
+     *      search: 搜索
+     * }
+     */
+    app.router('pin-ground', async( ctx, next ) => {
+        try {
+
+            const { page } = event.data;
+            const limit = event.data.limit || 10;
+
+            const search$ = event.data.search || '';
+            const search = new RegExp( search$.replace(/\s+/g, ""), 'i');
+
+            let where$ = {
+                title: search,
+                visiable: true,
+                isDelete: _.neq( true )
+            };
+
+            // 保健品配置
+            const bjpConfig$ = await db.collection('app-config')
+            .where({
+                type: 'app-bjp-visible'
+            })
+            .get( );
+            const bjpConfig = bjpConfig$.data[ 0 ];
+
+            if ( !!bjpConfig && !bjpConfig.value ) {
+                where$ = Object.assign({ }, where$, {
+                    category: _.neq('4')
+                })
+            }
+
+            // 获取总数
+            const total$ = await db.collection('goods')
+                .where( where$ )
+                .count( );
+
+            // 获取商品数据
+            const data$ = await db.collection('goods')
+                .where( where$ )
+                .limit( limit )
+                .skip(( page - 1 ) * limit )
+                .orderBy( 'saled', 'desc')
+                .get( );
+
+            // 获取型号数据
+            const standards = await Promise.all( data$.data.map( x => {
+                return db.collection('standards')
+                    .where({
+                        pid: x._id,
+                        isDelete: false,
+                        groupPrice: _.gt( 0 )
+                    })
+                    .get( );
+            }));
+
+            const insertStandars = data$.data.map(( x, k ) => Object.assign({ }, x, {
+                standards: standards[ k ].data
+            }));
+
+            // 获取活动数据数据
+            const activities$ = await Promise.all(
+                data$.data.map( good => {
+                    return db.collection('activity')
+                        .where({
+                            pid: good._id,
+                            isClosed: false,
+                            isDeleted: false,
+                            type: 'good_discount',
+                            endTime: _.gt( getNow( true )),
+                            ac_groupPrice: _.gt( 0 )
+                        })
+                        .get( )
+                })
+            );
+
+            const insertActivity = insertStandars.map(( x, k ) => Object.assign({ }, x, {
+                activities: activities$[ k ].data
+            }));
+
+            return ctx.body = {
+                status: 200,
+                data: {
+                    data: insertActivity,
+                    pagenation: {
+                        page,
+                        pageSize: limit,
+                        total: total$.total,
+                        totalPage: Math.ceil( total$.total / limit )
+                    }
+                }
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
 
     /**
      * 商品列表（ 含standards、activities子表）
@@ -382,17 +485,19 @@ export const main = async ( event, context ) => {
             } else {
     
                 // 更新
-                const meta = Object.assign({ }, event.data );
+                const meta = { ...event.data };
+                const standards = meta.standards;
 
                 delete meta._id;
                 delete event.data._id;
-
-                const { standards } = meta;
+                delete event.data.standards;
 
                 await db.collection('goods')
                     .doc( _id )
                     .set({
-                        data: Object.assign({ }, meta, event.data )
+                        data: {
+                            ...event.data
+                        }
                     })
     
                 // 0. 查询该产品底下所有的型号
@@ -446,10 +551,11 @@ export const main = async ( event, context ) => {
                 // 3. 新增部分型号
                 await Promise.all( wouldCreate.map( x => {
                     return db.collection('standards').add({
-                        data: Object.assign({ }, x, {
+                        data: {
+                            ...x,
                             pid: _id,
                             isDelete: false
-                        })
+                        }
                     })
                 }));
     

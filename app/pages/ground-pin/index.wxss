@@ -1,0 +1,7 @@
+.page-ground-pin {
+    
+}
+
+.gp-bar {
+    height: 130rpx;
+}

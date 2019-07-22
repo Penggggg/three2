@@ -30,9 +30,7 @@ Component({
             const meta = [
                 {
                     title: '钱',
-                    url: `/pages/trip-enter/index`,
-                    // img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-kouhong.png',
-                    // activeImg: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-kouhong-active.png'
+                    url: `/pages/ground-pin/index`,
                     img: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-sheng.png",
                     activeImg: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-sheng-color.png"
                 }, {

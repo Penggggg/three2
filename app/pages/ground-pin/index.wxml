@@ -1,0 +1,19 @@
+<view class="page-ground-pin">
+
+    <!-- 底下导航条 -->
+    <view class="gp-bar">
+        <my-ground-bar
+        />
+    </view>
+
+    <!-- 提示弹框 -->
+    <view>
+        <my-common-confirm
+            title="拼团省钱"
+            open="{{ openTips }}"
+            bind:toggle="onToggle"
+            texts="{{[ '大家一起购买同一件宝贝', '就能自动获得更便宜的拼团价' ]}}"
+        />
+    </view>
+
+</view>

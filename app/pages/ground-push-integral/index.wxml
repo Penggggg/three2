@@ -8,14 +8,6 @@
         bindscrolltolower="fetchRank"
         class="p-groud-push-integral"
     >
-        <!-- 头部标题、提示 -->
-        <!-- <view
-            class="gpi-header-block"
-        >
-            <view class="gpi-title">分享赚钱</view>
-            <view class="gpi-tips mt">朋友购买了你分享的商品，就能获得积分</view>
-            <view class="gpi-tips">积分可以当现金抵扣使用</view>
-        </view> -->
 
         <!-- 分享列表 -->
         <view
@@ -73,6 +65,7 @@
     <!-- 底下导航条 -->
     <view class="gpi-bar">
         <my-ground-bar
+            ac="{{ 1 }}"
         />
     </view>
 

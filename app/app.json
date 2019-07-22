@@ -1,7 +1,9 @@
 {
   "pages": [
+    "pages/ground-pin/index",
     "pages/ground-push-integral/index",
     "pages/trip-enter/index",
+    "pages/manager-goods-active/index",
     "pages/order-list/index",
     "pages/coupon-list/index",
     "pages/my/index",
@@ -19,7 +21,6 @@
     "pages/manager-auth-init/index",
     "pages/manager-trip-detail/index",
     "pages/like-goods/index",
-    "pages/manager-goods-active/index",
     "pages/concat/index",
     "pages/trip-deliver/index",
     "pages/manager-person-info/index",
