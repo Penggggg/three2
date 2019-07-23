@@ -1,4 +1,5 @@
 const { navTo } = require('../../util/route.js');
+const { createFormId } = require('../../util/form-id.js');
 
 Component({
     /**
@@ -66,18 +67,9 @@ Component({
             })
         },
         /** 点击导航 */
-        navigate({ currentTarget }) {
-            const pages = getCurrentPages( )
-            const current = pages[ pages.length - 1 ];
-            const url = current.route;
-
-            // this.setData({
-            //     active: currentTarget.dataset.index
-            // })
-
-            if ( currentTarget.dataset.url.indexOf( url ) === -1 ) {
-                navTo( currentTarget.dataset.url )
-            }
+        navigate({ currentTarget, detail }) {
+            createFormId( detail.formId );
+            navTo( currentTarget.dataset.url )
         },
         /** 判断当前路由 */
         init( ) {
