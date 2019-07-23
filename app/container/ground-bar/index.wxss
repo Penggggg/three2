@@ -14,11 +14,15 @@
     box-shadow: 0 0 15px rgba( 0, 0, 0, 0.08 );
 
 }
+
+.flex-1 {
+  flex: 1;
+}
    
   .con-tdb-item {
-    flex: 1;
+    /* flex: 1; */
     display: flex;
-    padding: 15rpx;
+    padding: 15rpx !important;
     align-items: center;
     justify-content: center;
     flex-direction: column;
@@ -41,3 +45,18 @@
   .con-tdb-text.active {
     color: #999;
   }
+
+  .fix-btn {
+    background: transparent;
+    outline:none;
+    border:none;
+    list-style: none;
+    padding: 0;
+    line-height: normal;
+    overflow: visible;
+    text-align: left;
+}
+
+.fix-btn:after {
+    border:none;
+}
