@@ -52,17 +52,8 @@ Component({
 
         /** 点击导航 */
         navigate({ currentTarget, detail }) {
-
-            // const pages = getCurrentPages( )
-            // const current = pages[ pages.length - 1 ];
-            // const url = current.route;
-
             createFormId( detail.formId );
             navTo( currentTarget.dataset.url )
-
-            // if ( currentTarget.dataset.url.indexOf( url ) === -1 ) {
-                
-            // }
         },
 
         /** 初始化下标 */

@@ -158,7 +158,9 @@
     box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.20 );
     /* background-image: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%); */
     /* background-image: linear-gradient(to right, #f78ca0 0%, #f9748f 19%, #fd868c 60%, #fe9a8b 100%); */
-    background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);
+    /* background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%); */
+    background-image: linear-gradient(to right, #f78ca0 0%, #f9748f 19%, #fd868c 60%, #fe9a8b 100%);
+
 }
 
 .gi7-share-img {

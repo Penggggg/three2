@@ -29,10 +29,12 @@ Component({
                 normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-shop.png",
                 active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-shop-active.png"
             }, {
-                label: '购物车',
-                url: "/pages/cart-list/index",
-                normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-cart.png",
-                active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-cart-active.png"
+                label: '钱',
+                url: "/pages/ground-pin/index",
+                // normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-cart.png",
+                // active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-cart-active.png"
+                normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-sheng.png",
+                active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-sheng-color.png"
             }, {
                 label: '我的',
                 url: "/pages/my/index",
