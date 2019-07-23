@@ -13,7 +13,7 @@
 }
 
 .gpi-bar {
-    height: 130rpx;
+    height: 115rpx;
 }
 
 .gpi-header-block {

@@ -1,6 +1,8 @@
+const { navTo } = require('../../util/route.js');
+const { createFormId } = require('../../util/form-id.js');
 
 /**
- * @description\
+ * @description
  * 拼团广场，一排一个的商品列表
  */
 Component({
@@ -10,6 +12,8 @@ Component({
     properties: {
         /**
          * 商品详情
+         * 
+         * _id
          * title
          * name(型号)
          * img
@@ -41,6 +45,12 @@ Component({
      */
     methods: {
         init( val ) {
+        },
+
+        goDetail( e ) {
+            createFormId( e.detail.formId );
+            const { _id } = this.data.good;
+            navTo(`/pages/goods-detail/index?id=${_id}`);
         }
     }
 })

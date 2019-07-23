@@ -6,7 +6,7 @@
 }
 
 .gp-bar {
-    height: 130rpx;
+    height: 115rpx;
 }
 
 .p-groud-pin {

@@ -49,6 +49,7 @@ Page({
                         standards.map( standard => {
                             const activeTarget = activities.find( ac => ac.sid === standard._id && !!ac.ac_groupPrice );
                             const meta = {
+                                _id: good._id,
                                 tag: good.tag,
                                 title: good.title,
                                 img: standard.img,
@@ -73,6 +74,7 @@ Page({
                     } else {
                         const activeTarget = activities.find( ac => !ac.sid && !!ac.ac_groupPrice );
                         const meta = {
+                            _id: good._id,
                             tag: good.tag,
                             img: good.img[ 0 ],
                             title: good.title,
@@ -111,7 +113,7 @@ Page({
         http({
             data: {
                 search,
-                limit: 10,
+                limit: 8,
                 page: page + 1
             },
             url: `good_pin-ground`,
@@ -122,7 +124,7 @@ Page({
                 const { pagenation } = data;
                 const { page, totalPage } = pagenation;
 
-                const meta = reset ?
+                const meta = reset === true ?
                     data.data :
                     page === 1 ? data.data : [ ...list, ...data.data ];
      
