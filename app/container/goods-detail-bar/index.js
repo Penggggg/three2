@@ -61,15 +61,22 @@ Component({
                 label: '商城',
                 url: '/pages/trip-enter/index',
                 src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-home4.png'
-            }, {
-                label: '行程',
-                url: '/pages/index/index',
-                src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-train4.png'          
-            }, {
-                label: '购物车',
-                url: '/pages/cart-list/index',
-                src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-cart4.png'          
+            },
+            {
+                label: '钱',
+                url: '/pages/ground-pin/index',
+                src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-sheng.png'
             }
+            // {
+            //     label: '行程',
+            //     url: '/pages/index/index',
+            //     src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-train4.png'          
+            // },
+            // {
+            //     label: '购物车',
+            //     url: '/pages/cart-list/index',
+            //     src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-cart4.png'          
+            // }
         ],
         // 库存
         hasStock: false,
