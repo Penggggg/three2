@@ -98,10 +98,11 @@
     font-size: 28rpx;
     border-radius: 50%;
     position: absolute;
-    background: #6a6fd3;
     text-align: center;
     justify-content: center;
     box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.15 );
+    /* background: #6a6fd3; */
+    background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);
 }
 
 .gpi-price {

@@ -7,6 +7,48 @@
         bindscrolltolower="fetchPin"
         class="p-groud-pin"
     >
+
+        <!-- 搜索框 -->
+        <view
+            class="gp-seach-block"
+        >
+            <view
+                class="gp-input-block"
+            >
+                <input 
+                    value="{{ search }}"
+                    class="gp-input"
+                    placeholder="搜搜拼团"
+                    bindinput="onSearch"
+                    bindconfirm="onConfirmSearch"
+                    placeholder-style="color:rgba(0, 0, 0, 0.3)"
+                />
+                <image
+                    mode="aspectFill"
+                    class="gp-search-icon"
+                    bindtap="onConfirmSearch"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-search-grey.png"
+                />
+            </view>
+            <view class="gp-search-decorate"></view>
+        </view>
+
+        <!-- 标题 -->
+        <view class="gp-title-block">
+            <view class="gp-title bold">
+                热门
+            </view>
+            <view class="gp-title">
+                拼团
+                <view 
+                    bindtap="sureOpen"
+                    class="gp-tips-toggle"
+                >
+                    ?
+                </view>
+            </view>
+        </view>
+
     </scroll-view>
 
     <!-- 底下导航条 -->
@@ -19,6 +61,7 @@
     <view>
         <my-common-confirm
             title="拼团省钱"
+            openTime="{{ openTime }}"
             storageKey="ground-pin"
             open="{{ openTips }}"
             bind:toggle="onToggle"

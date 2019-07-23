@@ -285,6 +285,13 @@ export const main = async ( event, context ) => {
                 .where( where$ )
                 .count( );
 
+            /**
+             * 这里没对商品、型号
+             * 进行 groupPrice: _.gt( 0 ) 
+             * 的限制
+             * 原因是有可能active是有团购价的
+             */
+
             // 获取商品数据
             const data$ = await db.collection('goods')
                 .where( where$ )
@@ -299,7 +306,6 @@ export const main = async ( event, context ) => {
                     .where({
                         pid: x._id,
                         isDelete: false,
-                        groupPrice: _.gt( 0 )
                     })
                     .get( );
             }));

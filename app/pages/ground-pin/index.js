@@ -26,18 +26,79 @@ Page({
         list: [ ],
 
         // 是否打开提示
-        openTips: true
+        openTips: true,
+
+        // 本次手动打开的时间
+        openTime: 0,
+
+        // 搜索
+        search: ''
     },
 
     /**  */
     runComputed( ) {
         computed( this, {
+            list$: function( ) {
+                const { list } = this.data;
+                const metaList = [ ];
+                
+                list.map( good => {
+                    const { standards, activities } = good;
+                    // 有型号
+                    if ( Array.isArray( standards ) && standards.length > 0 ) {
+                        standards.map( standard => {
+                            const activeTarget = activities.find( ac => ac.sid === standard._id && !!ac.ac_groupPrice );
+                            const meta = {
+                                tag: good.tag,
+                                title: good.title,
+                                img: standard.img,
+                                name: standard.name
+                            };
+                            if ( !!activeTarget ) {
+                                metaList.push({
+                                    ...meta,
+                                    price: activeTarget.ac_price,
+                                    groupPrice: activeTarget.ac_groupPrice
+                                });
+                            } else if ( !!standard.groupPrice ) {
+                                metaList.push({
+                                    ...meta,
+                                    price: standard.price,
+                                    groupPrice: standard.groupPrice
+                                });
+                            }
+                        });
+                    // 无型号
+                    } else {
+                        const activeTarget = activities.find( ac => !ac.sid && !!ac.ac_groupPrice );
+                        const meta = {
+                            tag: good.tag,
+                            title: good.title,
+                            img: good.img
+                        };
+                        if ( !!activeTarget ) {
+                            metaList.push({
+                                ...meta,
+                                price: activeTarget.ac_price,
+                                groupPrice: activeTarget.ac_groupPrice
+                            });
+                        } else if ( !!good.groupPrice ) {
+                            metaList.push({
+                                ...meta,
+                                price: good.price,
+                                groupPrice: good.groupPrice
+                            });
+                        }
+                    }
+                });
+                return metaList;
+            }
         });
     },
 
     /** 拉取拼团列表 */
-    fetchPin( ) {
-        const { page, canLoadMore, loading, list } = this.data;
+    fetchPin( reset = false ) {
+        const { page, canLoadMore, loading, list, search } = this.data;
 
         if ( !canLoadMore || !!loading ) { return; }
 
@@ -47,6 +108,7 @@ Page({
 
         http({
             data: {
+                search,
                 limit: 10,
                 page: page + 1
             },
@@ -58,7 +120,10 @@ Page({
                 const { pagenation } = data;
                 const { page, totalPage } = pagenation;
 
-                const meta = page === 1 ? list : [ ...list, ...data.data ];
+                const meta = reset ?
+                    data.data :
+                    page === 1 ? data.data : [ ...list, ...data.data ];
+     
                 this.setData({
                     page,
                     list: meta,
@@ -69,6 +134,24 @@ Page({
         });
     },
 
+    /** 输入搜索 */
+    onSearch( e ) {
+        this.setData({
+            search: e.detail.value
+        });
+    },
+
+    /** 输入搜索 */
+    onConfirmSearch( ) {
+        this.setData({
+            page: 0,
+            canLoadMore: true
+        });
+        setTimeout(( ) => {
+            this.fetchPin( true );
+        }, 20 );
+    },
+
     /** 提示弹框 */
     onToggle( e ) {
         this.setData({
@@ -76,10 +159,19 @@ Page({
         })
     },
 
+    /** 手动打开 */
+    sureOpen( ) {
+        this.setData({
+            openTips: true,
+            openTime: Date.now( )
+        })
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+        this.runComputed( );
         this.fetchPin( );
     },
 
