@@ -1,4 +1,5 @@
 const { navTo } = require('../../util/route.js');
+const { createFormId } = require('../../util/form-id.js');
 
 Component({
     /**
@@ -29,10 +30,12 @@ Component({
                 normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-shop.png",
                 active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-shop-active.png"
             }, {
-                label: '购物车',
-                url: "/pages/cart-list/index",
-                normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-cart.png",
-                active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-cart-active.png"
+                label: '钱',
+                url: "/pages/ground-pin/index",
+                // normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-cart.png",
+                // active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-cart-active.png"
+                normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-sheng.png",
+                active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-sheng-color.png"
             }, {
                 label: '我的',
                 url: "/pages/my/index",
@@ -64,18 +67,9 @@ Component({
             })
         },
         /** 点击导航 */
-        navigate({ currentTarget }) {
-            const pages = getCurrentPages( )
-            const current = pages[ pages.length - 1 ];
-            const url = current.route;
-
-            // this.setData({
-            //     active: currentTarget.dataset.index
-            // })
-
-            if ( currentTarget.dataset.url.indexOf( url ) === -1 ) {
-                navTo( currentTarget.dataset.url )
-            }
+        navigate({ currentTarget, detail }) {
+            createFormId( detail.formId );
+            navTo( currentTarget.dataset.url )
         },
         /** 判断当前路由 */
         init( ) {

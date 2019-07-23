@@ -202,37 +202,43 @@
                             class="te-pin-goods"
                         >
                             <view class="te-pin-goods-list">
-                                <view
+                                <form
+                                    bindsubmit="goGoodDetail"
                                     data-item="{{ item }}"
+                                    report-submit="{{ true }}"
+                                    class="te-pin-goods-form"
                                     wx:key="{{ index }}"
                                     wx:for="{{ allShoppinglist }}"
-                                    class="te-pin-goods-img-con"
-                                    bindtap="goGoodDetail"
                                 >
-                                    <image 
-                                        mode="aspectFill"
-                                        class="te-pin-goods-img"
-                                        src="{{ item.detail.img }}"
-                                    />
-                                    <view
-                                        class="te-tag-block"
-                                        wx:if="{{ !!item.adjustGroupPrice }}"
+                                    <button
+                                        form-type="submit"
+                                        class='fix-btn te-pin-goods-img-con'
                                     >
-                                        <image
-                                            mode="widthFix"
-                                            class="gd-activity-icon"
-                                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                                        <image 
+                                            mode="aspectFill"
+                                            class="te-pin-goods-img"
+                                            src="{{ item.detail.img }}"
                                         />
-                                        <view class="te-tag-text">
-                                            可省 {{ item.delta }}元
+                                        <view
+                                            class="te-tag-block"
+                                            wx:if="{{ !!item.adjustGroupPrice }}"
+                                        >
+                                            <image
+                                                mode="widthFix"
+                                                class="gd-activity-icon"
+                                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                                            />
+                                            <view class="te-tag-text">
+                                                可省 {{ item.delta }}元
+                                            </view>
                                         </view>
-                                    </view>
-                                    <view
-                                        class="te-pin-good-title-con"
-                                    >
-                                        {{ item.detail.good.title }}
-                                    </view>
-                                </view>
+                                        <view
+                                            class="te-pin-good-title-con"
+                                        >
+                                            {{ item.detail.good.title }}
+                                        </view>
+                                    </button>
+                                </form>
                             </view>
                         </view>
                     </view>
@@ -280,7 +286,7 @@
                             wx:key="{{ index }}"
                             wx:for="{{ recommendGoods$ }}"
                         >
-                            <swiper-item>
+                            <swiper-item class="recommond-swiper-item">
                                 <my-good-item-5
                                     good="{{ item }}"
                                     tid="{{ current._id }}"

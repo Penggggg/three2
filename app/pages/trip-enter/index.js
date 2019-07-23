@@ -2,6 +2,7 @@ const { http } = require('../../util/http.js');
 const { navTo } = require('../../util/route.js');
 const { computed } = require('../../lib/vuefy/index.js');
 const { delayeringGood } = require('../../util/goods.js');
+const { createFormId } = require('../../util/form-id');
 
 const app = getApp( );
 
@@ -454,7 +455,8 @@ Page({
     },
 
     /** 跳到拼团商品详情 */
-    goGoodDetail({ currentTarget }) {
+    goGoodDetail({ currentTarget, detail }) {
+        createFormId( detail.formId );
         const { current } = this.data;
         const { item } = currentTarget.dataset;
         let path = `/pages/goods-detail/index?id=${item.detail.good._id}`;

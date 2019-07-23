@@ -146,7 +146,7 @@
         >
 
             <!-- 拼团文案 -->
-            <view class="info-block-item" wx:if="{{ priceGap && priceGap !== '0' }}">
+            <view class="info-block-item np" wx:if="{{ !!priceGap }}">
 
                 <view class="info-block-item-label">
                     拼团：
@@ -177,10 +177,32 @@
 
             </view>
 
+            <!-- 积分推广文案 -->
+            <view class="info-block-item np" wx:if="{{ canIntegrayShare }}">
+                <view class="info-block-item-label">
+                    赚钱：
+                </view>
+                <view class="info-block-item-content">
+                    分享此商品可获
+                    <form
+                        bindsubmit="toggleTips3"
+                        class="red bigger nobold"
+                        report-submit="{{ true }}"
+                    >
+                        <button
+                            form-type="submit"
+                            class="red formid-btn normal"
+                        >   
+                            ¥{{ integral$ }}抵现积分
+                        </button>
+                    </form>
+                </view>
+            </view>
+
             <!-- 保证，三个icon -->
             <view
                 class="info-block-item"
-                wx:if="{{ activities.length === 0 }}"
+                wx:if="{{ (activities.length === 0 && !canIntegrayShare) || (activities.length === 0 && !priceGap) || (activities.length === 0 && !priceGap)}}"
             >
                 <view class="info-block-item-label">
                     保证：
@@ -301,7 +323,6 @@
             </view>
         </view>
 
-
         <!-- 商品下面的栏 -->
         <my-goods-detail-bar
             tid="{{ tid }}"
@@ -310,17 +331,18 @@
             canPinSku="{{ canPinSku }}"
             activities="{{ activities }}"
             someCanPin="{{ pinCount$ > 0 }}"
+            bind:toggle="onSkuToggle"
         />
 
     </view> 
 
     <!-- 海报 -->
     <my-good-poster
-        wx:if="{{ !loading }}"
+        wx:if="{{ !loading && !openingSku }}"
         good="{{ detail }}"
         bindtoggle="onPostToggle"
-        goodCanPin="{{ !!priceGap }}"
         someCanPin="{{ pinCount$ > 0 }}"
+        goodCanPin="{{ !!priceGap && priceGap !== '0' }}"
     />
 
     <!-- 商品管理页面入口 -->
@@ -419,5 +441,11 @@
 
         </view>
     </wxc-mask>
+
+    <!-- 积分提示弹框 -->
+    <my-share-integral
+        show="{{ showShareTips2 }}"
+        bind:toggle="toggleTips3"
+    />
 
 </view>

@@ -60,6 +60,12 @@ Page({
         // 展示弹框
         showTips: 'hide',
 
+        // 分享Tips
+        showShareTips: 'hide',
+
+        // 分享Tips2
+        showShareTips2: false,
+
         // 拼团列表
         pin: [ ],
 
@@ -73,7 +79,22 @@ Page({
         canPinSku: [ ],
 
         // 当前的行程
-        trip: null
+        trip: null,
+
+        // 当前是否开启了积分推广
+        canIntegrayShare: false,
+
+        // 当前账号的openid
+        openid: '',
+
+        // 分享人的openid
+        from: '',
+
+        // 积分推广获点比例
+        pushIntegralRate: 0,
+
+        // 是否展开sku
+        openingSku: false
     },
 
     /** 设置computed */
@@ -104,7 +125,9 @@ Page({
                     return ''
                 } else {
                     const result = delayeringGood( detail );
-                    return result ? String( result.goodPins.eachPriceRound ).replace(/\.00/g, '') : '';
+                    const gap = result ? String( result.goodPins.eachPriceRound ).replace(/\.00/g, '') : '';
+                    const meta = gap !== '0' && !!gap ? gap : '';
+                    return meta;
                 }
             },
 
@@ -207,6 +230,16 @@ Page({
                 return !!standards && standards.length > 0 ;
             },
 
+            // 积分区间
+            integral$: function( ) {
+                const { detail, pushIntegralRate } = this.data;
+                if ( !detail ) { 
+                    return '';
+                }
+                const result = delayeringGood( detail, pushIntegralRate );
+                return result.integral$;
+            }
+
         })
     },
 
@@ -269,7 +302,6 @@ Page({
 
     /** 拉取当前商品的购物请单信息 */
     fetchShopping( pid, tid ) {
-
         if ( !pid || !tid ) { return; }
 
         http({
@@ -306,11 +338,11 @@ Page({
                 if ( !!data[ 0 ]) {
                     const tid = data[ 0 ]._id
 
-                    if ( !this.data.tid ) {
+                    if ( !!tid ) {
                         this.fetchShopping( id, tid );
                     }
                     this.setData!({
-                        tid: data[ 0 ]._id,
+                        tid,
                         trip: data[ 0 ]
                     });
                 }
@@ -318,11 +350,41 @@ Page({
         })
     },
 
+    /** 创建分享记录 */
+    createShare( ) {
+        const { id, canIntegrayShare, from, openid } = this.data;
+        if ( !id || !canIntegrayShare || !from || !openid ) { return; }
+        http({
+            data: {
+                from,
+                pid: id,
+            },
+            url: 'common_create-share'
+        });
+    },
+
     // 展开提示
     toggleTips( e? ) {
         const { showTips } = this.data;
         this.setData!({
             showTips: showTips === 'show' ? 'hide' : 'show'
+        });
+        !!e && this.createFormId( e.detail.formId );
+    },
+
+    // 展开分享提示
+    toggleTips2( e? ) {
+        const { showShareTips } = this.data;
+        this.setData!({
+            showShareTips: showShareTips === 'show' ? 'hide' : 'show'
+        });
+        !!e && this.createFormId( e.detail.formId );
+    },
+
+    toggleTips3( e? ) {
+        const { showShareTips2 } = this.data;
+        this.setData!({
+            showShareTips2: !showShareTips2,
         });
         !!e && this.createFormId( e.detail.formId );
     },
@@ -345,7 +407,17 @@ Page({
             });
         });
         (app as any).watch$('appConfig', val => {
-            console.log('.....', val );
+            this.setData!({
+                pushIntegralRate: (val || { })['push-integral-get-rate'] || 0,
+                canIntegrayShare: !!(val || { })['good-integral-share'] || false
+            });
+            this.createShare( );
+        });
+        (app as any).watch$('openid', val => {
+            this.setData!({
+                openid: val
+            });
+            this.createShare( );
         });
     },
     
@@ -448,36 +520,49 @@ Page({
         })
     },
 
+    /** sku选择弹框 */
+    onSkuToggle( e ) {
+        this.setData!({
+            openingSku: e.detail
+        });
+    },
+
     /**
      * 生命周期函数--监听页面加载
+     * {
+     *    id || scene // 商品id
+     *    tid // 行程id
+     *    from // 分享人的id
+     * }
      */
     onLoad: function (options) {
 
         const scene = decodeURIComponent( options!.scene || '' )
         
-        this.watchRole( );
         this.runComputed( );
 
-        this.checkLike( );
-        // if ( !options!.tid ) {
-            this.fetchLast( );
-        // }
-
+        // if ( !options!.id && !scene && !'71f2cd945cab4fc10261232b3f358619' ) { return; }
         // this.setData!({
-        //     id: "71f2cd945cab4fc10261232b3f358619",
-        //     tid: "13dba11c5d23ebb203b421ff08f4b0af"
-        // })
-        
-        if ( !options!.id && !scene ) { return; }
-        this.setData!({
-            id: options!.id || scene,
-        });
+        //     id: options!.id || scene || '71f2cd945cab4fc10261232b3f358619',
+        // });
 
-        if ( !!(options as any).tid ) {
+        if ( options!.id || scene ) { 
             this.setData!({
-                tid: options!.tid
+                id: options!.id || scene,
+            });
+        }
+        
+        if ( !!(options as any).from ) {
+            this.setData!({
+                from: options!.from
             })
         }
+        
+        setTimeout(( ) => {
+            this.watchRole( );
+            this.checkLike( );
+            this.fetchLast( );
+        }, 20 );
     },
   
     /**
@@ -549,8 +634,8 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    onShareAppMessage: function ( ) {
-        const { detail, pin$, activities, priceGap, trip } = this.data;
+    onShareAppMessage: function ( e ) {
+        const { detail, pin$, activities, priceGap, trip, openid } = this.data;
         return {
             title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
                         activities.length === 0 ?
@@ -560,7 +645,8 @@ Page({
                             `立减${trip.reduce_price}元！` :
                             '给你看看这宝贝！'
                 }${detail.title}`,
-            path: `/pages/goods-detail/index?id=${detail._id}&tid=${this.data.tid}`,
+            // 分享不应该带tid
+            path: `/pages/goods-detail/index?id=${detail._id}&from=${openid}`,
             imageUrl: `${detail.img[ 0 ]}`
         }
     }

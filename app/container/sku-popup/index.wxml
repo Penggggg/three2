@@ -1,4 +1,5 @@
 <!--container/sku-popup/index.wxml-->
+
 <view>
 
     <!-- sku背景 -->
@@ -192,6 +193,7 @@
 
                     <view
                         wx:else
+                        class="sku-dingjin"
                     >
                         <view class="sku-info-title mt il">
                             订金
@@ -204,6 +206,11 @@
                             > 
                                 {{ depositPrice }}
                             </wxc-price>
+                        </view>
+                        <view
+                            class="sku-dingjin-tips"
+                        >
+                            先付订金，后付尾款～
                         </view>
                     </view>
                     

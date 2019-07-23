@@ -42,6 +42,35 @@ export const overtimeTrip = async ( ) => {
                 })
         }));
 
+        if ( trips$.data.length > 0 ) {
+            // 推送代购通知
+            const members = await db.collection('manager-member')
+            .where({
+                push: true
+            })
+            .get( );
+
+            await Promise.all(
+                members.data.map( async member => {
+                    // 4、调用推送
+                    const push$ = await cloud.callFunction({
+                        name: 'common',
+                        data: {
+                            $url: 'push-template-cloud',
+                            data: {
+                                openid: member.openid,
+                                type: 'trip',
+                                page: `pages/manager-trip-list/index`,
+                                texts: [`行程已自动到期`, `请查看尾款情况`]
+                            }
+                        }
+                    });
+                })
+            );
+        }
+
+        
+
     } catch ( e ) {
         console.log('!!!!overtimeTrip')
         return { status: 500 }

@@ -1,0 +1,61 @@
+<form
+    bindsubmit="goDetail"
+    report-submit="{{ true }}"
+    class="good-item-8-form"
+>
+    <button 
+        form-type="submit"
+        class="fix-btn con-good-item-8 {{ isLeft ? '' : 'right' }}"
+    >
+        <image
+            mode="aspectFill"
+            class="gi8-img"
+            src="{{ good.img }}"
+        />
+        <view class="gi8-info-block {{ isLeft ? '' : 'right' }}">
+            
+            <view class="gi8-title gi8-text">
+                {{ good.title }}
+            </view>
+
+            <view
+                wx:if="{{ good.name }}"
+                class="gi8-name gi8-text"
+            >
+                {{ good.name }}
+            </view>
+
+            <view class="gi8-detail gi8-text">
+                {{ good.detail }}
+            </view>
+
+            <view 
+                class="gi8-action-block {{ isLeft ? '' : 'right' }}"
+            >
+
+                <wxc-price
+                    status="del"
+                    decimal="small"
+                    class="gi8-price"
+                    del-color="#666"
+                > 
+                    {{ good.price }}
+                </wxc-price>
+
+                <view
+                    class="gi8-btn"
+                >
+                    拼团 <wxc-price
+                            icon="sub"
+                            decimal="small"
+                            class="gi8-group-price"
+                        > 
+                            {{ good.groupPrice }}
+                        </wxc-price>
+                </view>
+
+            </view>
+
+        </view>
+    </button>
+</form>

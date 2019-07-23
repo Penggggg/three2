@@ -1,67 +1,72 @@
 
-<view
-    class="good-item-6"
-    bindtap="goDetail"
+<form
+    bindsubmit="goDetail"
+    report-submit="{{ true }}"
+    class="good-item-6-form"
 >
-
-    <!-- 图片 -->
-    <image 
-        class="gi6-image"
-        mode="aspectFill"
-        lazy-load="{{ true }}"
-        src="{{ good.img[ 0 ]}}"
-    />
-
-    <!-- 标题 -->
-    <view class="gi6-title">
-        {{ good.title }}
-    </view>
-
-    <!-- 详情 -->
-    <view class="gi6-detail">
-        {{ good.detail }}
-    </view>
-
-    <!-- 原价 -->
-    <view
-        class="gi6-fadeprice"
-        wx:if="{{ !good.hasActivity }}"
+    <button
+        form-type="submit"
+        class="fix-btn good-item-6"
     >
-        市场售价:¥{{ good.fadePrice }}
-    </view>
 
-    <!-- 活动标签 -->
-    <view
-        class="gi6-tag-block"
-        wx:if="{{ good.hasActivity }}"
-    >
-        <image
-            mode="widthFix"
+        <!-- 图片 -->
+        <image 
+            class="gi6-image"
+            mode="aspectFill"
             lazy-load="{{ true }}"
-            class="gi6-activity-icon"
-            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+            src="{{ good.img[ 0 ]}}"
         />
-        <view class="gi6-tag-text">
-            限时活动
+
+        <!-- 标题 -->
+        <view class="gi6-title">
+            {{ good.title }}
         </view>
-    </view>
 
-    <!-- 最低价 -->
-    <view class="gi6-price-block">
-        超值
-        <wxc-price
-            icon="sub"
-            decimal="small"
-            class="gi6-price"
-        > 
-            {{ good.price$ }}
-        </wxc-price>
-    </view>
+        <!-- 详情 -->
+        <view class="gi6-detail">
+            {{ good.detail }}
+        </view>
 
-    <!-- 标签 -->
-    <view class="gi6-label">
-        {{ tag }}
-    </view>
+        <!-- 原价 -->
+        <view
+            class="gi6-fadeprice"
+            wx:if="{{ !good.hasActivity }}"
+        >
+            市场售价:¥{{ good.fadePrice }}
+        </view>
 
+        <!-- 活动标签 -->
+        <view
+            class="gi6-tag-block"
+            wx:if="{{ good.hasActivity }}"
+        >
+            <image
+                mode="widthFix"
+                lazy-load="{{ true }}"
+                class="gi6-activity-icon"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+            />
+            <view class="gi6-tag-text">
+                限时活动
+            </view>
+        </view>
 
-</view>
+        <!-- 最低价 -->
+        <view class="gi6-price-block">
+            超值
+            <wxc-price
+                icon="sub"
+                decimal="small"
+                class="gi6-price"
+            > 
+                {{ good.price$ }}
+            </wxc-price>
+        </view>
+
+        <!-- 标签 -->
+        <view class="gi6-label">
+            {{ tag }}
+        </view>
+
+    </button>
+</form>

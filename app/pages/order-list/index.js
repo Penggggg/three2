@@ -44,8 +44,6 @@ Page({
         metaList: [ ],
         // 快递费用列表
         deliverFees: [ ],
-        // 以行程为基调的订单列表
-        tripOrders: [ ],
         // 是否新客户
         isNew: true,
         // 优惠券列表
@@ -73,7 +71,17 @@ Page({
         // 列表
         loadingList: false,
         // 展示其他行程的订单
-        showALlTrip: false
+        showALlTrip: false,
+        // 推广积分
+        pushIntegral: 0,
+        // 积分推广抵现比例
+        pushIntegralMoneyRate: 0.1,
+        // 是否展示结账
+        isShowSettle: false,
+        // 当前行程的订单
+        currentTripOrder: { },
+        // 推广积分使用记录表
+        pushIntegralFees: [ ]
     },
 
     /** 设置computed */
@@ -108,7 +116,7 @@ Page({
                  *  }
                  */
 
-                const { tid, showALlTrip, isNew, metaList, pinList, deliverFees } = this.data;
+                const { tid, showALlTrip, isNew, metaList, pinList, deliverFees, pushIntegralFees } = this.data;
                 const orderObj = { };
 
                 const fixNumber = n => {
@@ -380,9 +388,14 @@ Page({
                     const userDeliverFeeMeta = deliverFees.find( x => x.tid === tripOrders.tid );
                     const userDeliverFee = userDeliverFeeMeta ? userDeliverFeeMeta.fee : null;
 
+                    // 推广积分
+                    const pushIntegralFeesMeta = pushIntegralFees.find( x => x.tid === tripOrders.tid );
+                    const pushintegralFee = pushIntegralFeesMeta ? pushIntegralFeesMeta.value : null;
+
                     if ( userDeliverFee ) {
                         wholePriceNotDiscount += userDeliverFee;
                     }
+                    tripOrders['pushintegralFee'] = pushintegralFee;
                     tripOrders['userDeliverFee'] = userDeliverFee;
                     tripOrders['wholePriceNotDiscount'] = wholePriceNotDiscount;
                     
@@ -628,6 +641,9 @@ Page({
                     if ( t_daijin.isUsed ) {
                         total = Number( Number( total - t_daijin.value ).toFixed( 2 ));
                     }
+                    if ( !!pushintegralFee ) {
+                        total = Number( Number( total - pushintegralFee ).toFixed( 2 ));
+                    }
 
                     tripOrders['total'] = total;
 
@@ -768,7 +784,7 @@ Page({
     },
 
     /** 拉取订单数据 */
-    fetchList( index ) {
+    fetchList( index, reset = false ) {
         const { page, keyMapType, skip, canloadMore, metaList, tidParam, fromDetail, loadingList } = this.data;
         const type = typeof index !== 'object' ?
             keyMapType[ index ] :
@@ -804,10 +820,11 @@ Page({
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
                 const { page, current, totalPage, total } = data;
+                const metaData = !reset ? [ ...metaList, ...data.data ] : [ ...data.data ];
                 this.setData({
                     page,
                     skip: current,
-                    metaList: [ ...metaList, ...data.data ],
+                    metaList: metaData,
                     canloadMore: total > current
                 });
 
@@ -815,13 +832,10 @@ Page({
                 if ( data.data.length !== 0 ) {
                     this.setNavBar( );
 
-                    const tidsArr = [ ];
-                    [ ...metaList, ...data.data ].map( o => {
-                        if ( tidsArr.findIndex( s => s === o.tid ) === -1 ) {
-                            tidsArr.push( o.tid )
-                        }
-                    });
+                    const tidsArr = metaData.map( x => x.tid );
+
                     this.fetchDeliverFee( tidsArr.join(','));
+                    this.fetchPushIntegralFee( tidsArr.join(','));
                     
                     this.fetchCurrentTrip( tid => this.fetchPinList( tid ));
                 // 无订单则显示默认文案
@@ -887,6 +901,54 @@ Page({
         
     },
 
+    /** 拉取积分推广使用情况 */
+    fetchPushIntegralFee( tids ) {
+
+        const action = ( ) => {
+            this.setData({
+                loadingList: false
+            })
+        }
+
+        if ( !tids ) {
+            return action( );
+        }
+
+        http({
+            data: {
+                tids,
+                type: 'push_integral'
+            },
+            url: 'common_push-integral-use',
+            success: res => {
+                const { status, data } = res;
+                if ( status === 200 ) {
+                    this.setData({
+                        pushIntegralFees: data
+                    });
+                    setTimeout(( ) => {
+                        action( );
+                    }, 20 );
+                }
+            }
+        })
+        
+    },
+
+    /** 获取当前人的推广积分 */
+    fetchPushIntegral( ) {
+        http({
+            url: 'common_push-integral',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setData({
+                    pushIntegral: data
+                });
+            }
+        })
+    },
+
     /** 跳到快递排行榜页面 */
     goDeliver({ currentTarget }) {
         navTo(`/pages/trip-deliver/index?id=${currentTarget.dataset.tid}`);
@@ -940,6 +1002,12 @@ Page({
 
             }
         });
+        app.watch$('appConfig', val => {
+            const value = (val || { })['push-integral-money-rate'];
+            value !== undefined && this.setData({
+                pushIntegralMoneyRate: (val || { })['push-integral-money-rate']
+            });
+        });
     },
 
     /** 去联系代购 */
@@ -969,7 +1037,6 @@ Page({
                             skip: 0,
                             canloadMore: true,
                             metaList: [ ],
-                            tripOrders: [ ],
                         });
                         setTimeout(( ) => {
                             this.fetchList( this.data.active );
@@ -990,78 +1057,44 @@ Page({
     /** 付尾款 */
     payLast({ currentTarget }) {
 
-        const coupons = [ ];
         const tripOrder = currentTarget.dataset.data;
-        const { tid, meta, t_daijin, t_lijian, t_manjian, wholePriceByDiscount, lastPrice } = tripOrder;
 
-        wxPay( lastPrice, ({ prepay_id }) => {
+        return this.setData({
+            isShowSettle: true,
+            currentTripOrder: tripOrder
+        });
+    },
 
-            if ( wholePriceByDiscount <= 0 ) { return; }
+    /** 成功付尾款 */
+    onPayLast( e ) {
+        this.setData({
+            page: 0,
+            skip: 0,
+            canloadMore: true,
+        });
+        setTimeout(( ) => {
+            this.fetchCoupons( true );
+            this.fetchList( this.data.active, true );
+        }, 20 );
+    
+        wx.showToast({
+            title: '支付成功'
+        });
 
-            if ( t_daijin.isUsed && t_daijin.id ) {
-                coupons.push( t_daijin.id )
-            } 
-            if ( t_lijian.isUsed && t_lijian.id ) {
-                coupons.push( t_lijian.id )
-            } 
-            if ( t_manjian.isUsed && t_manjian.id ) {
-                coupons.push( t_manjian.id )
-            } 
-
-            const orders = meta.map( order => {
-                const { _id, pid, sid, canGroup, allocatedGroupPrice, allocatedCount, allocatedPrice } = order;
-                const final_price = !!canGroup && allocatedGroupPrice ?
-                    allocatedCount * allocatedGroupPrice :
-                    allocatedCount * allocatedPrice;
-                return {
-                    pid,
-                    sid,
-                    oid: _id,
-                    final_price,
-                    allocatedCount,
-                }
+        // 如果领取了代金券
+        if ( !!e.detail && !!e.detail.value ) {
+            this.setData({
+                showDaijin: 'show',
+                daijin: e.detail
             });
+        };
+    },
 
-            const data = {
-                tid,
-                orders,
-                coupons,
-                integral: wholePriceByDiscount,
-            };
-
-            http({
-                data,
-                url: 'order_pay-last',
-                success: res => {
-                    if ( res.status === 200 ) {
-
-                        this.setData({
-                            page: 0,
-                            skip: 0,
-                            canloadMore: true,
-                            metaList: [ ],
-                            tripOrders: [ ],
-                        });
-                        setTimeout(( ) => {
-                            this.fetchCoupons( true );
-                            this.fetchList( this.data.active );
-                        }, 20 );
-                    
-                        wx.showToast({
-                            title: '支付成功'
-                        });
-
-                        // 如果领取了代金券
-                        if ( res.data && res.data.value ) {
-                            this.setData({
-                                showDaijin: 'show',
-                                daijin: res.data
-                            });
-                        }
-                    }
-                }
-            })
-        }, ( ) => { })
+    /** 关闭结账界面 */
+    onSettleToggle( e ) {
+        this.setData({
+            isShowSettle: e.detail
+        });
     },
 
     /** 展示任务弹框 */
@@ -1135,6 +1168,7 @@ Page({
             page: 0
         })
         setTimeout(( ) => {
+            this.fetchPushIntegral( );
             this.fetchCoupons( );
             this.fetchList( this.data.active );
         }, 0 );
