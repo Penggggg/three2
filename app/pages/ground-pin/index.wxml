@@ -49,6 +49,16 @@
             </view>
         </view>
 
+        <!-- 商品列表 -->
+        <view class="gp-good-list">
+            <my-good-item-8
+                wx:key="{{ index }}"
+                wx:for="{{ list$ }}"
+                good="{{ item }}"
+                isLeft="{{ index % 2 === 1 }}"
+            />
+        </view>
+
     </scroll-view>
 
     <!-- 底下导航条 -->

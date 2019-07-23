@@ -89,3 +89,8 @@
      /* background: #6a6fd3; */
     background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);
 }
+
+.gp-good-list {
+    box-sizing: border-box;
+    padding: 0 50rpx;
+}

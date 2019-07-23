@@ -52,7 +52,8 @@ Page({
                                 tag: good.tag,
                                 title: good.title,
                                 img: standard.img,
-                                name: standard.name
+                                name: standard.name,
+                                detail: good.detail
                             };
                             if ( !!activeTarget ) {
                                 metaList.push({
@@ -73,7 +74,7 @@ Page({
                         const activeTarget = activities.find( ac => !ac.sid && !!ac.ac_groupPrice );
                         const meta = {
                             tag: good.tag,
-                            img: good.img,
+                            img: good.img[ 0 ],
                             title: good.title,
                             detail: good.detail
                         };
@@ -222,6 +223,9 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function () {
-
+        return {
+            title: `分享给你～超值拼团价美妆宝贝`,
+            path: `/pages/ground-pin/index`
+        }
     }
 })
