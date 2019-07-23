@@ -23,14 +23,14 @@ Page({
             list1$: function( ) {
                 const { coupons, tid } = this.data;
                 return [
-                    ...coupons.filter( x => x.tid === tid )
+                    ...coupons.filter( x => x.tid === tid || ( !x.tid && !x.isUsed ))
                 ]
             },
             // 之前的行程卡券
             list2$: function( ) {
                 const { coupons, tid } = this.data;
                 return [
-                    ...coupons.filter( x => x.tid !== tid )
+                    ...coupons.filter( x => x.tid !== tid || ( !x.tid && !!x.isUsed ))
                 ]
             }
         })

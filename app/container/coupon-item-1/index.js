@@ -35,6 +35,11 @@ Component({
         showNext: {
             type: Boolean,
             value: false
+        },
+        /** 跳到行程还是券列表 */
+        gotoTrip: {
+            type: Boolean,
+            value: true
         }
     },
 
@@ -68,8 +73,9 @@ Component({
 
         /** 跳到行程入口 */
         goTrip( ) {
-            const { showNext } = this.data
-            navTo(`/pages/trip-enter/index`)
+            const { showNext, gotoTrip } = this.data;
+            this.triggerEvent('close', '');
+            navTo( gotoTrip ? `/pages/trip-enter/index` : `/pages/coupon-list/index`) 
         }
 
     }

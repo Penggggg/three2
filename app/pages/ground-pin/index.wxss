@@ -1,0 +1,96 @@
+.page-ground-pin {
+    display: flex;
+    height: 100vh;
+    background: #fff;
+    flex-direction: column;
+}
+
+.gp-bar {
+    height: 115rpx;
+}
+
+.p-groud-pin {
+    flex: 1;
+    overflow-y: scroll;
+    box-sizing: border-box;
+}
+
+.gp-seach-block {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding:  20rpx 20rpx 0rpx 50rpx;
+}
+
+.gp-input-block {
+    flex: 1;
+    position: relative;
+}
+
+.gp-input {
+    width: 100%;
+    height: 85rpx;
+    font-size: 23rpx;
+    border-radius: 3px;
+    box-sizing: border-box;
+    color: rgba( 0, 0, 0, 0.35 );
+    padding: 15rpx 85rpx 15rpx 25rpx;
+    letter-spacing: 0.1em;
+    box-shadow: 3px 0 18px rgba( 0, 0, 0, 0.12 );
+}
+
+.gp-search-icon {
+    right: 20rpx;
+    top: 50%;
+    width: 45rpx;
+    height: 45rpx;
+    position: absolute;
+    transform: translate( 0, -50% );
+}
+
+.gp-search-decorate {
+    width: 50rpx;
+    height: 50rpx;
+    border-radius: 0 2px 2px 0;
+    background: #77e5dd;
+}
+
+.gp-title-block {
+    display: flex;
+    padding: 0 50rpx;
+    box-sizing: border-box;
+    margin: 70rpx 0 40rpx;
+}
+
+.gp-title {
+    color: #333;
+    font-size: 45rpx;
+    position: relative;
+    letter-spacing: 0.03em;
+}
+
+.gp-title.bold {
+    font-weight: bold;
+}
+
+.gp-tips-toggle {
+    top: 10rpx;
+    display: flex;
+    right: -46rpx;
+    width: 38rpx;
+    height: 38rpx;
+    color: #fff;
+    font-size: 28rpx;
+    border-radius: 50%;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.15 );
+     /* background: #6a6fd3; */
+    background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);
+}
+
+.gp-good-list {
+    box-sizing: border-box;
+    padding: 0 50rpx;
+}

@@ -309,13 +309,19 @@
                             class="tog-pay-inline ml"
                             wx:if="{{( item.t_manjian.isUsed || item.t_manjian.canUsed ) && ( item.t_manjian.value )}}"
                         >   
-                            满减券：-<view class="tog-pay-color">-{{ item.t_manjian.value }}</view>
+                            满减券：<view class="tog-pay-color">-{{ item.t_manjian.value }}</view>
                         </view>
                         <view
                             class="tog-pay-inline ml"
                             wx:if="{{( item.t_daijin.isUsed || item.t_daijin.canUsed ) && ( item.t_daijin.value )}}"
                         >   
-                            代金券：-<view class="tog-pay-color">-{{ item.t_daijin.value }}</view>
+                            代金券：<view class="tog-pay-color">-{{ item.t_daijin.value }}</view>
+                        </view>
+                        <view
+                            class="tog-pay-inline ml"
+                            wx:if="{{ item.userPushIntegral }}"
+                        >   
+                            积分：<view class="tog-pay-color">-{{ item.userPushIntegral }}</view>
                         </view>
                     </view>
                     <view class="tog-pay-text">实付：<view class="tog-pay-color">¥{{ item.wholePriceByDiscount < 0 ? 0 : item.wholePriceByDiscount }}</view></view>

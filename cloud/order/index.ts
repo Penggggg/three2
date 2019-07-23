@@ -420,6 +420,8 @@ export const main = async ( event, context ) => {
 
     /**
      * 批量更新，订单为已支付，并且增加到购物清单
+     * 并推送相关买家
+     * 并推送相关“推广者”
      * {
      *      orderIds: "123,234,345"
      *      form_id,
@@ -453,6 +455,7 @@ export const main = async ( event, context ) => {
                     .get( );
             }));
 
+            // 订单列表
             const list = find$.map( x => {
                 const { _id, tid, pid, sid, price, groupPrice, acid } = x.data[ 0 ];
                 return {
@@ -473,7 +476,7 @@ export const main = async ( event, context ) => {
                 }
             });
 
-            // 处理推送
+            // 处理购买相关的推送
             if ( create$.result.status === 200 ) {
                 const { buyer, others } = create$.result.data;
 
@@ -534,6 +537,7 @@ export const main = async ( event, context ) => {
                     }
                 });
 
+                // 其他人拼团成功的推送
                 await Promise.all(
                     Object.keys( othersPush ).map(
                         otherOpenid => cloud.callFunction({
@@ -548,8 +552,120 @@ export const main = async ( event, context ) => {
                             }
                         })
                     )
-                )
+                );
 
+            }
+
+            // 查看app-config积分推广是否开启
+            const appConf$ = await db.collection('app-config')
+                .where({
+                    type: 'good-integral-share'
+                })
+                .get( );
+            const appConf = appConf$.data[ 0 ];
+            
+            if ( !!appConf.value ) {
+                // 找出所有的推广记录
+                const pushers$: any = await Promise.all(
+                    list.map( async( x, k ) => {
+                        const pushRecord$ = await db.collection('share-record')
+                            .where({
+                                pid: x.pid,
+                                openid: openId,
+                                isSuccess: false
+                            })
+                            .get( );
+                        return {
+                            ...pushRecord$.data[ 0 ],
+                            price: list[ k ].price,
+                            pushId: pushRecord$.data[ 0 ] ? pushRecord$.data[ 0 ]._id : ''
+                        }
+                    })
+                );
+
+                // 找出所有的推广者
+                const pushers: any = [ ];
+                pushers$
+                    .filter( x => !!x.from )
+                    .map( x => {
+                        const index = pushers.findIndex( y => y.from === x.from );
+                        if ( index !== -1 ) {
+                            const origin = pushers[ index ];
+                            pushers.splice( index, 1, {
+                                ...origin,
+                                price: Number(( x.price + origin.price ).toFixed( 2 ))
+                            });
+                        } else {
+                            pushers.push({
+                                from: x.from,
+                                price: x.price,
+                                pushId: x.pushId
+                            })
+                        }
+                    });
+
+                const appConf2$ = await db.collection('app-config')
+                    .where({
+                        type: 'push-integral-get-rate'
+                    })
+                    .get( );
+                const appConf2 = appConf2$.data[ 0 ];
+                const integralRate = appConf2.value || 0.05;
+
+                await Promise.all(
+                    pushers.map( async pusher => {
+
+                        // 推广积分比例 5%
+                        
+                        const integral = Number(( pusher.price * integralRate ).toFixed( 1 ));
+
+                        // 记录推广者积分
+                        const user$ = await db.collection('user')
+                            .where({
+                                openid: pusher.from
+                            })
+                            .get( );
+                        const user = user$.data[ 0 ];
+                        const userid = user._id;
+                        delete user['_id'];
+
+                        await db.collection('user')
+                            .doc( String( userid ))
+                            .set({
+                                data: {
+                                    ...user,
+                                    push_integral: user.push_integral ? 
+                                        Number((user.push_integral + integral).toFixed( 1 )) : 
+                                        integral
+                                }
+                            });
+
+                        // 处理推广者相关的推送
+                        const push$ = await cloud.callFunction({
+                            name: 'common',
+                            data: {
+                                $url: 'push-template',
+                                data: {
+                                    type: 'hongbao',
+                                    openid: pusher.from,
+                                    // 积分页面
+                                    page: 'pages/ground-push-integral/index',
+                                    texts: [`恭喜！获得${integral}元抵扣现金`,`推广成功！有人购买了你分享的商品`]
+                                }
+                            }
+                        });
+
+                        // 更新推广状态
+                        await db.collection('share-record')
+                            .doc( pusher.pushId )
+                            .update({
+                                data: {
+                                    isSuccess: true,
+                                    successTime: getNow( true )
+                                }
+                            });
+                    })
+                )
             }
 
             return ctx.body = {
@@ -557,6 +673,7 @@ export const main = async ( event, context ) => {
             }
 
         } catch ( e ) { 
+            console.log( e );
             return ctx.body = { status: 500 };
         } 
     })
@@ -606,6 +723,21 @@ export const main = async ( event, context ) => {
                     .where({
                         tid,
                         openid: uid
+                    })
+                    .get( ))
+            );
+
+            // 积分推广使用情况
+            const pushIntegral$ = await Promise.all(
+                Array.from( 
+                    new Set( orders$.data
+                        .map( x => x.openid )
+                ))
+                .map( uid => db.collection('integral-use-record')
+                    .where({
+                        tid,
+                        openid: uid,
+                        type: 'push_integral'
                     })
                     .get( ))
             );
@@ -669,13 +801,16 @@ export const main = async ( event, context ) => {
                         .filter( x => x.length > 0 && x[ 0 ].openid === user.openid ) :
                     undefined;
 
-                const deliverFee = deliverfees$[ k ].data[ 0 ] || null
+                const deliverFee = deliverfees$[ k ].data[ 0 ] || 0;
+
+                const pushIntegral = (pushIntegral$[ k ].data[ 0 ] || { }).value || 0;
 
                 return {
                     user,
                     orders,
                     address,
                     deliverFee,
+                    pushIntegral,
                     coupons: (!!coupons && coupons.length > 0 ) ? coupons[ 0 ] : [ ]
                 };
             });
@@ -948,7 +1083,7 @@ export const main = async ( event, context ) => {
      * @description
      * 订单付尾款
      * {
-     *      tid // 领代金券
+     *      tid
      *      integral // 积分总额（user表）
      *      orders: [{  
      *          oid // 订单状态
@@ -959,28 +1094,79 @@ export const main = async ( event, context ) => {
      *      coupons: [ // 卡券消费
      *          id1,
      *          id2...
-     *      ]
+     *      ],
+     *      push_integral // 使用的推广积分
      * }
      */
     app.router('pay-last', async( ctx, next ) => {
         try {
             const openid = event.userInfo.openId;
-            const { tid, integral, orders, coupons } = event.data;
+            const { tid, integral, orders, coupons, push_integral } = event.data;
 
             const user$ = await db.collection('user')
                 .where({
                     openid
                 })
                 .get( );
+            const user = user$.data[ 0 ];
+            const uid = user._id;
+
+            // 计算推广积分
+            const calculatePushIntegral = user.push_integral - push_integral > 0 ?
+                user.push_integral - push_integral : 
+                0;
+
+            const saveData = {
+                ...user,
+                integral: ( user.integral || 0 ) + ( integral || 0 ),
+                push_integral: !user.push_integral ?
+                    0 :
+                    calculatePushIntegral
+            };
+
+            delete saveData['_id'];
 
             // 增加积分总额
+            // 抵扣推广积分
             await db.collection('user')
-                .doc( String( user$.data[ 0 ]._id ))
-                .update({
-                    data: {
-                        integral: _.inc( integral )
-                    }
+                .doc( String( uid ))
+                .set({
+                    data: saveData
                 });
+
+            // 新增推广积分使用记录
+            if ( !!push_integral ) {
+                const record$ = await db.collection('integral-use-record')
+                    .where({
+                        data: {
+                            tid,
+                            openid,
+                            type: 'push_integral'
+                        }
+                    })
+                    .get( );
+                const record = record$.data[ 0 ];
+
+                if ( !!record && !!push_integral ) {
+                    await db.collection('integral-use-record')
+                        .doc( String( record._id ))
+                        .update({
+                            data: {
+                                value: _.inc( push_integral )
+                            }
+                        });
+                } else if ( !record && !!push_integral ) {
+                    await db.collection('integral-use-record')
+                        .add({
+                            data: {
+                                tid,
+                                openid,
+                                value: push_integral,
+                                type: 'push_integral'
+                            }
+                        });
+                }
+            }
 
             // 更新订单状态、商品销量
             await Promise.all( orders.map( order => {

@@ -140,6 +140,10 @@
     position: relative;
 }
 
+.info-block-item.np {
+    padding: 5rpx 25rpx 5rpx 25rpx;
+}
+
 .gd-share-btn {
     height: 70rpx;
     width: 70rpx;
@@ -422,6 +426,14 @@
     position: relative;
 }
 
+.gd-share-swiper-item {
+    display: flex;
+    overflow: visible;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
 .gd-swiper-image {
     width: 140rpx;
     height: 140rpx;
@@ -624,8 +636,32 @@
     background: transparent;
 }
 
+.formid-btn.normal {
+    font-size: 25rpx !important;
+    font-weight: normal !important;
+}
+
 
 .formid-btn::after {
     border: none;
     background: transparent;
+}
+
+.gd-share-swiper {
+    height: 150rpx;
+    margin-top: 20rpx;
+}
+
+.gd-share-swiper-form {
+    width: 300rpx;
+    text-align: center;
+}
+
+.gd-share-swiper-btn {
+    color: #fff;
+    font-weight: normal;
+    font-size: 26rpx !important;
+    background: #535bf3 !important;
+    padding: 15rpx 25rpx !important;
+    box-sizing: content-box !important;
 }

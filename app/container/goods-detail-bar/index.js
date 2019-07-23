@@ -61,15 +61,22 @@ Component({
                 label: '商城',
                 url: '/pages/trip-enter/index',
                 src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-home4.png'
-            }, {
-                label: '行程',
-                url: '/pages/index/index',
-                src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-train4.png'          
-            }, {
-                label: '购物车',
-                url: '/pages/cart-list/index',
-                src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-cart4.png'          
+            },
+            {
+                label: '钱',
+                url: '/pages/ground-pin/index',
+                src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-sheng.png'
             }
+            // {
+            //     label: '行程',
+            //     url: '/pages/index/index',
+            //     src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-train4.png'          
+            // },
+            // {
+            //     label: '购物车',
+            //     url: '/pages/cart-list/index',
+            //     src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-cart4.png'          
+            // }
         ],
         // 库存
         hasStock: false,
@@ -88,7 +95,10 @@ Component({
         isNew: true,
 
         // 是否需要付订金
-        shouldPrepay: true
+        shouldPrepay: true,
+
+        // 按钮禁止点击
+        disabled: false,
     },
 
     computed: {
@@ -198,9 +208,14 @@ Component({
         },
         /** 展开/关闭 sku */
         toggleSku( e ) {
-            const { openSku } = this.data;
+            const { openSku, disabled } = this.data;
+
+            if ( disabled && !openSku ) {
+                return;
+            }
+
             this.setData({
-                openSku: !this.data.openSku
+                openSku: !openSku
             });
             if ( !openSku && e ) {
                 this.setData({
@@ -209,12 +224,16 @@ Component({
             }
             // 处理formid
             this.createFormId( e.detail.formId );
+
+            // 发布
+            this.triggerEvent('toggle', !openSku );
         },
         /** 关闭sku */
         onCloseSku( e ) {
             this.setData({
                 openSku: e.detail
-            })
+            });
+            this.triggerEvent('toggle', false );
         },
         /** 选择sku */
         onConfirmSku( e ) {
@@ -283,10 +302,10 @@ Component({
         /** 立即购买 */
         buy( item, form_id ) {
 
-            const { tid, shouldPrepay, preview } = this.data;
+            const { tid, shouldPrepay, preview, disabled } = this.data;
             const { sid, pid, price, count, img, title, groupPrice, acid } = item;
 
-            if ( preview ) { return; }
+            if ( preview || disabled ) { return; }
 
             // 判断是否没有最新行程
             if ( !tid ) {
@@ -295,6 +314,10 @@ Component({
                     title: '暂无行程计划，暂时不能购买～'
                 });
             }
+
+            this.setData({
+                disabled: true
+            });
 
             // 地址选择
             wx.chooseAddress({
@@ -353,6 +376,10 @@ Component({
                                         form_id
                                     },
                                     success: res => {
+
+                                        this.setData({
+                                            disabled: false
+                                        });
                         
                                         if ( res.status === 200 ) {
                                             total_fee && wx.showToast({
@@ -361,27 +388,32 @@ Component({
                                         } else {
                                             wx.showToast({
                                                 icon: 'none',
-                                                title: '支付成功，刷新失败，重试中...'
+                                                title: '刷新失败，请联系管理员'
                                             });
-                                            pay( );
+                                            // pay( );
                                         }
                                     }
                                 });
                             }
                             pay( );
                         }, ( ) => {
+                            this.setData({
+                                disabled: false
+                            });
                             // 失败/成功-订单列表
                             navTo('/pages/order-list/index');
                         });
 
                     }, ( ) => {
-                        // this.setData({
-                        //     isSettling: false
-                        // });
+                        this.setData({
+                            disabled: false
+                        });
                     });
-
                 },
                 fail: res => {
+                    this.setData({
+                        disabled: false
+                    });
                 }
             });
             

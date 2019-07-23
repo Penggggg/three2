@@ -115,7 +115,6 @@
 
             </view>
 
-
             <scroll-view
                 wx:else
                 scroll-y
@@ -412,6 +411,18 @@
                         >
                             <view class="pol-pay-price small">-{{ item.t_daijin.value }}</view>
                         </view>
+                        <view
+                            class="pol-trip-order-sum ml"
+                            wx:if="{{ item.pushintegralFee }}"
+                        >
+                            抵现:
+                        </view>
+                        <view
+                            class="pol-trip-order-totalprice"
+                             wx:if="{{ item.pushintegralFee }}"
+                        >
+                            <view class="pol-pay-price small">-{{ item.pushintegralFee }}</view>
+                        </view>
                     </view>
 
                     <!-- 不是多余订金的情况：结算最终 把优惠也计算在里面 -->
@@ -629,6 +640,7 @@
     <!-- 结算获得代金券 -->
     <wxc-mask 
         content-align="bl"
+        wx:if="{{ daijin.value }}"
         status="{{ showDaijin }}"
         bindmasktap="toggleDaijin"
     >
@@ -657,6 +669,8 @@
                 </view>
             </view>
             <my-coupon-item-1
+                bind:close="toggleDaijin"
+                gotoTrip="{{ false }}"
                 showNext="{{ true }}"
                 transparent="{{ true }}"
                 type="{{ daijin.type }}"
@@ -669,6 +683,14 @@
         </view>
     </wxc-mask>
 
-    
+    <!-- 结账组件 -->
+    <my-trip-settlement
+        show="{{ isShowSettle }}"
+        tripOrder="{{ currentTripOrder }}"
+        totalPushIntegral="{{ pushIntegral }}"
+        pushIntegralRate="{{ pushIntegralMoneyRate }}"
+        bind:toggle="onSettleToggle"
+        bind:ok="onPayLast"
+    />
 
 </view>

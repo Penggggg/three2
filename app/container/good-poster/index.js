@@ -308,7 +308,6 @@ Component({
         // 自动弹出转发提示
         initTips( ) {
             const { goodCanPin, someCanPin } = this.data;
-            // if ( !canPin ) { return; }
             const time = setInterval(( ) => {
                 const { tips, tipsIndex, showTips } = this.data;
                 const allTips = tips

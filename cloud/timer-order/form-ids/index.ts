@@ -32,7 +32,7 @@ export const clearFormIds = async ( ) => {
 
         const find$ = await db.collection('form-ids')
             .where({
-                creatTime: _.lte( getNow( true ) - FORM_ID_OVERTIME )
+                createTime: _.lte( getNow( true ) - FORM_ID_OVERTIME )
             })
             .get( );
 

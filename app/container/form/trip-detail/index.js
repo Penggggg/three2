@@ -534,6 +534,53 @@ Component({
                 })
             }
 
+            const send = ( ) => {
+                let tripDetail = Object.assign({
+                    ...r1.data,
+                    ...r2.data,
+                    ...r3.data,
+                    sales_volume: 0,
+                    fullreduce_atleast,
+                    fullreduce_values,
+                    cashcoupon_atleast,
+                    cashcoupon_values,
+                    selectedProductIds,
+                    updateTime: new Date( ).getTime( ),
+                }, {
+                    end_date: new Date( `${new Date( end_date ).toDateString( ).replace(/\-/g, '/')} 23:59:50` ).getTime( ),
+                    start_date: new Date( `${new Date( start_date ).toDateString( ).replace(/\-/g, '/')} 08:00:00` ).getTime( )
+                });
+        
+                if ( !tid ) {
+                    tripDetail = Object.assign({ }, tripDetail, {
+                        isClosed: false,
+                        createTime: new Date( ).getTime( )
+                    });
+                } else {
+                    tripDetail = Object.assign({ }, tripDetail, {
+                        _id: tid
+                    });
+                }
+    
+                http({
+                    data: tripDetail,
+                    errMsg: '加载失败，请重试',
+                    loadingMsg: tid ? '更新中...' : '创建中..',
+                    url: `trip_edit`,
+                    success: res => {
+                        const { status, data } = res;
+                        if ( status === 200 ) {
+                            wx.showToast({
+                                title: tid ? '更新成功' : '创建成功！'
+                            });
+                            setTimeout(( ) => {
+                                navTo(`/pages/manager-trip-list/index`);
+                            }, 200 );
+                        }
+                    }
+                });
+            };
+
             if (( !tid && r3.data.published ) ||( !!tid && !published && !r3.data.published )) {
                 return wx.showModal({
                     title: 'Tips',
@@ -541,53 +588,11 @@ Component({
                     content: `行程将推送给7天使用过商城的客户`,
                     success: res => {
                         if ( res.cancel ) { return; }
-
-                        let tripDetail = Object.assign({
-                            ...r1.data,
-                            ...r2.data,
-                            ...r3.data,
-                            sales_volume: 0,
-                            fullreduce_atleast,
-                            fullreduce_values,
-                            cashcoupon_atleast,
-                            cashcoupon_values,
-                            selectedProductIds,
-                            updateTime: new Date( ).getTime( ),
-                        }, {
-                            end_date: new Date( `${new Date( end_date ).toDateString( ).replace(/\-/g, '/')} 23:59:50` ).getTime( ),
-                            start_date: new Date( `${new Date( start_date ).toDateString( ).replace(/\-/g, '/')} 08:00:00` ).getTime( )
-                        });
-                
-                        if ( !tid ) {
-                            tripDetail = Object.assign({ }, tripDetail, {
-                                isClosed: false,
-                                createTime: new Date( ).getTime( )
-                            });
-                        } else {
-                            tripDetail = Object.assign({ }, tripDetail, {
-                                _id: tid
-                            });
-                        }
-            
-                        http({
-                            data: tripDetail,
-                            errMsg: '加载失败，请重试',
-                            loadingMsg: tid ? '更新中...' : '创建中..',
-                            url: `trip_edit`,
-                            success: res => {
-                                const { status, data } = res;
-                                if ( status === 200 ) {
-                                    wx.showToast({
-                                        title: tid ? '更新成功' : '创建成功！'
-                                    });
-                                    setTimeout(( ) => {
-                                        navTo(`/pages/manager-trip-list/index`);
-                                    }, 200 );
-                                }
-                            }
-                        });
+                        send( );
                     }
                 });
+            } else {
+                send( );
             }
 
         },
