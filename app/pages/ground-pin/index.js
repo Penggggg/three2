@@ -73,8 +73,9 @@ Page({
                         const activeTarget = activities.find( ac => !ac.sid && !!ac.ac_groupPrice );
                         const meta = {
                             tag: good.tag,
+                            img: good.img,
                             title: good.title,
-                            img: good.img
+                            detail: good.detail
                         };
                         if ( !!activeTarget ) {
                             metaList.push({
