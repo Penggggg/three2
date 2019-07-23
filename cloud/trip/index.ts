@@ -416,7 +416,7 @@ export const main = async ( event, context ) => {
                             return !members.data.find( member => member.openid === user.openid )
                         })
                         .map( async user => {
-                            // 4、调用推送
+                            // 4、调用推送 
                             const push$ = await cloud.callFunction({
                                 name: 'common',
                                 data: {

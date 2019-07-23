@@ -1135,7 +1135,7 @@ export const main = async ( event, context ) => {
 
     /** 
      * @description
-     * 获取推广积分
+     * 获取推广积分s
      */
     app.router('push-integral', async ( ctx, next ) => {
         try {
