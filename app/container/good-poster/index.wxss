@@ -11,6 +11,7 @@
     right: 40rpx;
     bottom: 210rpx;
     position: fixed;
+    z-index: 10;
 }
 
 .cgp-icon-img {
@@ -28,7 +29,7 @@
 .cgp-icon {
     height: 70rpx;
     width: 70rpx;
-    z-index: 2000;
+    /* z-index: 2000; */
     border-radius: 50%;
     background: transparent;
     border: none;

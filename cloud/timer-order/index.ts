@@ -1,8 +1,9 @@
 import * as cloud from 'wx-server-sdk';
 import { overtimeTrip } from './trip';
 import { clearFormIds, clearUseless } from './form-ids';
-import { overtime, payedFix, priceFix, payLastFix, pushNew, pushLastPay } from './order';
 import { catchLostOrders, removeUselessOrders } from './shopping-list';
+import { overtime, payedFix, priceFix, payLastFix, pushNew, pushLastPay } from './order';
+import { clearShareRecord } from './share-record';
 
 cloud.init({
     env: process.env.cloud
@@ -32,6 +33,7 @@ export const main = async ( event, context ) => {
         await removeUselessOrders( );
         await clearFormIds( );
         await clearUseless( );
+        await clearShareRecord( );
         
         return {
             status: 200

@@ -1,0 +1,56 @@
+<view
+    wx:if="{{ open && canShow }}"
+    bindtap="toggle"
+    class="con-common-confirm"
+>
+
+    <!-- 背景 -->
+    <view
+        class="ccc-bg"
+    >
+    </view>
+
+    <!-- 内容弹框 -->
+    <view
+        class="ccc-container"
+    >
+
+        <!-- 头部彩色块 -->
+        <view class="ccc-color-header"></view>
+
+        <!-- 头像 -->
+        <view class="ccc-avatar">
+            <open-data type="userAvatarUrl"></open-data>
+        </view>
+
+        <!-- 标题 -->
+        <view
+            class="ccc-title"
+        >
+            {{ title }}
+        </view>
+
+        <!-- 内容 -->
+        <view
+            class="ccc-content"
+        >
+            <view   
+                class="ccc-text"
+                wx:key="{{ index }}"
+                wx:for="{{ texts }}"
+            >
+                {{ item }}
+            </view>
+        </view>
+
+        <!-- 按钮 -->
+        <view
+            class="ccc-btn"
+            catchtap="toggle"
+        >
+            知道了
+        </view>
+
+    </view>
+
+</view>

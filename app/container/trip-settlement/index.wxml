@@ -1,0 +1,151 @@
+<view 
+    wx:if="{{ show }}"
+    class="con-trip-settle"
+>
+
+    <!-- 回退按钮 -->
+    <view 
+        bindtap="onClose"
+        class="cts-back-corner"
+    >
+        <image
+            mode="widthFix"
+            class="cts-settle-btn-img small"
+            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-left.png"
+        />
+    </view>
+
+    <!-- 顶部总金额 -->
+    <view class="cts-price-block">
+        <wxc-price
+            icon="sub"
+            decimal="small"
+            class="cts-total-price"
+        > 
+            {{ lastPrice$ }}
+        </wxc-price>
+        <view
+            class="cts-title-tips"
+            wx:if="{{ !!deduction$ }}"
+        >
+            总尾款
+            <wxc-price
+                icon="sub"
+                decimal="small"
+            > 
+                {{ lastPrice }}
+            </wxc-price>
+        </view>
+        <view
+            wx:else
+            class="cts-title-tips"
+        >
+            付尾款
+        </view>
+    </view>
+
+    <!-- 中间支付模块 -->
+    <view
+        class="cts-info-block"
+    >
+
+        <view
+            class="cts-info-con"
+        >
+            <view class="cts-info-line">
+                <view class="cts-line one"></view>
+                <view class="cts-line two green"></view>
+                <view class="cts-line three"></view>
+                <view class="cts-line four"></view>
+                <view class="cts-line five"></view>
+                <view class="cts-line six"></view>
+                <view class="cts-line seven"></view>
+            </view>
+            <view class="cts-push-integral-con">
+                <view class="cts-text-con">
+                    <wxc-price
+                        icon="sub"
+                        decimal="small"
+                        class="cts-push-integral"
+                    > 
+                        {{ deduction$ }}
+                    </wxc-price>
+                    <view class="cts-push-integral small">
+                        本次可抵现
+                        <view 
+                            class="cts-tips-toggle"
+                            bindtap="toggleTips"
+                        >
+                            ?
+                        </view>
+                    </view>
+                </view>
+                <view
+                    class="cts-push-integral-tips"
+                >
+                    {{ !!deduction$ ? '你拥有抵现积分:' : '暂无抵现积分' }}
+                </view>
+                <wxc-price
+                    icon="sub"
+                    decimal="small"
+                    wx:if="{{ !!deduction$ }}"
+                    class="cts-push-integral-tips"
+                > 
+                    {{ totalPushIntegral }}
+                </wxc-price>
+            </view>
+            <view
+                class="cts-btn-block"
+            >
+                <!-- <view 
+                    bindtap="onClose"
+                    class="cts-back-btn"
+                >
+                    <image
+                        mode="widthFix"
+                        class="cts-settle-btn-img small"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-left.png"
+                    />
+                </view> -->
+                <form
+                    bindsubmit="onSettle"
+                    report-submit="{{ true }}"
+                    class="pmgl-entry-btn-container"
+                >
+                    <button
+                        form-type="submit"
+                        class='cts-settle-btn fix-btn'
+                    >
+                        <image
+                            mode="widthFix"
+                            class="cts-settle-btn-img"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-right-white.png"
+                        />
+                    </button>
+                </form>
+            </view>
+            
+        </view>
+
+    </view>
+
+    <!-- 底部使用积分选项 -->
+    <view
+        wx:if="{{ !!deduction$ }}"
+        class="cts-confirm-block"
+    >
+        <checkbox-group bindchange="onCheckboxChange">
+            <view>
+                <checkbox value="{{ true }}" checked="{{ true }}" color="#3941e5"/> <view class="cts-opt-text">使用我的抵现积分</view>
+            </view>
+        </checkbox-group>
+    </view>
+
+     <!-- 积分提示弹框 -->
+    <my-share-integral
+        canShare="{{ false }}"
+        show="{{ showShareTips }}"
+        bind:toggle="toggleTips"
+    />
+
+</view>

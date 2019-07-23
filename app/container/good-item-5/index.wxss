@@ -1,3 +1,10 @@
+.good-item-5-form {
+    width: 100%;
+    display: flex;
+    position: relative;
+    overflow: visible;
+}
+
 .good-item-5 {
     width: 100%;
     display: flex;
@@ -6,17 +13,18 @@
     align-items: center;
     position: relative;
     justify-content: space-between;
+    text-align: left !important;
 }
 
-.good-item-5:before {
+.good-item-5-form:before {
     top: 5%;
-    right: 0;
+    right: 30rpx;
     height: 90%;
     width: 1px;
     content: '';
     position: absolute;
     transform: scaleX( 0.5 );
-    background: rgba( 0, 0, 0, 0.1 );
+    /* background: rgba( 0, 0, 0, 0.1 ); */
 }
 
 .gi5-info {
@@ -74,6 +82,7 @@
 
 .gi5-img-block {
     position: relative;
+    overflow: visible;
 }
 
 .gi5-tag-block {
@@ -101,4 +110,19 @@
     font-size: 17rpx;
     text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
 
+}
+
+.fix-btn {
+    background: transparent;
+    outline:none;
+    border:none;
+    list-style: none;
+    padding: 0;
+    line-height: normal;
+    overflow: visible;
+    /* text-align: left; */
+}
+
+.fix-btn:after {
+    border:none;
 }

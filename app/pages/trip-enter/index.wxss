@@ -590,8 +590,14 @@
     width: 100vw;
     height: 150rpx;
     box-sizing: border-box;
-    padding: 0 20rpx;
+    padding: 0 20rpx 0 40rpx;
     position: relative;
+}
+
+.recommond-swiper-item {
+    overflow: visible;
+    display: flex;
+    align-items: center;
 }
 
 .recommond-swiper:before {
@@ -682,11 +688,17 @@
     box-shadow: 0 0 10px rgba( 0, 0, 0, 0.15 );
 }
 
-.te-pin-goods-img-con {
-    padding: 15px 0;
+.te-pin-goods-form {
     position: relative;
     margin-right: 25rpx;
+    overflow: visible;
+}
+
+.te-pin-goods-img-con {
+    padding: 15px 0 !important;
+    position: relative;
     display: inline-block;
+    box-sizing: content-box;
 }
 
 .te-pin-good-title-con {
@@ -786,4 +798,19 @@
     background: #fceccb;
     box-sizing: border-box;
     border-radius: 3px;
+}
+
+.fix-btn {
+    background: transparent;
+    outline:none;
+    border:none;
+    list-style: none;
+    padding: 0;
+    line-height: normal;
+    overflow: visible;
+    /* text-align: left; */
+}
+
+.fix-btn:after {
+    border:none;
 }

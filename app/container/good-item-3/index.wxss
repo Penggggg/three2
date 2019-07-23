@@ -1,18 +1,17 @@
 /* container/good-item-3/index.wxss */
+.good-item-3-form {
+    overflow: visible;
+}
+
 .good-item-3 {
-    width: 318rpx;
+    width: 322rpx;
     margin: 18rpx 15rpx;
     position: relative;
     border-radius: 5px;
     display: inline-block;
     padding-bottom: 10rpx;
-    border: 1px solid rgba( 0, 0, 0, 0.05 );
-    /* box-shadow: 3px 2px 12px rgba(0, 0, 0, 0.2); */
-    /* box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.10); */
-}
-
-.g2-img-block {
-    /* height: 250rpx; */
+    overflow: visible;
+    border: 1px solid rgba( 0, 0, 0, 0.05 ) !important;
 }
 
 .gi3-image {
@@ -153,4 +152,19 @@
     font-size: 17rpx;
     text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
 
+}
+
+.fix-btn {
+    background: transparent;
+    outline:none;
+    border:none;
+    list-style: none;
+    padding: 0;
+    line-height: normal;
+    overflow: visible;
+    text-align: left;
+}
+
+.fix-btn:after {
+    border:none;
 }

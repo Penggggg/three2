@@ -1,0 +1,124 @@
+.gd-pin-tips-block {
+    width: 75vw;
+    padding-top: 50rpx;
+    overflow-y: scroll;
+    background: #fafafa;
+    border-radius: 3px;
+    padding-bottom: 50rpx;
+}
+
+.gd-pin-tips-icon-block {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    box-sizing: border-box;
+}
+
+.gd-pin-tips-icon-round {
+    height: 30vw;
+    width: 30vw;
+    border-radius: 50%;
+    display: flex;
+    background: #ff758c;  
+    align-items: center;
+    position: relative;
+    justify-content: center; 
+    background: -webkit-linear-gradient(to top, #ff758c, #ff7eb3);  
+    background: linear-gradient(to top, #ff758c, #ff7eb3); 
+}
+
+.gd-pin-tips-icon-round::after {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    width: 35vw;
+    height: 35vw;
+    content: '';
+    border-radius: 50%;
+    background: rgba( 255, 117, 140, 0.1);
+    transform: translate( -50%, -50% );
+}
+
+.gd-pin-tips-icon {
+    width: 60rpx;
+}
+
+.gd-pin-tips-title {
+    color: #333;
+    font-size: 35rpx;
+    text-align: center;
+    margin-top: 40rpx;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+}
+
+.gd-pin-tips-content {
+    font-size: 22rpx;
+    padding: 25rpx 35rpx;
+    letter-spacing: 0.05em;
+    color: rgba( 0, 0, 0, 0.45 );
+    text-align: center;
+    text-indent: 2em;
+}
+
+.gd-pin-close {
+    top: 10rpx;
+    right: 30rpx;
+    position: fixed;
+    text-align: center;
+}
+
+.gd-share-swiper-item {
+    display: flex;
+    overflow: visible;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.formid-btn {
+    padding: 0;
+    display: inline;
+    font-size: 29rpx;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+    text-decoration: none;
+    font-weight: bold;
+    background: transparent;
+}
+
+.formid-btn.normal {
+    font-size: 25rpx !important;
+    font-weight: normal !important;
+}
+
+
+.formid-btn::after {
+    border: none;
+    background: transparent;
+}
+
+
+.swiper-visible {
+    overflow: visible;
+}
+
+.gd-share-swiper {
+    height: 150rpx;
+    margin-top: 20rpx;
+}
+
+.gd-share-swiper-form {
+    width: 300rpx;
+    text-align: center;
+}
+
+.gd-share-swiper-btn {
+    color: #fff;
+    font-weight: normal;
+    font-size: 26rpx !important;
+    background: #535bf3 !important;
+    padding: 15rpx 25rpx !important;
+    box-sizing: content-box !important;
+}

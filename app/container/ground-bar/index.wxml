@@ -1,0 +1,27 @@
+
+<view
+    class='con-tdb-bar'
+>
+    <form
+        class="flex-1"
+        wx:for="{{ navList$ }}"
+        wx:key="{{ index }}"
+        data-url="{{ item.url }}"
+        bindsubmit="navigate"
+        report-submit="{{ true }}"
+    >
+        <button 
+            form-type="submit"
+            class='fix-btn con-tdb-item'
+        >
+            <image
+                mode="aspectFill"
+                class='con-tdb-bar-img'
+                src="{{ active === index ? item.activeImg : item.img }}"
+            />
+            <view class="con-tdb-text {{ active === index ? 'active' : '' }}">
+                {{ item.title }}
+            </view>
+        </button>
+    </form>
+</view>

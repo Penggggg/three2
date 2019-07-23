@@ -1,4 +1,6 @@
 const { navTo } = require('../../util/route.js');
+const { createFormId } = require('../../util/form-id.js');
+
 /**
  * @description
  * 沾满一行两格的商品框，普通商品列表
@@ -49,7 +51,8 @@ Component({
       },
 
       // 详情
-      goDetail( ) {
+      goDetail( e ) {
+          createFormId( e.detail.formId );
           const { _id } = this.data.good;
           navTo(`/pages/goods-detail/index?id=${_id}&tid=${this.data.tid}`);
       }

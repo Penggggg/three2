@@ -1,8 +1,13 @@
 
+/** 积分推广比例 */
+const pushIntegralRate = 0.05;
+
 /** 
  * 商品 ～ 价格区间、库存区间、差价、最低价格（含团购价/一口价）
+ * @param x 商品详情
+ * @param pushIntegralRate 积分推广获点比例
  */
-const delayeringGood = x => {
+const delayeringGood = ( x, pushIntegralRate = 0 ) => {
  
     if ( !x ) {
         return null
@@ -57,7 +62,6 @@ const delayeringGood = x => {
     // 重新排序价格和库存
     allPriceArr = allPriceArr.sort(( x, y ) => x - y );
     allStockArr = allStockArr.sort(( x, y ) => x - y );
-    
 
     return Object.assign({ }, x, {
 
@@ -79,6 +83,16 @@ const delayeringGood = x => {
                 allPriceArr[ 0 ] === allPriceArr[ allPriceArr.length - 1 ] ? 
                     allPriceArr[ 0 ] :
                     `${allPriceArr[ 0 ]} ~ ${allPriceArr[ allPriceArr.length - 1 ]}`,
+
+        // 可获积分区间
+        integral$: allPriceArr.length === 0 ?
+            (allPriceArr[ 0 ] * pushIntegralRate).toFixed( 1 ) :
+                allPriceArr[ 0 ] === allPriceArr[ allPriceArr.length - 1 ] ? 
+                    (allPriceArr[ 0 ] * pushIntegralRate).toFixed( 1 ) :
+                    `${(allPriceArr[ 0 ] * pushIntegralRate).toFixed( 1 )} ~ ${(allPriceArr[ allPriceArr.length - 1 ] * pushIntegralRate).toFixed( 1 )}`,
+
+        // 最大积分
+        integral2$: (allPriceArr[ allPriceArr.length - 1 ] * pushIntegralRate).toFixed( 1 ),
 
         // 最大幅度差价
         priceGap: allPriceArr.length === 0 ?

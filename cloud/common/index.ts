@@ -428,6 +428,7 @@ export const main = async ( event, context ) => {
         try {
 
             let coupons = 0;
+            const openid = event.userInfo.openId;
             const trips$ = await cloud.callFunction({
                 data: {
                     $url: 'enter'
@@ -440,21 +441,36 @@ export const main = async ( event, context ) => {
             // 订单数
             const orders$ = await db.collection('order')
                 .where({
-                    openid: event.userInfo.openId,
+                    openid,
                     base_status: _.neq('5')
                 })
                 .count( );
 
+
+            // 卡券数( 过滤掉只剩当前的trip卡券 )
+            let coupons$: any = {
+                total: 0
+            };
+            
             if ( !!trip ) {
-                // 卡券数( 过滤掉只剩当前的trip卡券 )
-                const coupons$ = await db.collection('coupon')
+                coupons$ = await db.collection('coupon')
                     .where({
+                        openid,
                         tid: trip._id,
-                        openid: event.userInfo.openId
+                        type: _.neq('t_daijin'),
                     })
                     .count( );
-                coupons = coupons$.total;
             }
+
+            const coupons2$ = await db.collection('coupon')
+                .where({
+                    openid,
+                    isUsed: false,
+                    type: 't_daijin',
+                })
+                .count( );
+
+            coupons = coupons$.total + coupons2$.total;
             
             return ctx.body = {
                 status: 200,
@@ -965,11 +981,14 @@ export const main = async ( event, context ) => {
             const page = event.data.page || 'pages/order-list/index';
 
             // 如果没有prepay_id, 就去拿该用户的form_id
+            // 倒叙拿formid
             if ( !formid ) {
                 const find$ = await db.collection('form-ids')
                     .where({
-                        openid
+                        openid,
+                        formid: _.neq('the formId is a mock one')
                     })
+                    .orderBy('createTime', 'asc')
                     .limit( 1 )
                     .get( );
 
@@ -1035,6 +1054,147 @@ export const main = async ( event, context ) => {
             return ctx.body = {
                 status: 500,
                 message: typeof e === 'string' ? e : JSON.stringify( e )
+            }
+        }
+    })
+
+    /**
+     * @description
+     * 创建一个分享记录
+     * 表结构 {
+     *      to // 受推者
+     *      from // 推广者
+     *      pid
+     *      createTime // 分享时间
+     *      isSuccess: boolean // 是否推广成功
+     *      successTime: // 推广成功的时间
+     * }
+     * 请求{
+     *     pid
+     *     from
+     * }
+     */
+    app.router('create-share', async( ctx, next ) => {
+        try {
+            const openid = event.userInfo.openId;
+            const { from, pid } = event.data;
+
+            // 规则1:防重复
+            // 如果A给B推广过商品1，则C给B推广商品1无效
+            const count$ = await db.collection('share-record')
+                .where({
+                    pid,
+                    openid,
+                    isSuccess: false
+                })
+                .count( );
+
+            if ( count$.total > 0 ) {
+                return ctx.body = { status: 200 };
+            }
+
+            // 规则2: 不能自己推自己
+            if ( openid === from ) {
+                return ctx.body = { status: 200 };
+            }
+
+            // 规则3: 24h内不能重复推
+            const count2$ = await db.collection('share-record')
+                .where({
+                    pid,
+                    openid,
+                    isSuccess: true,
+                    successTime: _.gte( getNow( true ) - 24 * 60 * 60 * 1000 )
+                })
+                .count( );
+            
+            if ( count2$.total > 0 ) {
+                return ctx.body = { status: 200 };
+            }
+
+            // 创建
+            const create$ = await db.collection('share-record')
+                .add({
+                    data: {
+                        pid,
+                        from,
+                        openid,
+                        isSuccess: false,
+                        createTime: getNow( true )
+                    }
+                });
+
+            return ctx.body = { status: 200 };
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    })
+
+    /** 
+     * @description
+     * 获取推广积分
+     */
+    app.router('push-integral', async ( ctx, next ) => {
+        try {
+            const openid = event.data.openId || event.userInfo.openId;
+            const user$ = await db.collection('user')
+                .where({
+                    openid
+                })
+                .get( );
+            const user = user$.data[ 0 ];
+
+            return ctx.body = {
+                status: 200,
+                data: !!user ? user.push_integral || 0 : 0
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        } 
+    })
+
+    /**
+     * @description
+     * 获取积分使用记录
+     * {
+     *    tids: 'a,b,c'
+     *    type: 'push_integral' | ''
+     * }
+     */
+    app.router('push-integral-use', async ( ctx, next ) => {
+        try {
+            const { tids, type } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+
+            const find$: any = await Promise.all(
+                tids.split(',')
+                    .map( tid => {
+                        return db.collection('integral-use-record')
+                            .where({
+                                tid,
+                                type,
+                                openid
+                            })
+                            .get( );
+                    })
+            );
+
+            const meta = find$
+                .filter( x => !!x.data[ 0 ])
+                .map( x => x.data[ 0 ]);
+
+            return ctx.body = {
+                data: meta,
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
             }
         }
     })
