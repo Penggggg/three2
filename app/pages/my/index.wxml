@@ -82,6 +82,7 @@
                     class="pm-checkin-bar"
                 >
                     <my-process-bar
+                        valText="经验 "
                         showRate="{{ false }}"
                         current="{{ 80 }}"
                         total="{{ 100 }}"
@@ -96,7 +97,7 @@
                         等级: <view class="pm-checkin-class-tips">1级</view> 
                         <view>全周可送 ¥9.9元</view>
                     </view>
-                    <view class="pm-checkin-class start">
+                    <view class="pm-checkin-class start big">
                         <image
                             mode="aspectFill"
                             class='pm-checkin-icon'

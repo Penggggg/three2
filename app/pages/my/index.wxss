@@ -196,7 +196,12 @@
     color: #fff;
     text-shadow: 0 0 3px rgba( 0, 0, 0, 0.15 );
     box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.25 );
-    background-image: linear-gradient( 225deg, #209cff 0%, #68e0cf 60%, #68e0cf 100%);
+    background-image: linear-gradient( -225deg, #209cff 0%, #68e0cf 60%, #68e0cf 100%);
+    /* background-image: linear-gradient( -225deg, #4facfe 0%, #00f2fe 100%); */
+    /* background-image: linear-gradient(120deg, #48c6ef 0%, #48c6ef 100%); */
+    /* background-image: linear-gradient( -225deg, #007adf 0%, #00ecbc 100%); */
+    /* background-image: linear-gradient(-225deg, #77FFD2 0%, #6297DB 48%, #1EECFF 100%); */
+    /* background-image: linear-gradient(to left, #9EFBD3 0%, #57E9F2 48%, #45D4FB 100%); */
 }
 
 .pm-checkin-tips-price {
@@ -225,6 +230,15 @@
 .pm-checkin-class.start {
     display: flex;
     align-items: flex-end;
+}
+
+.pm-checkin-class.big {
+    font-size: 26rpx;
+    /* font-weight: bold; */
+}
+
+.pm-checkin-class.small {
+    font-weight: bold;
 }
 
 .pm-checkin-class-tips {
@@ -257,7 +271,7 @@
 }
 
 .pm-checkin-interal-tips:after {
-    bottom: -10rpx;
+    bottom: -11rpx;
     left: 25rpx;
     content: '';
     width: 0;
