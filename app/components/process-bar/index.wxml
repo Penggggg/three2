@@ -1,0 +1,10 @@
+<view class="con-process">
+    <view 
+        class="cp-progress-bar striped active" 
+        style="width: {{ text$ }}"
+    >
+        <view class="progress-value">
+            {{ valText }}{{ showRate ? text$ : current + ' / ' + total }}
+        </view>
+    </view>
+</view>

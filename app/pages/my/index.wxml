@@ -46,17 +46,65 @@
 
         </view>
 
-        <!-- 行程导流 -->
-        <view class="pm-trp-block">
-            <image
-                mode="scaleToFill"
-                class="pm-img-banner"
-                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/my-banner.png"
-            />
+
+        <!-- 抵现积分、签到打卡 -->
+        <view
+            class="pm-checkin-block"
+        >
+            <view class="pm-checkin-container">
+
+                <!-- 标题 -->
+                <view class="pm-checkin-title">
+                    我的抵现金
+                </view>
+
+                <!-- 金额 -->
+                <view class="pm-checkin-sum">
+                    <wxc-price
+                        icon="sub"
+                        decimal="small"
+                        class="pm-checkin-price"
+                    > 
+                        5.32
+                    </wxc-price>
+                    <view class="pm-checkin-tips">
+                        明天送<view class="pm-checkin-tips-price">¥3.23</view>
+                    </view>
+                </view>
+
+                <!-- 进度条 -->
+                <view 
+                    class="pm-checkin-bar"
+                >
+                    <my-process-bar
+                        showRate="{{ false }}"
+                        current="{{ 80 }}"
+                        total="{{ 100 }}"
+                    />
+                </view>
+
+                <!-- 用户等级 -->
+                <view
+                    class="pm-checkin-user"
+                >
+                    <view class="pm-checkin-class">
+                        等级 <view class="pm-checkin-class-tips">1级</view> 
+                        <view>每周可领¥9.9元</view>
+                    </view>
+                    <view class="pm-checkin-class start">
+                        <image
+                            mode="aspectFill"
+                            class='pm-checkin-icon'
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-coin-1.png"
+                        /> 2级周领 ¥12.8元
+                    </view>
+                </view>
+
+            </view>
         </view>
 
         <!-- 其他选项 -->
-        <view class="pm-other-block">
+        <!-- <view class="pm-other-block">
             <view class="pm-other-container">
                 <view
                     wx:for="{{ icons }}"
@@ -82,7 +130,7 @@
                     />
                 </view>
             </view>
-        </view>
+        </view> -->
     </view>
     
 
