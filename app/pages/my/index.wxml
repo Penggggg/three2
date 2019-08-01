@@ -56,6 +56,11 @@
                 <!-- 标题 -->
                 <view class="pm-checkin-title">
                     我的抵现金
+                    <view
+                        class="pm-checkin-interal-tips {{ showInteral ? '' : 'hide' }}"
+                    >
+                        下单就能用
+                    </view>
                 </view>
 
                 <!-- 金额 -->
@@ -88,15 +93,15 @@
                     class="pm-checkin-user"
                 >
                     <view class="pm-checkin-class">
-                        等级 <view class="pm-checkin-class-tips">1级</view> 
-                        <view>每周可领¥9.9元</view>
+                        等级: <view class="pm-checkin-class-tips">1级</view> 
+                        <view>全周可送 ¥9.9元</view>
                     </view>
                     <view class="pm-checkin-class start">
                         <image
                             mode="aspectFill"
                             class='pm-checkin-icon'
                             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-coin-1.png"
-                        /> 2级周领 ¥12.8元
+                        /> 2级每周送 ¥12.8元
                     </view>
                 </view>
 

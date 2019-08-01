@@ -7,6 +7,8 @@ Page({
      * 页面的初始数据
      */
     data: {
+
+        // 分导航模块
         icons: [
             {
                 title: '联系客服',
@@ -15,10 +17,18 @@ Page({
                 iconImg: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-kefu2.png'
             }
         ],
+
+        // 基本资料
         baseInfo: {
             orders: 0,
             coupons: 0
-        }
+        },
+
+        // 定时器
+        clock: null,
+
+        // 展示抵现金提示
+        showInteral: false
     },
 
     /** 点击下方的客服等模块 */
@@ -67,11 +77,24 @@ Page({
         navTo('/pages/like-goods/index');
     },
 
+    toggleInteral( val, reset = false ) {
+        this.setData({
+            showInteral: val
+        });
+        !!reset && setTimeout(( ) => {
+            this.setData({
+                showInteral: false
+            });
+        }, 5000 );
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        // this.fetchData( );
+        setTimeout(( ) => {
+            this.toggleInteral( true, true )
+        }, 3000 );
     },
 
     /**
@@ -92,7 +115,7 @@ Page({
      * 生命周期函数--监听页面隐藏
      */
     onHide: function () {
-
+        
     },
 
     /**
