@@ -124,7 +124,7 @@
                             3小时后登陆奖励
                         </view>
                         <view class="pm-checkin-task-get">
-                            20经验
+                            {{ signExp }}经验
                         </view>
                     </view>
 

@@ -35,7 +35,6 @@ Page({
 
         // 文字拼团提示
         tips: [
-            '明天送¥2.32',
             '下单就能用'
         ],
 
@@ -55,7 +54,10 @@ Page({
         userLevelArr: [ 0, 999, 9999 ],
 
         // 签到奖励数组
-        signGift: [ ]
+        signGift: [ ],
+
+        // 签到赢积分
+        signExp: 20
     },
 
     runComputed( ) {
@@ -109,12 +111,64 @@ Page({
                         level = k;
                     }
                 });
-                const signGiftArr = signGift[ level + 1 ];
+                const signGiftArr = signGift[ level + 1 ] || signGift[ level ];
                 return signGiftArr ?
                     signGiftArr.reduce(( x, y ) => Number(( x + y ).toFixed( 2 )), 0 ):
                     0;
-            }
+            },
 
+            // 今天签到领多少钱
+            todaySignGift$: function( ) {
+                const day = new Date( ).getDay( ); // 0 ~ 6
+                const { userLevelArr, exp, signGift } = this.data;
+                let level = 0;
+                userLevelArr.map(( x, k ) => {
+                    if ( exp >= x ) {
+                        level = k;
+                    }
+                });
+                const signGiftArr = signGift[ level ];
+                
+                if ( !signGiftArr ) {
+                    return 0;
+                }
+
+                if ( day === 0 ) {
+                    return signGiftArr[ signGiftArr.length - 1 ];
+                } else {
+                    return signGiftArr[ day - 1 ];
+                }
+            },
+
+            // 明天签到领多少钱
+
+            // 文字提示
+            tips$: function( ) {
+
+                let money = 0;
+                const meta = ['下单就能用']
+                const day = new Date( ).getDay( ); // 0 ~ 6
+                const { userLevelArr, exp, signGift } = this.data;
+                let level = 0;
+                userLevelArr.map(( x, k ) => {
+                    if ( exp >= x ) {
+                        level = k;
+                    }
+                });
+                const signGiftArr = signGift[ level ];
+                
+                if ( !signGiftArr ) {
+                    return meta;
+                }
+
+                if ( day === 0 ) {
+                    money = signGiftArr[ signGiftArr.length - 1 ];
+                } else {
+                    money = signGiftArr[ day - 1 ];
+                };
+
+                return [ ...meta, `今天已领${money}元` ]
+            }
         });
     },
 
@@ -153,6 +207,7 @@ Page({
                     exp: data.exp,
                     pushIntegral: data.integral
                 });
+                setTimeout(( ) => this.initTips( ), 100 );
             }
         })
     },
@@ -207,8 +262,8 @@ Page({
     initTips( ) {
 
         const time = setInterval(( ) => {
-            const { tips, tipsIndex, showInteral } = this.data;
-            const allTips = tips
+            const { tips, tips$, tipsIndex, showInteral } = this.data;
+            const allTips = tips$
 
             if ( tipsIndex >= allTips.length - 1 ) {
                 this.setData({
@@ -238,7 +293,7 @@ Page({
     onLoad: function (options) {
         this.runComputed( );
         this.watchRole( );
-        this.initTips( );
+        // this.initTips( );
     },
 
     /**
