@@ -52,7 +52,10 @@ Page({
         exp: 0,
 
         // 用户等级数组
-        userLevelArr: [ 0, 999, 9999 ]
+        userLevelArr: [ 0, 999, 9999 ],
+
+        // 签到奖励数组
+        signGift: [ ]
     },
 
     runComputed( ) {
@@ -80,7 +83,38 @@ Page({
                     }
                 });
                 return max;
+            },
+
+            // 当前等级的全周送金额
+            currentLevelSignGift$: function( ) {
+                const { userLevelArr, exp, signGift } = this.data;
+                let level = 0;
+                userLevelArr.map(( x, k ) => {
+                    if ( exp >= x ) {
+                        level = k;
+                    }
+                });
+                const signGiftArr = signGift[ level ];
+                return signGiftArr ?
+                    signGiftArr.reduce(( x, y ) => Number(( x + y ).toFixed( 2 )), 0 ):
+                    0;
+            },
+
+            // 下级全周送
+            nextLevelSignGift$: function( ) {
+                const { userLevelArr, exp, signGift } = this.data;
+                let level = 0;
+                userLevelArr.map(( x, k ) => {
+                    if ( exp >= x ) {
+                        level = k;
+                    }
+                });
+                const signGiftArr = signGift[ level + 1 ];
+                return signGiftArr ?
+                    signGiftArr.reduce(( x, y ) => Number(( x + y ).toFixed( 2 )), 0 ):
+                    0;
             }
+
         });
     },
 
@@ -94,7 +128,12 @@ Page({
             const two = val['user-level-two'];
             const three = val['user-level-three'];
 
+            const sign1 = val['sign-gift-one'];
+            const sign2 = val['sign-gift-two'];
+            const sign3 = val['sign-gift-three'];
+
             this.setData({
+                signGift: [ sign1, sign2, sign3 ],
                 userLevelArr: [ one, two, three ]
             });
         });

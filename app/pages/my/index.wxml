@@ -95,14 +95,17 @@
                 >
                     <view class="pm-checkin-class">
                         等级: <view class="pm-checkin-class-tips">{{ currentLevel$ }}级</view> 
-                        <view>全周可送 ¥9.9元</view>
+                        <view>全周可送 ¥{{ currentLevelSignGift$ }}元</view>
                     </view>
-                    <view class="pm-checkin-class start big">
+                    <view
+                        wx:if="{{ currentLevel$ < 3 }}"
+                        class="pm-checkin-class start big"
+                    >
                         <image
                             mode="aspectFill"
                             class='pm-checkin-icon'
                             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-coin-1.png"
-                        /> 2级每周送 ¥12.8元
+                        /> {{ currentLevel$ + 1 }}级每周送 ¥{{ nextLevelSignGift$ }}元
                     </view>
                 </view>
 
