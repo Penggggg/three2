@@ -152,7 +152,7 @@
 
 .pm-checkin-block {
     padding: 30rpx;
-    margin-top: 30rpx;
+    margin-top: 40rpx;
     box-sizing: border-box;
 }
 

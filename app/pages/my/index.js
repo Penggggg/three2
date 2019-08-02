@@ -40,17 +40,24 @@ Page({
         tipsIndex: null,
 
         // 当前的文字
-        tipsText: ''
+        tipsText: '',
+
+        // 推广抵现积分
+        pushIntegral: 0
     },
 
-    /** 点击下方的客服等模块 */
-    onTabIcon({ currentTarget }) {
-        const { data } = currentTarget.dataset;
-        if ( data.url ) {
-            navTo( data.url );
-        } else {
-            !!this[ data.handler ] && !!this[ data.handler ]( );
-        }
+    /** 获取当前人的推广积分 */
+    fetchPushIntegral( ) {
+        http({
+            url: 'common_push-integral',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setData({
+                    pushIntegral: data
+                });
+            }
+        })
     },
 
     /** 拉取订单、卡券数据 */
@@ -89,15 +96,14 @@ Page({
         navTo('/pages/like-goods/index');
     },
 
-    toggleInteral( val, reset = false ) {
-        this.setData({
-            showInteral: val
-        });
-        !!reset && setTimeout(( ) => {
-            this.setData({
-                showInteral: false
-            });
-        }, 5000 );
+    /** 点击下方的客服等模块 */
+    onTabIcon({ currentTarget }) {
+        const { data } = currentTarget.dataset;
+        if ( data.url ) {
+            navTo( data.url );
+        } else {
+            !!this[ data.handler ] && !!this[ data.handler ]( );
+        }
     },
 
     // 自动弹出转发提示
@@ -148,6 +154,7 @@ Page({
      */
     onShow: function ( ) {
         this.fetchData( );
+        this.fetchPushIntegral( );
     },
 
     /**

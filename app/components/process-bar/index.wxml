@@ -1,10 +1,10 @@
 <view class="con-process">
     <view 
         class="cp-progress-bar striped active" 
-        style="width: {{ text$ }}"
+        style="width: {{ rate$ < 0.3 ? '25%' : text$ }}"
     >
         <view class="progress-value">
-            {{ valText }}{{ showRate ? text$ : current + ' / ' + total }}
+            {{ valText }} {{ showRate ? text$ : current + ' / ' + total }}
         </view>
     </view>
 </view>

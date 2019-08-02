@@ -70,7 +70,7 @@
                         decimal="small"
                         class="pm-checkin-price"
                     > 
-                        5.32
+                        {{ pushIntegral }}
                     </wxc-price>
                     <!-- <view class="pm-checkin-tips">
                         明天送<view class="pm-checkin-tips-price">¥3.23</view>
@@ -82,9 +82,9 @@
                     class="pm-checkin-bar"
                 >
                     <my-process-bar
-                        valText="经验 "
+                        valText="经验"
                         showRate="{{ false }}"
-                        current="{{ 80 }}"
+                        current="{{ 10 }}"
                         total="{{ 100 }}"
                     />
                 </view>
