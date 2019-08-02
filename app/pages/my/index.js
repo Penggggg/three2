@@ -141,6 +141,29 @@ Page({
             },
 
             // 明天签到领多少钱
+            toSignGift$: function( ) {
+                let level = 0;
+                const ts = 24 * 60 * 60 * 1000;
+                const day = new Date( new Date( ).getTime( ) + ts ).getDay( ); // 0 ~ 6
+                const { userLevelArr, exp, signGift, signExp } = this.data;
+
+                userLevelArr.map(( x, k ) => {
+                    if ( exp + signExp >= x ) {
+                        level = k;
+                    }
+                });
+
+                const signGiftArr = signGift[ level ];
+                if ( !signGiftArr ) {
+                    return 0;
+                }
+
+                if ( day === 0 ) {
+                    return signGiftArr[ signGiftArr.length - 1 ];
+                } else {
+                    return signGiftArr[ day - 1 ];
+                }
+            },
 
             // 文字提示
             tips$: function( ) {

@@ -72,9 +72,9 @@
                     > 
                         {{ pushIntegral }}
                     </wxc-price>
-                    <!-- <view class="pm-checkin-tips">
-                        明天送<view class="pm-checkin-tips-price">¥3.23</view>
-                    </view> -->
+                    <view class="pm-checkin-gift-tips">
+                        明天送¥{{ toSignGift$ }}
+                    </view>
                 </view>
 
                 <!-- 进度条 -->

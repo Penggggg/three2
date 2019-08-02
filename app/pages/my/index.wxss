@@ -176,9 +176,16 @@
 
 .pm-checkin-sum {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     margin-bottom: 20rpx;
-    justify-content: space-between;
+}
+
+.pm-checkin-gift-tips {
+    color: #fff;
+    font-size: 24rpx;
+    margin-left: 10rpx;
+    line-height: 40rpx;
+    text-shadow: 0 0 3px rgba( 0, 0, 0, 0.15 );
 }
 
 .pm-checkin-price {
