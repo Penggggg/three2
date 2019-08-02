@@ -28,7 +28,19 @@ Page({
         clock: null,
 
         // 展示抵现金提示
-        showInteral: false
+        showInteral: false,
+
+        // 文字拼团提示
+        tips: [
+            '明天送¥2.32',
+            '下单就能用'
+        ],
+
+        // 当前文字拼团提示的下标
+        tipsIndex: null,
+
+        // 当前的文字
+        tipsText: ''
     },
 
     /** 点击下方的客服等模块 */
@@ -88,13 +100,40 @@ Page({
         }, 5000 );
     },
 
+    // 自动弹出转发提示
+    initTips( ) {
+
+        const time = setInterval(( ) => {
+            const { tips, tipsIndex, showInteral } = this.data;
+            const allTips = tips
+
+            if ( tipsIndex >= allTips.length - 1 ) {
+                this.setData({
+                    showInteral: false
+                });
+                return clearInterval( time );
+            }
+
+            if ( !showInteral ) {
+                const index = tipsIndex === null ? 0 : tipsIndex + 1;
+                this.setData({
+                    showInteral: true,
+                    tipsIndex: index,
+                    tipsText: allTips[ index ]
+                });
+            } else {
+                this.setData({
+                    showInteral: false
+                });
+            }
+        }, 3500 );
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        setTimeout(( ) => {
-            this.toggleInteral( true, true )
-        }, 3000 );
+        this.initTips( );
     },
 
     /**
@@ -107,7 +146,7 @@ Page({
     /**
      * 生命周期函数--监听页面显示
      */
-    onShow: function () {
+    onShow: function ( ) {
         this.fetchData( );
     },
 

@@ -59,7 +59,7 @@
                     <view
                         class="pm-checkin-interal-tips {{ showInteral ? '' : 'hide' }}"
                     >
-                        下单就能用
+                        {{ tipsText }}
                     </view>
                 </view>
 
@@ -72,9 +72,9 @@
                     > 
                         5.32
                     </wxc-price>
-                    <view class="pm-checkin-tips">
+                    <!-- <view class="pm-checkin-tips">
                         明天送<view class="pm-checkin-tips-price">¥3.23</view>
-                    </view>
+                    </view> -->
                 </view>
 
                 <!-- 进度条 -->
@@ -103,6 +103,35 @@
                             class='pm-checkin-icon'
                             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-coin-1.png"
                         /> 2级每周送 ¥12.8元
+                    </view>
+                </view>
+
+                <!-- 任务列表 -->
+                <!-- 倒计时 -->
+                <view 
+                    class="pm-checkin-task"
+                >
+                    <view class="pm-checkin-task-content">
+                        <image
+                            mode="aspectFill"
+                            class='pm-checkin-task-icon'
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-exp-1.png"
+                        />
+                        <view class="pm-checkin-task-text">
+                            3小时后登陆奖励
+                        </view>
+                        <view class="pm-checkin-task-get">
+                            20经验
+                        </view>
+                    </view>
+
+                    <view class="pm-checkin-task-count">
+                        <wxc-countdown
+                            countdown="{{ 1000 }}"
+                            format="hh:mm:ss"
+                            num-style="font-size: 24rpx; color: #fff;"
+                            symbol-style="font-size: 24rpx;color: #fff;"
+                        />
                     </view>
                 </view>
 

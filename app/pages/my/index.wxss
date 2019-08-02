@@ -216,6 +216,7 @@
 
 .pm-checkin-user {
     display: flex;
+    margin-bottom: 50rpx;
     align-items: flex-start;
     justify-content: space-between;
 }
@@ -255,6 +256,26 @@
     display: inline-block;
 }
 
+.pm-checkin-task-icon {
+    width: 60rpx;
+    height: 60rpx;
+    margin-right: 15rpx;
+    display: inline-block;
+}
+
+.pm-checkin-task-text {
+    color: #666;
+    font-size: 24rpx;
+    line-height: 34rpx;
+    margin-right: 20rpx;
+}
+
+.pm-checkin-task-get {
+    color: #ff0844;
+    font-size: 26rpx;
+    font-weight: bold;
+}
+
 .pm-checkin-interal-tips {
     opacity: 100;
     top: -10rpx;
@@ -284,4 +305,25 @@
 
 .pm-checkin-interal-tips.hide {
     opacity: 0;
+}
+
+.pm-checkin-task {
+    display: flex;
+    border-radius: 5px;
+    background: #fff;
+    align-items: center;
+    padding: 25rpx 15rpx;
+    justify-content: space-between;
+}
+
+.pm-checkin-task-content {
+    display: flex;
+    align-items: center;
+}
+
+.pm-checkin-task-count {
+    border-radius: 30rpx;
+    padding: 5rpx 22rpx;
+    background: #f5222d;
+    background-image: linear-gradient(-225deg, #ff0844 0%, #ffb199 100%);
 }
