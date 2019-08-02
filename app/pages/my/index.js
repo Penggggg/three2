@@ -1,5 +1,8 @@
 const { http } = require('../../util/http.js');
 const { navTo } = require('../../util/route.js');
+const { computed } = require('../../lib/vuefy/index.js');
+
+const app = getApp( );
 
 Page({
 
@@ -43,18 +46,73 @@ Page({
         tipsText: '',
 
         // 推广抵现积分
-        pushIntegral: 0
+        pushIntegral: 0,
+
+        // 用户经验
+        exp: 0,
+
+        // 用户等级数组
+        userLevelArr: [ 0, 999, 9999 ]
+    },
+
+    runComputed( ) {
+        computed( this, {
+
+            // 用户等级
+            currentLevel$: function( ) {
+                const { userLevelArr, exp } = this.data;
+                let level = 0;
+                userLevelArr.map(( x, k ) => {
+                    if ( exp >= x ) {
+                        level = k + 1;
+                    }
+                });
+                return level;
+            },
+
+            // 当前用户等级的上限
+            currentLevelExp$: function( ) {
+                const { userLevelArr, exp } = this.data;
+                let max = 999;
+                userLevelArr.map(( x, k ) => {
+                    if ( exp >= x ) {
+                        max = userLevelArr[ k + 1 ] || userLevelArr[ k ];
+                    }
+                });
+                return max;
+            }
+        });
+    },
+
+    /** 全局数据 */
+    watchRole( ) {
+        app.watch$('appConfig', ( val ) => {
+
+            if ( !val ) { return; }
+
+            const one = val['user-level-one'];
+            const two = val['user-level-two'];
+            const three = val['user-level-three'];
+
+            this.setData({
+                userLevelArr: [ one, two, three ]
+            });
+        });
     },
 
     /** 获取当前人的推广积分 */
     fetchPushIntegral( ) {
         http({
+            data: {
+                showMore: true
+            },
             url: 'common_push-integral',
             success: res => {
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
                 this.setData({
-                    pushIntegral: data
+                    exp: data.exp,
+                    pushIntegral: data.integral
                 });
             }
         })
@@ -139,6 +197,8 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+        this.runComputed( );
+        this.watchRole( );
         this.initTips( );
     },
 

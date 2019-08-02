@@ -38,11 +38,13 @@ Component({
             computed( this, {
                 rate$: function( ) {
                     const { total, current } = this.data;
-                    return ( current / total ).toFixed( 1 );
+                    const num = ( current / total ).toFixed( 1 )
+                    return num > 1 ? 1 : num;
                 },
                 text$: function( ) {
                     const { total, current } = this.data;
-                    return Number(( current / total ).toFixed( 1 )) * 100 + '%';
+                    const num = Number(( current / total ).toFixed( 1 )) * 100;
+                    return num > 100 ? '100%' : num + '%';
                 }
             });
         }

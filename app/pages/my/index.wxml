@@ -84,8 +84,8 @@
                     <my-process-bar
                         valText="经验"
                         showRate="{{ false }}"
-                        current="{{ 10 }}"
-                        total="{{ 100 }}"
+                        current="{{ exp }}"
+                        total="{{ currentLevelExp$ }}"
                     />
                 </view>
 
@@ -94,7 +94,7 @@
                     class="pm-checkin-user"
                 >
                     <view class="pm-checkin-class">
-                        等级: <view class="pm-checkin-class-tips">1级</view> 
+                        等级: <view class="pm-checkin-class-tips">{{ currentLevel$ }}级</view> 
                         <view>全周可送 ¥9.9元</view>
                     </view>
                     <view class="pm-checkin-class start big">
