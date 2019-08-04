@@ -1,0 +1,94 @@
+<view class="con-user-sign-gift">
+    <view
+        class="pm-checkin-block"
+    >
+        <view class="pm-checkin-container">
+
+            <!-- 标题 -->
+            <view class="pm-checkin-title">
+                我的抵现金
+                <view
+                    class="pm-checkin-interal-tips {{ showInteral ? '' : 'hide' }}"
+                >
+                    {{ tipsText }}
+                </view>
+            </view>
+
+            <!-- 金额 -->
+            <view class="pm-checkin-sum">
+                <wxc-price
+                    icon="sub"
+                    decimal="small"
+                    class="pm-checkin-price"
+                > 
+                    {{ pushIntegral }}
+                </wxc-price>
+                <view class="pm-checkin-gift-tips">
+                    明天送¥{{ toSignGift$ }}
+                </view>
+            </view>
+
+            <!-- 进度条 -->
+            <view 
+                class="pm-checkin-bar"
+            >
+                <my-process-bar
+                    valText="经验"
+                    showRate="{{ false }}"
+                    current="{{ exp }}"
+                    total="{{ currentLevelExp$ }}"
+                />
+            </view>
+
+            <!-- 用户等级 -->
+            <view
+                class="pm-checkin-user"
+            >
+                <view class="pm-checkin-class">
+                    等级: <view class="pm-checkin-class-tips">{{ currentLevel$ }}级</view> 
+                    <view>全周可送 ¥{{ currentLevelSignGift$ }}元</view>
+                </view>
+                <view
+                    wx:if="{{ currentLevel$ < 3 }}"
+                    class="pm-checkin-class start big"
+                >
+                    <image
+                        mode="aspectFill"
+                        class='pm-checkin-icon'
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-coin-1.png"
+                    /> {{ currentLevel$ + 1 }}级每周送 ¥{{ nextLevelSignGift$ }}元
+                </view>
+            </view>
+
+            <!-- 任务列表 -->
+            <!-- 倒计时 -->
+            <view 
+                class="pm-checkin-task"
+            >
+                <view class="pm-checkin-task-content">
+                    <image
+                        mode="aspectFill"
+                        class='pm-checkin-task-icon'
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-exp-1.png"
+                    />
+                    <view class="pm-checkin-task-text">
+                        3小时后登陆奖励
+                    </view>
+                    <view class="pm-checkin-task-get">
+                        {{ signExp }}经验
+                    </view>
+                </view>
+
+                <view class="pm-checkin-task-count">
+                    <wxc-countdown
+                        countdown="{{ 1000 }}"
+                        format="hh:mm:ss"
+                        num-style="font-size: 24rpx; color: #fff;"
+                        symbol-style="font-size: 24rpx;color: #fff;"
+                    />
+                </view>
+            </view>
+
+        </view>
+    </view>
+</view>

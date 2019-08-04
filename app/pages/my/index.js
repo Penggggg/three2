@@ -27,9 +27,6 @@ Page({
             coupons: 0
         },
 
-        // 定时器
-        clock: null,
-
         // 展示抵现金提示
         showInteral: false,
 

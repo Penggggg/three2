@@ -55,6 +55,7 @@
     "my-share-integral": "./container/share-integral/index",
     "my-trip-order-getmoney": "./container/trip-order-getmoney/index",
     "my-trip-order-deliver": "./container/trip-order-deliver/index",
+    "my-user-sign-gift": "./container/user-sign-gift/index",
     "my-trip-order-shoppinglist": "./container/trip-order-shoppinglist/index",
     "my-trip-rank-fairy": "./container/trip-rank-fairy/index",
     "my-trip-rank-good": "./container/trip-rank-good/index",
