@@ -6,6 +6,7 @@ const app = getApp( );
 const storageKey = {
     'exp-get-last-time': 'exp-get-last-time', // 上次获得经验的时间
     'exp-end-count-time': 'exp-end-count-time', // 可以获取经验倒计时的时间
+    'integral-get-last-time': 'integral-get-last-time' // 上次免费获得抵扣金的时间
 };
 
 Component({
@@ -58,6 +59,9 @@ Component({
 
         // x小时后签到
         signCountHour: 2,
+
+        // 弹出登录获抵现金的红包框
+        showSignGift: false
 
     },
 
@@ -236,7 +240,10 @@ Component({
                         exp: data.exp,
                         pushIntegral: data.integral
                     });
-                    setTimeout(( ) => this.initTips( ), 100 );
+                    setTimeout(( ) => {
+                        this.initTips( );
+                        this.checkGetIntegral( );
+                    }, 100 );
                 }
             })
         },
@@ -268,6 +275,24 @@ Component({
                     });
                     this.fetchPushIntegral( );
                     wx.setStorageSync( storageKey['exp-get-last-time'], String( Date.now( )));
+                }
+            })
+        },
+
+        // 获取今天的免费抵现金
+        getFreeIntegral( ) {
+            const { todaySignGift$ } = this.data;
+            http({
+                url: 'common_get-integral',
+                data: {
+                    integral: todaySignGift$
+                },
+                loadingMsg: '领取中...',
+                success: res => {
+                    const { status } = res;
+                    if ( status !== 200 ) { return; }
+                    this.fetchPushIntegral( );
+                    wx.setStorageSync( storageKey['integral-get-last-time'], String( Date.now( )));
                 }
             })
         },
@@ -325,12 +350,21 @@ Component({
 
             const reset = ( ) => {
                 const whenCanGetExp = getRightTime( Date.now( ), signCountHour );
+                const countDown = Number((( whenCanGetExp - Date.now( )) / 1000 ).toFixed( 0 ));
+
                 wx.setStorageSync( storageKey['exp-end-count-time'], String( whenCanGetExp ));
 
                 if ( whenCanGetExp > Date.now( )) {
                     this.setData({
-                        countDown: Number((( whenCanGetExp - Date.now( )) / 1000 ).toFixed( 0 ))
+                        countDown
                     });
+
+                    // 倒计时
+                    setTimeout(( ) => {
+                        this.setData({
+                            isGetExp: false
+                        })
+                    }, countDown * 1000 );
                 }
             }
 
@@ -381,6 +415,37 @@ Component({
                     isGetExp: false
                 });
                 this.initExpCount( );
+            }
+
+            if ( !lastTime ) {
+                reset( );
+                
+            } else {
+                const now = new Date( );
+                const thatTime = new Date( Number( lastTime ));
+
+                const d1 = now.getDate( );
+                const d2 = thatTime.getDate( );
+                const oneDay = 24 * 60 * 60 * 1000;
+
+                if ( 
+                    now.getTime( ) > thatTime.getTime( ) &&
+                    (
+                        d1 !== d2 ||
+                        now.getTime( ) - thatTime.getTime( ) > oneDay
+                    ) 
+                ) {
+                    reset( );
+                }
+            }
+        },
+
+        // 检查今天是否已经领取了抵现金
+        checkGetIntegral( ) {
+            const lastTime =  wx.getStorageSync( storageKey['integral-get-last-time']);
+
+            const reset = ( ) => {
+                this.getFreeIntegral( );
             }
 
             if ( !lastTime ) {

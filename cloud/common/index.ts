@@ -1256,6 +1256,53 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /**
+     * @description
+     * 签到领积分
+     * {
+     *      integral: number
+     * }
+     */
+    app.router('get-integral', async ( ctx, next ) => {
+        try {
+            const { integral } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+
+            const user$ = await db.collection('user')
+                .where({
+                    openid
+                })
+                .get( );
+
+            const user = user$.data[ 0 ] || null;
+
+            if ( !user ) { return ctx.body = { status: 200 }};
+
+            const bd_uid = user._id;
+            const body = {
+                ...user,
+                push_integral: !user.push_integral ? 
+                    integral :
+                    Number(( user.push_integral + integral ).toFixed( 2 ))
+            };
+
+            delete body['_id'];
+
+            const update$ = await db.collection('user')
+                .doc( String( bd_uid ))
+                .set({
+                    data: body
+                });
+
+            return ctx.body = {
+                status: 200
+            };
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
+
     return app.serve( );
 
 }

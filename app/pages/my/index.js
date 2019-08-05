@@ -328,7 +328,7 @@ Page({
      */
     onShow: function ( ) {
         this.fetchData( );
-        this.fetchPushIntegral( );
+        // this.fetchPushIntegral( );
     },
 
     /**
