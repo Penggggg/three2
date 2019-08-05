@@ -241,6 +241,37 @@ Component({
             })
         },
 
+        // 领取经验
+        getExp( ) {
+            const { isGetExp, signExp } = this.data;
+            if ( isGetExp ) {
+                return wx.showToast({
+                    icon: 'none',
+                    title: '明天再来～'
+                });
+            }
+            http({
+                url: 'common_get-exp',
+                data: {
+                    exp: signExp
+                },
+                loadingMsg: '领取中...',
+                success: res => {
+                    const { status } = res;
+                    if ( status !== 200 ) { return; }
+                    wx.showToast({
+                        title: '领取成功',
+                        duration: 2500,
+                    });
+                    this.setData({
+                        isGetExp: true
+                    });
+                    this.fetchPushIntegral( );
+                    wx.setStorageSync( storageKey['exp-get-last-time'], String( Date.now( )));
+                }
+            })
+        },
+
         // 自动弹出转发提示
         initTips( ) {
 
@@ -374,8 +405,6 @@ Component({
                 }
             }
         },
-
-        // 领取经验
 
         // 跳到分享广场
         goGound( ) {

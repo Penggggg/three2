@@ -189,6 +189,11 @@
     background-image: linear-gradient(-225deg, #ff0844 0%, #ffb199 100%);
 }
 
+.pm-checkin-task-count.grey {
+    background-image: none;
+    background: #e8e8e8;
+}
+
 .pm-checkin-task-count.shine:after {
     left: 50%;
     top: 50%;
