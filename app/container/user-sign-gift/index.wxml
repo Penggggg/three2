@@ -72,20 +72,63 @@
                         src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-exp-1.png"
                     />
                     <view class="pm-checkin-task-text">
-                        3小时后登陆奖励
+                        {{ signCountHour }}小时后登陆奖励
                     </view>
                     <view class="pm-checkin-task-get">
                         {{ signExp }}经验
                     </view>
                 </view>
 
-                <view class="pm-checkin-task-count">
+                <view class="pm-checkin-task-count {{ !countDown ? 'shine' : '' }}">
                     <wxc-countdown
-                        countdown="{{ 1000 }}"
                         format="hh:mm:ss"
+                        wx:if="{{ countDown && !isGetExp }}"
+                        countdown="{{ countDown }}"
                         num-style="font-size: 24rpx; color: #fff;"
                         symbol-style="font-size: 24rpx;color: #fff;"
                     />
+                    <view
+                        class="pm-checkin-task-btn"
+                        wx:if="{{ !countDown && !isGetExp }}"
+                    >
+                        可领取
+                    </view>
+                    <view
+                        class="pm-checkin-task-btn"
+                        wx:if="{{ !countDown && !!isGetExp }}"
+                    >
+                        已领取
+                    </view>
+                </view>
+            </view>
+
+            <!-- 去赚抵现金 -->
+            <view 
+                class="pm-checkin-task nmb"
+            >
+                <view class="pm-checkin-task-content">
+                    <image
+                        mode="aspectFill"
+                        class='pm-checkin-task-icon'
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-exp-1.png"
+                    />
+                    <view class="pm-checkin-task-text">
+                        分享商品就能
+                    </view>
+                    <view class="pm-checkin-task-get">
+                        赚抵现金
+                    </view>
+                </view>
+
+                <view
+                    bindtap="goGound"
+                    class="pm-checkin-task-count"
+                >
+                    <view
+                        class="pm-checkin-task-btn"
+                    >
+                        去看看
+                    </view>
                 </view>
             </view>
 

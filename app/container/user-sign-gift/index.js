@@ -3,6 +3,10 @@ const { computed } = require('../../lib/vuefy/index.js');
 const { navTo } = require('../../util/route.js');
 
 const app = getApp( );
+const storageKey = {
+    'exp-get-last-time': 'exp-get-last-time', // 上次获得经验的时间
+    'exp-end-count-time': 'exp-end-count-time', // 可以获取经验倒计时的时间
+};
 
 Component({
     /**
@@ -44,7 +48,17 @@ Component({
         signGift: [ ],
 
         // 签到赢积分
-        signExp: 20
+        signExp: 20,
+
+        // 今天是否已经领取了经验
+        isGetExp: true,
+
+        // 今天的经验倒计时
+        countDown: 0,
+
+        // x小时后签到
+        signCountHour: 2,
+
     },
 
     /**
@@ -235,10 +249,11 @@ Component({
                 const allTips = tips$
 
                 if ( tipsIndex >= allTips.length - 1 ) {
-                    this.setData({
-                        showInteral: false
+                    return this.setData({
+                        tipsIndex: null,
+                        // showInteral: false
                     });
-                    return clearInterval( time );
+                    // return clearInterval( time );
                 }
 
                 if ( !showInteral ) {
@@ -254,12 +269,126 @@ Component({
                     });
                 }
             }, 3500 );
+        },
+
+        // 初始化经验倒计时
+        initExpCount( ) {
+            const now = new Date( );
+            const { signCountHour } = this.data;
+            const endTime = Number( wx.getStorageSync( storageKey['exp-end-count-time']));
+
+            // 获取可以领取经验的时间点
+            // 如果指定时间为 20点 ～ 24点，则统一为23:00，就可领取经验
+            const getRightTime = ( ts, signCountHour ) => {
+                const time = new Date( Number( ts ));
+                const y = time.getFullYear( );
+                const m = time.getMonth( ) + 1;
+                const d = time.getDate( );
+                const hour = time.getHours( );
+                if ( hour === 20 || hour === 21 || hour === 22 || hour === 23 ) {
+                    return new Date(`${y}/${m}/${d} 22:00:00`).getTime( );
+                } else {
+                    return Number( ts ) + signCountHour * 60 * 60 * 1000;
+                }
+            };
+
+            const reset = ( ) => {
+                const whenCanGetExp = getRightTime( Date.now( ), signCountHour );
+                wx.setStorageSync( storageKey['exp-end-count-time'], String( whenCanGetExp ));
+
+                if ( whenCanGetExp > Date.now( )) {
+                    this.setData({
+                        countDown: Number((( whenCanGetExp - Date.now( )) / 1000 ).toFixed( 0 ))
+                    });
+                }
+            }
+
+            // 初始化
+            if ( !endTime ) {
+                
+                reset( );
+                
+            // 如果有endTime
+            } else {
+
+                // 倒计时还没有过时
+                if ( endTime > Date.now( )) {
+                    this.setData({
+                        countDown: Number((( endTime - Date.now( )) / 1000 ).toFixed( 0 ))
+                    });
+                // 倒计时已经过时了
+                } else {
+
+                    // 如果倒计时已经过时，并已经不是当天，则重新计算
+                    const now = new Date( );
+                    const thatTime = new Date( Number( endTime ));
+
+                    const d1 = now.getDate( );
+                    const d2 = thatTime.getDate( );
+                    const oneDay = 24 * 60 * 60 * 1000;
+
+                    if ( 
+                        now.getTime( ) > thatTime.getTime( ) &&
+                        (
+                            d1 !== d2 ||
+                            now.getTime( ) - thatTime.getTime( ) > oneDay
+                        ) 
+                    ) {
+                        reset( );
+                    }
+
+                }
+            }
+        },
+
+        // 今天是否已经领取经验
+        checkGetExp( ) {
+            const lastTime =  wx.getStorageSync( storageKey['exp-get-last-time']);
+
+            const reset = ( ) => {
+                this.setData({
+                    isGetExp: false
+                });
+                this.initExpCount( );
+            }
+
+            if ( !lastTime ) {
+                reset( );
+                
+            } else {
+                const now = new Date( );
+                const thatTime = new Date( Number( lastTime ));
+
+                const d1 = now.getDate( );
+                const d2 = thatTime.getDate( );
+                const oneDay = 24 * 60 * 60 * 1000;
+
+                if ( 
+                    now.getTime( ) > thatTime.getTime( ) &&
+                    (
+                        d1 !== d2 ||
+                        now.getTime( ) - thatTime.getTime( ) > oneDay
+                    ) 
+                ) {
+                    reset( );
+                }
+            }
+        },
+
+        // 领取经验
+
+        // 跳到分享广场
+        goGound( ) {
+            navTo('/pages/ground-push-integral/index');
         }
+
     },
 
     attached: function( ) {
         this.watchRole( );
         this.runComputed( );
+
+        this.checkGetExp( );
         this.fetchPushIntegral( );
     }
 })
