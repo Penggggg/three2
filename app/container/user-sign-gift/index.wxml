@@ -1,4 +1,6 @@
 <view class="con-user-sign-gift">
+
+    <!-- 签到版面 -->
     <view
         class="pm-checkin-block"
     >
@@ -135,4 +137,7 @@
 
         </view>
     </view>
+
+    <!-- 送抵现金版面 -->
+
 </view>
