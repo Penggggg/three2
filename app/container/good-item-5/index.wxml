@@ -10,6 +10,7 @@
     >
         <view class="gi5-img-block">
             <image
+                lazy-load="{{ true }}"
                 class="gi5-img"
                 mode="aspectFill"
                 src="{{ good.img[ 0 ] }}"
@@ -19,6 +20,7 @@
                 wx:if="{{ good.hasActivity }}"
             >
                 <image
+                    lazy-load="{{ true }}"
                     mode="widthFix"
                     class="gd-activity-icon"
                     src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"

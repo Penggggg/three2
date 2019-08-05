@@ -47,7 +47,9 @@
         </view>
 
         <!-- 抵现积分、签到打卡 -->
-        <my-user-sign-gift />
+        <my-user-sign-gift
+            showSign="{{ true }}"
+        />
 
         <!-- 其他选项 -->
         <!-- <view class="pm-other-block">

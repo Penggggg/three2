@@ -11,6 +11,7 @@
             mode="aspectFill"
             class="gi8-img"
             src="{{ good.img }}"
+            lazy-load="{{ true }}"
         />
         <view class="gi8-info-block {{ isLeft ? '' : 'right' }}">
             

@@ -14,7 +14,10 @@ Component({
      * 组件的属性列表
      */
     properties: {
-
+        showSign: {
+            type: Boolean,
+            value: false
+        }
     },
 
     /**
@@ -201,6 +204,12 @@ Component({
                     };
     
                     return [ ...meta, `今天已领${money}元` ]
+                },
+
+                // 展示红包
+                showSignGift$: function( ) {
+                    const { showSignGift } = this.data;
+                    return showSignGift ? 'show' : 'hide'
                 }
             });
         },
@@ -291,10 +300,24 @@ Component({
                 success: res => {
                     const { status } = res;
                     if ( status !== 200 ) { return; }
+                    this.setData({
+                        showSignGift: true
+                    });
+                    wx.showToast({
+                        title: '签到成功'
+                    })
                     this.fetchPushIntegral( );
                     wx.setStorageSync( storageKey['integral-get-last-time'], String( Date.now( )));
                 }
             })
+        },
+
+        // 开启、关闭红包提示
+        toggleGift( ) {
+            const { showSignGift } = this.data;
+            this.setData({
+                showSignGift: !showSignGift
+            });
         },
 
         // 自动弹出转发提示

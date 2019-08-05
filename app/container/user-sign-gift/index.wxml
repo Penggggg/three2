@@ -2,6 +2,7 @@
 
     <!-- 签到版面 -->
     <view
+        wx:if="{{ showSign }}"
         class="pm-checkin-block"
     >
         <view class="pm-checkin-container">
@@ -139,6 +140,75 @@
     </view>
 
     <!-- 送抵现金版面 -->
-    
+    <wxc-mask
+        content-align="cc"
+        status="{{ showSignGift$ }}"
+        bindmasktap="toggleGift"
+    >
+        <!-- 红包现金 -->
+        <view
+            class="pm-hongbao-block"
+        >
+            
+            <!-- 红包背景 -->
+            <image
+                mode="aspectFill"
+                class='pm-hongbao-img'
+                lazy-load="{{ true }}"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/bg-sign-gift.png"
+            />
+            
+            <!-- 红包内容 -->
+            <view class="pm-hongbao-content">
+                <view class="pm-hongbao-title center">
+                    - 下单就能用 -
+                </view>
+                <view class="pm-hongbao-price-block center">
+                    <wxc-price
+                        icon="sub"
+                        decimal="small"
+                        class="pm-hongbao-price"
+                    > 
+                        {{ todaySignGift$ }}
+                    </wxc-price>
+                </view>
+                <view class="pm-hongbao-text-block">
+                    <view class="pm-hongbao-bigtips center">
+                        今日领取成功
+                    </view>
+                    <view class="pm-hongbao-smalltips mt center">
+                        每天登陆
+                    </view>
+                    <view class="pm-hongbao-smalltips center">
+                        全周<view class="pm-hongbao-price2 bold">可领¥{{ currentLevelSignGift$ }}元</view>
+                    </view>
+                    <view class="pm-countdown-block">
+                        <view>
+                            <wxc-countdown
+                                format="hh时mm分ss秒"
+                                wx:if="{{ countDown }}"
+                                countdown="{{ countDown }}"
+                                num-style="font-size: 30rpx; color: #f5222d;"
+                                symbol-style="font-size: 30rpx;color: #f5222d;"
+                            />
+                        </view>
+                        后 领{{ signExp }}经验
+                    </view>
+                    <view class="pm-hongbao-smalltips center">
+                        下级每周领¥{{ nextLevelSignGift$ }}
+                    </view>
+                </view>
+            </view>
+
+            <!-- 关闭按钮 -->
+            <view 
+                bindtap="toggleGift"
+                class="pm-hongbao-close"
+            >
+                X
+            </view>
+        </view>
+        
+    </wxc-mask>
 
 </view>

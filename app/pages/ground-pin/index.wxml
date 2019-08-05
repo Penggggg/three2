@@ -24,6 +24,7 @@
                     placeholder-style="color:rgba(0, 0, 0, 0.3)"
                 />
                 <image
+                    lazy-load="{{ true }}"
                     mode="aspectFill"
                     class="gp-search-icon"
                     bindtap="onConfirmSearch"
