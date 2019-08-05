@@ -48,7 +48,7 @@ Component({
         signGift: [ ],
 
         // 签到赢积分
-        signExp: 20,
+        signExp: 25,
 
         // 今天是否已经领取了经验
         isGetExp: true,
