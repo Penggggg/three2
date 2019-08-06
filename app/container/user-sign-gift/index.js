@@ -1,6 +1,7 @@
 const { http } = require('../../util/http.js');
 const { computed } = require('../../lib/vuefy/index.js');
 const { navTo } = require('../../util/route.js');
+const { createFormId } = require('../../util/form-id.js');
 
 const app = getApp( );
 const storageKey = {
@@ -322,7 +323,10 @@ Component({
         },
 
         // 开启、关闭红包提示
-        toggleGift( ) {
+        toggleGift( e ) {
+            const { formId } = e.detail;
+            createFormId( formId );
+            
             const { showSignGift } = this.data;
             this.setData({
                 showSignGift: !showSignGift
