@@ -1,143 +1,170 @@
 <view class="con-user-sign-gift">
 
-    <!-- 签到版面 -->
-    <view
-        wx:if="{{ showSign }}"
-        class="pm-checkin-block"
+    <!-- 背景 -->
+    <!-- wx:if="{{ showSignBlock && !showSign }}" -->
+    <view 
+        class="pm-checkin-bg"
     >
-        <view class="pm-checkin-container">
+    </view>
 
-            <!-- 标题 -->
-            <view class="pm-checkin-title">
-                我的抵现金
-                <view
-                    class="pm-checkin-interal-tips {{ showInteral ? '' : 'hide' }}"
-                >
-                    {{ tipsText }}
-                </view>
-            </view>
-
-            <!-- 金额 -->
-            <view class="pm-checkin-sum">
-                <wxc-price
-                    icon="sub"
-                    decimal="small"
-                    class="pm-checkin-price"
-                > 
-                    {{ pushIntegral }}
-                </wxc-price>
-                <view class="pm-checkin-gift-tips">
-                    明天送¥{{ toSignGift$ }}
-                </view>
-            </view>
-
-            <!-- 进度条 -->
-            <view 
-                class="pm-checkin-bar"
+    <!-- 签到版面的壳 -->
+    <view
+        class="pm-checkin-con fixed"
+    
+    >
+        <!-- 关闭按钮 -->
+        <form
+            report-submit="{{ true }}"
+            class="pm-sign-close-form"
+        >
+            <button
+                form-type="submit"
+                class='fix-btn pm-hongbao-close'
             >
-                <my-process-bar
-                    valText="经验"
-                    showRate="{{ false }}"
-                    current="{{ exp }}"
-                    total="{{ currentLevelExp$ }}"
-                />
-            </view>
+                X 
+            </button>
+        </form>
 
-            <!-- 用户等级 -->
-            <view
-                class="pm-checkin-user"
-            >
-                <view class="pm-checkin-class">
-                    等级: <view class="pm-checkin-class-tips">{{ currentLevel$ }}级</view> 
-                    <view>全周可送 ¥{{ currentLevelSignGift$ }}元</view>
-                </view>
-                <view
-                    wx:if="{{ currentLevel$ < 3 }}"
-                    class="pm-checkin-class start big"
-                >
-                    <image
-                        mode="aspectFill"
-                        class='pm-checkin-icon'
-                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-coin-1.png"
-                    /> {{ currentLevel$ + 1 }}级每周送 ¥{{ nextLevelSignGift$ }}元
-                </view>
-            </view>
+        <!-- 签到版面 -->
+        <view
+            wx:if="{{ showSign }}"
+            class="pm-checkin-block"
+        >
+            <view class="pm-checkin-container">
 
-            <!-- 任务列表 -->
-            <!-- 倒计时 -->
-            <view 
-                class="pm-checkin-task"
-            >
-                <view class="pm-checkin-task-content">
-                    <image
-                        mode="aspectFill"
-                        class='pm-checkin-task-icon'
-                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-exp-1.png"
-                    />
-                    <view class="pm-checkin-task-text">
-                        {{ signCountHour }}小时后登陆奖励
-                    </view>
-                    <view class="pm-checkin-task-get">
-                        {{ signExp }}经验
-                    </view>
-                </view>
-
-                <view class="pm-checkin-task-count {{ !countDown && !isGetExp ? 'shine' : '' }} {{ !!isGetExp ? 'grey' : '' }}">
-                    <wxc-countdown
-                        format="hh:mm:ss"
-                        wx:if="{{ countDown && !isGetExp }}"
-                        countdown="{{ countDown }}"
-                        num-style="font-size: 24rpx; color: #fff;"
-                        symbol-style="font-size: 24rpx;color: #fff;"
-                    />
+                <!-- 标题 -->
+                <view class="pm-checkin-title">
+                    我的抵现金
                     <view
-                        bindtap="getExp"
-                        class="pm-checkin-task-btn"
-                        wx:if="{{ !countDown && !isGetExp }}"
+                        class="pm-checkin-interal-tips {{ showInteral ? '' : 'hide' }}"
                     >
-                        可领取
+                        {{ tipsText }}
+                    </view>
+                </view>
+
+                <!-- 金额 -->
+                <view class="pm-checkin-sum">
+                    <wxc-price
+                        icon="sub"
+                        decimal="small"
+                        class="pm-checkin-price"
+                    > 
+                        {{ pushIntegral }}
+                    </wxc-price>
+                    <view class="pm-checkin-gift-tips">
+                        明天送¥{{ toSignGift$ }}
+                    </view>
+                </view>
+
+                <!-- 进度条 -->
+                <view 
+                    class="pm-checkin-bar"
+                >
+                    <my-process-bar
+                        valText="经验"
+                        showRate="{{ false }}"
+                        current="{{ exp }}"
+                        total="{{ currentLevelExp$ }}"
+                    />
+                </view>
+
+                <!-- 用户等级 -->
+                <view
+                    class="pm-checkin-user"
+                >
+                    <view class="pm-checkin-class">
+                        等级: <view class="pm-checkin-class-tips">{{ currentLevel$ }}级</view> 
+                        <view>全周可送 ¥{{ currentLevelSignGift$ }}元</view>
                     </view>
                     <view
-                        class="pm-checkin-task-btn"
-                        wx:if="{{ !countDown && !!isGetExp }}"
+                        wx:if="{{ currentLevel$ < 3 }}"
+                        class="pm-checkin-class start big"
                     >
-                        已领取
-                    </view>
-                </view>
-            </view>
-
-            <!-- 去赚抵现金 -->
-            <view 
-                class="pm-checkin-task nmb"
-            >
-                <view class="pm-checkin-task-content">
-                    <image
-                        mode="aspectFill"
-                        class='pm-checkin-task-icon'
-                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-exp-1.png"
-                    />
-                    <view class="pm-checkin-task-text">
-                        分享商品就能
-                    </view>
-                    <view class="pm-checkin-task-get">
-                        赚抵现金
+                        <image
+                            mode="aspectFill"
+                            class='pm-checkin-icon'
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-coin-1.png"
+                        /> {{ currentLevel$ + 1 }}级每周送 ¥{{ nextLevelSignGift$ }}元
                     </view>
                 </view>
 
-                <view
-                    bindtap="goGound"
-                    class="pm-checkin-task-count"
+                <!-- 任务列表 -->
+                <!-- 倒计时 -->
+                <view 
+                    class="pm-checkin-task"
                 >
-                    <view
-                        class="pm-checkin-task-btn"
-                    >
-                        去看看
+                    <view class="pm-checkin-task-content">
+                        <image
+                            mode="aspectFill"
+                            class='pm-checkin-task-icon'
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-exp-1.png"
+                        />
+                        <view class="pm-checkin-task-text">
+                            {{ signCountHour }}小时后登陆奖励
+                        </view>
+                        <view class="pm-checkin-task-get">
+                            {{ signExp }}经验
+                        </view>
+                    </view>
+
+                    <view class="pm-checkin-task-count {{ !countDown && !isGetExp ? 'shine' : '' }} {{ !!isGetExp ? 'grey' : '' }}">
+                        <wxc-countdown
+                            format="hh:mm:ss"
+                            wx:if="{{ countDown && !isGetExp }}"
+                            countdown="{{ countDown }}"
+                            num-style="font-size: 24rpx; color: #fff;"
+                            symbol-style="font-size: 24rpx;color: #fff;"
+                        />
+                        <view
+                            bindtap="getExp"
+                            class="pm-checkin-task-btn"
+                            wx:if="{{ !countDown && !isGetExp }}"
+                        >
+                            可领取
+                        </view>
+                        <view
+                            class="pm-checkin-task-btn"
+                            wx:if="{{ !countDown && !!isGetExp }}"
+                        >
+                            已领取
+                        </view>
                     </view>
                 </view>
-            </view>
 
+                <!-- 去赚抵现金 -->
+                <view 
+                    class="pm-checkin-task nmb"
+                >
+                    <view class="pm-checkin-task-content">
+                        <image
+                            mode="aspectFill"
+                            class='pm-checkin-task-icon'
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-exp-1.png"
+                        />
+                        <view class="pm-checkin-task-text">
+                            分享商品就能
+                        </view>
+                        <view class="pm-checkin-task-get">
+                            赚抵现金
+                        </view>
+                    </view>
+
+                    <view
+                        bindtap="goGound"
+                        class="pm-checkin-task-count"
+                    >
+                        <view
+                            class="pm-checkin-task-btn"
+                        >
+                            去看看
+                        </view>
+                    </view>
+                </view>
+
+            </view>
         </view>
     </view>
+    
 
     <!-- 送抵现金版面 -->
     <wxc-mask

@@ -1,3 +1,26 @@
+.pm-checkin-bg {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 1000;
+    background: rgba( 0, 0, 0, 0.45 );
+}
+
+.pm-checkin-con {
+
+}
+
+.pm-checkin-con.fixed {
+    top: 15%;
+    left: 50%;
+    z-index: 1001;
+    position: fixed;
+    width: 100vw;
+    transform: translate( -50%, 0 );
+}
+
 .pm-checkin-block {
     padding: 30rpx;
     margin-top: 40rpx;
@@ -322,6 +345,13 @@
 .pm-hongbao-close-form {
     top: 50rpx;
     right: 50rpx;
+    position: absolute;
+}
+
+.pm-sign-close-form {
+    right: 50rpx;
+    top: 100rpx;
+    z-index: 1001;
     position: absolute;
 }
 

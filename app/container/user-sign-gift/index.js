@@ -67,7 +67,7 @@ Component({
         showSignGift: false,
 
         // 把签到面板弹出
-        showSignBlock: false
+        showSignBlock: true
 
     },
 
