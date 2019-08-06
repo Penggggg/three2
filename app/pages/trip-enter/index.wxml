@@ -380,4 +380,9 @@
         <my-nav />
     </view>
 
+    <!-- 抵现积分、签到打卡 -->
+    <my-user-sign-gift
+        showSign="{{ false }}"
+    />
+
 </view>

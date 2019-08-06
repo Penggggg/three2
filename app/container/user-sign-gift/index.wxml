@@ -29,7 +29,7 @@
 
         <!-- 签到版面 -->
         <view
-            wx:if="{{ showSign }}"
+            wx:if="{{ showSign || showSignBlock$ }}"
             class="pm-checkin-block"
         >
             <view class="pm-checkin-container">
@@ -109,7 +109,7 @@
                         </view>
                     </view>
 
-                    <view class="pm-checkin-task-count {{ !countDown && !isGetExp ? 'shine' : '' }} {{ !!isGetExp ? 'grey' : '' }}">
+                    <view class="pm-checkin-task-count {{ !countDown || !isGetExp ? 'shine' : '' }} {{ !!isGetExp ? 'grey' : '' }}">
                         <wxc-countdown
                             format="hh:mm:ss"
                             wx:if="{{ countDown && !isGetExp }}"

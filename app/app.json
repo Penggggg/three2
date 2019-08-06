@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/my/index",
     "pages/trip-enter/index",
+    "pages/my/index",
     "pages/goods-detail/index",
     "pages/ground-pin/index",
     "pages/ground-push-integral/index",

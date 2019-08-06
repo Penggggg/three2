@@ -67,7 +67,7 @@ Component({
         showSignGift: false,
 
         // 把签到面板弹出
-        showSignBlock: true
+        showSignBlock: false
 
     },
 
@@ -327,7 +327,8 @@ Component({
             this.setData({
                 showSignGift: !showSignGift
             });
-            if ( !showSignGift ) {
+
+            if ( !showSignGift === false ) {
                 this.setData({
                     showSignBlock: true
                 });
