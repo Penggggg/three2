@@ -325,6 +325,21 @@ Component({
             })
         },
 
+        // 推送模板
+        push( ) {
+            const { todaySignGift$, toSignGift$, currentLevelSignGift$, nextLevelSignGift$ } = this.data;
+            http({
+                url: 'common_get-integral-push',
+                data: {
+                    get_integral: todaySignGift$,
+                    next_integral: toSignGift$,
+                    week_integral: currentLevelSignGift$,
+                    nextweek_integral: nextLevelSignGift$
+                },
+                success: res => { }
+            })
+        },
+
         // 开启、关闭红包提示
         toggleGift( e ) {
             const { formId } = e.detail;
@@ -334,6 +349,10 @@ Component({
             this.setData({
                 showSignGift: !showSignGift
             });
+
+            if ( formId ) {
+                this.push( );
+            }
 
             if ( !showSignGift === false ) {
                 this.setData({

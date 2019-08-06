@@ -1303,6 +1303,42 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /**
+     * @description
+     * 领取抵现金成功，推送
+     * {
+     *      get_integral: number // 本次获得
+     *      next_integral: number // 下次获得
+     *      week_integral: number // 本周获得
+     *      nextweek_integral: number // 下周获得
+     * }
+     */
+    app.router('get-integral-push', async ( ctx, next ) => {
+        try {
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const { get_integral, next_integral, week_integral, nextweek_integral } = event.data;
+
+            // 4、调用推送
+            const push$ = await cloud.callFunction({
+                name: 'common',
+                data: {
+                    $url: 'push-template-cloud',
+                    data: {
+                        openid,
+                        type: 'hongbao',
+                        page: 'pages/my/index',
+                        texts: [`恭喜获${get_integral}元，下单就能用！`, `全周登陆就送${week_integral}元！升级就送${nextweek_integral}元！`]
+                    }
+                }
+            });
+
+            return ctx.body = { status: 200 };
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
+
     return app.serve( );
 
 }

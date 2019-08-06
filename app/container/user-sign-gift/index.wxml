@@ -190,7 +190,7 @@
             <view class="pm-hongbao-content">
                 <view class="pm-hongbao-title center">
                     <!-- - 下单就能用 - -->
-                    - 登陆送现金 -
+                    - 送现金 下单用 -
                 </view>
                 <view class="pm-hongbao-price-block center">
                     <wxc-price
