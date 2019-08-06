@@ -148,8 +148,7 @@
         <!-- 红包现金 -->
         <view
             class="pm-hongbao-block"
-        >
-            
+        >   
             <!-- 红包背景 -->
             <image
                 mode="aspectFill"
@@ -157,11 +156,12 @@
                 lazy-load="{{ true }}"
                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/bg-sign-gift.png"
             />
-            
+
             <!-- 红包内容 -->
             <view class="pm-hongbao-content">
                 <view class="pm-hongbao-title center">
-                    - 下单就能用 -
+                    <!-- - 下单就能用 - -->
+                    - 登陆送现金 -
                 </view>
                 <view class="pm-hongbao-price-block center">
                     <wxc-price
@@ -182,31 +182,34 @@
                     <view class="pm-hongbao-smalltips center">
                         全周<view class="pm-hongbao-price2 bold">可领¥{{ currentLevelSignGift$ }}元</view>
                     </view>
-                    <view class="pm-countdown-block">
-                        <view>
-                            <wxc-countdown
-                                format="hh时mm分ss秒"
-                                wx:if="{{ countDown }}"
-                                countdown="{{ countDown }}"
-                                num-style="font-size: 30rpx; color: #f5222d;"
-                                symbol-style="font-size: 30rpx;color: #f5222d;"
-                            />
-                        </view>
-                        后 领{{ signExp }}经验
-                    </view>
-                    <view class="pm-hongbao-smalltips center">
-                        下级每周领¥{{ nextLevelSignGift$ }}
-                    </view>
+                    <form
+                        class=""
+                        bindsubmit="toggleGift"
+                        report-submit="{{ true }}"
+                    >
+                        <button
+                            form-type="submit"
+                            class='fix-btn pm-countdown-block'
+                        >
+                            知道了 
+                        </button>
+                    </form>
                 </view>
             </view>
 
             <!-- 关闭按钮 -->
-            <view 
-                bindtap="toggleGift"
-                class="pm-hongbao-close"
+            <form
+                class="pm-hongbao-close-form"
+                bindsubmit="toggleGift"
+                report-submit="{{ true }}"
             >
-                X
-            </view>
+                <button
+                    form-type="submit"
+                    class='fix-btn pm-hongbao-close'
+                >
+                    X 
+                </button>
+            </form>
         </view>
         
     </wxc-mask>

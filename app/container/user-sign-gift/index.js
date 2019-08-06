@@ -64,7 +64,10 @@ Component({
         signCountHour: 2,
 
         // 弹出登录获抵现金的红包框
-        showSignGift: false
+        showSignGift: false,
+
+        // 把签到面板弹出
+        showSignBlock: false
 
     },
 
@@ -318,6 +321,11 @@ Component({
             this.setData({
                 showSignGift: !showSignGift
             });
+            if ( !showSignGift ) {
+                this.setData({
+                    showSignBlock: true
+                });
+            }
         },
 
         // 自动弹出转发提示
