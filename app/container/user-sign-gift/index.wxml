@@ -1,21 +1,23 @@
 <view class="con-user-sign-gift">
 
     <!-- 背景 -->
-    <!-- wx:if="{{ showSignBlock && !showSign }}" -->
     <view 
         class="pm-checkin-bg"
+        wx:if="{{ showSignBlock$ }}"
     >
     </view>
 
     <!-- 签到版面的壳 -->
     <view
-        class="pm-checkin-con fixed"
+        class="pm-checkin-con {{ showSignBlock$ ? 'fixed' : '' }}"
     
     >
         <!-- 关闭按钮 -->
         <form
+            wx:if="{{ showSignBlock$ }}"
             report-submit="{{ true }}"
             class="pm-sign-close-form"
+            bindsubmit="toggleSign"
         >
             <button
                 form-type="submit"
@@ -133,6 +135,7 @@
 
                 <!-- 去赚抵现金 -->
                 <view 
+                    wx:if="{{ !showSignBlock$ }}"
                     class="pm-checkin-task nmb"
                 >
                     <view class="pm-checkin-task-content">
@@ -165,7 +168,6 @@
         </view>
     </view>
     
-
     <!-- 送抵现金版面 -->
     <wxc-mask
         content-align="cc"

@@ -213,6 +213,12 @@ Component({
                 showSignGift$: function( ) {
                     const { showSignGift } = this.data;
                     return showSignGift ? 'show' : 'hide'
+                },
+
+                // 是否弹起签到框
+                showSignBlock$: function( ) {
+                    const { showSignBlock, showSign } = this.data;
+                    return showSignBlock && !showSign;
                 }
             });
         },
@@ -326,6 +332,14 @@ Component({
                     showSignBlock: true
                 });
             }
+        },
+
+        // 开启、关闭签到框
+        toggleSign( ) {
+            const { showSignBlock } = this.data;
+            this.setData({
+                showSignBlock: !showSignBlock
+            });
         },
 
         // 自动弹出转发提示
