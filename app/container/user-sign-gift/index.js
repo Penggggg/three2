@@ -285,12 +285,15 @@ Component({
                 success: res => {
                     const { status } = res;
                     if ( status !== 200 ) { return; }
-                    wx.showToast({
-                        title: '领取成功',
-                        duration: 2500,
-                    });
+                    setTimeout(( ) => {
+                        wx.showToast({
+                            title: '领取成功',
+                            duration: 2500,
+                        });
+                    }, 100 );
                     this.setData({
-                        isGetExp: true
+                        isGetExp: true,
+                        countDown: 0
                     });
                     this.fetchPushIntegral( );
                     wx.setStorageSync( storageKey['exp-get-last-time'], String( Date.now( )));
@@ -378,6 +381,7 @@ Component({
         },
 
         // 初始化经验倒计时
+        // 未领取经验
         initExpCount( ) {
             const now = new Date( );
             const { signCountHour } = this.data;
@@ -398,6 +402,7 @@ Component({
                 }
             };
 
+            // 重置状态
             const reset = ( ) => {
                 const whenCanGetExp = getRightTime( Date.now( ), signCountHour );
                 const countDown = Number((( whenCanGetExp - Date.now( )) / 1000 ).toFixed( 0 ));
@@ -415,6 +420,8 @@ Component({
                             isGetExp: false
                         })
                     }, countDown * 1000 );
+                } else {
+
                 }
             }
 
@@ -450,7 +457,14 @@ Component({
                         ) 
                     ) {
                         reset( );
+                    } else {
+                        // 如果还在今天，并且可以领取
+                        this.setData({
+                            showSignBlock: true
+                        })
                     }
+
+                    
 
                 }
             }
