@@ -25,6 +25,65 @@ Page({
 
         // 当前选中的分类
         active: 'recommand',
+
+        // ip头像
+        ipAvatar: '',
+
+        // ip名称
+        ipName: '',
+
+        // 推荐商品
+        recommendGoods: [ ],
+
+        // 当前行程
+        current: null
+    },
+
+    runComputed( ) {
+        computed( this, {
+
+        });
+    },
+
+    /** 全局数据 */
+    watchRole( ) {
+
+        app.watch$('appConfig', ( val ) => {
+            if ( !val ) { return; }
+            this.setData({
+                ipName: val['ip-name'],
+                ipAvatar: val['ip-avatar']
+            })
+        });
+
+        app.watch$('role', role => {
+            this.setData({
+                role
+            });
+        });
+    },
+
+    /** 拉取两个最新行程 */
+    fetchLast( ) {
+
+        http({
+            data: { },
+            loadingMsg: '加载中...',
+            url: `trip_enter`,
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                const current = data[ 0 ];
+
+                this.setData({
+                    current: data[ 0 ] ? this.dealTrip( data[ 0 ]) : null,
+                    recommendGoods: current? current.products.map( delayeringGood ).filter( x => !!x ) : [ ],
+                });
+
+            }
+        });
+
     },
 
     /** 拉取数据字典 */
@@ -53,12 +112,32 @@ Page({
         });
     },
 
+    /** 拼团广场 */
+    goGround( ) {
+        navTo('/pages/ground-pin/index');
+    },
+
     /** 选择分类 */
     onChoiceClassify({ currentTarget }) {
         const { value } = currentTarget.dataset;
         this.setData({
             active: value
         })
+    },
+
+    /** 处理详情 */
+    dealTrip( tripDetail ) {
+
+        const { start_date, end_date } = tripDetail;
+        const MMdd = timestamp => {
+            const d = new Date( timestamp );
+            return `${d.getMonth( ) + 1}.${d.getDate( )}`
+        }
+
+        return Object.assign({ }, tripDetail, {
+            end_date$: MMdd( end_date ),
+            start_date$: MMdd( start_date )
+        });
     },
 
     /** 去搜索 */
@@ -70,7 +149,11 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        this.fetchDic( )
+        this.runComputed( );
+        this.watchRole( );
+
+        this.fetchLast( );
+        this.fetchDic( );
     },
 
     /**
@@ -84,7 +167,13 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function () {
+        const { role } = this.data;
+        if ( role === 1 ) {
 
+            setTimeout(( ) => {
+                this.fetchLast( );
+            }, 20 );
+        }
     },
 
     /**

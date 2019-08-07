@@ -3,7 +3,7 @@
     <!-- 加载中 -->
     <view
         wx:if="{{ loading }}"
-        class="pi-loading-tips"
+        class="te2-loading-tips"
     >
         加载中...
     </view>
@@ -15,44 +15,19 @@
 
         <!-- 分类选择 -->
         <view
-            class="pi-classify-contaienr"
+            class="te2-classify-contaienr"
             wx:if="{{ classify.length > 0 }}"
         >
-            <view class="pi-classify-block">
+            <view class="te2-classify-block">
                 <view
                     wx:for="{{ classify }}"
                     wx:key="{{ index }}"
                     data-value="{{ item.value }}"
-                    class="pi-classify-item {{ active === item.value ? 'active' : ''  }}"
+                    class="te2-classify-item {{ active === item.value ? 'active' : ''  }}"
                     bindtap="onChoiceClassify"
                 >
                     {{ item.label }}
                 </view>
-            </view>
-        </view>
-
-        <!-- 搜索框 -->
-        <view
-            class="pi-search-con"
-            wx:if="{{ active === 'recommand' }}"
-        >
-            <view
-                class="pi-search-block"
-                bindtap="goSearch"
-            >
-
-                <view class="pi-icon">
-                    <wxc-icon
-                        size="35"
-                        type="search"
-                        color="#bfbfbf"
-                    />
-                </view>
-
-                <view class="pi-search-text">
-                    搜索商品
-                </view>
-                
             </view>
         </view>
 
@@ -65,15 +40,166 @@
                 class="te2-recommand-block"
                 wx:if="{{ active === 'recommand' }}"
             >
+
+                <!-- 搜索框 -->
+                <view
+                    class="te2-search-con"
+                    wx:if="{{ active === 'recommand' }}"
+                >
+                    <view
+                        class="te2-search-block"
+                        bindtap="goSearch"
+                    >
+
+                        <view class="te2-icon">
+                            <wxc-icon
+                                size="35"
+                                type="search"
+                                color="#bfbfbf"
+                            />
+                        </view>
+
+                        <view class="te2-search-text">
+                            搜索商品
+                        </view>
+                        
+                    </view>
+                </view>
+
+                <!-- IP+拼团展示、热门推荐 -->
+                <swiper
+                    indicator-dots="{{ true }}"
+                    autoplay="{{ true }}"
+                    duration="{{ 800 }}"
+                    circular="{{ true }}"
+                    interval="{{ 4000 }}"
+                    class="te2-recommand-logo-swiper"
+                    display-multiple-items="{{ 1 }}"
+                    indicator-active-color="rgba(0,0,0,0.2)"
+                    indicator-color="rgba(0,0,0,0.4)"
+                >
+
+                    <!-- IP+拼团展示 -->
+                    <block>
+                        <swiper-item class="te2-recommond-logo-item">
+
+                            <!-- 背景图 -->
+                            <image
+                                mode="scaleToFill"
+                                class="te2-recommond-logo"
+                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner-2.png"
+                            />
+
+                            <!-- ip logo -->
+                            <view
+                                bindtap="goGround"
+                                class="te2-logo-block"
+                            >
+
+                                <view
+                                    wx:if="{{ ipAvatar }}"
+                                    class="te2-zhushou-block fixed"
+                                >
+                                    有助手, 帮找群友拼团
+                                </view>
+
+                                <!-- ip头像 -->
+                                <image
+                                    mode="aspectFit"
+                                    class="te2-logo-avatar"
+                                    lazy-load="{{ true }}"
+                                    src="{{ ipAvatar }}"
+                                    wx:if="{{ ipAvatar }}"
+                                />
+
+                                <!-- IP名字 -->
+                                <view
+                                    
+                                    class="te2-tips-btn-block"
+                                >
+                                    <view class="te2-tips-btn">
+                                        {{ ipName ? ipName + '代购拼团' : '更多代购拼团' }}
+                                    </view>
+                                </view>
+
+                                 <!-- 行程基本信息 -->
+                                <view
+                                    class="te2-trip-info"
+                                >
+                                    <!-- <view class="trip-decorate">
+                                        Trip
+                                    </view>  -->
+                                    <view 
+                                        class="trip-date"
+                                        wx:if="{{ current }}"
+                                    >
+                                        {{ current.start_date$ }} ~ {{ current.end_date$ }}
+                                    </view>
+                                </view>
+                                
+                            </view>
+
+                            <!-- 拼团提示 -->
+                            <view class="te2-pin-block">
+
+                                <view class="te2-pin-title">
+                                    拼团省钱
+                                </view>
+
+                                <view class="te2-pin-title-big">
+                                    小程序有拼团价
+                                </view>
+
+                                <view class="te2-pin-price-block">
+                                    <view
+                                        icon="sub"
+                                        decimal="small"
+                                        class="te2-pin-price-big"
+                                    > 
+                                        ¥48
+                                    </view>
+                                    <view
+                                        class="te2-pin-price line"
+                                    > 
+                                        ¥69
+                                    </view>
+                                </view>
+
+                                <!-- 助手提示 -->
+                                <view
+                                    wx:if="{{ !ipAvatar }}"
+                                    class="te2-zhushou-block"
+                                >
+                                    有助手, 帮找群友拼团
+                                </view>
+                            </view>
+                        </swiper-item>
+                    </block>
+
+                    <!-- 热门推荐 -->
+                    <!-- <block
+                        wx:key="{{ index }}"
+                        wx:for="{{ recommendGoods$ }}"
+                    >
+                        <swiper-item class="te2-recommond-logo-item">
+                        </swiper-item>
+                    </block> -->
+                </swiper>
+
             </scroll-view>
 
             <!-- 其他分类 -->
-            <view class="te-classify-container">
+            <view class="te2-classify-container">
                 <my-good-classify-list
                     classify="{{ active }}"
                     wx:if="{{ active !== 'recommand' }}"
                 />
             </view>
+        </view>
+
+        <view class="pm-nav-block">
+            <!-- 底部按钮 -->
+            <my-nav />
         </view>
 
     </view>

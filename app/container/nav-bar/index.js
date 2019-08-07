@@ -20,16 +20,18 @@ Component({
         // 导航nav
         navList: [
             {
-                label: '行程',
-                url: "/pages/trip-enter/index",
+                label: '商城',
+                url: "/pages/trip-enter-2/index",
                 normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-plane.png",
                 active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-plane-active.png"
-            }, {
-                label: '超值',
-                url: "/pages/index/index",
-                normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-shop.png",
-                active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-shop-active.png"
-            }, {
+            }, 
+            // {
+            //     label: '超值',
+            //     url: "/pages/index/index",
+            //     normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-shop.png",
+            //     active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-shop-active.png"
+            // }, 
+            {
                 label: '钱',
                 url: "/pages/ground-pin/index",
                 // normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-cart.png",
