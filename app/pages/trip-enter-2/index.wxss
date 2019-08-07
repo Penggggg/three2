@@ -19,7 +19,7 @@
 }
 
 .te-classify-container {
-    padding: 15rpx 10rpx 15rpx 10rpx;
+    padding: 0rpx 10rpx 15rpx 10rpx;
 }
 
 .pi-loading-tips {
