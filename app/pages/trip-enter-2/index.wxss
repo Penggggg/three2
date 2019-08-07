@@ -248,7 +248,12 @@
     border-radius: 30px;
     display: inline-block;
     letter-spacing: 0.08em;
+    transition: all ease 0.4s;
     background: rgba( 0, 0, 0, 0.3 );
+}
+
+.te2-zhushou-block.hide {
+    opacity: 0;
 }
 
 

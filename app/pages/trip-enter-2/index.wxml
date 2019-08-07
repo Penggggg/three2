@@ -98,7 +98,7 @@
 
                                 <view
                                     wx:if="{{ ipAvatar }}"
-                                    class="te2-zhushou-block fixed"
+                                    class="te2-zhushou-block fixed {{ zhushouTips ? '' : 'hide' }}"
                                 >
                                     有助手, 帮找群友拼团
                                 </view>

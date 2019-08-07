@@ -36,7 +36,13 @@ Page({
         recommendGoods: [ ],
 
         // 当前行程
-        current: null
+        current: null,
+
+        // 定时器
+        clocks: [ ],
+
+        // 展示助手提示
+        zhushouTips: false
     },
 
     runComputed( ) {
@@ -145,12 +151,27 @@ Page({
         navTo('/pages/search/index')
     },
 
+    /** 初始化助手定时器 */
+    initClock( ) {
+        const { clocks } = this.data;
+        clocks.push(
+            setInterval(( ) => {
+                const { zhushouTips } = this.data;
+                this.setData({
+                    zhushouTips: !zhushouTips
+                })
+            }, 4000 )
+        )
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
         this.runComputed( );
         this.watchRole( );
+
+        this.initClock( );
 
         this.fetchLast( );
         this.fetchDic( );
@@ -187,7 +208,14 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload: function () {
-
+        const { clocks } = this.data;
+        clocks.map( c => {
+            if ( c ) {
+                try {
+                    clearInterval( c );
+                } catch ( e ) {}
+            }
+        })
     },
 
     /**
