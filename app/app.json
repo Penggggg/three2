@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/trip-enter-2/index",
     "pages/trip-enter/index",
     "pages/my/index",
     "pages/goods-detail/index",

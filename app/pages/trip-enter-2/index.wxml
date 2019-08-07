@@ -1,0 +1,84 @@
+<view class="p-trip-enter2">
+
+    <!-- 加载中 -->
+    <view
+        wx:if="{{ loading }}"
+        class="pi-loading-tips"
+    >
+        加载中...
+    </view>
+
+    <view
+        wx:else
+        class="te2-content"
+    >
+
+        <!-- 分类选择 -->
+        <view
+            class="pi-classify-contaienr"
+            wx:if="{{ classify.length > 0 }}"
+        >
+            <view class="pi-classify-block">
+                <view
+                    wx:for="{{ classify }}"
+                    wx:key="{{ index }}"
+                    data-value="{{ item.value }}"
+                    class="pi-classify-item {{ active === item.value ? 'active' : ''  }}"
+                    bindtap="onChoiceClassify"
+                >
+                    {{ item.label }}
+                </view>
+            </view>
+        </view>
+
+        <!-- 搜索框 -->
+        <view
+            class="pi-search-con"
+            wx:if="{{ active === 'recommand' }}"
+        >
+            <view
+                class="pi-search-block"
+                bindtap="goSearch"
+            >
+
+                <view class="pi-icon">
+                    <wxc-icon
+                        size="35"
+                        type="search"
+                        color="#bfbfbf"
+                    />
+                </view>
+
+                <view class="pi-search-text">
+                    搜索商品
+                </view>
+                
+            </view>
+        </view>
+
+        <view
+            class="te2-content-container"
+        >
+            <!-- 推荐 -->
+            <scroll-view
+                scroll-y
+                class="te2-recommand-block"
+                wx:if="{{ active === 'recommand' }}"
+            >
+            </scroll-view>
+
+            <!-- 其他分类 -->
+            <view class="te-classify-container">
+                <my-good-classify-list
+                    classify="{{ active }}"
+                    wx:if="{{ active !== 'recommand' }}"
+                />
+            </view>
+        </view>
+
+    </view>
+
+    <!-- 管理入口 -->
+    <my-manager-entry-btn />
+
+</view>
