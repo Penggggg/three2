@@ -72,11 +72,11 @@
                     autoplay="{{ true }}"
                     duration="{{ 800 }}"
                     circular="{{ true }}"
-                    interval="{{ 4000 }}"
+                    interval="{{ 4500 }}"
                     class="te2-recommand-logo-swiper"
                     display-multiple-items="{{ 1 }}"
-                    indicator-active-color="rgba(0,0,0,0.2)"
-                    indicator-color="rgba(0,0,0,0.4)"
+                    indicator-active-color="rgba(0,0,0,0.4)"
+                    indicator-color="rgba(0,0,0,0.2)"
                 >
 
                     <!-- IP+拼团展示 -->
@@ -173,17 +173,79 @@
                                     有助手, 帮找群友拼团
                                 </view>
                             </view>
+
                         </swiper-item>
                     </block>
 
                     <!-- 热门推荐 -->
-                    <!-- <block
+                    <block
                         wx:key="{{ index }}"
                         wx:for="{{ recommendGoods$ }}"
                     >
-                        <swiper-item class="te2-recommond-logo-item">
+                        <swiper-item class="te2-recommond-logo-item line">
+
+                            <!-- 背景图 -->
+                            <image
+                                mode="scaleToFill"
+                                class="te2-recommond-logo"
+                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner-2.png"
+                            />
+
+                            <!-- 产品图片 -->
+                            <view 
+                                class="te2-recommond-good-con"
+                                wx:if="{{ recommendGoodWidths[ index ]}}"
+                            >
+                                <view
+                                    class="te2-pinest-img-con"
+                                    style="width: {{ recommendGoodWidths[ index ]}}rpx"
+                                >
+                                    <image
+                                        mode="aspectFill"
+                                        class="te2-pinest-img"
+                                        src="{{ item.img[ 0 ]}}"
+                                        lazy-load="{{ true }}"
+                                    />
+                                </view>
+                                <view class="te2-pinest-text-block">
+                                    <view class="te2-pinest-text">强烈推荐</view>
+                                    <image
+                                        mode="aspectFill"
+                                        class="te2-pinest-icon"
+                                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-star-3.png"
+                                    />
+                                </view>
+                            </view>
+
+                            <!-- 文字信息 -->
+                            <view class="te2-pin-block">
+
+                                <view class="te2-pin-title">
+                                    {{ item.tagText }}
+                                </view>
+
+                                <view class="te2-pin-title-big">
+                                    {{ item.title }}
+                                </view>
+
+                                <view class="te2-pin-price-block">
+                                    <view
+                                        icon="sub"
+                                        decimal="small"
+                                        class="te2-pin-price-big"
+                                    > 
+                                        ¥{{ item.lowest_price$ }}
+                                    </view>
+                                    <view
+                                        class="te2-pin-price"
+                                    > 
+                                        最低价
+                                    </view>
+                                </view>
+                            </view>
+
                         </swiper-item>
-                    </block> -->
+                    </block>
                 </swiper>
 
             </scroll-view>

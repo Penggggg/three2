@@ -35,6 +35,9 @@ Page({
         // 推荐商品
         recommendGoods: [ ],
 
+        // 推荐商品宽度
+        recommendGoodWidths: [ ],
+
         // 当前行程
         current: null,
 
@@ -47,7 +50,16 @@ Page({
 
     runComputed( ) {
         computed( this, {
-
+            // 热门推荐 + 活动标志 
+            recommendGoods$: function( ) {
+                const { recommendGoods } = this.data;
+                const meta = recommendGoods.map( x => Object.assign({ }, x, {
+                    // 是否有特价活动
+                    hasActivity: Array.isArray( x.activities ) && x.activities.length > 0
+                }));
+                console.log( meta );
+                return meta;
+            }
         });
     },
 
@@ -87,6 +99,8 @@ Page({
                     recommendGoods: current? current.products.map( delayeringGood ).filter( x => !!x ) : [ ],
                 });
 
+                this.configPinest( );
+
             }
         });
 
@@ -115,6 +129,40 @@ Page({
                     }, ...res.data.goods_category ]
                 });
             }
+        });
+    },
+
+    /** 设置本期推荐的网络图片 */
+    configPinest( ) {
+        const { recommendGoods } = this.data;
+        if ( recommendGoods.length === 0 ) { return; }
+
+        Promise.all(
+            recommendGoods.map( good => {
+                return this.imgInfo( good.img[ 0 ])
+            })
+        ).then( arr => {
+            this.setData({
+                recommendGoodWidths: arr
+            });
+        });
+    },
+
+    /** 返回promise的问了图片数据 */
+    imgInfo( imgSrc ) {
+        return new Promise( resolve => {
+            wx.getImageInfo({
+                src: imgSrc,
+                success: res => {
+                    // 在.wxss文件设置了 height:225rpx;
+                    const proportion = res.width / res.height;
+                    const imgWidth = 225 / proportion;
+                    resolve( imgWidth );
+                },
+                fail: ( ) => {
+                    resolve( 0 );
+                }
+            });
         });
     },
 

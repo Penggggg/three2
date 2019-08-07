@@ -90,6 +90,11 @@
 .te2-recommond-logo-item {
     height: 350rpx;
     position: relative;
+    box-sizing: border-box;
+}
+
+.te2-recommond-logo-item.line {
+    border: 4px solid #000;
 }
 
 .te2-recommond-logo {
@@ -196,6 +201,13 @@
     color: #333;
     font-size: 34rpx;
     letter-spacing: 0.05em;
+    width: 350rpx;
+    overflow: hidden; 
+    display: -webkit-box; 
+    -webkit-line-clamp: 1;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
 }
 
 .te2-pin-title-big {
@@ -203,6 +215,13 @@
     font-size: 46rpx;
     font-weight: bold;
     letter-spacing: 0.05em;
+    width: 350rpx;
+    overflow: hidden; 
+    display: -webkit-box; 
+    -webkit-line-clamp: 1;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
 }
 
 .te2-pin-price-block {
@@ -229,9 +248,9 @@
 }
 
 .te2-pin-price.line:after {
-    top: 56%;
+    top: 55%;
     left: 50%;
-    height: 4rpx;
+    height: 5rpx;
     width: 120%;
     content: '';
     position: absolute;
@@ -284,4 +303,49 @@
     color: #fff;
     margin-top: 5rpx;
     font-size: 24rpx;
+}
+
+.te2-recommond-good-con {
+    top: 50%;
+    right: 85rpx;
+    position: absolute;
+    border-radius: 2px;
+    border: 3px solid #fff;
+    box-shadow: 0px 0px 15px rgba( 0, 0, 0, 0.15 );
+    transform: translate( 0, -50% );
+}
+
+.te2-pinest-img-con {
+    /* width:190rpx; */
+    width: 0rpx;
+    height:225rpx;
+    overflow: hidden;
+}
+
+.te2-pinest-img {
+    width: 100%;
+    border-radius: 2px;
+    height: 100%;
+}
+
+.te2-pinest-text-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 2rpx 0;
+    background: rgba( 255, 255, 255, 0.85 );
+}
+
+.te2-pinest-text {
+    color: #333;
+    font-size: 24rpx;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+}
+
+.te2-pinest-icon {
+    width: 30rpx;
+    max-height: 30rpx;
+    margin-left: 10rpx;
 }
