@@ -261,6 +261,7 @@ Component({
                     });
                     setTimeout(( ) => {
                         this.initTips( );
+                        this.checkGetExp( );
                         this.checkGetIntegral( );
                     }, 100 );
                 }
@@ -293,7 +294,8 @@ Component({
                     }, 100 );
                     this.setData({
                         isGetExp: true,
-                        countDown: 0
+                        countDown: 0,
+                        showSignBlock: false
                     });
                     this.fetchPushIntegral( );
                     wx.setStorageSync( storageKey['exp-get-last-time'], String( Date.now( )));
@@ -564,8 +566,6 @@ Component({
     attached: function( ) {
         this.watchRole( );
         this.runComputed( );
-
-        this.checkGetExp( );
         this.fetchPushIntegral( );
     }
 })
