@@ -57,7 +57,6 @@ Page({
                     // 是否有特价活动
                     hasActivity: Array.isArray( x.activities ) && x.activities.length > 0
                 }));
-                console.log( meta );
                 return meta;
             }
         });
@@ -169,6 +168,13 @@ Page({
     /** 拼团广场 */
     goGround( ) {
         navTo('/pages/ground-pin/index');
+    },
+
+    /** 跳到商品详情 */
+    goGoodDetail({ currentTarget }) {
+        const { data } = currentTarget.dataset;
+        const { pid } = data;
+        !!pid && navTo(`/pages/goods-detail/index?id=${pid}`);
     },
 
     /** 选择分类 */

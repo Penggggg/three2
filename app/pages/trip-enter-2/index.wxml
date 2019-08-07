@@ -182,7 +182,11 @@
                         wx:key="{{ index }}"
                         wx:for="{{ recommendGoods$ }}"
                     >
-                        <swiper-item class="te2-recommond-logo-item line">
+                        <swiper-item
+                            data-data="{{ item }}"
+                            bindtap="goGoodDetail"
+                            class="te2-recommond-logo-item line"
+                        >
 
                             <!-- 背景图 -->
                             <image
