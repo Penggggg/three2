@@ -36,6 +36,7 @@ Component({
                 setTimeout(( ) => {
                     this.toggle( );
                 }, 10000 );
+                wx.setStorageSync( storageKey, String( Date.now( )));
             }
 
             setTimeout(( ) => {
@@ -44,7 +45,6 @@ Component({
                     openAndClose( );
                 } else if ( Date.now( ) - last > delta ) {
                     // 多于5天的时候再显示一下
-                    wx.setStorageSync( storageKey, String( Date.now( )));
                     openAndClose( );
                 }
             }, 5000 );

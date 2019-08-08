@@ -45,7 +45,28 @@ Page({
         clocks: [ ],
 
         // 展示助手提示
-        zhushouTips: false
+        zhushouTips: false,
+
+        // 模块入口
+        entry: [
+            {
+                label: '好货拼团',
+                url: '/pages/ground-pin/index',
+                icon: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hufu-1.png'
+            }, {
+                label: '特价秒杀',
+                url: '/pages/ground-pin/index',
+                icon: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hufu-2.png'
+            }, {
+                label: '好物上新',
+                url: '/pages/ground-pin/index',
+                icon: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hufu-3.png'
+            }, {
+                label: '签到福利',
+                url: '/pages/my/index',
+                icon: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hufu-4.png'
+            }
+        ]
     },
 
     runComputed( ) {
@@ -216,6 +237,12 @@ Page({
                 })
             }, 4000 )
         )
+    },
+
+    /** 模块入口 */
+    goEntry({ currentTarget }) {
+        const { url }  = currentTarget.dataset;
+        !!url && navTo( url );
     },
 
     /**

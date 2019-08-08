@@ -31,6 +31,7 @@
             </view>
         </view>
 
+        <!-- 主体内容 -->
         <view
             class="te2-content-container"
         >
@@ -251,6 +252,27 @@
                         </swiper-item>
                     </block>
                 </swiper>
+
+                <!-- 各模块入口 -->
+                <view class="te2-entry-block">
+                    <view
+                        wx:key="{{ key }}"
+                        wx:for="{{ entry }}"
+                        class="te2-entry-item"
+                        data-url="{{ item.url }}"
+                        bindtap="goEntry"
+                    >
+                        <image
+                            class="te2-entry-icon"
+                            mode="aspectFill"
+                            lazy-load="{{ true }}"
+                            src="{{ item.icon }}"
+                        />
+                        <view class="te2-entry-label">
+                            {{ item.label }}
+                        </view>
+                    </view>
+                </view>
 
             </scroll-view>
 

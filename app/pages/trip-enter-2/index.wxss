@@ -349,3 +349,37 @@
     max-height: 30rpx;
     margin-left: 10rpx;
 }
+
+.test {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: 50%;
+}
+
+.te2-entry-block {
+    display: flex;
+    box-sizing: border-box;
+    padding: 45rpx 30rpx;
+}
+
+.te2-entry-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.te2-entry-icon {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: 50%;
+    /* box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.15 ); */
+}
+
+.te2-entry-label {
+    color: #333;
+    font-size: 25rpx;
+    margin-top: 15rpx;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+}
