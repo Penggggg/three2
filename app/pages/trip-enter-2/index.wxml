@@ -273,4 +273,7 @@
     <!-- 管理入口 -->
     <my-manager-entry-btn />
 
+    <!-- 保存我的小程序 -->
+    <my-save-wma />
+
 </view>

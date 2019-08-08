@@ -1,0 +1,7 @@
+<view class="con-save-wma {{ show ? '' : 'hide' }}">
+    <image
+        class="csw-img"
+        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-close-white.png"
+    />
+    <view>添加到我的小程序</view>
+</view>
