@@ -35,7 +35,7 @@ Component({
                 this.toggle( );
                 setTimeout(( ) => {
                     this.toggle( );
-                }, 10000 );
+                }, 5000 );
                 wx.setStorageSync( storageKey, String( Date.now( )));
             }
 
