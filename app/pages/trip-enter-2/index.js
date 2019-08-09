@@ -32,6 +32,9 @@ Page({
         // ip名称
         ipName: '',
 
+        // 每周上新
+        newList: [ ],
+
         // 推荐商品
         recommendGoods: [ ],
 
@@ -152,6 +155,26 @@ Page({
         });
     },
 
+    /** 拉取新品列表 */
+    fetchNew( ) {
+        http({
+            data: {
+                limit: 6,
+                page: 1,
+                sort: 'createTime'
+            },
+            url: `good_rank`,
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setData({
+                    newList: data.data,
+                });
+
+            }
+        })
+    },
+
     /** 设置本期推荐的网络图片 */
     configPinest( ) {
         const { recommendGoods } = this.data;
@@ -256,6 +279,7 @@ Page({
 
         this.fetchLast( );
         this.fetchDic( );
+        this.fetchNew( );
     },
 
     /**

@@ -359,7 +359,7 @@
 .te2-entry-block {
     display: flex;
     box-sizing: border-box;
-    padding: 45rpx 30rpx;
+    padding: 45rpx 30rpx 15rpx 30rpx;
 }
 
 .te2-entry-item {
