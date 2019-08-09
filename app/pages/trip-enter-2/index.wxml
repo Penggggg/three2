@@ -38,7 +38,9 @@
             <!-- 推荐 -->
             <scroll-view
                 scroll-y
+                lower-threshold="100"
                 class="te2-recommand-block"
+                bindscrolltolower="fetchRank"
                 wx:if="{{ active === 'recommand' }}"
             >
 
@@ -277,9 +279,9 @@
                 <!-- 任务提醒模块 -->
 
                 <!-- 本期拼团标题 -->
-                <!-- <my-title-decorate
+                <my-title-decorate
                     title="热门拼团"
-                /> -->
+                />
 
                 <!-- 本期拼团 -->
 
@@ -329,8 +331,20 @@
                 </view>
 
                 <!-- 畅销Top榜（好看的bar） -->
+                <my-title-decorate
+                    title="畅销Top榜"
+                />
 
                 <!-- 畅销Top榜（分页滚动） -->
+                <view
+                    class="te2-good-list"
+                >
+                    <my-good-item-3
+                        good="{{ item }}"
+                        wx:key="{{ index }}"
+                        wx:for="{{ rankList }}"
+                    />
+                </view>
 
             </scroll-view>
 

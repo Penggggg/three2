@@ -444,3 +444,7 @@
     line-height: 34rpx;
     color: rgba( 0, 0, 0, 0.35 );
 }
+
+.te2-good-list {
+    padding: 20rpx 25rpx;
+}

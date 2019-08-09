@@ -69,7 +69,19 @@ Page({
                 url: '/pages/my/index',
                 icon: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hufu-4.png'
             }
-        ]
+        ],
+
+        // 排行榜
+        loadingRank: false,
+
+        // 排行榜
+        canLoadRankMore: true,
+
+        // 排行榜
+        rankPage: 0,
+
+        // 排行榜
+        rankList: [ ]
     },
 
     runComputed( ) {
@@ -170,9 +182,44 @@ Page({
                 this.setData({
                     newList: data.data.map( delayeringGood ),
                 });
-                console.log( data.data.map( delayeringGood ));
             }
         })
+    },
+
+    /** 排行榜 */
+    fetchRank( ) {
+     
+        const { loadingRank, canLoadRankMore, rankPage, rankList } = this.data;
+        if ( loadingRank || !canLoadRankMore ) { return; }
+
+        this.setData({
+            loadingRank: true
+        });
+
+        http({
+            data: {
+                limit: 4,
+                page: rankPage + 1,
+            },
+            url: `good_rank`,
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                const list = data.data;
+                const { pagenation } = data;
+                const { page, totalPage } = pagenation;
+
+                const meta = page === 1 ? list : [ ...rankList, ...list ]
+
+                this.setData({
+                    rankPage: page,
+                    rankList: meta.map( delayeringGood ),
+                    loadingRank: false,
+                    canLoadRankMore: page < totalPage,
+                });
+            }
+        });
     },
 
     /** 设置本期推荐的网络图片 */
@@ -277,9 +324,10 @@ Page({
 
         this.initClock( );
 
-        this.fetchLast( );
         this.fetchDic( );
+        this.fetchLast( );
         this.fetchNew( );
+        this.fetchRank( );
     },
 
     /**
