@@ -291,7 +291,42 @@
                 />
 
                 <!-- 每周上新 -->
-                
+                <view class="te2-new-block">
+                    <view
+                        wx:key="{{ index }}"
+                        class="te2-new-item"
+                        wx:for="{{ newList }}"
+                    >
+                        <image 
+                            mode="aspectFill"
+                            lazy-load="{{ true }}"
+                            class="te2-new-item-img"
+                            src="{{ item.img[ 0 ]}}"
+                        />
+                        <view class="te2-new-item-info">
+                            <view class="te2-new-item-title">
+                                {{ item.title }}
+                            </view>
+                            <view class="te2-new-price-block">
+                                <wxc-price
+                                    icon="sub"
+                                    decimal="small"
+                                    class="te2-new-price"
+                                > 
+                                    {{ item.lowest_price$ }}
+                                </wxc-price>
+                                <wxc-price
+                                    icon="sub"
+                                    decimal="small"
+                                    status="del"
+                                    class="te2-new-price2"
+                                > 
+                                    {{ item.fadePrice }}
+                                </wxc-price>
+                            </view>
+                        </view>
+                    </view>
+                </view>
 
                 <!-- 畅销Top榜（好看的bar） -->
 

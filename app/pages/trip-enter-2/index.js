@@ -168,9 +168,9 @@ Page({
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
                 this.setData({
-                    newList: data.data,
+                    newList: data.data.map( delayeringGood ),
                 });
-
+                console.log( data.data.map( delayeringGood ));
             }
         })
     },
