@@ -81,7 +81,10 @@ Page({
         rankPage: 0,
 
         // 排行榜
-        rankList: [ ]
+        rankList: [ ],
+
+        // 本次行程购物清单
+        allShoppinglist: [ ]
     },
 
     runComputed( ) {
@@ -225,6 +228,9 @@ Page({
 
     /** 拉取所有购物清单 */
     fetchAllShoppinglist( tid ) {
+        const { allShoppinglist } = this.data;
+        if ( allShoppinglist.length > 0 ) { return; }
+
         http({
             data: {
                 tid,
@@ -241,8 +247,6 @@ Page({
                 const pingList = data.filter( x => !!x.adjustGroupPrice && x.uids.length > 1 );
 
                 this.setData({
-                    waitPin,
-                    pingList,
                     allShoppinglist: [ ...waitPin, ...pingList ]
                 });
             }

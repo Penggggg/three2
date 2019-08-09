@@ -88,6 +88,7 @@
 
                             <!-- 背景图 -->
                             <image
+                                lazy-load="{{ true }}"
                                 mode="scaleToFill"
                                 class="te2-recommond-logo"
                                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner-2.png"
@@ -285,6 +286,7 @@
 
                 <!-- 本期拼团 -->
 
+
                 <!-- 每周上新标题 -->
                 <my-title-decorate
                     left="9"
@@ -333,9 +335,22 @@
                 </view>
 
                 <!-- 畅销Top榜（好看的bar） -->
-                <my-title-decorate
-                    title="畅销Top榜"
-                />
+                <view class="te2-top-banner-block">
+                    <image
+                        mode="aspectFill"
+                        lazy-load="{{ true }}"
+                        class="te2-top-banner-img"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/banner-3.png"
+                    />
+                    <view class="te2-top-banner-info">
+                        <view class="te2-top-banner-title">
+                            畅销Top榜
+                        </view>
+                        <view class="te2-top-banner-tips">
+                            精致女孩秘籍都在这
+                        </view>
+                    </view>
+                </view>
 
                 <!-- 畅销Top榜（分页滚动） -->
                 <view
