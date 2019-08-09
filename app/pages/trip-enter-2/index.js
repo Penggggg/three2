@@ -135,6 +135,7 @@ Page({
                 });
 
                 this.configPinest( );
+                this.fetchAllShoppinglist( current._id );
 
             }
         });
@@ -222,6 +223,32 @@ Page({
         });
     },
 
+    /** 拉取所有购物清单 */
+    fetchAllShoppinglist( tid ) {
+        http({
+            data: {
+                tid,
+                type: 'all',
+                showUser: true
+            },
+            url: 'shopping-list_pin',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                const noPin = data.filter( x => !x.adjustGroupPrice );
+                const waitPin = data.filter( x => !!x.adjustGroupPrice && x.uids.length === 1 );
+                const pingList = data.filter( x => !!x.adjustGroupPrice && x.uids.length > 1 );
+
+                this.setData({
+                    waitPin,
+                    pingList,
+                    allShoppinglist: [ ...waitPin, ...pingList ]
+                });
+            }
+        });
+    },
+
     /** 设置本期推荐的网络图片 */
     configPinest( ) {
         const { recommendGoods } = this.data;
@@ -264,8 +291,8 @@ Page({
     /** 跳到商品详情 */
     goGoodDetail({ currentTarget }) {
         const { data } = currentTarget.dataset;
-        const { pid } = data;
-        !!pid && navTo(`/pages/goods-detail/index?id=${pid}`);
+        const { pid, _id } = data;
+        (!!pid || !!_id ) && navTo(`/pages/goods-detail/index?id=${pid || _id}`);
     },
 
     /** 选择分类 */

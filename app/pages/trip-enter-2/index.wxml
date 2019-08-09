@@ -298,6 +298,8 @@
                         wx:key="{{ index }}"
                         class="te2-new-item"
                         wx:for="{{ newList }}"
+                        data-data="{{ item }}"
+                        bindtap="goGoodDetail"
                     >
                         <image 
                             mode="aspectFill"
@@ -369,5 +371,26 @@
 
     <!-- 保存我的小程序 -->
     <my-save-wma />
+
+    <!-- 抵现积分、签到打卡 -->
+    <!-- <my-user-sign-gift showSign="{{ false }}"/> -->
+
+    <!-- 行程详情入口 -->
+    <!-- <my-social-trip-member
+        tid="{{ current._id }}"
+        opacity="{{ !showMember }}"
+        bindchange="onMemberChange"
+    /> -->
+
+    <!-- 立减优惠券 -->
+    <!-- <my-coupon-lijian
+        tid="{{ current._id }}"
+        wx:if="{{ loaded }}"
+        notGet="{{ lijian.notGet }}"
+        show="{{ showLijian }}"
+        bindclose="closeLijian"
+        endTime="{{ current.end_date }}"
+        hasBeenGet="{{ lijian.hasBeenGet }}"
+    /> -->
 
 </view>
