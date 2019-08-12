@@ -25,6 +25,9 @@ Page({
         // 列表
         list: [ ],
 
+        // 拼团列表
+        allShoppinglist: [ ],
+
         // 是否打开提示
         openTips: true,
 
@@ -38,8 +41,10 @@ Page({
     /**  */
     runComputed( ) {
         computed( this, {
+
             list$: function( ) {
-                const { list } = this.data;
+                const { list, allShoppinglist } = this.data;
+                // 拼团总列表
                 const metaList = [ ];
                 
                 list.map( good => {
@@ -54,7 +59,9 @@ Page({
                                 title: good.title,
                                 img: standard.img,
                                 name: standard.name,
-                                detail: good.detail
+                                detail: good.detail,
+                                sid: standard._id,
+                                pid: good._id
                             };
                             if ( !!activeTarget ) {
                                 metaList.push({
@@ -78,7 +85,8 @@ Page({
                             tag: good.tag,
                             img: good.img[ 0 ],
                             title: good.title,
-                            detail: good.detail
+                            detail: good.detail,
+                            pid: good._id
                         };
                         if ( !!activeTarget ) {
                             metaList.push({
@@ -95,7 +103,76 @@ Page({
                         }
                     }
                 });
-                return metaList;
+
+                // 根据已拼团列表过滤
+                const meta = metaList.filter( x => {
+                    return !allShoppinglist.find( s => 
+                        x.pid === s.pid &&
+                        ( !x.sid || ( !!x.sid && x.sid === s.sid ))
+                    );
+                });
+
+                // 购物清单
+                const meta2 = allShoppinglist.map( s => {
+                    const { good } = s.detail;
+                    return {
+                        _id: s.pid,
+                        pid: s.pid,
+                        title: good.title,
+                        tag: good.tag,
+                        img: s.detail.img,
+                        price: s.adjustPrice,
+                        detail: good.detail,
+                        users: s.users,
+                        groupPrice: s.adjustGroupPrice,
+                    };
+                });
+
+                const all = [ ...meta2, ...meta ];
+                return all;
+            }
+        });
+    },
+
+    /** 拉取两个最新行程 */
+    fetchLast( ) {
+        http({
+            data: { },
+            loadingMsg: '加载中...',
+            url: `trip_enter`,
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                this.fetchAllShoppinglist( data[ 0 ] ? data[ 0 ]._id : '' );
+
+            }
+        });
+    },
+
+    /** 拉取所有购物清单 */
+    fetchAllShoppinglist( tid ) {
+        const { allShoppinglist } = this.data;
+        if ( allShoppinglist.length > 0 || !tid ) { return; }
+
+        http({
+            data: {
+                tid,
+                type: 'all',
+                showUser: true
+            },
+            url: 'shopping-list_pin',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                const noPin = data.filter( x => !x.adjustGroupPrice );
+                const waitPin = data.filter( x => !!x.adjustGroupPrice && x.uids.length === 1 );
+                const pingList = data.filter( x => !!x.adjustGroupPrice && x.uids.length > 1 );
+
+                this.setData({
+                    allShoppinglist: [ ...waitPin, ...pingList ]
+                });
             }
         });
     },
@@ -177,6 +254,7 @@ Page({
     onLoad: function (options) {
         this.runComputed( );
         this.fetchPin( );
+        this.fetchLast( );
     },
 
     /**
