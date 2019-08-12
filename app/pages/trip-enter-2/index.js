@@ -134,11 +134,11 @@ Page({
 
                 this.setData({
                     current: data[ 0 ] ? this.dealTrip( data[ 0 ]) : null,
-                    recommendGoods: current? current.products.map( delayeringGood ).filter( x => !!x ) : [ ],
+                    recommendGoods: current ? current.products.map( delayeringGood ).filter( x => !!x ) : [ ],
                 });
 
                 this.configPinest( );
-                this.fetchAllShoppinglist( current._id );
+                // this.fetchAllShoppinglist( current ? current._id : '' );
 
             }
         });
@@ -229,7 +229,7 @@ Page({
     /** 拉取所有购物清单 */
     fetchAllShoppinglist( tid ) {
         const { allShoppinglist } = this.data;
-        if ( allShoppinglist.length > 0 ) { return; }
+        if ( allShoppinglist.length > 0 || !tid ) { return; }
 
         http({
             data: {
