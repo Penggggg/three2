@@ -39,9 +39,9 @@ Component({
 
         /** 地址跳转 */
         go( ) {
-            const { url } = this.data;
-            if ( !!url ) {
-                navTo( url );
+            const { url, tid } = this.data;
+            if ( !!url || !!tid ) {
+                navTo( url || `/pages/trip-detail/index?id=${tid}` );
             }
         },
 

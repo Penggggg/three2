@@ -12,38 +12,85 @@ Page({
      * 页面的初始数据
      */
     data: {
-
         role: 0,
 
-        /** 加载 */
-        loaded: false,
+        // 数据字典
+        dic: { },
 
-        /** 最快可用行程 */
-        current: null,
+        // 目录分类
+        classify: [ ],
 
-        /** 下一趟可用行程 */
-        next: null,
+        // 加载中
+        loading: true,
 
-        /** 顶部公共 */
-        notice: '',
+        // 当前选中的分类
+        active: 'recommand',
 
-        /** 热门推荐 */
+        // ip头像
+        ipAvatar: '',
+
+        // ip名称
+        ipName: '',
+
+        // 每周上新
+        newList: [ ],
+
+        // 推荐商品
         recommendGoods: [ ],
 
-        /** 排行榜商品 */
-        rankGoods: [ ],
+        // 推荐商品宽度
+        recommendGoodWidths: [ ],
 
-        /** 3~20名商品 */
-        otherGoods: [ ],
+        // 当前行程
+        current: null,
 
-        /** 展开立减框 */
+        // 定时器
+        clocks: [ ],
+
+        // 展示助手提示
+        zhushouTips: false,
+
+        // 模块入口
+        entry: [
+            {
+                label: '好货拼团',
+                url: '/pages/ground-pin/index',
+                icon: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hufu-1.png'
+            }, {
+                label: '特价秒杀',
+                // url: '/pages/ground-pin/index',
+                icon: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hufu-2.png'
+            }, {
+                label: '好物上新',
+                // url: '/pages/ground-pin/index',
+                icon: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hufu-3.png'
+            }, {
+                label: '签到福利',
+                url: '/pages/my/index',
+                icon: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hufu-4.png'
+            }
+        ],
+
+        // 排行榜
+        loadingRank: false,
+
+        // 排行榜
+        canLoadRankMore: true,
+
+        // 排行榜
+        rankPage: 0,
+
+        // 排行榜
+        rankList: [ ],
+
+        // 本次行程购物清单
+        allShoppinglist: [ ],
+
+        // 展示行程详情入口
+        showMember: false,
+
+        // 立减优惠券
         showLijian: false,
-
-        /** 展开立减的小红包 */
-        showLijianTips: false,
-
-        /** 展开满减 */
-        showManjian: false,
 
         /** 立减信息 */
         lijian: {
@@ -51,74 +98,10 @@ Page({
             notGet: 0,
             hasBeenGet: 0
         },
-
-        /** 参加人数 */
-        memberCount: 0,
-
-        /** 仙女购物单 */
-        fairyList: [ ],
-
-        /** 一口价商品列表 */
-        goodDiscounts: [ ],
-
-        /** 是否展示社交弹幕 */
-        showMember: false,
-
-        /** 本期拼团王产品 */
-        pinest: null,
-
-        /** 拼团王图片宽度 */
-        pinestImgWidth: 0,
-
-        /** 所有的拼团列表（待拼、可拼） */
-        allPin: [ ],
-
-        /** 所有的购物清单 */
-        allShoppinglist: [ ]
     },
 
-    /** 设置computed */
     runComputed( ) {
         computed( this, {
-
-            // 仙女购物单
-            fairyList$: function( ) {
-                const { fairyList } = this.data;
-                const temp = fairyList.map( usersl => {
-                    const { user, shoppinglist, coupons } = usersl;
-
-                    // 最多省多少：拼团 + 优惠券
-                    const delta1 = shoppinglist.reduce(( x, y ) => {
-                        const { adjustPrice, adjustGroupPrice } = y;
-
-                        if ( !adjustGroupPrice || !adjustPrice ) {
-                            return x + 0;
-                        }
-
-                        return x + Number( Number(( adjustPrice - adjustGroupPrice )).toFixed( 2 ));
-
-                    }, 0 );
-
-                    const delta2 = coupons.reduce(( x, y ) => {
-                        return Number( Number( x + y.value ).toFixed( 2 ))
-                    }, 0 );
-
-                    return {
-                        user,
-                        coupons,
-                        shoppinglist,
-                        delta: Number( Number( delta1 + delta2 ).toFixed( 2 ))
-                    }
-                });
-                return temp;
-            },
-
-            // 热门推荐前四
-            recommendGoodsTop$: function( ) {
-                const { recommendGoods } = this.data;
-                return recommendGoods.slice( 0, 4 );
-            },
-
             // 热门推荐 + 活动标志 
             recommendGoods$: function( ) {
                 const { recommendGoods } = this.data;
@@ -128,7 +111,25 @@ Page({
                 }));
                 return meta;
             }
-        })
+        });
+    },
+
+    /** 全局数据 */
+    watchRole( ) {
+
+        app.watch$('appConfig', ( val ) => {
+            if ( !val ) { return; }
+            this.setData({
+                ipName: val['ip-name'],
+                ipAvatar: val['ip-avatar']
+            })
+        });
+
+        app.watch$('role', role => {
+            this.setData({
+                role
+            });
+        });
     },
 
     /** 拉取两个最新行程 */
@@ -136,7 +137,6 @@ Page({
 
         http({
             data: { },
-            errMsg: '加载失败，请重试',
             loadingMsg: '加载中...',
             url: `trip_enter`,
             success: res => {
@@ -144,82 +144,124 @@ Page({
                 if ( status !== 200 ) { return; }
 
                 const current = data[ 0 ];
-                const next = data[ 1 ];
+
                 this.setData({
-                    loaded: true,
-                    recommendGoods: current? current.products.map( delayeringGood ).filter( x => !!x ) : [ ],
-                    next: data[ 1 ] ? this.dealTrip( data[ 1 ]) : null,
-                    current: data[ 0 ] ? this.dealTrip( data[ 0 ]) : null
+                    current: data[ 0 ] ? this.dealTrip( data[ 0 ]) : null,
+                    recommendGoods: current ? current.products.map( delayeringGood ).filter( x => !!x ) : [ ],
                 });
 
-                // 顶部公共
-                if ( current ) {
-                    let text = '';
-                    if ( current.fullreduce_values ) {
-                        text += `【超值优惠】满${current.fullreduce_atleast}减${current.fullreduce_values}券等你拿！`;
-                    }
-                    if ( current.reduce_price ) {
-                        text += `【立减】无门槛${current.reduce_price}优惠券等你拿！`
-                    }
-                    if ( current.postage === '0' ) {
-                        text += `【免邮】消费满${current.postagefree_atleast}元立即免邮!`
-                    } else if ( current.postage === '1' ) {
-                        text += `【包邮】消费任意金额均包邮费！`
-                    }
-                    this.setData({
-                        notice: text
-                    });
-
-                    this.fetchCoupon( current._id );
-                    this.fetchFairy( current._id )
-                    this.fetchPin( current._id )
-
-                } else if ( !next ) {
-                    this.setData({
-                        notice: `暂无下一趟行程 T.T`
-                    });
-                }
+                this.configPinest( );
+                this.fetchCoupon( current ? current._id : '' );
+                // this.fetchAllShoppinglist( current ? current._id : '' );
 
             }
         });
 
     },
 
-    /** 拉取仙女购物单 */
-    fetchFairy( tid ) {
+    /** 拉取数据字典 */
+    fetchDic( ) {
+        const { dic } = this.data;
+        // if ( Object.keys( dic ).length > 0 ) { return;}
+
         http({
             data: {
-                tid
+                filterBjp: true,
+                dicName: 'goods_category',
             },
-            url: 'shopping-list_fairy-shoppinglist',
+            errMsg: '加载失败，请重试',
+            url: `common_dic`,
             success: res => {
-                if ( res.status !== 200 ) {
-                    return; 
-                }
+                if ( res.status !== 200 ) { return; }
                 this.setData({
-                    fairyList: res.data
-                })
+                    loading: false,
+                    dic: res.data,
+                    classify: [{
+                        label: '推荐',
+                        value: 'recommand'
+                    }, ...res.data.goods_category ]
+                });
             }
-        })
+        });
     },
 
-    /** 拉取商品销量排行榜(前20) */
-    fetchRank( ) {
-     
-        const { rankGoods, role } = this.data;
-        if ( role === 0 && rankGoods.length > 0 ) { return; }
-
+    /** 拉取新品列表 */
+    fetchNew( ) {
         http({
             data: {
-                page: 1
+                limit: 6,
+                page: 1,
+                sort: 'createTime'
             },
             url: `good_rank`,
             success: res => {
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
                 this.setData({
-                    rankGoods: data.data.map( delayeringGood ),
-                    otherGoods: data.data.map( delayeringGood ).slice( 3 )
+                    newList: data.data.map( delayeringGood ),
+                });
+            }
+        })
+    },
+
+    /** 排行榜 */
+    fetchRank( ) {
+     
+        const { loadingRank, canLoadRankMore, rankPage, rankList } = this.data;
+        if ( loadingRank || !canLoadRankMore ) { return; }
+
+        this.setData({
+            loadingRank: true
+        });
+
+        http({
+            data: {
+                limit: 4,
+                page: rankPage + 1,
+            },
+            url: `good_rank`,
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                const list = data.data;
+                const { pagenation } = data;
+                const { page, totalPage } = pagenation;
+
+                const meta = page === 1 ? list : [ ...rankList, ...list ]
+
+                this.setData({
+                    rankPage: page,
+                    rankList: meta.map( delayeringGood ),
+                    loadingRank: false,
+                    canLoadRankMore: page < totalPage,
+                });
+            }
+        });
+    },
+
+    /** 拉取所有购物清单 */
+    fetchAllShoppinglist( tid ) {
+        const { allShoppinglist } = this.data;
+        if ( allShoppinglist.length > 0 || !tid ) { return; }
+
+        http({
+            data: {
+                tid,
+                type: 'all',
+                showUser: true
+            },
+            url: 'shopping-list_pin',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                const noPin = data.filter( x => !x.adjustGroupPrice );
+                const waitPin = data.filter( x => !!x.adjustGroupPrice && x.uids.length === 1 );
+                const pingList = data.filter( x => !!x.adjustGroupPrice && x.uids.length > 1 );
+
+                this.setData({
+                    allShoppinglist: [ ...waitPin, ...pingList ]
                 });
             }
         });
@@ -227,7 +269,7 @@ Page({
 
     /** 拉取优惠券信息 */
     fetchCoupon( tid ) {
-        if ( !!this.data.lijian.total ) { return; }
+        if ( !!this.data.lijian.total || !tid ) { return; }
         http({
             url: 'coupon_isget',
             data: {
@@ -259,8 +301,7 @@ Page({
                 }
 
                 this.setData({
-                    showLijian: t_lijian === 'half',
-                    showManjian: t_manjian === false
+                    showLijian: t_lijian === 'half'
                 });
 
                 if ( t_lijian === 'half' ) {
@@ -268,98 +309,6 @@ Page({
                         this.vibrateShort( );
                     }, 200 );
                 }
-            }
-        })
-    },
-
-    /** 拉取本期拼图 */
-    fetchPin( tid ) {
-        http({
-            data: {
-                tid,
-                type: 'all',
-                showUser: false
-            },
-            url: 'shopping-list_pin',
-            success: res => {
-                let data = res.data;
-                const { status } = res;
-
-                data = data.map( x => Object.assign({ }, x, {
-                    delta: !x.adjustGroupPrice ? 0 : (x.adjustPrice - x.adjustGroupPrice).toFixed( 0 )
-                }));
-
-                // 所有等待拼团，已拼团的商品
-                const allCanPin = data.filter( x => !!x.adjustGroupPrice );
-                // 这趟所有的购物清淡列表
-                const allShoppinglist = data.map( x => Object.assign({ }, x ));
-
-                // 如果【等待拼团，已拼团】只有一件商品，就不展示在“拼团之星”的位置了
-                if ( allCanPin.length === 1 ) {
-                    this.setData({
-                        allShoppinglist
-                    });
-                } else {
-                    let pinest = null;
-                    if ( allCanPin.length !== 0 ) {
-                        const pinestIndex = allShoppinglist.findIndex( x => x._id === allCanPin[ 0 ]._id );
-                        allShoppinglist.splice( pinestIndex, 1 );
-                    }
-
-                    if ( allCanPin.length !== 0 ) {
-                        pinest = allCanPin[ 0 ]
-                    }
-
-                    this.setData({
-                        pinest,
-                        allShoppinglist
-                    });
-                }
-
-                this.configPinest( );
-            }
-        });
-    },
-
-    /** 设置拼团之星的网络图片 */
-    configPinest( ) {
-        const { pinest } = this.data;
-        if ( !pinest ) { return; }
-        wx.getImageInfo({
-            src: pinest.detail.img,
-            success: res => {
-                // 在.wxss文件设置了 height:225rpx;
-                const proportion = res.width / res.height;
-                const imgWidth = 225 / proportion;
-                this.setData({
-                    pinestImgWidth: imgWidth
-                });
-            }
-        });
-    },
-
-    /** 系统自动领取立减到券 */
-    autoGetLijian( money ) {
-        const { current } = this.data;
-        const temp = {
-            tid: current._id,
-            title: '行程立减优惠券',
-            type: 't_lijian',
-            canUseInNext: false,
-            value: Number( money ),
-            atleast: 0
-        };
-        http({
-            data: temp,
-            url: 'coupon_create',
-            success: res => {
-                this.setData({
-                    showLijian: true,
-                    // showLijianTips: true
-                });
-                setTimeout(( ) => {
-                    this.vibrateShort( );
-                }, 200 );
             }
         })
     },
@@ -386,7 +335,31 @@ Page({
                 }
             }
         })
-        
+    },
+
+    /** 系统自动领取立减到券 */
+    autoGetLijian( money ) {
+        const { current } = this.data;
+        const temp = {
+            tid: current._id,
+            title: '行程立减优惠券',
+            type: 't_lijian',
+            canUseInNext: false,
+            value: Number( money ),
+            atleast: 0
+        };
+        http({
+            data: temp,
+            url: 'coupon_create',
+            success: res => {
+                this.setData({
+                    showLijian: true,
+                });
+                setTimeout(( ) => {
+                    this.vibrateShort( );
+                }, 200 );
+            }
+        })
     },
 
     /** 短振动 */
@@ -401,10 +374,57 @@ Page({
         }, 30 );
     },
 
-    /** 社交弹幕 */
-    onMemberChange({ detail }) {
+    /** 设置本期推荐的网络图片 */
+    configPinest( ) {
+        const { recommendGoods } = this.data;
+        if ( recommendGoods.length === 0 ) { return; }
+
+        Promise.all(
+            recommendGoods.map( good => {
+                return this.imgInfo( good.img[ 0 ])
+            })
+        ).then( arr => {
+            this.setData({
+                recommendGoodWidths: arr
+            });
+        });
+    },
+
+    /** 返回promise的问了图片数据 */
+    imgInfo( imgSrc ) {
+        return new Promise( resolve => {
+            wx.getImageInfo({
+                src: imgSrc,
+                success: res => {
+                    // 在.wxss文件设置了 height:225rpx;
+                    const proportion = res.width / res.height;
+                    const imgWidth = 225 / proportion;
+                    resolve( imgWidth );
+                },
+                fail: ( ) => {
+                    resolve( 0 );
+                }
+            });
+        });
+    },
+
+    /** 拼团广场 */
+    goGround( ) {
+        navTo('/pages/ground-pin/index');
+    },
+
+    /** 跳到商品详情 */
+    goGoodDetail({ currentTarget }) {
+        const { data } = currentTarget.dataset;
+        const { pid, _id } = data;
+        (!!pid || !!_id ) && navTo(`/pages/goods-detail/index?id=${pid || _id}`);
+    },
+
+    /** 选择分类 */
+    onChoiceClassify({ currentTarget }) {
+        const { value } = currentTarget.dataset;
         this.setData({
-            memberCount: detail
+            active: value
         })
     },
 
@@ -423,18 +443,36 @@ Page({
         });
     },
 
-    /** 关闭立减弹层，来源于分享完成、主动关闭 */
-    closeLijian( ) {
-        this.setData({
-            showLijian: false
-        });
+    /** 去搜索 */
+    goSearch( ) {
+        navTo('/pages/search/index')
     },
 
-    /** 关闭满减弹窗 */
-    closeManjian( ) {
-        this.setData({
-            showManjian: false
-        })
+    /** 初始化助手定时器 */
+    initClock( ) {
+        const { clocks } = this.data;
+        clocks.push(
+            setInterval(( ) => {
+                const { zhushouTips } = this.data;
+                this.setData({
+                    zhushouTips: !zhushouTips
+                })
+            }, 4000 )
+        )
+    },
+
+    /** 模块入口 */
+    goEntry({ currentTarget }) {
+        const { url }  = currentTarget.dataset;
+        if ( !!url ) {
+            navTo( url )
+        } else {
+            wx.showToast({
+                icon: 'none',
+                duration: 2000,
+                title: '即将上线'
+            });
+        }
     },
 
     /** 页面滚动 */
@@ -447,69 +485,53 @@ Page({
         })
     },
 
-    /** 跳到行程详情 */
-    goTripDetail( ) {
-        const { current } = this.data;
-        if ( !current ) { return; } 
-        navTo(`/pages/trip-detail/index?id=${current._id}`)
-    },
-
-    /** 跳到拼团商品详情 */
-    goGoodDetail({ currentTarget, detail }) {
-        createFormId( detail.formId );
-        const { current } = this.data;
-        const { item } = currentTarget.dataset;
-        let path = `/pages/goods-detail/index?id=${item.detail.good._id}`;
-        if ( !!current ) {
-            path += `&tid=${current._id}`
-        }
-        navTo( path );
-    },
-
     /** 展示立减大红包 */
     showBigLijian( ) {
         this.setData({
-            showLijian: true,
-            showLijianTips: false
+            showLijian: true
         })
+    },
+
+    /** 关闭立减弹层，来源于分享完成、主动关闭 */
+    closeLijian( ) {
+        this.setData({
+            showLijian: false
+        });
     },
 
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        this.fetchRank( );
-        this.fetchLast( );
         this.runComputed( );
+        this.watchRole( );
 
-        app.watch$('role', role => {
-            this.setData({
-                role
-            });
-        });
-    },
+        this.initClock( );
 
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow: function ( ) {
-        const { role } = this.data;
-        if ( role === 1 ) {
-            this.setData({
-                
-            });
-            setTimeout(( ) => {
-                this.fetchRank( );
-                this.fetchLast( );
-            }, 20 );
-        }
+        this.fetchDic( );
+        this.fetchLast( );
+        this.fetchNew( );
+        this.fetchRank( );
     },
 
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady: function () {
-        
+
+    },
+
+    /**
+     * 生命周期函数--监听页面显示
+     */
+    onShow: function () {
+        const { role } = this.data;
+        if ( role === 1 ) {
+
+            setTimeout(( ) => {
+                this.fetchLast( );
+            }, 20 );
+        }
     },
 
     /**
@@ -523,7 +545,14 @@ Page({
      * 生命周期函数--监听页面卸载
      */
     onUnload: function () {
-
+        const { clocks } = this.data;
+        clocks.map( c => {
+            if ( c ) {
+                try {
+                    clearInterval( c );
+                } catch ( e ) {}
+            }
+        })
     },
 
     /**
@@ -544,7 +573,6 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( event ) {
-
         const { current } = this.data; 
 
         // 获取另一个立减
@@ -554,15 +582,13 @@ Page({
 
         if ( !current ) {
             return {
-                title: '分享给你一个良心超值代购～',
-                path: '/pages/trip-enter/index',
-                // imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+                title: '一个可以拼团的代购～',
+                path: '/pages/trip-enter/index'
             }
         } else {
             return {
-                title: `${current.title}在${current.start_date$}开始！来瞧瞧大家拔草了什么～`,
-                path: '/pages/trip-enter/index',
-                // imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+                title: `${current.title}在${current.start_date$}开始！来拼团吧～`,
+                path: '/pages/trip-enter/index'
             }
         }
     }

@@ -3,8 +3,14 @@
     lower-threshold="100"
     class='con-good-classify-list'
     bindscrolltolower="fetchClassify"
-    wx:if="{{ result$.length > 0 }}"
 >
+
+    <my-client-search-bar
+        simple="{{ true }}"
+        value="{{ search }}"
+        initfocus="{{ false }}"
+        bindconfirm="onConfirm"
+    />
 
     <view class="gcl-result-waterfall">
         <view

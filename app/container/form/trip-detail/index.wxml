@@ -37,6 +37,7 @@
             >
                 <image
                     mode="aspectFill"
+                    lazy-load="{{ true }}"
                     class="recommend-item-img"
                     src="{{ item.img[ 0 ]}}"
                 />
