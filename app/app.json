@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/trip-enter/index",
     "pages/good-new/index",
+    "pages/trip-enter/index",
     "pages/good-activity/index",
     "pages/ground-pin/index",
     "pages/trip-enter-temp/index",
@@ -40,6 +40,7 @@
     "my-switch-text": "./components/switch-text/index",
     "my-title-decorate": "./components/title-decorate/index",
     "my-good-classify-list": "./container/good-classify-list/index",
+    "my-banner-1": "./container/banner-1/index",
     "my-good-item-1": "./container/good-item-1/index",
     "my-good-item-2": "./container/good-item-2/index",
     "my-good-item-3": "./container/good-item-3/index",

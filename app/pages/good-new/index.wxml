@@ -1,8 +1,7 @@
 <view class="p-good-new">
-    <image
-        mode="aspectFill"
-        lazy-load="{{ true }}"
-        class="pgn-banner"
-        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/banner-good-new.jpg"
+    <my-banner-1
+        img="{{ ipAvatar }}"
+        title1="{{ bannerTips$[ 0 ]}}"
+        title2="{{ bannerTips$[ 1 ]}}"
     />
 </view>
