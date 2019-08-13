@@ -1,8 +1,8 @@
 {
   "pages": [
-    "pages/trip-enter-2/index",
-    "pages/ground-pin/index",
     "pages/trip-enter/index",
+    "pages/ground-pin/index",
+    "pages/trip-enter-temp/index",
     "pages/my/index",
     "pages/goods-detail/index",
     "pages/ground-push-integral/index",

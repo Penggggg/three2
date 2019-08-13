@@ -21,7 +21,7 @@ Component({
         navList: [
             {
                 label: '商城',
-                url: "/pages/trip-enter-2/index",
+                url: "/pages/trip-enter/index",
                 normal: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-plane.png",
                 active: "https://global-1257764567.cos.ap-guangzhou.myqcloud.com/nav-icon-plane-active.png"
             }, 
