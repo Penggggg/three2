@@ -3,6 +3,7 @@
     <!-- 背景 -->
     <view 
         class="pm-checkin-bg"
+        bindtap="toggleSign"
         wx:if="{{ showSignBlock$ }}"
     >
     </view>
@@ -23,7 +24,7 @@
                 form-type="submit"
                 class='fix-btn pm-hongbao-close'
             >
-                X 
+                x
             </button>
         </form>
 

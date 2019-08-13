@@ -364,7 +364,10 @@ Component({
         },
 
         // 开启、关闭签到框
-        toggleSign( ) {
+        toggleSign( e ) {
+            if ( !!e ) {
+                createFormId( e.detail.formId )
+            }
             const { showSignBlock } = this.data;
             this.setData({
                 showSignBlock: !showSignBlock

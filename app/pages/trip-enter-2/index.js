@@ -87,7 +87,17 @@ Page({
         allShoppinglist: [ ],
 
         // 展示行程详情入口
-        showMember: false
+        showMember: false,
+
+        // 立减优惠券
+        showLijian: false,
+
+        /** 立减信息 */
+        lijian: {
+            total: 0,
+            notGet: 0,
+            hasBeenGet: 0
+        },
     },
 
     runComputed( ) {
@@ -141,6 +151,7 @@ Page({
                 });
 
                 this.configPinest( );
+                this.fetchCoupon( current ? current._id : '' );
                 // this.fetchAllShoppinglist( current ? current._id : '' );
 
             }
@@ -256,6 +267,113 @@ Page({
         });
     },
 
+    /** 拉取优惠券信息 */
+    fetchCoupon( tid ) {
+        if ( !!this.data.lijian.total || !tid ) { return; }
+        http({
+            url: 'coupon_isget',
+            data: {
+                tid,
+                check: 't_lijian,t_manjian,t_daijin'
+            },
+            success: res => {
+                if ( res.status !== 200 ) { return; }
+
+                const { reduce_price } = this.data.current;
+                const { t_daijin, t_lijian, t_manjian } = res.data;
+                
+                /** 
+                 * 先处理：立减
+                 * 如果未领取立减到上半部分，则系统创建
+                 **/
+                const halfOfLijian = Number( reduce_price * 0.4 ).toFixed( 2 );
+                this.setData({
+                    lijian: {
+                        total: reduce_price,
+                        hasBeenGet: halfOfLijian,
+                        notGet: Number( reduce_price * 0.6 ).toFixed( 2 ),
+                    }
+                })
+
+                // 未领取过立减，则自动拿“半张”优惠券
+                if ( t_lijian === false ) {
+                    this.autoGetLijian( halfOfLijian );
+                }
+
+                this.setData({
+                    showLijian: t_lijian === 'half'
+                });
+
+                if ( t_lijian === 'half' ) {
+                    setTimeout(( ) => {
+                        this.vibrateShort( );
+                    }, 200 );
+                }
+            }
+        })
+    },
+
+    /** 领取另一张优惠券 */
+    getAnotherLijian( ) {
+        const { current } = this.data;
+        http({
+            data: {
+                tid: current._id
+            },
+            url: 'coupon_repair-lijian',
+            success: res => {
+                if ( res.status === 200 ) {
+                    this.setData({
+                        showLijian: false
+                    });
+                    setTimeout(( ) => {
+                        wx.showToast({
+                            duration: 2000,
+                            title: '领取成功！'
+                        });
+                    }, 2500 );
+                }
+            }
+        })
+    },
+
+    /** 系统自动领取立减到券 */
+    autoGetLijian( money ) {
+        const { current } = this.data;
+        const temp = {
+            tid: current._id,
+            title: '行程立减优惠券',
+            type: 't_lijian',
+            canUseInNext: false,
+            value: Number( money ),
+            atleast: 0
+        };
+        http({
+            data: temp,
+            url: 'coupon_create',
+            success: res => {
+                this.setData({
+                    showLijian: true,
+                });
+                setTimeout(( ) => {
+                    this.vibrateShort( );
+                }, 200 );
+            }
+        })
+    },
+
+    /** 短振动 */
+    vibrateShort( ) {
+        wx.vibrateShort({
+            success: res => { }
+        });
+        setTimeout(( ) => {
+            wx.vibrateShort({
+                success: res => { }
+            });
+        }, 30 );
+    },
+
     /** 设置本期推荐的网络图片 */
     configPinest( ) {
         const { recommendGoods } = this.data;
@@ -367,6 +485,20 @@ Page({
         })
     },
 
+    /** 展示立减大红包 */
+    showBigLijian( ) {
+        this.setData({
+            showLijian: true
+        })
+    },
+
+    /** 关闭立减弹层，来源于分享完成、主动关闭 */
+    closeLijian( ) {
+        this.setData({
+            showLijian: false
+        });
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
@@ -441,6 +573,23 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function () {
+        const { current } = this.data; 
 
+        // 获取另一个立减
+        if ( event.from === 'button' ) {
+            this.getAnotherLijian( );
+        }
+
+        if ( !current ) {
+            return {
+                title: '一个可以拼团的代购～',
+                path: '/pages/trip-enter/index'
+            }
+        } else {
+            return {
+                title: `${current.title}在${current.start_date$}开始！来拼团吧～`,
+                path: '/pages/trip-enter/index'
+            }
+        }
     }
 })

@@ -399,14 +399,14 @@
     />
 
     <!-- 立减优惠券 -->
-    <!-- <my-coupon-lijian
+    <my-coupon-lijian
         tid="{{ current._id }}"
-        wx:if="{{ loaded }}"
+        wx:if="{{ current }}"
         notGet="{{ lijian.notGet }}"
         show="{{ showLijian }}"
         bindclose="closeLijian"
         endTime="{{ current.end_date }}"
         hasBeenGet="{{ lijian.hasBeenGet }}"
-    /> -->
+    />
 
 </view>
