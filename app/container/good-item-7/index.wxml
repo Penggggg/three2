@@ -12,6 +12,7 @@
             <image
                 class="gi7-img"
                 mode="aspectFill"
+                lazy-load="{{ true }}"
                 src="{{ good.img[ 0 ] }}"
             />
             <view
@@ -19,6 +20,7 @@
                 wx:if="{{ good.hasActivity }}"
             >
                 <image
+                    lazy-load="{{ true }}"
                     mode="widthFix"
                     class="gd-activity-icon"
                     src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
@@ -71,6 +73,7 @@
         赚{{ good.integral2$ }}元
         <image
             mode="aspectFill"
+            lazy-load="{{ true }}"
             class='gi7-share-img'
             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-share-white.png"
         />

@@ -14,6 +14,7 @@
             <image
                 mode="widthFix"
                 class="cmj-img"
+                lazy-load="{{ true }}"
                 animation="{{ animationMiddleHeaderItem }}"
                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/manjian.png"
             />

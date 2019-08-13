@@ -1135,10 +1135,14 @@ export const main = async ( event, context ) => {
 
     /** 
      * @description
-     * 获取推广积分s
+     * 获取推广积分
+     * {
+     *    showMore?: false
+     * }
      */
     app.router('push-integral', async ( ctx, next ) => {
         try {
+            const { showMore } = event.data;
             const openid = event.data.openId || event.userInfo.openId;
             const user$ = await db.collection('user')
                 .where({
@@ -1147,9 +1151,17 @@ export const main = async ( event, context ) => {
                 .get( );
             const user = user$.data[ 0 ];
 
+            const exp = !!user ? user.exp || 0 : 0;
+            const integral = !!user ? user.push_integral || 0 : 0;
+
             return ctx.body = {
                 status: 200,
-                data: !!user ? user.push_integral || 0 : 0
+                data: !showMore ? 
+                    integral :
+                    {
+                        exp,
+                        integral,
+                    }
             }
 
         } catch ( e ) {
@@ -1196,6 +1208,134 @@ export const main = async ( event, context ) => {
             return ctx.body = {
                 status: 500
             }
+        }
+    })
+
+    /**
+     * @description
+     * 签到领积分
+     * {
+     *      exp: number
+     * }
+     */
+    app.router('get-exp', async ( ctx, next ) => {
+        try {
+            const { exp } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+
+            const user$ = await db.collection('user')
+                .where({
+                    openid
+                })
+                .get( );
+
+            const user = user$.data[ 0 ] || null;
+
+            if ( !user ) { return ctx.body = { status: 200 }};
+
+            const bd_uid = user._id;
+            const body = {
+                ...user,
+                exp: !user.exp ? exp : user.exp + exp
+            };
+
+            delete body['_id'];
+
+            const update$ = await db.collection('user')
+                .doc( String( bd_uid ))
+                .set({
+                    data: body
+                });
+
+            return ctx.body = {
+                status: 200
+            };
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
+
+    /**
+     * @description
+     * 签到领积分
+     * {
+     *      integral: number
+     * }
+     */
+    app.router('get-integral', async ( ctx, next ) => {
+        try {
+            const { integral } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+
+            const user$ = await db.collection('user')
+                .where({
+                    openid
+                })
+                .get( );
+
+            const user = user$.data[ 0 ] || null;
+
+            if ( !user ) { return ctx.body = { status: 200 }};
+
+            const bd_uid = user._id;
+            const body = {
+                ...user,
+                push_integral: !user.push_integral ? 
+                    integral :
+                    Number(( user.push_integral + integral ).toFixed( 2 ))
+            };
+
+            delete body['_id'];
+
+            const update$ = await db.collection('user')
+                .doc( String( bd_uid ))
+                .set({
+                    data: body
+                });
+
+            return ctx.body = {
+                status: 200
+            };
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
+
+    /**
+     * @description
+     * 领取抵现金成功，推送
+     * {
+     *      get_integral: number // 本次获得
+     *      next_integral: number // 下次获得
+     *      week_integral: number // 本周获得
+     *      nextweek_integral: number // 下周获得
+     * }
+     */
+    app.router('get-integral-push', async ( ctx, next ) => {
+        try {
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const { get_integral, next_integral, week_integral, nextweek_integral } = event.data;
+
+            // 4、调用推送
+            const push$ = await cloud.callFunction({
+                name: 'common',
+                data: {
+                    $url: 'push-template-cloud',
+                    data: {
+                        openid,
+                        type: 'hongbao',
+                        page: 'pages/my/index',
+                        texts: [`${get_integral}元抵现金！下单就能用！`, `明天登陆送${next_integral}元，本周可送${week_integral}元！`]
+                    }
+                }
+            });
+
+            return ctx.body = { status: 200 };
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
         }
     })
 

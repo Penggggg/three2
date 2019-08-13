@@ -25,6 +25,7 @@
                     wx:if="{{ good.hasActivity }}"
                 >
                     <image
+                        lazy-load="{{ true }}"
                         mode="widthFix"
                         class="gi4-activity-icon"
                         src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
@@ -60,6 +61,7 @@
                                 {{ good.lowest_price$ }}
                             </wxc-price>
                             <image
+                                lazy-load="{{ true }}"
                                 mode="widthFix"
                                 class="gi4-price-low-img"
                                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-price-low-right.png"

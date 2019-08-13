@@ -6,6 +6,10 @@
     padding: 5rpx 10rpx;
     border-radius: 20px;
     background: rgba( 0, 0, 0, 0.35 );
+    top: 120rpx;
+    left: 30rpx;
+    position: fixed;
+    z-index: 5;
 }
 
 .con-social-trip-member.opacity {

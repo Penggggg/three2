@@ -1,5 +1,8 @@
 const { http } = require('../../util/http.js');
 const { navTo } = require('../../util/route.js');
+const { computed } = require('../../lib/vuefy/index.js');
+
+const app = getApp( );
 
 Page({
 
@@ -7,6 +10,8 @@ Page({
      * 页面的初始数据
      */
     data: {
+
+        // 分导航模块
         icons: [
             {
                 title: '联系客服',
@@ -15,20 +20,39 @@ Page({
                 iconImg: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-kefu2.png'
             }
         ],
+
+        // 基本资料
         baseInfo: {
             orders: 0,
             coupons: 0
-        }
+        },
     },
 
-    /** 点击下方的客服等模块 */
-    onTabIcon({ currentTarget }) {
-        const { data } = currentTarget.dataset;
-        if ( data.url ) {
-            navTo( data.url );
-        } else {
-            !!this[ data.handler ] && !!this[ data.handler ]( );
-        }
+    runComputed( ) {
+        computed( this, {
+
+        });
+    },
+
+    /** 全局数据 */
+    watchRole( ) {
+        app.watch$('appConfig', ( val ) => {
+
+            if ( !val ) { return; }
+
+            const one = val['user-level-one'];
+            const two = val['user-level-two'];
+            const three = val['user-level-three'];
+
+            const sign1 = val['sign-gift-one'];
+            const sign2 = val['sign-gift-two'];
+            const sign3 = val['sign-gift-three'];
+
+            this.setData({
+                signGift: [ sign1, sign2, sign3 ],
+                userLevelArr: [ one, two, three ]
+            });
+        });
     },
 
     /** 拉取订单、卡券数据 */
@@ -67,11 +91,22 @@ Page({
         navTo('/pages/like-goods/index');
     },
 
+    /** 点击下方的客服等模块 */
+    onTabIcon({ currentTarget }) {
+        const { data } = currentTarget.dataset;
+        if ( data.url ) {
+            navTo( data.url );
+        } else {
+            !!this[ data.handler ] && !!this[ data.handler ]( );
+        }
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-        // this.fetchData( );
+        this.runComputed( );
+        this.watchRole( );
     },
 
     /**
@@ -84,15 +119,16 @@ Page({
     /**
      * 生命周期函数--监听页面显示
      */
-    onShow: function () {
+    onShow: function ( ) {
         this.fetchData( );
+
     },
 
     /**
      * 生命周期函数--监听页面隐藏
      */
     onHide: function () {
-
+        
     },
 
     /**

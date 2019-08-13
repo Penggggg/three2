@@ -1,6 +1,6 @@
 <view>
-    <view class="con-search-bar">
-        <view class="csb-search-block">
+    <view class="con-search-bar {{ simple ? 'simple' : '' }}">
+        <view class="csb-search-block {{ simple ? 'simple' : '' }}">
 
             <view class="csb-icon">
                 <wxc-icon

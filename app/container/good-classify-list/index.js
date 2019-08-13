@@ -40,7 +40,10 @@ Component({
         canLoadMore: true,
 
         /** loading */
-        loading: false
+        loading: false,
+
+        /** 搜索 */
+        search: ''
 
     },
 
@@ -70,6 +73,8 @@ Component({
             this.setData({
                 page: 0,
                 classify,
+                search: '',
+                lastsearch: '',
                 loading: false,
                 canLoadMore: true
             });
@@ -78,17 +83,18 @@ Component({
 
         /** 拉取商品列表 */
         fetchClassify( ) {
-            const { page, result, classify, canLoadMore, loading } = this.data;
+            const { page, result, classify, canLoadMore, loading, search } = this.data;
 
             if ( !canLoadMore || loading ) { return; }
 
             this.setData({
-                loading: true
+                loading: true,
             })
 
             // 搜索
             http({
                 data: {
+                    search,
                     page: page + 1,
                     category: classify,
                 },
@@ -111,6 +117,16 @@ Component({
     
                 }
             });
+        },
+
+        /** 确定搜索 */
+        onConfirm( e ) {
+            this.setData({
+                page: 0,
+                search: e.detail,
+                canLoadMore: true
+            });
+            this.fetchClassify( )
         }
 
     }
