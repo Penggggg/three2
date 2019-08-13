@@ -1,6 +1,8 @@
 {
   "pages": [
     "pages/trip-enter/index",
+    "pages/good-new/index",
+    "pages/good-activity/index",
     "pages/ground-pin/index",
     "pages/trip-enter-temp/index",
     "pages/my/index",

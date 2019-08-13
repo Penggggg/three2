@@ -26,6 +26,9 @@ Component({
      */
     data: {
 
+        // 是否有授权
+        isAuth: false,
+
         // 展示抵现金提示
         showInteral: false,
 
@@ -243,6 +246,21 @@ Component({
                     userLevelArr: [ one, two, three ]
                 });
             });
+
+            app.watch$('isUserAuth', val => {
+                if ( val === undefined ) { return; }
+                this.setData({
+                    isAuth: val
+                });
+            });
+
+        },
+
+        /** 获取用户授权 */
+        getUserAuth( ) {
+            app.getWxUserInfo(( ) => {
+                this.getFreeIntegral( true );
+            });
         },
 
         /** 获取当前人的推广积分 */
@@ -304,8 +322,15 @@ Component({
         },
 
         // 获取今天的免费抵现金
-        getFreeIntegral( ) {
-            const { todaySignGift$ } = this.data;
+        getFreeIntegral( close = false ) {
+            const { todaySignGift$, isAuth } = this.data;
+
+            if ( !isAuth ) { 
+                return this.setData({
+                    showSignGift: true
+                });
+            }
+
             http({
                 url: 'common_get-integral',
                 data: {
@@ -319,10 +344,12 @@ Component({
                         showSignGift: true
                     });
                     wx.showToast({
-                        title: '签到成功'
+                        title: '领取成功'
                     })
                     this.fetchPushIntegral( );
                     wx.setStorageSync( storageKey['integral-get-last-time'], String( Date.now( )));
+
+                    !!close && this.toggleGift( );
                 }
             })
         },
@@ -344,17 +371,19 @@ Component({
 
         // 开启、关闭红包提示
         toggleGift( e ) {
-            const { formId } = e.detail;
-            createFormId( formId );
+            
+            if ( !!e ) {
+                const { formId } = e.detail;
+                createFormId( formId );
+                setTimeout(( ) => {
+                    this.push( );
+                }, 1000 );
+            }
             
             const { showSignGift } = this.data;
             this.setData({
                 showSignGift: !showSignGift
             });
-
-            if ( formId ) {
-                this.push( );
-            }
 
             if ( !showSignGift === false ) {
                 this.setData({

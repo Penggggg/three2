@@ -42,8 +42,25 @@
                     分享立即获另外<view class="con-lj-inline-big">{{ notGet }}</view>元红包
                 </view>
 
+                <!-- 用户授权按钮 -->
+                <form
+                    wx:if="{{ !isUserAuth }}"
+                    class="cgp-toggle-btn"
+                    report-submit="{{ true }}"
+                >
+                    <button
+                        open-type="getUserInfo"
+                        report-submit="{{ true }}"
+                        bindgetuserinfo="getUserAuth"
+                        class="formid-btn con-lj-share"
+                    >
+                        分享
+                    </button>
+                </form>
+
                 <!-- 分享按钮 -->
                 <form
+                    wx:else
                     bindsubmit="onShare"
                     class="cgp-toggle-btn"
                     report-submit="{{ true }}"
