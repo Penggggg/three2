@@ -1,0 +1,39 @@
+.con-save-wma {
+    display: flex;
+    align-items: center;
+    top: 20rpx;
+    right: 130rpx;
+    z-index: 800;
+    position: fixed;
+    font-size: 23rpx;
+    padding: 8rpx 15rpx;
+    border-radius: 30px;
+    letter-spacing: 0.08em;
+    transition: all ease 0.4s;
+    color: rgba( 255, 255, 2555, 0.9 );
+    background: rgba( 0, 0, 0, 0.45 );
+}
+
+.con-save-wma.hide {
+    opacity: 0;
+}
+
+.con-save-wma:after{ 
+    top: -11rpx;
+    right: 25rpx;
+    content: '';
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 10rpx solid transparent;
+    border-right: 10rpx solid transparent;
+    border-bottom: 12rpx solid rgba( 0, 0, 0, 0.5 );
+}
+
+.csw-img {
+    width: 28rpx;
+    height: 28rpx;
+    margin-right: 10rpx;
+    border-radius: 50%;
+    border: 1px solid rgba( 255, 255, 255, 0.7 );
+}

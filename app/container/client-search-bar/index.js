@@ -13,6 +13,11 @@ Component({
             initfocus: {
                   type: Boolean,
                   value: true
+            },
+            // 简单模式 - 看起来小一点
+            simple: {
+                  type: Boolean,
+                  value: false
             }
       },
 
@@ -59,12 +64,6 @@ Component({
             /** 确定 */
             onConfirm( ) {
                   const { search } = this.data;
-                  // if ( !search ) {
-                  //       return wx.showToast({
-                  //             icon: 'none',
-                  //             title: '未输入内容哦'
-                  //       })
-                  // }
                   this.triggerEvent('confirm', search );
             },
 

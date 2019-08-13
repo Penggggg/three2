@@ -83,6 +83,7 @@
     color: #fff;
     font-size: 21rpx;
     border-radius: 3px;
+    white-space: nowrap;
     padding: 10rpx 30rpx;
     text-shadow: 0 0 2px rgba(0, 0, 0, 0.2 );
     box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.18 );
@@ -107,4 +108,29 @@
 
 .fix-btn:after {
     border:none;
+}
+
+.gi8-swiper {
+    height: 60rpx;
+    width: 70rpx;
+}
+
+.gi8-avatar {
+    width: 60rpx;
+    height: 60rpx;
+    border-radius: 50%;
+}
+
+.gi8-member-block {
+    display: flex;
+    align-items: center;
+}
+
+.gi8-members {
+    flex: 1;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    padding: 0 20rpx;
+    overflow-y: hidden;
+    box-sizing: border-box;
 }

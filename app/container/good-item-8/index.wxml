@@ -11,6 +11,7 @@
             mode="aspectFill"
             class="gi8-img"
             src="{{ good.img }}"
+            lazy-load="{{ true }}"
         />
         <view class="gi8-info-block {{ isLeft ? '' : 'right' }}">
             
@@ -33,19 +34,54 @@
                 class="gi8-action-block {{ isLeft ? '' : 'right' }}"
             >
 
-                <wxc-price
-                    status="del"
-                    decimal="small"
-                    class="gi8-price"
-                    del-color="#666"
-                > 
-                    {{ good.price }}
-                </wxc-price>
+                <view class="gi8-member-block ">
+                    <wxc-price
+                        status="del"
+                        decimal="small"
+                        class="gi8-price"
+                        del-color="#666"
+                    > 
+                        {{ good.price }}
+                    </wxc-price>
+                    <view 
+                        class="gi8-members"
+                        wx:if="{{ good.users }}"
+                    >
+                        <!-- 头像列表 -->
+                        <swiper
+                            class="gi8-swiper"
+                            autoplay="{{ true }}"
+                            circular="{{ true }}"
+                            duration="{{ 1000 }}"
+                            interval="{{ 3000 }}"
+                            display-multiple-items="{{ 1 }}"
+                        >
+                            <block
+                                wx:key="{{ index }}"
+                                wx:for="{{ good.users }}"
+                            >
+                                <swiper-item>
+                                    <image
+                                        mode="scaleToFill"
+                                        class="gi8-avatar"
+                                        lazy-load="{{ true }}"
+                                        src="{{ item.avatarUrl }}"
+                                    />
+                                </swiper-item>
+                            </block>
+                        </swiper>
+                    </view>
+                </view>
 
                 <view
                     class="gi8-btn"
                 >
-                    拼团 <wxc-price
+                    {{ !!good.users && good.users.length > 0 ? 
+                            !!good.users && good.users.length === 1 ?
+                            '已开团' :
+                                good.users.length + 1 + '人团' : 
+                                '拼团' 
+                    }} <wxc-price
                             icon="sub"
                             decimal="small"
                             class="gi8-group-price"

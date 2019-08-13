@@ -1,0 +1,20 @@
+<view class="com-title">
+
+    <image
+        mode="aspectFit"
+        lazy-load="{{ true }}"
+        class="com-title-img"
+        src="{{ left$ }}"
+    />
+
+    <view class="com-title-text">
+        {{ title }}
+    </view>
+
+    <image
+        mode="aspectFit"
+        lazy-load="{{ true }}"
+        class="com-title-img"
+        src="{{ right$ }}"
+    />
+</view>

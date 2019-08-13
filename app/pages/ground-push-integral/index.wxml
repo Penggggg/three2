@@ -22,7 +22,7 @@
             <view class="gpi-data-block">
                 <view class="gpi-data-info">
                     <view class="gpi-data-title">
-                        我的总积分
+                        我的抵现金
                         <view 
                             bindtap="sureOpen"
                             class="gpi-tips-toggle"

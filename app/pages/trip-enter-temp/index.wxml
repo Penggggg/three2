@@ -1,0 +1,388 @@
+<view class="trip-enter">
+
+    <view class="te-content-block ">
+
+        <!-- 加载栏 -->
+        <view
+            class="te-tips-skt"
+            wx:if="{{ !loaded }}"
+        >
+            <view class="text">正在加载...</view> 
+        </view>
+
+        <!-- 行程入口主体 -->
+        <view
+            wx:else
+        >
+            <scroll-view
+                scroll-y
+                bindscroll="onScroll"
+                class="te-container"
+            >
+
+                <!-- 中间滚动信息 -->
+                <view class="te-content">
+
+                    <!-- 行程基本信息 -->
+                    <view class="te-trip-info">
+                        <view class="trip-decorate">
+                            TRIP
+                        </view>
+                        <view
+                            class="trip-title"
+                        >
+                            {{ current ? current.title : '超值优惠' }}
+                        </view>
+                        <view 
+                            class="trip-date"
+                            wx:if="{{ current }}"
+                        >
+                            {{ current.start_date$ }} ~ {{ current.end_date$ }}
+                        </view>
+                    </view>
+
+                    <!-- 顶部logo -->
+                    <view
+                        class="te-header"
+                    >
+
+                        <image
+                            mode="widthFix"
+                            class="te-header-img"
+                            src="{{ pinest ? 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner-2.png' : 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner-1.png' }}"
+                        />
+
+                        <!-- 本期拼团王 -->
+                        <view
+                            data-item="{{ pinest }}"
+                            class="te-pinest-block"
+                            bindtap="goGoodDetail"
+                            wx:if="{{ pinest && pinestImgWidth }}"
+                        >
+                            <view
+                                class="te-pinest-img-con"
+                                style="width: {{ pinestImgWidth }}rpx"
+                            >
+                                <image
+                                    mode="aspectFill"
+                                    class="te-pinest-img"
+                                    src="{{ pinest.detail.good.img[ 0 ]}}"
+                                />
+                            </view>
+                            <view class="te-pinest-text-block">
+                                <view class="te-pinest-text">拼团之</view>
+                                <image
+                                    mode="aspectFill"
+                                    class="te-pinest-icon"
+                                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-star-3.png"
+                                />
+                            </view>
+                            <view
+                                class="te-tag-block big"
+                                wx:if="{{ !!pinest.adjustGroupPrice }}"
+                            >
+                                <image
+                                    mode="widthFix"
+                                    class="gd-activity-icon"
+                                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                                />
+                                <view class="te-tag-text big">
+                                    可省 {{ pinest.delta }}元
+                                </view>
+                            </view>
+                        </view>
+
+                        <view
+                            wx:if="{{ pinest }}"
+                            class="te-tips-btn-block"
+                            bindtap="goTripDetail"
+                        >
+                            <view class="te-tips-btn">
+                                Show More
+                            </view>
+                            <image
+                                mode="widthFix"
+                                class="te-header-icon"
+                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-right.png"
+                            />
+                        </view>
+
+                        <!-- 社交 - 参加人数，点击跳到拼团页面 -->
+                        <view
+                            wx:if="{{ current }}"
+                            bindtap="goTripDetail"
+                            class="te-header-members {{ notice !== '暂无下一趟行程 T.T' ? 'topper' : '' }}"
+                        >
+                            <my-social-trip-member
+                                tid="{{ current._id }}"
+                                opacity="{{ !showMember }}"
+                                bindchange="onMemberChange"
+                            />
+                        </view>
+
+                    </view>
+ 
+                    <!-- 仙女购物单版本2 -->
+                    <view
+                        bindtap="goTripDetail"
+                        wx:if="{{ fairyList$.length !== 0 || allShoppinglist.length !== 0 }}"
+                        class="te-fairy-simple-title-block te-block"
+                    >
+                        <view class="te-fairy-simple-title te-block-title">
+                            一起·拔草
+                        </view>
+                        <view
+                            class="te-fairy-simple-entry"
+                        >
+                            View all
+                        </view>
+                    </view>
+
+                    <view
+                        class="te-pin-info-block"
+                        wx:if="{{ fairyList$.length !== 0 || allShoppinglist.length !== 0 }}"
+                    >
+                        <swiper
+                            autoplay="{{ true }}"
+                            duration="{{ 1000 }}"
+                            circular="{{ true }}"
+                            interval="{{ 3500 }}"
+                            class="te-pin-users"
+                            display-multiple-items="{{ 1 }}"
+                            wx:if="{{ fairyList$.length > 0 }}"
+                        >
+                            <block
+                                wx:key="{{ index }}"
+                                wx:for="{{ fairyList$ }}"
+                            >
+                                <swiper-item>
+                                    <view
+                                        bindtap="goTripDetail"
+                                        class="te-fairy-simple-item"
+                                    >
+                                        <image
+                                            mode="scaleToFill"
+                                            class="te-fairy-simple-user-img"
+                                            src="{{ item.user.avatarUrl }}"
+                                        />
+                                        <view class="te-fairy-simple-info">
+
+                                            <view class="te-fairy-simple-dataset">
+                                                <view class="te-fairy-simple-info-value">
+                                                {{ item.shoppinglist.length }}
+                                                </view>
+                                                <view class="te-fairy-simple-info-label">
+                                                    拔草{{ item.shoppinglist.length }}件
+                                                </view>
+                                            </view>
+
+                                            <view class="te-fairy-simple-dataset">
+                                                <view class="te-fairy-simple-info-value">
+                                                    {{ item.coupons.length }}
+                                                </view>
+                                                <view class="te-fairy-simple-info-label">
+                                                    张优惠券
+                                                </view>
+                                            </view>
+
+                                            <view class="te-fairy-simple-dataset">
+                                                <view class="te-fairy-simple-info-value">
+                                                    {{ item.delta }}
+                                                </view>
+                                                <view class="te-fairy-simple-info-label">
+                                                    元最多省
+                                                </view>
+                                            </view>
+                                        </view>
+                                    </view>
+                                </swiper-item>
+                            </block>
+                        </swiper>
+                        <view
+                            class="te-pin-goods"
+                        >
+                            <view class="te-pin-goods-list">
+                                <form
+                                    bindsubmit="goGoodDetail"
+                                    data-item="{{ item }}"
+                                    report-submit="{{ true }}"
+                                    class="te-pin-goods-form"
+                                    wx:key="{{ index }}"
+                                    wx:for="{{ allShoppinglist }}"
+                                >
+                                    <button
+                                        form-type="submit"
+                                        class='fix-btn te-pin-goods-img-con'
+                                    >
+                                        <image 
+                                            mode="aspectFill"
+                                            class="te-pin-goods-img"
+                                            src="{{ item.detail.img }}"
+                                        />
+                                        <view
+                                            class="te-tag-block"
+                                            wx:if="{{ !!item.adjustGroupPrice }}"
+                                        >
+                                            <image
+                                                mode="widthFix"
+                                                class="gd-activity-icon"
+                                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
+                                            />
+                                            <view class="te-tag-text">
+                                                可省 {{ item.delta }}元
+                                            </view>
+                                        </view>
+                                        <view
+                                            class="te-pin-good-title-con"
+                                        >
+                                            {{ item.detail.good.title }}
+                                        </view>
+                                    </button>
+                                </form>
+                            </view>
+                        </view>
+                    </view>
+
+                    <!-- 满减 -->
+                    <my-coupon-manjian
+                        tid="{{ current._id }}"
+                        bindclose="closeManjian"
+                        money="{{ current.fullreduce_values }}"
+                        atleast="{{ current.fullreduce_atleast }}"
+                        wx:if="{{ loaded && showManjian }}"
+                    />
+
+                    <!-- 本期推荐版本2 标题 -->
+                    <view
+                        class="te-block"
+                        wx:if="{{ recommendGoodsTop$.length > 0 }}"
+                    >
+                        <view class="te-block-title">
+                            店主推荐
+                        </view>
+                        <view class="te-recommond-img-list">
+                            <image
+                                mode="scaleToFill"
+                                wx:key="{{ index }}"
+                                lazy-load="{{ true }}"
+                                class="te-recommond-icon-img"
+                                wx:for="{{ recommendGoodsTop$ }}"
+                                src="{{ item.img[ 0 ]}}"
+                            />
+                        </view>
+                    </view>
+
+                    <!-- 本期推荐版本2 -->
+                    <swiper
+                        autoplay="{{ true }}"
+                        duration="{{ 1000 }}"
+                        circular="{{ true }}"
+                        interval="{{ 4000 }}"
+                        class="recommond-swiper"
+                        display-multiple-items="{{ 2 }}"
+                        wx:if="{{ recommendGoods$.length > 0 }}"
+                    >
+                        <block
+                            wx:key="{{ index }}"
+                            wx:for="{{ recommendGoods$ }}"
+                        >
+                            <swiper-item class="recommond-swiper-item">
+                                <my-good-item-5
+                                    good="{{ item }}"
+                                    tid="{{ current._id }}"
+                                />
+                            </swiper-item>
+                        </block>
+                    </swiper>
+
+                    <!-- 热门销售(前三) -->
+                    <view class="te-rank-block">
+                        <my-good-item-4
+                            good="{{ rankGoods[ 0 ]}}"
+                            wx:if="{{ rankGoods[ 0 ]}}"
+                            tid="{{ current._id }}"
+                        />
+                        <my-good-item-4
+                            direction="right"
+                            good="{{ rankGoods[ 1 ]}}"
+                            tid="{{ current._id }}"
+                            wx:if="{{ rankGoods[ 1 ]}}"
+                        />
+                        <my-good-item-4
+                            good="{{ rankGoods[ 2 ]}}"
+                            tid="{{ current._id }}"
+                            wx:if="{{ rankGoods[ 2 ]}}"
+                        />
+                    </view>
+
+                    <!-- 商品列表（热门，非前三） -->
+                    <view
+                        class="te-good-list"
+                    >
+                        <my-good-item-3
+                            wx:for="{{ otherGoods }}"
+                            wx:key="{{ index }}"
+                            good="{{ item }}"
+                            tid="{{ current._id }}"
+                        />
+                    </view>
+
+                    <!-- 行程入口 -->
+
+                    <!-- 下期信息 -->
+
+                </view>
+            
+            </scroll-view>     
+        </view>
+
+        <!-- 管理入口 -->
+        <my-manager-entry-btn />
+
+        <!-- 提示有立减优惠券 -->
+        <view
+            bindtap="showBigLijian"
+            class="te-lijian-tips-con {{ role === 1 ? 'left' : 'right' }}"
+            wx:if="{{ lijian.total && showLijianTips }}"
+        >
+            <image
+                mode="aspectFill"
+                class="te-lijian-tips-icon"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hongbao.png"
+            />
+            <wxc-price
+                icon="sub"
+                decimal="small"
+                class="te-lijian-tips-price"
+            > 
+                {{ lijian.total }}
+            </wxc-price>
+            <view class="te-lijian-tips-text">
+                立减
+            </view>
+        </view>
+
+        <!-- 立减优惠券 -->
+        <my-coupon-lijian
+            tid="{{ current._id }}"
+            wx:if="{{ loaded }}"
+            notGet="{{ lijian.notGet }}"
+            show="{{ showLijian }}"
+            bindclose="closeLijian"
+            endTime="{{ current.end_date }}"
+            hasBeenGet="{{ lijian.hasBeenGet }}"
+        />
+
+    </view>
+
+    <view class="pm-nav-block">
+        <!-- 底部按钮 -->
+        <my-nav />
+    </view>
+
+    <!-- 抵现积分、签到打卡 -->
+    <my-user-sign-gift
+        showSign="{{ false }}"
+    />
+
+</view>
