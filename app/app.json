@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/good-activity/index",
     "pages/good-new/index",
+    "pages/good-activity/index",
     "pages/trip-enter/index",
     "pages/ground-pin/index",
     "pages/trip-enter-temp/index",
