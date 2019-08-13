@@ -38,6 +38,7 @@
             <!-- 推荐 -->
             <scroll-view
                 scroll-y
+                bindscroll="onScroll"
                 lower-threshold="100"
                 class="te2-recommand-block"
                 bindscrolltolower="fetchRank"
@@ -388,14 +389,14 @@
     <my-save-wma />
 
     <!-- 抵现积分、签到打卡 -->
-    <!-- <my-user-sign-gift showSign="{{ false }}"/> -->
+    <my-user-sign-gift showSign="{{ false }}"/>
 
-    <!-- 行程详情入口 -->
-    <!-- <my-social-trip-member
+    <!-- 行程详情入口   -->
+    <my-social-trip-member  
+        wx:if="{{ current }}"
         tid="{{ current._id }}"
         opacity="{{ !showMember }}"
-        bindchange="onMemberChange"
-    /> -->
+    />
 
     <!-- 立减优惠券 -->
     <!-- <my-coupon-lijian

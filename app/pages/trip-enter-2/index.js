@@ -84,7 +84,10 @@ Page({
         rankList: [ ],
 
         // 本次行程购物清单
-        allShoppinglist: [ ]
+        allShoppinglist: [ ],
+
+        // 展示行程详情入口
+        showMember: false
     },
 
     runComputed( ) {
@@ -352,6 +355,16 @@ Page({
                 title: '即将上线'
             });
         }
+    },
+
+    /** 页面滚动 */
+    onScroll( e ) {
+        const { scrollTop } = e.detail;
+        const { showMember } = this.data;
+        if ( showMember ) { return; }
+        this.setData({
+            showMember: scrollTop > 100
+        })
     },
 
     /**
