@@ -1327,7 +1327,7 @@ export const main = async ( event, context ) => {
                         openid,
                         type: 'hongbao',
                         page: 'pages/my/index',
-                        texts: [`${get_integral}元抵现金！下单就能用！`, `明天登陆送${next_integral}元，全周送${week_integral}元！`]
+                        texts: [`${get_integral}元抵现金！下单就能用！`, `明天登陆送${next_integral}元，本周可送${week_integral}元！`]
                     }
                 }
             });
