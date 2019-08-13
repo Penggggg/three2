@@ -2,6 +2,8 @@
 const { http } = require('../../util/http.js');
 const { createFormId } = require('../../util/form-id');
 
+const app = getApp( );
+
 Component({
     /**
      * 组件的属性列表
@@ -35,13 +37,17 @@ Component({
         // 行程截止
         endTime: {
             type: Number
-        }
+        },
     },
 
     /**
      * 组件的初始数据
      */
     data: {
+
+        /** 是否进行了用户授权 */
+        isUserAuth: false,
+
         // 动画
         animationMiddleHeaderItem: null,
     },
@@ -56,6 +62,16 @@ Component({
             if ( val ) {
                 // this.vibrateShort( );
             }
+        },
+
+        /** 监听用户授权情况 */
+        checkAuth( ) {
+            app.watch$('isUserAuth', val => {
+                if ( val === undefined ) { return; }
+                this.setData({
+                    isUserAuth: val
+                });
+            });
         },
 
         /** 关闭弹层 */
@@ -103,9 +119,15 @@ Component({
             createFormId( e.detail.formId )
         },
 
+        /** 获取用户授权 */
+        getUserAuth( ) {
+            app.getWxUserInfo(( ) => {
+            });
+        }
     },
 
     attached: function( ) {
+        this.checkAuth( );
         this.dealAnimate( );
     }
 
