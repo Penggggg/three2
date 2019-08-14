@@ -22,7 +22,19 @@ Page({
         ipName: '',
 
         // ip
-        ipAvatar: ''
+        ipAvatar: '',
+
+        // 排行榜
+        loadingRank: false,
+
+        // 排行榜
+        canLoadRankMore: true,
+
+        // 排行榜
+        rankPage: 0,
+
+        // 排行榜
+        rankList: [ ],
 
     },
 
@@ -54,10 +66,48 @@ Page({
         });
     },
 
+    /** 新品榜 */
+    fetchRank( ) {
+     
+        const { loadingRank, canLoadRankMore, rankPage, rankList } = this.data;
+        if ( loadingRank || !canLoadRankMore ) { return; }
+
+        this.setData({
+            loadingRank: true
+        });
+
+        http({
+            data: {
+                limit: 6,
+                page: rankPage + 1,
+                sort: 'createTime'
+            },
+            url: `good_rank`,
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+
+                const list = data.data;
+                const { pagenation } = data;
+                const { page, totalPage } = pagenation;
+
+                const meta = page === 1 ? list : [ ...rankList, ...list ]
+
+                this.setData({
+                    rankPage: page,
+                    rankList: meta.map( delayeringGood ),
+                    loadingRank: false,
+                    canLoadRankMore: page < totalPage,
+                });
+            }
+        });
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+        this.fetchRank( );
         this.watchRole( );
         this.runComputed( );
     },

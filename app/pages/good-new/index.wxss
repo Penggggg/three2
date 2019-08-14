@@ -1,0 +1,12 @@
+.p-good-new {
+    height: 100vh;
+}
+
+.pgn-scroll {
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.pgn-good-list {
+    padding: 30rpx 20rpx;
+}

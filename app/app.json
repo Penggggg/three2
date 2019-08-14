@@ -27,7 +27,8 @@
     "pages/concat/index",
     "pages/trip-deliver/index",
     "pages/manager-person-info/index",
-    "pages/goods-detail-preview/index"
+    "pages/goods-detail-preview/index",
+    "container/good-item-9/index"
   ],
   "usingComponents": {
     "my-nav": "./container/nav-bar/index",
@@ -50,6 +51,7 @@
     "my-good-item-6": "./container/good-item-6/index",
     "my-good-item-7": "./container/good-item-7/index",
     "my-good-item-8": "./container/good-item-8/index",
+    "my-good-item-9": "./container/good-item-9/index",
     "my-ground-bar": "./container/ground-bar/index",
     "my-good-poster": "./container/good-poster/index",
     "my-process-bar": "./components/process-bar/index",
