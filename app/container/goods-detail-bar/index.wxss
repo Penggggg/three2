@@ -17,7 +17,7 @@
 
 .gbs-btn-item {
     display: flex;
-    padding: 10rpx 20rpx;
+    padding: 10rpx 28rpx;
     flex-direction: column;
     align-items: center;
 }
