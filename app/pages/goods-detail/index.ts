@@ -563,10 +563,10 @@ Page({
         
         this.runComputed( );
 
-        if ( !options!.id && !scene && !'71f2cd945cab4fc10261232b3f358619' ) { return; }
-        this.setData!({
-            id: options!.id || scene || '71f2cd945cab4fc10261232b3f358619',
-        });
+        // if ( !options!.id && !scene && !'71f2cd945cab4fc10261232b3f358619' ) { return; }
+        // this.setData!({
+        //     id: options!.id || scene || '71f2cd945cab4fc10261232b3f358619',
+        // });
 
         if ( options!.id || scene ) { 
             this.setData!({

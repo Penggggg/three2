@@ -309,12 +309,47 @@
     display: flex;
     padding-top: 20rpx;
     justify-content: center;
+    position: relative;
 }
 
 .detail-info-banner-img {
-    width: 85%;
+    width: 95%;
     height: 200rpx;
-    border-radius: 6px;
+    border-radius: 3px;
+}
+
+.detail-banner-info {
+    top: 50%;
+    left: 100rpx;
+    position: absolute;
+    transform: translate( 0, -50% );
+}
+
+.detail-banner-title {
+    color: #333;
+    font-size: 31rpx;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    position: relative;
+    display: inline-block;
+}
+
+.detail-banner-tips {
+    color: #333;
+    font-size: 26rpx;
+    letter-spacing: 0.08em;
+}
+
+.detail-banner-avatar {
+    top: 40%;
+    right: -63rpx;
+    width: 50rpx;
+    height: 50rpx;
+    border-radius: 50%;
+    position: absolute;
+    border: 1px solid #fff;
+    transform: translate( 0, -50% );
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15 );
 }
 
 

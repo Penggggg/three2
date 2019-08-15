@@ -331,11 +331,31 @@
 
         <!-- banner -->
         <view class="detail-info-banner">
-            <image
+            <!-- <image
                 mode="scaleToFill"
                 class="detail-info-banner-img"
                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-info-banner.png"
+            /> -->
+            <image
+                mode="scaleToFill"
+                class="detail-info-banner-img"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/banner-3.png"
             />
+            <view class="detail-banner-info">
+                <view class="detail-banner-title">
+                    {{ ipName || '跑腿' }}代购
+                    <image
+                        src="{{ ipAvatar }}"
+                        mode="aspectFill"
+                        class="detail-banner-avatar"
+                        wx:if="{{ !!ipAvatar }}"
+                        lazy-load="{{ true }}"
+                    />
+                </view>
+                <view class="detail-banner-tips">
+                    正品·质量·超划算
+                </view>
+            </view>
         </view>
 
         <!-- 文字介绍 -->
