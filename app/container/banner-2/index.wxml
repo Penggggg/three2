@@ -1,0 +1,23 @@
+<view class="con-banner-1">
+    <image
+        class="cb1-img"
+        mode="aspectFill"
+        lazy-load="{{ true }}"
+        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/banner-bg-2.jpg"
+    />
+    <view class="cb1-info">
+        <view class="cb1-title1">
+            {{ title1 }}
+            <image
+                src="{{ img }}"
+                mode="aspectFill"
+                class="cb1-avatar"
+                wx:if="{{ !!img }}"
+                lazy-load="{{ true }}"
+            />
+        </view>
+        <view class="cb1-title2">
+            {{ title2 }}
+     </view>
+    </view>
+</view>

@@ -1,0 +1,44 @@
+.con-banner-1 {
+    position: relative;
+}
+
+.cb1-img {
+    width: 100vw;
+    height: 300rpx;
+}
+
+.cb1-info {
+    top: 48%;
+    left: 135rpx;
+    position: absolute;
+    transform: translate( 0, -50% );
+}
+
+.cb1-title1 {
+    color: #eb4d4a;
+    font-size: 40rpx;
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+    letter-spacing: 0.08em;
+    text-shadow: 5px 3px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cb1-title2 {
+    color: #eb4d4a;
+    font-size: 55rpx;
+    letter-spacing: 0.08em;
+    text-shadow: 5px 3px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cb1-avatar {
+    top: 50%;
+    right: -63rpx;
+    width: 50rpx;
+    height: 50rpx;
+    border-radius: 50%;
+    position: absolute;
+    border: 1px solid #fff;
+    transform: translate( 0, -50% );
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15 );
+}

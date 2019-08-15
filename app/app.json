@@ -1,14 +1,14 @@
 {
   "pages": [
     "pages/trip-enter/index",
-    "pages/good-new/index",
     "pages/good-activity/index",
+    "pages/manager-goods-active/index",
+    "pages/good-new/index",
     "pages/ground-pin/index",
     "pages/trip-enter-temp/index",
     "pages/my/index",
     "pages/goods-detail/index",
     "pages/ground-push-integral/index",
-    "pages/manager-goods-active/index",
     "pages/order-list/index",
     "pages/coupon-list/index",
     "pages/manager-trip-list/index",
@@ -27,7 +27,8 @@
     "pages/concat/index",
     "pages/trip-deliver/index",
     "pages/manager-person-info/index",
-    "pages/goods-detail-preview/index"
+    "pages/goods-detail-preview/index",
+    "container/good-item-9/index"
   ],
   "usingComponents": {
     "my-nav": "./container/nav-bar/index",
@@ -40,6 +41,8 @@
     "my-switch-text": "./components/switch-text/index",
     "my-title-decorate": "./components/title-decorate/index",
     "my-good-classify-list": "./container/good-classify-list/index",
+    "my-banner-1": "./container/banner-1/index",
+    "my-banner-2": "./container/banner-2/index",
     "my-good-item-1": "./container/good-item-1/index",
     "my-good-item-2": "./container/good-item-2/index",
     "my-good-item-3": "./container/good-item-3/index",
@@ -48,6 +51,7 @@
     "my-good-item-6": "./container/good-item-6/index",
     "my-good-item-7": "./container/good-item-7/index",
     "my-good-item-8": "./container/good-item-8/index",
+    "my-good-item-9": "./container/good-item-9/index",
     "my-ground-bar": "./container/ground-bar/index",
     "my-good-poster": "./container/good-poster/index",
     "my-process-bar": "./components/process-bar/index",
