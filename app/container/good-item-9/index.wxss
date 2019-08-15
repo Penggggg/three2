@@ -142,3 +142,17 @@
     font-weight: bold;
     margin-right: 15rpx;
 }
+
+.gi9-img-block {
+    position: relative;
+}
+
+.gi9-tag {
+    top: 0;
+    left: 0;
+    color: #fff;
+    font-size: 22rpx;
+    position: absolute;
+    padding: 0rpx 12rpx;
+    background: #eb4d4a;
+}

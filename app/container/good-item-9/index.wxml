@@ -7,12 +7,17 @@
         form-type="submit"
         class="fix-btn con-good-item-9 {{ isLeft ? '' : 'right' }}"
     >
-        <image
-            mode="aspectFill"
-            class="gi9-img"
-            src="{{ good.img }}"
-            lazy-load="{{ true }}"
-        />
+        <view class="gi9-img-block">
+            <image
+                mode="aspectFill"
+                class="gi9-img"
+                src="{{ good.img }}"
+                lazy-load="{{ true }}"
+            />
+            <view class="gi9-tag">
+                {{ good.tagText }}
+            </view>
+        </view>
         <view class="gi9-info-block {{ isLeft ? '' : 'right' }}">
             
             <view class="gi9-title gi9-text">

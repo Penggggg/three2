@@ -10,3 +10,10 @@
 .pgn-good-list {
     padding: 30rpx 20rpx;
 }
+
+.pgn-tips {
+    color: #999;
+    font-size: 24rpx;
+    text-align: center;
+    padding-top: 100rpx;
+}

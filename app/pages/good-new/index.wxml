@@ -5,12 +5,14 @@
         lower-threshold="100"
         bindscrolltolower="fetchRank"
     >
+
         <!-- logo -->
         <my-banner-1
             img="{{ ipAvatar }}"
             title1="{{ bannerTips$[ 0 ]}}"
             title2="{{ bannerTips$[ 1 ]}}"
         />
+
         <!-- 列表 -->
         <view class="pgn-good-list">
             <my-good-item-9
@@ -18,6 +20,14 @@
                 wx:for="{{ rankList }}"
                 good="{{ item }}"
             />
+        </view>
+
+        <!-- 提示 -->
+        <view 
+            class="pgn-tips"
+            wx:if="{{ !canLoadRankMore && rankList.length === 0 }}"
+        >
+            ~ 暂无更多 ~
         </view>
 
     </scroll-view>
