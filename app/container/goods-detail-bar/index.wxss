@@ -61,8 +61,12 @@
     text-align: center;
     /* background: #ff5777; */
     background: #ff8787; 
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 5px rgba( 0, 0, 0, 0.2 );
     background: -webkit-linear-gradient(to left, #ff61ab, #ff8787); 
     background: linear-gradient(to left, #ff61ab, #ff8787); 
+    background-image: linear-gradient(-225deg, #A445B2 0%, #D41872 52%, #FF0066 100%);
+    
 }
 
 .gbs-btn-item-img {
