@@ -206,7 +206,8 @@ Page({
 
         if ( active === 0 ) {
             temp = Object.assign({ }, temp, {
-                isClosed: false
+                isClosed: false,
+                filterPass: true
             });
         }
 

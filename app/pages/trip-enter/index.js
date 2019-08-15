@@ -58,11 +58,11 @@ Page({
                 icon: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hufu-1.png'
             }, {
                 label: '特价秒杀',
-                // url: '/pages/ground-pin/index',
+                url: '/pages/good-activity/index',
                 icon: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hufu-2.png'
             }, {
                 label: '好物上新',
-                // url: '/pages/ground-pin/index',
+                url: '/pages/good-new/index',
                 icon: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hufu-3.png'
             }, {
                 label: '签到福利',
