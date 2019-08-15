@@ -15,7 +15,7 @@
                 lazy-load="{{ true }}"
             />
             <view class="gi9-tag">
-                {{ good.tagText }}
+                {{ tips || good.tagText }}
             </view>
         </view>
         <view class="gi9-info-block {{ isLeft ? '' : 'right' }}">
@@ -41,7 +41,6 @@
 
                 <view class="gi9-member-block ">
                     <wxc-price
-                        icon="sub"
                         decimal="small"
                         class="gi9-price-big "
                     > 

@@ -3,7 +3,7 @@ const { createFormId } = require('../../util/form-id.js');
 
 /**
  * @description
- * 拼团广场，一排一个的商品列表
+ * 好物上新、限时特价，一排一个的商品列表
  */
 Component({
     /**
@@ -30,6 +30,11 @@ Component({
         isLeft: {
             type: Boolean,
             value: true
+        },
+        /** 左上角 */
+        tips: {
+            type: String,
+            value: ''
         }
     },
 
