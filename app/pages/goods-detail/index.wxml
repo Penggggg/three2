@@ -66,8 +66,11 @@
                 </view>
             </view>
 
-            <!-- 价格信息 -->
-            <view class="pgd-price-time-block-item purple">
+            <!-- 价格信息：普通 -->
+            <!-- <view
+                wx:if="{{ !from }}"
+                class="pgd-price-time-block-item purple"
+            >
                 <wxc-price
                     icon="sub"
                     class="white price mr"
@@ -85,6 +88,29 @@
                 > 
                     原价{{ detail.fadePrice }}
                 </wxc-price>
+            </view> -->
+
+            <!-- 价格信息：来自于分享 -->
+            <view
+                class="pgd-price-time-block-item purple"
+            >
+                <view
+                    class="white price mr mtt"
+                >
+                    <wxc-price
+                        icon="sub"
+                        class="white price mr"
+                        decimal="small"
+                        wx:if="{{ detail }}"
+                    > 
+                        {{ detail$.lowest_price$ }}
+                    </wxc-price>
+                    <view 
+                        class="price-pin-tips"
+                    >
+                        {{ detail$.hasPin ? '拼团价' : '最低价' }}
+                    </view>
+                </view>
             </view>
 
             <!-- 行程倒计时 -->
@@ -305,11 +331,31 @@
 
         <!-- banner -->
         <view class="detail-info-banner">
-            <image
+            <!-- <image
                 mode="scaleToFill"
                 class="detail-info-banner-img"
                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-info-banner.png"
+            /> -->
+            <image
+                mode="scaleToFill"
+                class="detail-info-banner-img"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/banner-3.png"
             />
+            <view class="detail-banner-info">
+                <view class="detail-banner-title">
+                    {{ ipName || '跑腿' }}代购
+                    <image
+                        src="{{ ipAvatar }}"
+                        mode="aspectFill"
+                        class="detail-banner-avatar"
+                        wx:if="{{ !!ipAvatar }}"
+                        lazy-load="{{ true }}"
+                    />
+                </view>
+                <view class="detail-banner-tips">
+                    正品·质量·超划算
+                </view>
+            </view>
         </view>
 
         <!-- 文字介绍 -->
@@ -363,11 +409,25 @@
         <view class="gd-pin-tips-block">
 
             <view class="gd-pin-tips-icon-block">
-                <view class="gd-pin-tips-icon-round">
+                <view 
+                    wx:if="{{ !ipAvatar }}"
+                    class="gd-pin-tips-icon-round"
+                >
                     <image
                         mode="widthFix"
                         class="gd-pin-tips-icon"
                         src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-money-white.png"
+                    />
+                </view>
+                <view 
+                    wx:else
+                    class="gd-pin-tips-icon-round nb"
+                >
+                    <image
+                        mode="aspectFill"
+                        lazy-load="{{ true }}"
+                        class="gd-pin-ipAvatar"
+                        src="{{ ipAvatar }}"
                     />
                 </view>
             </view>
@@ -377,7 +437,7 @@
             </view>
 
             <view class="gd-pin-tips-content">
-                如果有他人也买了同款商品，会"自动拼团”，并得到更省钱的“拼团价”。如果闺蜜或者群友刚好也需要～那就邀请她们一起购买吧！
+                有群友人买了同款商品，就会"自动拼团”，并得到更划算的“拼团价”。若闺蜜或群友刚好需要～就邀请她们一起买，一起捡便宜！
             </view>
 
             <!-- 行程清单 -->
@@ -407,19 +467,25 @@
                             <view class="gd-swiper-title">
                                 {{ item.name }}
                             </view>
-                            <view class="gd-swiper-title small">
-                                <!-- ¥{{ item.price }} -->
-                                拼 ¥{{ item.groupPrice }}
+                            <view class="gd-swiper-title del small">
+                                ¥{{ item.price }}
+                                <!-- ¥{{ item.groupPrice }} -->
                             </view>
                             <view class="gd-swiper-title small color">
-                                <!-- 拼: {{ item.groupPrice }} -->
-                                省 ¥{{ item.delta }}
+                                拼: {{ item.groupPrice }}
+                                <!-- 省 ¥{{ item.delta }} -->
                             </view>
                             <view
                                 class="gd-swiper-tag"
                                 wx:if="{{ item.canPin }}"
                             >
-                                本次可拼团
+                                下单就拼团
+                            </view>
+                            <view
+                                wx:else
+                                class="gd-swiper-tag"
+                            >
+                                省¥{{ item.delta }}
                             </view>
                         </view>
                     </swiper-item>

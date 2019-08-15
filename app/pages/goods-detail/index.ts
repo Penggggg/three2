@@ -18,6 +18,11 @@ Page({
      * 页面的初始数据
      */
     data: {
+        // ip
+        ipName: '',
+
+        // ip 
+        ipAvatar: '',
 
         // 是否为新客
         isNew: true,
@@ -195,6 +200,7 @@ Page({
                 const meta2 = meta.map( x => Object.assign({ }, x, {
                     delta: Number( x.price - x.groupPrice ).toFixed( 0 )
                 }));
+
                 return meta2;
             },
 
@@ -238,6 +244,12 @@ Page({
                 }
                 const result = delayeringGood( detail, pushIntegralRate );
                 return result.integral$;
+            },
+
+            // 详情
+            detail$: function( ) {
+                const { detail } = this.data;
+                return delayeringGood( detail )
             }
 
         })
@@ -245,7 +257,7 @@ Page({
 
     /** 拉取商品详情 */
     fetDetail( id ) {
-        const { detail } = this.data;
+        const { detail, from } = this.data;
         if ( detail ) { return; }
         http({
             data: {
@@ -270,7 +282,7 @@ Page({
                         groupPrice,
                         img: img[ 0 ]
                     }];
-                }
+                };
 
                 const activities$ = activities.map( x => {
 
@@ -295,7 +307,14 @@ Page({
                     activities: activities$
                 });
 
-                this.checkOpenPin( );
+                // 弹起拼团框
+                if ( !!from && delayeringGood( res.data ).hasPin ) {
+                    this.setData!({
+                        showTips: 'show'
+                    });
+                } else if ( !from && delayeringGood( res.data ).hasPin ) {
+                    this.checkOpenPin( );
+                }
             }
         });
     },
@@ -407,7 +426,10 @@ Page({
             });
         });
         (app as any).watch$('appConfig', val => {
+            if ( !val ) { return; }
             this.setData!({
+                ipName: val['ip-name'],
+                ipAvatar: val['ip-avatar'],
                 pushIntegralRate: (val || { })['push-integral-get-rate'] || 0,
                 canIntegrayShare: !!(val || { })['good-integral-share'] || false
             });
@@ -445,16 +467,16 @@ Page({
 
     /** 检查是否有主动弹开过拼团 */
     checkOpenPin( ) {
-        const { detail, tid } = this.data;
+        const { detail } = this.data;
         if ( !detail ) { return }
-
         const result = delayeringGood( detail );
-        if ( result && tid ) {
+        if ( result ) {
+            const oneDay = 24 * 60 * 60 * 1000;
             const priceGap = String( result.goodPins.eachPriceRound ).replace(/\.00/g, '');
-            const openRecordTid = wx.getStorageSync( storageKey );
+            const openRecord = wx.getStorageSync( storageKey );
 
-            if ( !!priceGap && !!tid && openRecordTid !== tid ) {
-                wx.setStorageSync( storageKey, tid );
+            if ( !!priceGap && Date.now( ) - Number( openRecord ) >= oneDay ) {
+                wx.setStorageSync( storageKey, String( Date.now( )));
                 this.toggleTips( );
             }
         }
@@ -551,7 +573,7 @@ Page({
                 id: options!.id || scene,
             });
         }
-        
+
         if ( !!(options as any).from ) {
             this.setData!({
                 from: options!.from
@@ -639,7 +661,7 @@ Page({
         return {
             title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
                         activities.length === 0 ?
-                            `一起买！一起省${String( priceGap ).replace(/\.00/g, '')}元！` :
+                            `拼团买！一起省${String( priceGap ).replace(/\.00/g, '')}元！` :
                             '限时特价超实惠！' : 
                         trip && trip.reduce_price ? 
                             `立减${trip.reduce_price}元！` :
