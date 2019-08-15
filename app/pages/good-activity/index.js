@@ -79,23 +79,28 @@ Page({
         http({
             data: {
                 limit: 6,
-                page: rankPage + 1,
-                sort: 'createTime'
+                isClosed: false,
+                filterPass: true,
+                page: rankPage + 1
             },
-            url: `good_rank`,
+            url: `activity_good-discount-list`,
             success: res => {
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
 
-                const list = data.data;
-                const { pagenation } = data;
+                const { list, pagenation } = data;
                 const { page, totalPage } = pagenation;
 
                 const meta = page === 1 ? list : [ ...rankList, ...list ]
+                const meta2 = meta.map( x => ({
+                    ...x.detail,
+                    price: x.ac_price,
+                    groupPrice: x.ac_groupPrice
+                }));
 
                 this.setData({
                     rankPage: page,
-                    rankList: meta.map( delayeringGood ),
+                    rankList: meta2.map( delayeringGood ),
                     loadingRank: false,
                     canLoadRankMore: page < totalPage,
                 });
