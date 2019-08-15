@@ -1,2 +1,35 @@
-<!--app/pages/good-activity/index.wxml-->
-<text>app/pages/good-activity/index.wxml</text>
+<view class="p-good-new">
+    <scroll-view
+        scroll-y
+        class="pgn-scroll"
+        lower-threshold="100"
+        bindscrolltolower="fetchRank"
+    >
+
+        <!-- logo -->
+        <my-banner-2
+            img="{{ ipAvatar }}"
+            title1="{{ bannerTips$[ 0 ]}}"
+            title2="{{ bannerTips$[ 1 ]}}"
+        />
+
+        <!-- 列表 -->
+        <view class="pgn-good-list">
+            <my-good-item-9
+                wx:key="{{ index }}"
+                wx:for="{{ rankList }}"
+                good="{{ item }}"
+                tips="限时特价"
+            />
+        </view>
+
+        <!-- 提示 -->
+        <view 
+            class="pgn-tips"
+            wx:if="{{ !canLoadRankMore && rankList.length === 0 }}"
+        >
+            ~ 暂无更多 ~
+        </view>
+
+    </scroll-view>
+</view>

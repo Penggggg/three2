@@ -1,8 +1,34 @@
 <view class="p-good-new">
-    <image
-        mode="aspectFill"
-        lazy-load="{{ true }}"
-        class="pgn-banner"
-        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/banner-good-new.jpg"
-    />
+    <scroll-view
+        scroll-y
+        class="pgn-scroll"
+        lower-threshold="100"
+        bindscrolltolower="fetchRank"
+    >
+
+        <!-- logo -->
+        <my-banner-1
+            img="{{ ipAvatar }}"
+            title1="{{ bannerTips$[ 0 ]}}"
+            title2="{{ bannerTips$[ 1 ]}}"
+        />
+
+        <!-- 列表 -->
+        <view class="pgn-good-list">
+            <my-good-item-9
+                wx:key="{{ index }}"
+                wx:for="{{ rankList }}"
+                good="{{ item }}"
+            />
+        </view>
+
+        <!-- 提示 -->
+        <view 
+            class="pgn-tips"
+            wx:if="{{ !canLoadRankMore && rankList.length === 0 }}"
+        >
+            ~ 暂无更多 ~
+        </view>
+
+    </scroll-view>
 </view>

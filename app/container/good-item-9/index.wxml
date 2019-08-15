@@ -1,0 +1,69 @@
+<form
+    bindsubmit="goDetail"
+    report-submit="{{ true }}"
+    class="good-item-9-form"
+>
+    <button 
+        form-type="submit"
+        class="fix-btn con-good-item-9 {{ isLeft ? '' : 'right' }}"
+    >
+        <view class="gi9-img-block">
+            <image
+                mode="aspectFill"
+                class="gi9-img"
+                src="{{ good.img }}"
+                lazy-load="{{ true }}"
+            />
+            <view class="gi9-tag">
+                {{ tips || good.tagText }}
+            </view>
+        </view>
+        <view class="gi9-info-block {{ isLeft ? '' : 'right' }}">
+            
+            <view class="gi9-title gi9-text">
+                {{ good.title }}
+            </view>
+
+            <view
+                wx:if="{{ good.name }}"
+                class="gi9-name gi9-text"
+            >
+                {{ good.name }}
+            </view>
+
+            <view class="gi9-detail gi9-text">
+                {{ good.detail }}
+            </view>
+
+            <view 
+                class="gi9-action-block {{ isLeft ? '' : 'right' }}"
+            >
+
+                <view class="gi9-member-block ">
+                    <wxc-price
+                        decimal="small"
+                        class="gi9-price-big "
+                    > 
+                        {{ good.lowest_price$ }}
+                    </wxc-price>
+                    <wxc-price
+                        status="del"
+                        decimal="small"
+                        class="gi9-price"
+                        del-color="#999"
+                    > 
+                        {{ good.fadePrice }}
+                    </wxc-price>
+                </view>
+
+                <view
+                    class="gi9-btn"
+                >
+                    马上购买
+                </view>
+
+            </view>
+
+        </view>
+    </button>
+</form>
