@@ -65,6 +65,8 @@
 
                 <!-- 价格 -->
                 <view class="sku-price-block" wx:if="{{ selectedSku }}">
+
+                    <!-- 价格 -->
                     <view class="sku-price-set">
                         <view
                             class="sku-pin-tips"
@@ -82,18 +84,24 @@
                             }}
                         </wxc-price>
                     </view>
+
+                    <!-- 库存 -->
                     <view
                         class="sku-stock"
                         wx:if="{{ selectedSku.stock || selectedSku.limit }}"
                     >
                         {{ selectedSku.stock ? '库存' + selectedSku.stock + '件' : '' }}<text>{{ selectedSku.limit ? '限购' + selectedSku.limit + '件' : '' }}</text>
                     </view>
+
+                    <!-- 已选择 -->
                     <view
                         class="sku-title"
                         wx:if="{{ selectedSku.title !== '默认型号' }}"
                     >
                         已选择：{{ selectedSku.title }}
                     </view>
+
+                    <!-- 价格对比 -->
                     <view
                         class="sku-pin-title"
                     >
@@ -150,6 +158,23 @@
                         bind:changenumber="onSkuCount"
                     />
                 </view>
+
+                <!-- 拼团助手 -->
+                <view
+                    wx:if="{{ !selectedSku.canPin }}"
+                    class="sku-standards-block"
+                >
+                    <view
+                        class="sku-dingjin"
+                    >
+                        <view class="sku-info-title mt il">
+                            服务
+                        </view>
+                        <view class="sku-info-text il">
+                            群助手帮你, 找人拼团
+                        </view>
+                    </view>
+                </view>
                 
                 <!-- 订金 -->
                 <view
@@ -163,15 +188,6 @@
                         <view class="sku-info-title mt il">
                             您免付订金
                         </view>
-                         <!-- <view class="sku-info-text il">
-                            <wxc-price
-                                icon="sub"
-                                decimal="small"
-                                class="deposit-price"
-                            > 
-                                {{ depositPrice }}
-                            </wxc-price>
-                        </view> -->
                     </view>
 
                     <view
@@ -180,15 +196,6 @@
                         <view class="sku-info-title mt il">
                             本趟行程免订金
                         </view>
-                         <!-- <view class="sku-info-text il">
-                            <wxc-price
-                                icon="sub"
-                                decimal="small"
-                                class="deposit-price"
-                            > 
-                                {{ depositPrice }}
-                            </wxc-price>
-                        </view> -->
                     </view>
 
                     <view
