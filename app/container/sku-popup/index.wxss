@@ -209,11 +209,13 @@
 .sku-btn {
     text-align: center;
     padding: 18rpx 20rpx;
-    color: #ff5777;
     font-size: 32rpx;
     text-align: center;
-    background: #ffe8ee;
     border-radius: 5px;
+    color: #fff;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 3px rgba( 0, 0, 0, 0.1 );
+    background-image: linear-gradient(-225deg, #A445B2 0%, #D41872 52%, #FF0066 100%);
 }
 
 .sku-btn.lh {
@@ -222,6 +224,7 @@
 
 .sku-info-text {
     font-size: 24rpx;
+    color: #666;
 }
 
 .sku-info-text.il {
