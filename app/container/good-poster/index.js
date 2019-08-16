@@ -52,8 +52,7 @@ Component({
         // 文字拼团提示
         tips: [
             '发群求拼团',
-            '分享给朋友',
-            '转发获积分',
+            '分享给闺蜜'
         ],
         
         // 是否转发提示
@@ -335,13 +334,13 @@ Component({
                         showTips: false
                     });
                 }
-            }, 2500 );
+            }, 4500 );
         }
 
     },
 
     attached: function( ) {
         this.watchRole( );
-        setTimeout(( ) => this.initTips( ), 1000 );
+        setTimeout(( ) => this.initTips( ), 5000 );
     }
 })
