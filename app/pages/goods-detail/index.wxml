@@ -66,31 +66,7 @@
                 </view>
             </view>
 
-            <!-- 价格信息：普通 -->
-            <!-- <view
-                wx:if="{{ !from }}"
-                class="pgd-price-time-block-item purple"
-            >
-                <wxc-price
-                    icon="sub"
-                    class="white price mr"
-                    decimal="small"
-                    wx:if="{{ detail }}"
-                > 
-                    {{ price }}
-                </wxc-price>
-                <wxc-price
-                    status="del"
-                    decimal="small"
-                    wx:if="{{ detail }}"
-                    del-color="#fff"
-                    class="white fade-price"
-                > 
-                    原价{{ detail.fadePrice }}
-                </wxc-price>
-            </view> -->
-
-            <!-- 价格信息：来自于分享 -->
+            <!-- 价格信息 -->
             <view
                 class="pgd-price-time-block-item purple"
             >
@@ -114,7 +90,7 @@
             </view>
 
             <!-- 行程倒计时 -->
-            <view
+            <!-- <view
                 class="pgd-price-time-block-item countdown"
             >
                 <view class="pgd-price-time-block-tips">行程开始还剩</view>
@@ -123,7 +99,7 @@
                     format="hh:mm:ss"
                     num-style="font-size: 32rpx; color: #fff; padding: 5rpx 8rpx;background: #000; text-align: center; border-radius: 8rpx;"
                 />
-            </view>
+            </view> -->
 
         </view>
 
@@ -175,7 +151,7 @@
             <view class="info-block-item np" wx:if="{{ !!priceGap }}">
 
                 <view class="info-block-item-label">
-                    拼团：
+                    省钱：
                 </view>
 
                 <view class="info-block-item-content">
@@ -196,7 +172,7 @@
                             form-type="submit"
                             class="red formid-btn"
                         >   
-                            拼团省{{ priceGap }}元【详情】
+                            拼团省{{ priceGap }}元
                         </button>
                     </form>
                 </view>
@@ -209,7 +185,7 @@
                     赚钱：
                 </view>
                 <view class="info-block-item-content">
-                    分享此商品可获
+                    分享商品可获
                     <form
                         bindsubmit="toggleTips3"
                         class="red bigger nobold"
@@ -219,7 +195,7 @@
                             form-type="submit"
                             class="red formid-btn normal"
                         >   
-                            ¥{{ integral$ }}抵现积分
+                            ¥{{ integral$ }}抵现金
                         </button>
                     </form>
                 </view>

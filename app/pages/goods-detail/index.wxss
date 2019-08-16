@@ -284,6 +284,7 @@
     /* padding-left: 50rpx; */
     padding: 20rpx 0 0 50rpx;
     border-radius: 60rpx 10rpx 10rpx 60rpx;
+    background-image: linear-gradient(to right, #7028e4 0%, #e5b2ca 100%);
 }
 
 .pgd-price-time-block-item.countdown {
