@@ -313,7 +313,7 @@ Component({
                     this.setData({
                         isGetExp: true,
                         countDown: 0,
-                        showSignBlock: false
+                        // showSignBlock: false
                     });
                     this.fetchPushIntegral( );
                     wx.setStorageSync( storageKey['exp-get-last-time'], String( Date.now( )));
