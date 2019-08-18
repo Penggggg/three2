@@ -28,6 +28,7 @@ const getNow = ( ts = false ): any => {
  * -------- 字段 ----------
         title 标题 string
  *!     destination 目的地 string
+        warning: 是否发送过期警告,
         start_date 开始时间 number
         end_date 结束时间 number
         reduce_price 行程立减 number
@@ -277,7 +278,7 @@ export const main = async ( event, context ) => {
             let trip: any = null;
             let _id = event.data._id;
             const tid = event.data._id;
-            const { published, title, start_date, end_date, reduce_price } = event.data;
+            const { published, title, start_date, reduce_price } = event.data;
             
             const getErr = message => {
                 return ctx.body = {
@@ -285,6 +286,17 @@ export const main = async ( event, context ) => {
                     message
                 }
             };
+
+            const fixEndDate = endDate => {
+                const t = new Date( endDate );
+                const y = t.getFullYear( );
+                const m = t.getMonth( ) + 1;
+                const d = t.getDate( );
+
+                return new Date(`${y}/${m}/${d} 20:00:00`).getTime( );
+            };
+
+            const end_date = fixEndDate( Number( event.data.end_date ));
 
             /**
              * 校验1：
@@ -336,6 +348,8 @@ export const main = async ( event, context ) => {
                 const create$ = await db.collection('trip')
                     .add({
                         data: Object.assign({ }, event.data, {
+                            end_date,
+                            warning: false,
                             callMoneyTimes: 0
                         })
                     });
@@ -358,7 +372,7 @@ export const main = async ( event, context ) => {
                 
                 const temp = Object.assign({ }, origin, {
                     ...event.data,
-                    callMoneyTimes: event.data['end_date'] > origin['end_date'] ? 0 : origin['callMoneyTimes'],
+                    callMoneyTimes: end_date > origin['end_date'] ? 0 : origin['callMoneyTimes'],
                     isClosed: getNow( true ) >= Number( end_date ) 
                 })
     
