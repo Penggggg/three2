@@ -1,12 +1,25 @@
 <view class="con-user-sign-gift">
 
-    <!-- 背景 -->
-    <view 
+    
+    <!-- <view 
         class="pm-checkin-bg"
         bindtap="toggleSign"
         wx:if="{{ showSignBlock$ }}"
     >
-    </view>
+    </view> -->
+
+    <!-- 背景 -->
+    <form
+        wx:if="{{ showSignBlock$ }}"
+        report-submit="{{ true }}"
+        bindsubmit="toggleSign"
+    >
+        <button
+            form-type="submit"
+            class='fix-btn pm-checkin-bg'
+        >
+        </button>
+    </form>
 
     <!-- 签到版面的壳 -->
     <view

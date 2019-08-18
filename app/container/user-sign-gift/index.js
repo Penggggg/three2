@@ -356,14 +356,15 @@ Component({
 
         // 推送模板
         push( ) {
-            const { todaySignGift$, toSignGift$, currentLevelSignGift$, nextLevelSignGift$ } = this.data;
+            const { signExp, todaySignGift$, toSignGift$, currentLevelSignGift$, nextLevelSignGift$ } = this.data;
             http({
                 url: 'common_get-integral-push',
                 data: {
                     get_integral: todaySignGift$,
                     next_integral: toSignGift$,
                     week_integral: currentLevelSignGift$,
-                    nextweek_integral: nextLevelSignGift$
+                    nextweek_integral: nextLevelSignGift$,
+                    signExp
                 },
                 success: res => { }
             })

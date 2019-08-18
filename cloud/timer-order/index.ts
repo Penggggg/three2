@@ -4,6 +4,7 @@ import { clearFormIds, clearUseless } from './form-ids';
 import { catchLostOrders, removeUselessOrders } from './shopping-list';
 import { overtime, payedFix, priceFix, payLastFix, pushNew, pushLastPay } from './order';
 import { clearShareRecord } from './share-record';
+import { userGetExp } from './push-timer';
 
 cloud.init({
     env: process.env.cloud
@@ -22,6 +23,7 @@ const _ = db.command;
 export const main = async ( event, context ) => {
     try {
         
+        await userGetExp( );
         await pushNew( );
         await pushLastPay( );
         await overtime( );
