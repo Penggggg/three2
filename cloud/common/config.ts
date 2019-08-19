@@ -88,7 +88,8 @@ export const collections = [
     'form-ids',
     'analyse-data',
     'share-record',
-    'integral-use-record'
+    'integral-use-record',
+    'push-timer'
 ];
 
 /** 权限模块 */
