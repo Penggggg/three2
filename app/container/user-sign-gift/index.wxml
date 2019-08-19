@@ -1,12 +1,17 @@
 <view class="con-user-sign-gift">
 
     <!-- 背景 -->
-    <view 
-        class="pm-checkin-bg"
-        bindtap="toggleSign"
+    <form
         wx:if="{{ showSignBlock$ }}"
+        report-submit="{{ true }}"
+        bindsubmit="toggleSign"
     >
-    </view>
+        <button
+            form-type="submit"
+            class='fix-btn pm-checkin-bg'
+        >
+        </button>
+    </form>
 
     <!-- 签到版面的壳 -->
     <view
@@ -262,5 +267,25 @@
         </view>
         
     </wxc-mask>
+
+    <view
+        wx:if="{{ simple }}"
+        bindtap="fetchPushIntegral"
+        class="pm-tips-con left"
+    >
+        <image
+            mode="aspectFill"
+            class="pm-tips-icon"
+            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hongbao.png"
+        />
+        <view
+            class="pm-tips-price"
+        > 
+            现金
+        </view>
+        <view class="pm-tips-text">
+            签到
+        </view>
+    </view>
 
 </view>

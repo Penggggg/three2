@@ -728,6 +728,23 @@ Page({
                     this.setData({
                         pinList: res.data
                     });
+
+                    // 已经拼团成功的
+                    const pinList = res.data;
+                    // 本次形成的订单列表
+                    const tripOrders = this.data.metaList.filter( x => x.tid === tid );
+
+                    // 等待拼团
+                    const someWaitPin = tripOrders.filter( order => {
+                        return !pinList.find( shopping => {
+                            return shopping.pid === order.pid && shopping.sid === order.sid;
+                        });
+                    });
+
+                    // 判断订单中，是否存在等待拼团的订单
+                    if ( someWaitPin.length > 0 ) {
+                        this.toggleTask( );
+                    }
                 }
             }
         });
@@ -758,7 +775,7 @@ Page({
         });
     },
 
-    /** 拉取拼团列表 */
+    /** 拉取推荐拼团列表 */
     fetchGroupList( tid ) {
         if ( !tid ) { return; }
         if ( this.data.shoppinglist.length !== 0 ) { return; }
