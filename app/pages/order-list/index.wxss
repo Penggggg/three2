@@ -831,7 +831,7 @@ to {transform: translate( -50%,  -20% ) rotate( 180deg );}
 
 .pol-task-good-img-con {
     top: -20rpx;
-    left: 80rpx;
+    left: 120rpx;
     width: 50rpx;
     height: 50rpx;
     overflow: hidden;

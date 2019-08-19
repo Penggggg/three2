@@ -269,9 +269,9 @@
     </wxc-mask>
 
     <view
-        wx:if="{{ simple }}"
         bindtap="fetchPushIntegral"
         class="pm-tips-con left"
+        wx:if="{{ simple && !showSign }}"
     >
         <image
             mode="aspectFill"
