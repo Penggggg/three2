@@ -11,7 +11,7 @@
             <image
                 mode="aspectFill"
                 class="gi9-img"
-                src="{{ good.img }}"
+                src="{{ good.img[ 0 ]}}"
                 lazy-load="{{ true }}"
             />
             <view class="gi9-tag">
