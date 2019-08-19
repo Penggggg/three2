@@ -15,9 +15,15 @@ Component({
      * 组件的属性列表
      */
     properties: {
+        // 是否展示在html中
         showSign: {
             type: Boolean,
             value: false
+        },
+        // 是否只展示小红包
+        simple: {
+            type: Boolean,
+            value: true
         }
     },
 
@@ -597,8 +603,9 @@ Component({
     },
 
     attached: function( ) {
+        const { showSign, simple } = this.data;
         this.watchRole( );
         this.runComputed( );
-        this.fetchPushIntegral( );
+        (showSign || !simple) && this.fetchPushIntegral( );
     }
 })

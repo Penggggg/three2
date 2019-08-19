@@ -381,3 +381,52 @@
 .fix-btn:after {
     border:none;
 }
+
+.pm-tips-con {
+    z-index: 10;
+    bottom: 200rpx;
+    position: fixed;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 5px 5px 15px rgba( 0, 0, 0, 0.10 );
+}
+
+.pm-tips-con.left {
+    left: 60rpx;
+}
+
+.pm-tips-con.right {
+    right: 60rpx;
+}
+
+.pm-tips-icon {
+    width: 70rpx;
+    height: 90rpx;
+    display: block;
+    border-radius: 5px;
+}
+
+.pm-tips-price {
+    top: 80%;
+    left: 70%;
+    color: #fff;
+    position: absolute;
+    font-size: 22rpx;
+    width: 100%;
+    transform: translate( -50%, -50% );
+}
+
+.pm-tips-text {
+    left: 5%;
+    /* bottom: -40rpx; */
+    top: -11rpx;
+    width: 90%;
+    padding: 2rpx 0;
+    font-size: 18rpx;
+    color: #a28460;
+    text-align: center;
+    position: absolute;
+    background: #fceccb;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
