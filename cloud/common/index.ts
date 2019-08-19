@@ -1306,7 +1306,9 @@ export const main = async ( event, context ) => {
     /**
      * @description
      * 领取抵现金成功，推送
+     * 并设置2小时候后的经验获取推送
      * {
+     *      signExp: 领取的经验
      *      get_integral: number // 本次获得
      *      next_integral: number // 下次获得
      *      week_integral: number // 本周获得
@@ -1316,7 +1318,7 @@ export const main = async ( event, context ) => {
     app.router('get-integral-push', async ( ctx, next ) => {
         try {
             const openid = event.data.openId || event.data.openid || event.userInfo.openId;
-            const { get_integral, next_integral, week_integral, nextweek_integral } = event.data;
+            const { signExp, get_integral, next_integral, week_integral, nextweek_integral } = event.data;
 
             // 4、调用推送
             const push$ = await cloud.callFunction({
@@ -1327,10 +1329,22 @@ export const main = async ( event, context ) => {
                         openid,
                         type: 'hongbao',
                         page: 'pages/my/index',
-                        texts: [`${get_integral}元抵现金！下单就能用！`, `明天登陆送${next_integral}元，本周可送${week_integral}元！`]
+                        texts: [`${get_integral}元抵现金！`, `下单就能用！本周登陆送${week_integral}元！`]
                     }
                 }
             });
+
+            // 5、插入调用栈
+            const create$ = await db.collection('push-timer')
+                .add({
+                    data: {
+                        openid,
+                        texts: [`登陆领取${signExp}点经验`, `升级后，全周可领${nextweek_integral}元！`],
+                        pushtime: getNow( true ) + 2.1 * 60 * 60 * 1000,
+                        desc: '到时间领取经验了',
+                        type: 'user-exp-get'
+                    }
+                });
 
             return ctx.body = { status: 200 };
 

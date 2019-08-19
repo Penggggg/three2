@@ -15,9 +15,15 @@ Component({
      * 组件的属性列表
      */
     properties: {
+        // 是否展示在html中
         showSign: {
             type: Boolean,
             value: false
+        },
+        // 是否只展示小红包
+        simple: {
+            type: Boolean,
+            value: true
         }
     },
 
@@ -313,7 +319,7 @@ Component({
                     this.setData({
                         isGetExp: true,
                         countDown: 0,
-                        showSignBlock: false
+                        // showSignBlock: false
                     });
                     this.fetchPushIntegral( );
                     wx.setStorageSync( storageKey['exp-get-last-time'], String( Date.now( )));
@@ -356,14 +362,15 @@ Component({
 
         // 推送模板
         push( ) {
-            const { todaySignGift$, toSignGift$, currentLevelSignGift$, nextLevelSignGift$ } = this.data;
+            const { signExp, todaySignGift$, toSignGift$, currentLevelSignGift$, nextLevelSignGift$ } = this.data;
             http({
                 url: 'common_get-integral-push',
                 data: {
                     get_integral: todaySignGift$,
                     next_integral: toSignGift$,
                     week_integral: currentLevelSignGift$,
-                    nextweek_integral: nextLevelSignGift$
+                    nextweek_integral: nextLevelSignGift$,
+                    signExp
                 },
                 success: res => { }
             })
@@ -596,8 +603,9 @@ Component({
     },
 
     attached: function( ) {
+        const { showSign, simple } = this.data;
         this.watchRole( );
         this.runComputed( );
-        this.fetchPushIntegral( );
+        (showSign || !simple) && this.fetchPushIntegral( );
     }
 })

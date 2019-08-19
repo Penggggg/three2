@@ -92,6 +92,12 @@ Page({
         // 立减优惠券
         showLijian: false,
 
+        /** 是否已经加载过红包领取信息 */
+        initHongbao: false,
+
+        /** 是否已经全额领取过立减红包 */
+        hasGetAllLijian: false,
+
         /** 立减信息 */
         lijian: {
             total: 0,
@@ -281,17 +287,17 @@ Page({
 
                 const { reduce_price } = this.data.current;
                 const { t_daijin, t_lijian, t_manjian } = res.data;
-                
+            
                 /** 
                  * 先处理：立减
                  * 如果未领取立减到上半部分，则系统创建
                  **/
-                const halfOfLijian = Number( reduce_price * 0.4 ).toFixed( 2 );
+                const halfOfLijian = Number( Number( reduce_price * 0.4 ).toFixed( 2 ));
                 this.setData({
                     lijian: {
                         total: reduce_price,
                         hasBeenGet: halfOfLijian,
-                        notGet: Number( reduce_price * 0.6 ).toFixed( 2 ),
+                        notGet: Number( Number( reduce_price * 0.6 ).toFixed( 2 )),
                     }
                 })
 
@@ -301,7 +307,8 @@ Page({
                 }
 
                 this.setData({
-                    showLijian: t_lijian === 'half'
+                    showLijian: t_lijian === 'half',
+                    hasGetAllLijian: t_lijian === true
                 });
 
                 if ( t_lijian === 'half' ) {
@@ -309,6 +316,12 @@ Page({
                         this.vibrateShort( );
                     }, 200 );
                 }
+
+                setTimeout(( ) => {
+                    this.setData({
+                        initHongbao: true
+                    })
+                }, 20 );
             }
         })
     },

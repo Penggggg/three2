@@ -381,7 +381,10 @@
     <my-save-wma />
 
     <!-- 抵现积分、签到打卡 -->
-    <my-user-sign-gift showSign="{{ false }}"/>
+    <my-user-sign-gift
+        simple="{{ !hasGetAllLijian }}"
+        wx:if="{{ initHongbao }}"
+    />
 
     <!-- 行程详情入口   -->
     <my-social-trip-member  
