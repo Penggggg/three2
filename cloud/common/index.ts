@@ -1339,7 +1339,7 @@ export const main = async ( event, context ) => {
                 .add({
                     data: {
                         openid,
-                        texts: [`登陆领取${signExp}点经验`, `升级后，全周可领${nextweek_integral}元！`],
+                        texts: [`登陆领取${signExp || 25}点经验`, `升级后，全周可领${nextweek_integral}元！`],
                         pushtime: getNow( true ) + 2.1 * 60 * 60 * 1000,
                         desc: '到时间领取经验了',
                         type: 'user-exp-get'
