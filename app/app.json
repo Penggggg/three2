@@ -41,6 +41,7 @@
     "my-switch-text": "./components/switch-text/index",
     "my-title-decorate": "./components/title-decorate/index",
     "my-good-classify-list": "./container/good-classify-list/index",
+    "my-task-modal": "./container/task-modal/index",
     "my-banner-1": "./container/banner-1/index",
     "my-banner-2": "./container/banner-2/index",
     "my-good-item-1": "./container/good-item-1/index",
