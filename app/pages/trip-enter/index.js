@@ -275,7 +275,13 @@ Page({
 
     /** 拉取优惠券信息 */
     fetchCoupon( tid ) {
-        if ( !!this.data.lijian.total || !tid ) { return; }
+        if ( !!this.data.lijian.total || !tid ) {
+            return this.setData({
+                initHongbao: true,
+                hasGetAllLijian: true
+            });
+        }
+
         http({
             url: 'coupon_isget',
             data: {

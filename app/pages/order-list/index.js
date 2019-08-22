@@ -557,7 +557,7 @@ Page({
 
                                     price: Number(( price * order.count).toFixed( 2 )),
 
-                                    title: '拼团',
+                                    title: '拼团就减',
 
                                     img: order.img[ 0 ],
 
