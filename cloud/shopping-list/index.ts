@@ -1125,6 +1125,97 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /**
+     * @description
+     * 个人的等待拼团任务列表
+     * {
+     *    openid
+     * }
+     */
+    app.router('pin-task', async( ctx, next ) => {
+        try {
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+
+            // 先找到当前的行程
+            const trips$ = await cloud.callFunction({
+                data: {
+                    $url: 'enter'
+                },
+                name: 'trip'
+            });
+            const trips = trips$.result.data;
+            const trip = trips[ 0 ];
+
+            if ( !trip ) {
+                return ctx.body = {
+                    data: [ ],
+                    status: 200
+                };
+            }
+
+            // 获取当前行程的未拼团列表
+            const shopping$ = await db.collection('shopping-list')
+                .where({
+                    tid: trip._id,
+                    uids: openid
+                })
+                .get( );
+
+            // 查询清单底下的个人订单
+            const all$ = await Promise.all(
+                shopping$.data.map( async shopping => {
+                    const { pid, sid, tid } = shopping;
+
+                    // 获取订单
+                    const allOrders$ = await db.collection('order')
+                        .where({
+                            pid, 
+                            sid, 
+                            tid,
+                            openid,
+                            pay_status: '1',
+                            base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
+                        })
+                        .get( );
+                    const count = allOrders$.data.reduce(( x, y ) => {
+                        return x + y.count;
+                    }, 0 );
+
+                    // 获取商品详情
+                    const good$ = await db.collection('goods')
+                        .doc( String( pid ))
+                        .get( );
+
+                    // 获取型号详情
+                    let standard: any = undefined;
+                    if ( !!sid ) {
+                        const standard$ = await db.collection('standards')
+                            .doc( String( sid ))
+                            .get( );
+                        standard = standard$.data;
+                    }
+
+                    return {
+                        count,
+                        standard,
+                        ...shopping,
+                        good: good$.data
+                    }
+                })
+            );
+
+            return ctx.body = {
+                status: 200,
+                data: all$
+            };
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            };
+        }
+    })
+
     return app.serve( );
 
 }
