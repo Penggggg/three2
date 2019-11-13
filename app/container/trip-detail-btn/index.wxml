@@ -2,7 +2,7 @@
 <view class='con-tdb-bar'>
     <view
         wx:for="{{ navList$ }}"
-        wx:key="{{ index }}"
+        wx:key="index"
         class='con-tdb-item'
         data-url="{{ item.url }}"
         data-index="{{ index }}"

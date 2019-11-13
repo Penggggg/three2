@@ -33,7 +33,7 @@
         >
             <block
                 wx:if="{{ detail }}"
-                wx:key="{{ index }}"
+                wx:key="index"
                 wx:for="{{ detail.img }}"
             >
                 <swiper-item>
@@ -114,7 +114,7 @@
             <wxc-label
                 class="pgd-label"
                 text="{{ item }}"
-                wx:key="{{ index }}"
+                wx:key="index"
                 wx:for="{{ detail.tag }}"
             />
 
@@ -151,7 +151,7 @@
                 <view class="info-block-item-content flex">
                     <view
                         wx:for="{{ promiseTips }}"
-                        wx:key="{{ index }}"
+                        wx:key="index"
                         class="info-block-item-tips"
                     >
                         <image
@@ -180,7 +180,7 @@
         <!-- 文字介绍 -->
         <view class="text-info-block" wx:if="{{ detail }}">
             <view
-                wx:key="{{ index }}"
+                wx:key="index"
                 class="text-info-item"
                 wx:for="{{ detailIntro$ }}"
             >

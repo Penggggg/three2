@@ -30,7 +30,7 @@
         >
             <view
                 class="recommend-item"
-                wx:key="{{ index }}"
+                wx:key="index"
                 data-sid="{{ item._id }}"
                 bindtap="toggleDeleteRecommend"
                 wx:for="{{ selectedProducts }}"

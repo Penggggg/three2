@@ -50,7 +50,7 @@
 
             <view
                 wx:for="{{ list }}"
-                wx:key="{{ index }}"
+                wx:key="index"
                 class="tos-shoppinglist-item {{ outline && (item.base_status === '0' || !!item.lastAllocated) ? 'notadjust' : '' }}"
             >
 

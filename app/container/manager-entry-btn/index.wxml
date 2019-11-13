@@ -31,7 +31,7 @@
     >
       <view class="con-manager-entry-btn-list">
         <form 
-          wx:key="{{ index }}"
+          wx:key="index"
           wx:for="{{ list }}"
           data-url="{{ item.url }}"
           report-submit="{{ true }}"
@@ -58,7 +58,7 @@
 
       <view class="con-manager-entry-btn-small-list">
           <view 
-            wx:key="{{ index }}"
+            wx:key="index"
             wx:for="{{ list2 }}"
             bindtap='navigate'
             data-url="{{ item.url }}"

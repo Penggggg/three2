@@ -25,7 +25,7 @@
     <view
       class='standards-line'
       wx:for="{{ standards }}"
-      wx:key="{{ index }}"
+      wx:key="index"
       data-index="{{ index }}"
       bindtap='standarClick'
     >

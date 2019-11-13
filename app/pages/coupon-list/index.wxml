@@ -15,7 +15,7 @@
     <view class="pcl-coupon-list">
         <my-coupon-item-1
             wx:for="{{ list1$ }}"
-            wx:key="{{ index }}"
+            wx:key="index"
             type="{{ item.type }}"
             value="{{ item.value }}"
             atleast="{{ item.atleast }}" 
@@ -49,7 +49,7 @@
         display-multiple-items="{{ shoppinglist.length <= 3 ? shoppinglist.length : 3 }}"
     >
         <block
-            wx:key="{{ index }}"
+            wx:key="index"
             wx:for="{{ shoppinglist }}"
         >
             <swiper-item class="swiper-visible">
@@ -96,7 +96,7 @@
     <!-- <view class="pcl-coupon-list">
         <my-coupon-item-1
             wx:for="{{ list2$ }}"
-            wx:key="{{ index }}"
+            wx:key="index"
             type="{{ item.type }}"
             value="{{ item.value }}"
             atleast="{{ item.atleast }}" 

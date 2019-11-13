@@ -9,7 +9,7 @@
         <view
             class="gbs-btn-item"
             wx:for="{{ btnList }}"
-            wx:key="{{ index }}"
+            wx:key="index"
             data-url="{{ item.url }}"
             catchtap="navigate"
         >

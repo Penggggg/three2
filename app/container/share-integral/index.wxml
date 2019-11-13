@@ -38,7 +38,7 @@
             >
                 <block
                     wx:for="{{ shareTexts }}"
-                    wx:key="{{ index }}"
+                    wx:key="index"
                 >
                     <swiper-item class="swiper-visible">
                         <view class="gd-share-swiper-item">

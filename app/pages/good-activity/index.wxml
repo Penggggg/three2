@@ -16,7 +16,7 @@
         <!-- 列表 -->
         <view class="pgn-good-list">
             <my-good-item-9
-                wx:key="{{ index }}"
+                wx:key="index"
                 wx:for="{{ rankList }}"
                 good="{{ item }}"
                 tips="限时特价"

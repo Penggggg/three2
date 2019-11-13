@@ -6,7 +6,7 @@
     
     <view
       wx:for="{{ meta }}"
-      wx:key="{{ index }}"
+      wx:key="index"
     >
 
       <!-- 标题类型 -->

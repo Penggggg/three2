@@ -55,7 +55,7 @@
                 <view
                     class="gpi-list-item"
                     wx:for="{{ rank$ }}"
-                    wx:key="{{ index }}"
+                    wx:key="index"
                 >
                     <my-good-item-7
                         good="{{ item }}"

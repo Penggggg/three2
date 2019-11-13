@@ -35,7 +35,7 @@
             display-multiple-items="{{ waitPin$.length > 1 ? 2 : 1 }}"
         >
             <block
-                wx:key="{{ index }}"
+                wx:key="index"
                 wx:for="{{ waitPin$ }}"
             >
                 <swiper-item class="ptd-swiper-item-container">
@@ -117,7 +117,7 @@
         >
             <view
                 class="ptd-pin-item"
-                wx:key="{{ index }}"
+                wx:key="index"
                 wx:for="{{ allShoppinglist$ }}"
             >
                 <!-- 主图：只有主体商品 -->

@@ -45,7 +45,7 @@
         <view class="tog-shoppinglist-block">
 
             <view
-                wx:key="{{ key }}"
+                wx:key="key"
                 wx:for="{{ clientOders$ }}"
                 class="tog-shoppinglist-item"
             >

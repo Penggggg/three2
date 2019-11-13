@@ -57,7 +57,7 @@
                             display-multiple-items="{{ 1 }}"
                         >
                             <block
-                                wx:key="{{ index }}"
+                                wx:key="index"
                                 wx:for="{{ good.users }}"
                             >
                                 <swiper-item>

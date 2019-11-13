@@ -8,7 +8,7 @@
     >
         <view
             class="options-text {{ active === index ? 'opacity' : '' }}"
-            wx:key="{{ index }}"
+            wx:key="index"
             wx:for="{{ options }}"
         >
             {{

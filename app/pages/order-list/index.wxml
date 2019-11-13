@@ -68,7 +68,7 @@
                     display-multiple-items="{{ shoppinglist.length <= 3 ? shoppinglist.length : 3 }}"
                 >
                     <block
-                        wx:key="{{ index }}"
+                        wx:key="index"
                         wx:for="{{ shoppinglist }}"
                     >
                         <swiper-item class="swiper-visible">
@@ -182,7 +182,7 @@
                 
                 <!-- 行程订单 -->
                 <view
-                    wx:key="{{ index }}"
+                    wx:key="index"
                     class="pol-order-item"
                     wx:for="{{ tripOrders$ }}"
                 >
@@ -555,7 +555,7 @@
             <view class="pol-task-content">
                 <view
                     class="pol-task-item"
-                    wx:key="{{ index }}"
+                    wx:key="index"
                     wx:for="{{ tripOrders$[ 0 ].task }}"
                 >
                     <!-- 小圆点 -->

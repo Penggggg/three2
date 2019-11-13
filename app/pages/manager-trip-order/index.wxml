@@ -4,7 +4,7 @@
     <view class="to-tabs">
         <form
             wx:for="{{ tabs }}"
-            wx:key="{{ index }}"
+            wx:key="index"
             data-index="{{ index }}"
             bindsubmit="onTabChange"
             report-submit="{{ true }}"

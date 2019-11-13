@@ -15,7 +15,7 @@
         class="avatar-swiper {{ imgList.length <= 3 ?'cstm-one' : '' }}"
     >
         <block
-            wx:key="{{ index }}"
+            wx:key="index"
             wx:for="{{ imgList }}"
         >
             <swiper-item>

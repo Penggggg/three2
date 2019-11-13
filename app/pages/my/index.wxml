@@ -56,7 +56,7 @@
             <view class="pm-other-container">
                 <view
                     wx:for="{{ icons }}"
-                    wx:key="{{ index }}"
+                    wx:key="index"
                     class="pm-other-item"
                     data-data="{{ item }}"
                     bindtap="onTabIcon"

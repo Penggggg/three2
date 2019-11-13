@@ -135,7 +135,7 @@
                     <view class="sku-standards" wx:if="{{ selectedSku }}">
                         <view
                             wx:for="{{ skuItems }}"
-                            wx:key="{{ index }}"
+                            wx:key="index"
                             wx:if="{{ item.title !== '默认型号' }}"
                             data-standard="{{ item }}"
                             bindtap="onSelectSku"

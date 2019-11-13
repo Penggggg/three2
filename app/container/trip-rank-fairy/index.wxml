@@ -84,7 +84,7 @@
         <view class="con-ptd-rank-list">
             <view
                 wx:for="{{ list$ }}"
-                wx:key="{{ index }}"
+                wx:key="index"
                 class="con-ptd-rank-item"
             >
 

@@ -36,7 +36,7 @@
         >
             <view   
                 class="ccc-text"
-                wx:key="{{ index }}"
+                wx:key="index"
                 wx:for="{{ texts }}"
             >
                 {{ item }}

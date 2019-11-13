@@ -3,7 +3,7 @@
     <form
         class="flex-1"
         wx:for="{{ navList }}"
-        wx:key="{{ index }}"
+        wx:key="index"
         data-url="{{ item.url }}"
         bindsubmit="navigate"
         report-submit="{{ true }}"

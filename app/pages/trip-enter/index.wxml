@@ -21,7 +21,7 @@
             <view class="te2-classify-block">
                 <view
                     wx:for="{{ classify }}"
-                    wx:key="{{ index }}"
+                    wx:key="index"
                     data-value="{{ item.value }}"
                     class="te2-classify-item {{ active === item.value ? 'active' : ''  }}"
                     bindtap="onChoiceClassify"
@@ -184,7 +184,7 @@
 
                     <!-- 热门推荐 -->
                     <block
-                        wx:key="{{ index }}"
+                        wx:key="index"
                         wx:for="{{ recommendGoods$ }}"
                     >
                         <swiper-item
@@ -260,7 +260,7 @@
                 <!-- 各模块入口 -->
                 <view class="te2-entry-block">
                     <view
-                        wx:key="{{ key }}"
+                        wx:key="key"
                         wx:for="{{ entry }}"
                         class="te2-entry-item"
                         data-url="{{ item.url }}"
@@ -290,7 +290,7 @@
                 <!-- 每周上新 -->
                 <view class="te2-new-block">
                     <view
-                        wx:key="{{ index }}"
+                        wx:key="index"
                         class="te2-new-item"
                         wx:for="{{ newList }}"
                         data-data="{{ item }}"
@@ -351,7 +351,7 @@
                 >
                     <my-good-item-3
                         good="{{ item }}"
-                        wx:key="{{ index }}"
+                        wx:key="index"
                         wx:for="{{ rankList }}"
                     />
                 </view>

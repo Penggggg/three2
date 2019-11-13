@@ -38,7 +38,7 @@
             <view class="pi-classify-block">
                 <view
                     wx:for="{{ classify }}"
-                    wx:key="{{ index }}"
+                    wx:key="index"
                     data-value="{{ item.value }}"
                     class="pi-classify-item {{ active === item.value ? 'active' : ''  }}"
                     bindtap="onChoiceClassify"
@@ -115,7 +115,7 @@
                             <view class="pi-new-list">
                                 <view
                                     wx:for="{{ newList$ }}"
-                                    wx:key="{{ index }}"
+                                    wx:key="index"
                                     class="pi-new-item"
                                     data-good="{{ item }}"
                                     bindtap="goGoodDetail"
@@ -172,7 +172,7 @@
                     <my-good-item-4
                         tid="{{ tid }}"
                         good="{{ item }}"
-                        wx:key="{{ index }}"
+                        wx:key="index"
                         wx:for="{{ activities$ }}"
                         direction="{{ item.right ? 'right' : '' }}"
                     />
@@ -191,7 +191,7 @@
                 <!-- 排行榜列表 -->
                 <view class="pi-result-waterfall">
                     <view
-                        wx:key="{{ index }}"
+                        wx:key="index"
                         wx:for="{{ rank$ }}"
                         class="pi-result-item"
                     >

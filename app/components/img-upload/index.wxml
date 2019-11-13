@@ -3,7 +3,7 @@
     <!-- 本次上传的照片 -->
     <view
         wx:for="{{ list }}"
-        wx:key="{{ index }}"
+        wx:key="index"
         class="ciu-img-container {{ canAdjust && list.length > 1 ? 'big' : '' }}"
     >
 
