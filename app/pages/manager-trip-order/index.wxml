@@ -11,6 +11,7 @@
             class="to-tabs-item {{ active === index ? 'active' : '' }} {{ active === index ? 'current' : '' }} {{ index === 2 || index === 1 ? 'line' : '' }}"
         >
             <button 
+                bindtap="onSubscribe"
                 form-type="submit"
                 class="fix-btn to-tab-text {{ active === index ? 'active' : '' }}"
             >

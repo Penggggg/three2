@@ -47,6 +47,7 @@
                 class="flex-1"
             >
                 <button
+                    bindtap="onSubscribe"
                     form-type="submit"
                     class='pmgl-info fix-btn'
                 >
@@ -95,6 +96,7 @@
                 class="pmgl-btn-form"
             >
                 <button
+                    bindtap="onSubscribe"
                     form-type="submit"
                     class="pmgl-important fix-btn"
                 >
@@ -137,6 +139,7 @@
         class="pmgl-entry-btn-container"
     >
         <button
+            bindtap="onSubscribe"
             form-type="submit"
             class='pmgl-entry-btn fix-btn'
         >

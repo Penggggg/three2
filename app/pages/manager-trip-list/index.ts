@@ -1,9 +1,7 @@
-
+const app = getApp<any>( );
 import { http } from '../../util/http';
 import { navTo } from '../../util/route.js';
-import { createFormId } from '../../util/form-id';
 
-// app/pages/manager-goods-detail/index.js
 Page({
 
     /**
@@ -41,7 +39,6 @@ Page({
 
     /** 跳页 */
     navigate( e ) {
-        createFormId( e.detail.formId );
         navTo('/pages/manager-trip-detail/index');
     },
 
@@ -181,7 +178,6 @@ Page({
 
     /** 点击详情 */
     onTab({ currentTarget, detail }) {
-        createFormId( detail.formId );
         const { tid } = currentTarget.dataset;
         if ( !tid ) { return; }
         navTo(`/pages/manager-trip-detail/index?id=${tid}`);
@@ -190,8 +186,11 @@ Page({
     /** 跳动详情的订单 */
     goOrder({ currentTarget, detail }) {
         const { tid } = currentTarget.dataset;
-        createFormId( detail.formId );
         navTo(`/pages/manager-trip-order/index?id=${tid}`);
+    },
+
+    onSubscribe( ) {
+        app.getSubscribe('newOrder,trip');
     },
   
     /**

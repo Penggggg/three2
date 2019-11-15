@@ -1,5 +1,5 @@
+const app = getApp( );
 const { http } = require('../../util/http.js');
-const { createFormId } = require('../../util/form-id');
 
 Page({
 
@@ -29,12 +29,14 @@ Page({
     /** 切换tab */
     onTabChange({ currentTarget, detail }) {
         
-        createFormId( detail.formId );
-
         const { index } = currentTarget.dataset;
         this.setData({
             active: index
         });
+    },
+
+    onSubscribe( ) {
+        app.getSubscribe('newOrder,trip');
     },
 
     /** 子组件修改tab */
@@ -120,4 +122,5 @@ Page({
             imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
         }
     }
+
 })

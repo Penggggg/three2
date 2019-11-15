@@ -4,7 +4,7 @@ import { computed } from '../../lib/vuefy/index.js';
 import { delayeringGood } from '../../util/goods.js';
 import { navTo } from '../../util/route.js';
 
-const app = getApp( );
+const app = getApp<any>( );
 
 // 打开拼团提示的key
 const storageKey = 'opened-pin-in-good';
@@ -388,7 +388,6 @@ Page({
         this.setData!({
             showTips: showTips === 'show' ? 'hide' : 'show'
         });
-        !!e && this.createFormId( e.detail.formId );
     },
 
     // 展开分享提示
@@ -397,7 +396,6 @@ Page({
         this.setData!({
             showShareTips: showShareTips === 'show' ? 'hide' : 'show'
         });
-        !!e && this.createFormId( e.detail.formId );
     },
 
     toggleTips3( e? ) {
@@ -405,7 +403,10 @@ Page({
         this.setData!({
             showShareTips2: !showShareTips2,
         });
-        !!e && this.createFormId( e.detail.formId );
+    },
+
+    onSubscribe( ) {
+        app.getSubscribe('buyPin,waitPin,trip');
     },
 
     // 进入商品管理
@@ -529,17 +530,6 @@ Page({
         wx.setNavigationBarTitle({
             title: val ? '分享商品' : '商品详情'
         });
-    },
-
-    createFormId( formid ) {
-        if ( !formid ) { return; }
-        http({
-            data: {
-                formid
-            },
-            loadingMsg: 'none',
-            url: 'common_create-formid',
-        })
     },
 
     /** sku选择弹框 */

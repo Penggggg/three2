@@ -169,6 +169,7 @@
                         report-submit="{{ true }}"
                     >
                         <button
+                            bint="onSubscribe"
                             form-type="submit"
                             class="red formid-btn"
                         >   
@@ -192,6 +193,7 @@
                         report-submit="{{ true }}"
                     >
                         <button
+                            bindtap="onSubscribe"
                             form-type="submit"
                             class="red formid-btn normal"
                         >   
