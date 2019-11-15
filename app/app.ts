@@ -1,4 +1,5 @@
 import { http } from './util/http';
+import { checkSubscribeTips, requestSubscribe } from './util/subscribe';
 
 const cloudEnv = 'prod-b87b76';
 // const cloudEnv = undefined;
@@ -20,7 +21,13 @@ App<MyApp>({
         /** 编辑中的商品数据 */
         editingGood: { },
         /** app配置 */
-        appConfig: { }
+        appConfig: { },
+        /** 展示全局的订阅提示信息 */
+        showSubscribeTips: false,
+        /** 订阅类型 */
+        subscribeTpye: '',
+        /** 订阅模板 */
+        subscribeTemplates: [ ]
     },
 
     /** 全局store */
@@ -31,7 +38,10 @@ App<MyApp>({
         userInfo: null,
         isNew: true,
         editingGood: null,
-        appConfig: null
+        appConfig: null,
+        showSubscribeTips: false,
+        subscribeTpye: '',
+        subscribeTemplates: [ ]
     },
 
     /** 监听函数的对象数组 */
@@ -104,6 +114,18 @@ App<MyApp>({
         })
     },
 
+    /** 获取订阅模板 */
+    getSubscribeTemplated( ) {
+        http({
+            url: 'common_get-subscribe-templates',
+            success: res => {
+                this.setGlobalData({
+                    subscribeTemplates: res.data
+                });
+            }
+        })
+    },
+
     /** 获取app配置 */
     getAppConfig( ) {
         http({
@@ -147,6 +169,21 @@ App<MyApp>({
             this.setGlobalData( res.result );
             !!cb && cb( );
         });
+    },
+
+    /** 获取订阅授权 */
+    getSubscribe( types ) {
+        const hasShow = checkSubscribeTips( );
+        if ( !hasShow ) {
+            // 弹框
+            this.setGlobalData({
+                subscribeTpye: types,
+                showSubscribeTips: true
+            });
+        } else {    
+            // 订阅请求
+            requestSubscribe( types, ( this.globalData.subscribeTemplates || [ ]));
+        }
     },
 
     /** 设置全局数据 */
@@ -196,8 +233,9 @@ App<MyApp>({
         this.initCloud( )
             .then(( ) => {
                 this.getUserInfo( );
-                this.getIsNewCustom( );
                 this.getAppConfig( );
+                this.getIsNewCustom( );
+                this.getSubscribeTemplated( );
             })
             .catch( e => {
                 wx.showToast({
@@ -222,7 +260,9 @@ export interface MyApp {
     getAppConfig: ( ) => void
     getUserInfo: ( cb?: () => void ) => void,
     getIsNewCustom:  ( ) => void,
+    getSubscribeTemplated: ( ) => void,
     getWxUserInfo: ( cb?: ( ) => void ) => void,
+    getSubscribe: ( type?: any ) => void,
     setGlobalData: <K extends keyof globalState>( data: globalState | Pick<globalState, K> ) => void,
     watch$: ( key: keyof globalState, any ) => void
 }
@@ -238,5 +278,8 @@ type globalState = {
     isUserAuth: boolean,
     userInfo: any
     isNew: boolean
-    appConfig: any
+    appConfig: any,
+    showSubscribeTips: boolean
+    subscribeTpye: any,
+    subscribeTemplates: any[]
 }

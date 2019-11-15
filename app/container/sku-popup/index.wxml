@@ -250,6 +250,7 @@
                     bindsubmit="confirmSelect"
                 >
                     <button
+                        bindtap="onSubscribe"
                         class="sku-btn lh"
                         form-type="submit"
                     >

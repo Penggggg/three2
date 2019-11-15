@@ -1353,6 +1353,53 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /** 
+     * @description
+     * 获取订阅模板列表
+     */
+    app.router('get-subscribe-templates', async ( ctx, next ) => {
+        try {
+            return ctx.body = { 
+                status: 200,
+                data: CONFIG.subscribe_templates
+            };
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
+
+    /** 
+     * @description
+     * 测试专用
+     */
+    app.router('test', async ( ctx, next ) => {
+        try {
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const result = await cloud.openapi.subscribeMessage.send({
+                touser: openid,
+                page: 'pages/trip-enter/index',
+                data: {
+                    thing11: {
+                        value: '呵呵呵额'
+                    },
+                    thing6: {
+                        value: '2015年01月05日'
+                    }
+                },
+                templateId: 'u91Cqoo76phn_0o5N_JdqxFKVUF5-f2W5zEjziGO17g'
+            });
+            return ctx.body = {
+                status: 200,
+                data: result
+            }
+        } catch ( e ) {
+            return ctx.body = { 
+                status: 500,
+                data: e
+            };
+        }
+    })
+
     return app.serve( );
 
 }

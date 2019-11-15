@@ -1,10 +1,11 @@
 <form
     report-submit="{{ true }}"
     class="con-manjian"
-    bindsubmit="createFormId"
+    bindsubmit="onSubmit"
 >
 
     <button
+        bindtap="onSubscribe"
         form-type="submit"
         class="formid-btn"
     >   

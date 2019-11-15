@@ -1,5 +1,5 @@
+const app = getApp( );
 const { navTo } = require('../../util/route.js');
-const { createFormId } = require('../../util/form-id.js');
 
 Component({
 
@@ -52,8 +52,11 @@ Component({
 
         /** 点击导航 */
         navigate({ currentTarget, detail }) {
-            createFormId( detail.formId );
             navTo( currentTarget.dataset.url )
+        },
+
+        onSubscribe( ) {
+            app.getSubscribe('buyPin,waitPin,trip');
         },
 
         /** 初始化下标 */

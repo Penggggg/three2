@@ -9,6 +9,7 @@
       class="fon-manager-entry-btn-form"
   >
     <button
+      bindtap="onSubscribe"
       form-type="submit"
       class='con-manager-entry-btn-container'
     >
@@ -39,6 +40,7 @@
           class="con-manager-entry-btn-list-item"
         >
           <button 
+            bindtap="onSubscribe"
             form-type="submit"
             class="con-manager-entry-btn-list-check"
           >

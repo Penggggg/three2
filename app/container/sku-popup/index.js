@@ -149,8 +149,9 @@ Component({
                 }, null );
                 this.triggerEvent('close', false, null );
             });
-
-            this.createFormId( e.detail.formId );
+        },
+        onSubscribe( ) {
+            app.getSubscribe('buy,getMoney');
         },
         /** 关闭弹窗 */
         close( ) {
@@ -170,17 +171,6 @@ Component({
                 // 进行确认
                 this.confirmSelect( );
             });
-        },
-        // 添加一个formid
-        createFormId( formid ) {
-            if ( !formid ) { return; }
-            http({
-                data: {
-                    formid
-                },
-                loadingMsg: 'none',
-                url: 'common_create-formid',
-            })
         }
     },
 

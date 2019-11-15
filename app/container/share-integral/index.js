@@ -1,4 +1,4 @@
-const { createFormId } = require('../../util/form-id.js');
+const app = getApp( );
 
 Component({
     /**
@@ -50,9 +50,12 @@ Component({
             this.setData({
                 showShareTips: showShareTips === 'show' ? 'hide' : 'show'
             });
-            !!e && createFormId( e.detail.formId );
             this.triggerEvent('toggle', showShareTips === 'show' ? false : true );
-        }
+        },
+
+        onSubscribe( ) {
+            app.getSubscribe('buyPin,waitPin,trip');
+        },
 
     }
 })

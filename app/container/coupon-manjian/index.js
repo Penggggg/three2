@@ -1,3 +1,4 @@
+const app = getApp( );
 const { http } = require('../../util/http.js');
 
 Component({
@@ -82,21 +83,14 @@ Component({
         },
 
         /** formid */
-        createFormId( e ) {
+        onSubmit( e ) {
 
             this.getReduce( );
-
-            const formid = e.detail.formId;
-            if ( !formid ) { return; }
-
-            http({
-                data: {
-                    formid
-                },
-                loadingMsg: 'none',
-                url: 'common_create-formid',
-            })
         },
+
+        onSubscribe( ) {
+            app.getSubscribe('trip,hongbao');
+        }
 
     },
 

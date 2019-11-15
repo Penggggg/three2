@@ -1,7 +1,6 @@
 const { http } = require('../../util/http.js');
 const { computed } = require('../../lib/vuefy/index.js');
 const { navTo } = require('../../util/route.js');
-const { createFormId } = require('../../util/form-id.js');
 
 const app = getApp( );
 const storageKey = {
@@ -380,8 +379,6 @@ Component({
         toggleGift( e ) {
             
             if ( !!e ) {
-                const { formId } = e.detail;
-                createFormId( formId );
                 setTimeout(( ) => {
                     this.push( );
                 }, 1000 );
@@ -401,13 +398,14 @@ Component({
 
         // 开启、关闭签到框
         toggleSign( e ) {
-            if ( !!e ) {
-                createFormId( e.detail.formId )
-            }
             const { showSignBlock } = this.data;
             this.setData({
                 showSignBlock: !showSignBlock
             });
+        },
+
+        onSubscribe( ) {
+            app.getSubscribe('buyPin,waitPin,trip');
         },
 
         // 自动弹出转发提示

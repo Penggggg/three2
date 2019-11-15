@@ -1,0 +1,59 @@
+<view class="c-subscribe-tips">
+    <wxc-mask 
+        locked="true"
+        status="{{ show }}"
+        content-align="cc"
+    >
+        <view class="cst-con">
+            <view class="cst-title">
+                需要您的授权
+            </view>
+            <view class="cst-tips">
+                <view>
+                    为了更好的服务
+                </view>
+                <view>
+                    请勾选 <view class="cst-bold">保持选择</view> 并点击<view class="cst-bold">允许</view>
+                </view>
+            </view>
+            <view class="cst-exmple-con">
+                <view class="cst-exmple-title">
+                    <!-- 微信授权 -->
+                    发送以下消息
+                </view>
+                <view class="cst-exmple-opt">
+                    <radio class="cst-exmple-radio" checked="{{ false }}" />
+                    <view class="cst-exmple-opt-label">
+                        拼团成功提醒
+                    </view>
+                </view>
+                <view class="cst-exmple-btn-group">
+                    <view class="cst-exmple-btn invert mr">
+                        取消
+                    </view>
+                    <view class="cst-exmple-btn">
+                        允许
+                    </view>
+                    <view class="cst-tips-btn two">
+                        允许
+                    </view>
+                </view>
+                <view class="cst-exmple-awalys-opt">
+                    <radio class="cst-exmple-awalys-radio" checked="{{ true }}" />
+                    <view class="cst-exmple-awalys-label">
+                        保持选择 不再询问
+                    </view>
+                    <view class="cst-tips-btn one">
+                        勾选
+                    </view>
+                </view>
+            </view>
+            <button 
+                bindtap="onKnow"
+                class="cst-btn"
+            >
+                知道了
+            </button>
+        </view>
+    </wxc-mask>
+</view>

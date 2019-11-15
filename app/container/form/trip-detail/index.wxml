@@ -125,6 +125,7 @@
             report-submit="{{ true }}"
         >
             <button
+                bindsubmit="submit"
                 form-type="submit"
                 class='fix-btn ptd-btn'
             >
@@ -139,6 +140,7 @@
             report-submit="{{ true }}"
         >
             <button
+                bindtap="onSubscribe"
                 form-type="submit"
                 class='fix-btn ptd-btn invert'
             >

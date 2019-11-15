@@ -1,8 +1,7 @@
+const app = getApp( );
 const { http } = require('../../../util/http.js');
 const { navTo } = require('../../../util/route.js');
-const { createFormId } = require('../../../util/form-id.js');
 
-// container/form/trip-detail/index.js
 Component({
 
     behaviors: [require('../../../behaviores/computed/index.js')],
@@ -510,10 +509,12 @@ Component({
             // });
         },
 
+        onSubscribe( e ) {
+            app.getSubscribe('newOrder,trip');
+        },
+
         /** 表单提交 */
         submit( e ) {
-
-            createFormId( e.detail.formId );
 
             const { tid, published } = this.data;
             const form1 = this.selectComponent('#form1');
@@ -600,7 +601,6 @@ Component({
         /** 关闭行程 */
         closeTrip( e ) {
 
-            createFormId( e.detail.formId );
             const { tid, hasNextTrip } = this.data;
 
             if ( !tid ) { return; }

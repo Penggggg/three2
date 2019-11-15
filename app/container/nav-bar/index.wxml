@@ -9,6 +9,7 @@
         report-submit="{{ true }}"
     >
         <button
+            bindtap="onSubscribe"
             form-type="submit"
             class="fix-btn con-nav-item"
         >

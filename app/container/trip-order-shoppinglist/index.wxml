@@ -25,6 +25,7 @@
                 report-submit="{{ true }}"
             >
                 <button
+                    bindtap="onSubscribe"
                     form-type="submit"
                     class="fix-btn tos-order-count"
                 >

@@ -4,6 +4,7 @@
     class="good-item-8-form"
 >
     <button 
+        bindtap="onSubscribe"
         form-type="submit"
         class="fix-btn con-good-item-8 {{ isLeft ? '' : 'right' }}"
     >

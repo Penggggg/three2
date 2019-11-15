@@ -72,6 +72,7 @@
                 report-submit="{{ true }}"
             >
                 <button
+                    bindtap="onSubscribe"
                     form-type="submit"
                     class="formid-btn"
                 >   

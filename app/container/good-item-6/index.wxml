@@ -5,6 +5,7 @@
     class="good-item-6-form"
 >
     <button
+        bindtap="onSubscribe"
         form-type="submit"
         class="fix-btn good-item-6"
     >

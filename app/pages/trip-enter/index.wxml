@@ -407,4 +407,7 @@
     <!-- 任务模块 -->
     <!-- <my-task-modal /> -->
 
+    <!-- 订阅消息模块 -->
+    <my-subscribe-tips />
+
 </view>

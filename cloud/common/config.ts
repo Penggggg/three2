@@ -55,6 +55,38 @@ export const push_template = {
     }
 };
 
+/** 订阅服务类型 */
+export const subscribe_templates = {
+    buyPin: {
+        desc: '开奖结果通知：开奖结果、开奖内容',
+        id: 'rau9z8QU48gWel5Jn8hLt6-ChVWi8puo8E_QXR1CgMc'
+    },
+    waitPin: {
+        desc: '活动开始提醒：温馨提示、活动内容',
+        id: 'u91Cqoo76phn_0o5N_Jdqz62rry4UdyIR6SyjRsZy0w'
+    },
+    buy: {
+        desc: '订单状态通知： 订单状态、备注',
+        id: 'hAU2bG9eeGDr0KeOIcM_StBIMa5tJj8D2P8vibDavLQ'
+    },
+    getMoney: {
+        desc: '尾款支付提醒：温馨提示、时间期限',
+        id: 'is_8EPAO0WvaKoG7eDdLcLF7PXYZJYGa04BpOIuegpo'
+    }, 
+    newOrder: {
+        desc: '新订单提醒: 订单状态、购买商品',
+        id: 'Onl9TTI33fTvg5K7AHydhNgMP1HmTJ22osUMzVBmSBQ'
+    },
+    trip: {
+        desc: '活动开始提醒：温馨提示、活动内容',
+        id: 'u91Cqoo76phn_0o5N_Jdqz62rry4UdyIR6SyjRsZy0w'
+    },
+    hongbao: {
+        desc: '开奖结果通知：开奖结果、开奖内容',
+        id: 'rau9z8QU48gWel5Jn8hLt6-ChVWi8puo8E_QXR1CgMc'
+    }
+};
+
 /** 微信支付 */
 export const wxPay = {
     mch_id: '1521522781', // 商户号

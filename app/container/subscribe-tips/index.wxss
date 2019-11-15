@@ -1,0 +1,166 @@
+.c-subscribe-tips {
+
+}
+
+.cst-con {
+    width: 80vw;
+    display: flex;
+    padding: 40rpx 25rpx 20rpx;
+    min-height: 60vh;
+    border-radius: 5px;
+    background: #fff;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.cst-title {
+    color: #333;
+    font-size: 35rpx;
+    font-weight: bold;
+    letter-spacing: 0.03em;
+}
+
+.cst-tips {
+    color: #666;
+    font-size: 29rpx;
+    text-align: center;
+    line-height: 50rpx;
+    margin: 40rpx 0 30rpx;
+    letter-spacing: 0.03em;
+}
+
+.cst-bold {
+    color: #333;
+    display: inline;
+    font-size: 30rpx;
+    font-weight: bold;
+}
+
+.cst-exmple-con {
+    width: 65vw;
+    border-radius: 3px;
+    margin: 20rpx 0 50rpx;
+    background: #f8f8f8;
+    position: relative;
+    box-shadow: 0 0 10px rgba( 0, 0, 0, 0.1 );
+}
+
+.cst-exmple-title {
+    color: #666;
+    font-size: 32rpx;
+    font-weight: bold;
+    padding: 20rpx 0 20rpx 40rpx;
+    /* text-align: center; */
+    margin-bottom: 20rpx;
+    letter-spacing: 0.03em;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05 );
+}
+
+.cst-exmple-tips {
+    color: #666;
+    font-size: 29rpx;
+    font-weight: bold;
+    padding-left: 20rpx;
+    box-sizing: border-box;
+    letter-spacing: 0.03em;
+}
+
+.cst-exmple-opt {
+    display: flex;
+    margin: 30rpx 0;
+    padding: 0 20rpx;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.cst-exmple-opt-label {
+    color: #666;
+    font-size: 29rpx;
+    font-weight: bold;
+    letter-spacing: 0.03em;
+}
+
+.cst-exmple-radio {
+    transform: scale( 0.7 );
+}
+
+.cst-exmple-btn-group {
+   display: flex;
+   margin-top: 25rpx;
+   padding: 35rpx 0;
+   margin-top: 20rpx;
+   align-items: center;
+   position: relative;
+   justify-content: center;
+   border-top: 1px solid rgba(0, 0, 0, 0.05 );
+}
+
+.cst-exmple-btn {
+    color: #fff;
+    font-size: 26rpx;
+    text-align: center;
+    padding: 15rpx 55rpx;
+    background: #09bb07;
+    border-radius: 3px;
+}
+
+.cst-exmple-btn.mr {
+    margin-right: 30rpx;
+}
+
+.cst-exmple-btn.invert {
+    color: #09bb07;
+    background: #eaeae8;
+}
+
+.cst-exmple-awalys-opt {
+    display: flex;
+    margin-top: 10rpx;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20rpx;
+    position: relative;
+}
+
+.cst-exmple-awalys-radio {
+    transform: scale( 0.6 );
+}
+
+.cst-exmple-awalys-label {
+    color: #666;
+    font-size: 24rpx;
+    letter-spacing: 0.02em;
+}
+
+.cst-btn {
+    color: #fff;
+    font-size: 29rpx;
+    text-align: center;
+    border-radius: 30px;
+    padding: 0rpx 0;
+    width: 100%;
+    box-sizing: border-box;
+    background: #09bb07;
+}
+
+.cst-tips-btn {
+    padding: 25rpx 20rpx;
+    color: #09bb07;
+    font-size: 32rpx;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: 0 0 10px rgba( 0, 0, 0, 0.2 );
+}
+
+.cst-tips-btn.one {
+    left: 20rpx;
+    bottom: -30rpx;
+}
+
+.cst-tips-btn.two {
+    top: -10rpx;
+    right: 20rpx;
+}

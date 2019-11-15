@@ -66,6 +66,7 @@
                     report-submit="{{ true }}"
                 >
                     <button
+                        bindtap="onSubscribe"
                         open-type="share"
                         form-type="submit"
                         class="formid-btn con-lj-share"

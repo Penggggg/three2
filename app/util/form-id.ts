@@ -1,7 +1,7 @@
 import { http } from './http';
 
 const createFormId = formid => {
-    if ( !formid ) { return; }
+    if ( true || !formid ) { return; }
     return http({
         data: {
             formid

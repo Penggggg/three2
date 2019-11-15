@@ -1,8 +1,7 @@
 const app = getApp( );
-const { createFormId } = require('../../util/form-id');
 const { navTo } = require('../../util/route.js');
+const { http } = require('../../util/http');
 
-// container/manager-entry-btn/index.js
 Component({
     /**
      * 组件的属性列表
@@ -78,12 +77,15 @@ Component({
             this.setData({
                 showDrawer: !this.data.showDrawer
             });
-            createFormId( e.detail.formId );
+        },
+
+        /** 订阅-管理 */
+        onSubscribe( e ) {
+            app.getSubscribe('newOrder,trip');
         },
 
         /** 地址跳转 */
         navigate( e ) {
-            createFormId( e.detail.formId );
             navTo(e.currentTarget.dataset.url);
         }
         

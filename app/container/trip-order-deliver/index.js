@@ -1,3 +1,4 @@
+const app = getApp( );
 const { http } = require('../../util/http.js');
 
 Component({

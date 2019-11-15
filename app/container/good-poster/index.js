@@ -242,7 +242,7 @@ Component({
                 this.onDraw( );
             }
             this.triggerEvent('toggle', !show );
-            this.createFormId( e.detail.formId );
+            app.getSubscribe('newOrder,trip');
         },
 
         /** 保存canvas到本地图片 */
@@ -290,18 +290,6 @@ Component({
         },
 
         preventTouchMove( ) {
-        },
-
-        // 创建formid
-        createFormId( formid ) {
-            if ( !formid ) { return; }
-            http({
-                data: {
-                    formid
-                },
-                loadingMsg: 'none',
-                url: 'common_create-formid',
-            })
         },
 
         // 自动弹出转发提示

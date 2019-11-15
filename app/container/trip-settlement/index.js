@@ -1,6 +1,6 @@
+const app = getApp( );
 const { http } = require('../../util/http.js');
 const { computed } = require('../../lib/vuefy/index.js');
-const { createFormId } = require('../../util/form-id.js');
 const { wxPay } = require('../../util/pay.js');
 
 Component({
@@ -129,7 +129,6 @@ Component({
 
         // 开启结算
         onSettle( e ) {
-            createFormId( e.detail.formId );
 
             const coupons = [ ];
             const { lastPrice$, tripOrder, deduction$, isUsePushIntegral } = this.data;
@@ -183,8 +182,11 @@ Component({
                 });
 
             }, ( ) => { });
-        }
+        },
 
+        onSubscribe( ) {
+            app.getSubscribe('buy,getMoney,waitPin');
+        }
     },
 
     attached: function( ) {

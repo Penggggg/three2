@@ -1,4 +1,4 @@
-
+const app = getApp( );
 const storageKey = 'save-wma-last-time';
 
 Component({

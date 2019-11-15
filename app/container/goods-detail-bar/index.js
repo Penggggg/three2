@@ -206,6 +206,9 @@ Component({
                 }
             })
         },
+        onSubscribe( e ) {
+            app.getSubscribe('buyPin,waitPin,buy');
+        },
         /** 展开/关闭 sku */
         toggleSku( e ) {
             const { openSku, disabled } = this.data;
@@ -222,8 +225,6 @@ Component({
                     skuSelectType: e.currentTarget.dataset.type
                 });
             }
-            // 处理formid
-            this.createFormId( e.detail.formId );
 
             // 发布
             this.triggerEvent('toggle', !openSku );
@@ -438,17 +439,6 @@ Component({
                 // 进行结算
                 this.batchSettle( );
             });
-        },
-        // 添加一个formid
-        createFormId( formid ) {
-            if ( !formid ) { return; }
-            http({
-                data: {
-                    formid
-                },
-                loadingMsg: 'none',
-                url: 'common_create-formid',
-            })
         }
     },
 

@@ -75,6 +75,7 @@
                     class="gbs-btn-form-btn flex"
                 >
                     <button
+                        bindtap="onSubscribe"
                         form-type="submit"
                         class="gbs-btn-special-item morepink"
                     >   

@@ -113,6 +113,7 @@
                     class="pmgl-entry-btn-container"
                 >
                     <button
+                        bindtap="onSubscribe"
                         form-type="submit"
                         class='cts-settle-btn fix-btn'
                     >
