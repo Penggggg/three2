@@ -171,7 +171,7 @@ export const autoTrip = async ( ) => {
                     selectedProductIds: [ ],
                     createTime: getNow( true ),
                     start_date: getNow( true ),
-                    end_date: getNow( true ) + 30 * 24 * 60 * 60 * 1000
+                    end_date: getNow( true ) + 14 * 24 * 60 * 60 * 1000
                 }
             });
 
