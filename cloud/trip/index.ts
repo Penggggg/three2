@@ -259,7 +259,9 @@ export const main = async ( event, context ) => {
                 })
                 .count( );
 
-            meta.canEditCoupons = canEdit$.total === 0;
+            // meta.canEditCoupons = canEdit$.total === 0;
+            // 这个版本只有 立减
+            meta.canEditCoupons = true;
 
             return ctx.body = {
                 status: 200,
@@ -315,6 +317,10 @@ export const main = async ( event, context ) => {
                 .get( );
             
             lastTrip = trip$.data[ 0 ];
+
+            if ( reduce_price < 1 ) {
+                return getErr('立减金额不能少于1元')
+            }
 
             // 创建行程
             if ( !_id ) {
