@@ -484,7 +484,7 @@ export const main = async ( event, context ) => {
                 const pushMe$ = await cloud.callFunction({
                     name: 'common',
                     data: {
-                        $url: 'push-template',
+                        $url: 'push-subscribe',
                         data: {
                             type: buyer.type,
                             openid: buyer.openid,
@@ -543,7 +543,7 @@ export const main = async ( event, context ) => {
                         otherOpenid => cloud.callFunction({
                             name: 'common',
                             data: {
-                                $url: 'push-template',
+                                $url: 'push-subscribe',
                                 data: {
                                     type: 'buyPin',
                                     openid: otherOpenid,
@@ -644,7 +644,7 @@ export const main = async ( event, context ) => {
                         const push$ = await cloud.callFunction({
                             name: 'common',
                             data: {
-                                $url: 'push-template',
+                                $url: 'push-subscribe',
                                 data: {
                                     type: 'hongbao',
                                     openid: pusher.from,
@@ -1052,7 +1052,7 @@ export const main = async ( event, context ) => {
                             prepay_id: target.prepay_id,
                             texts: ['支付尾款，立即发货哦','越快越好']
                         },
-                        $url: 'push-template'
+                        $url: 'push-subscribe'
                     },
                     name: 'common'
                 });

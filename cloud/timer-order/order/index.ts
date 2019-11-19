@@ -303,7 +303,7 @@ export const pushNew = async ( ) => {
                 const push$ = await cloud.callFunction({
                     name: 'common',
                     data: {
-                        $url: 'push-template-cloud',
+                        $url: 'push-subscribe-cloud',
                         data: {
                             openid,
                             type: 'newOrder',
@@ -438,7 +438,7 @@ export const pushLastPay = async ( ) => {
             const push$ = await cloud.callFunction({
                 name: 'common',
                 data: {
-                    $url: 'push-template-cloud',
+                    $url: 'push-subscribe-cloud',
                     data: {
                         openid,
                         type: 'getMoney',

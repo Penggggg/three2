@@ -60,7 +60,7 @@ export const almostOver = async ( ) => {
                     const push$ = await cloud.callFunction({
                         name: 'common',
                         data: {
-                            $url: 'push-template-cloud',
+                            $url: 'push-subscribe-cloud',
                             data: {
                                 openid: member.openid,
                                 type: 'trip',
@@ -117,7 +117,7 @@ export const overtimeTrip = async ( ) => {
                     const push$ = await cloud.callFunction({
                         name: 'common',
                         data: {
-                            $url: 'push-template-cloud',
+                            $url: 'push-subscribe-cloud',
                             data: {
                                 openid: member.openid,
                                 type: 'trip',

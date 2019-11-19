@@ -961,7 +961,6 @@ export const main = async ( event, context ) => {
      */
     app.router('push-template-cloud', async( ctx, next ) => {
         try {
-            console.log('===========>push-template-cloud')
             // 获取token
             const result = await (axios as any)({
                 method: 'get',
@@ -1057,6 +1056,119 @@ export const main = async ( event, context ) => {
             }
         }
     })
+
+    /** 
+     * @description
+     * 订阅推送
+     * {
+     *      openid
+     *      type: 'buyPin' | 'buy' | 'getMoney' | 'waitPin' | 'newOrder'
+     *      texts: [ 'xx', 'yy' ]
+     *      ?page
+     * }
+     */
+    app.router('push-subscribe', async ( ctx, next ) => {
+        try {
+            const { type, texts } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const page = event.data.page || 'pages/trip-enter/index';
+            const template = CONFIG.subscribe_templates[ type ];
+
+            let textData = { };
+            texts.map(( text, k ) => {
+                textData = {
+                    ...textData,
+                    [ template.textKeys[ k ]]: {
+                        value: text
+                    }
+                };
+            });
+
+            const subscribeData = {
+                page,
+                data: textData,
+                touser: openid,
+                templateId: template.id
+            };
+
+            console.log('===订阅推送', subscribeData );
+
+            const send$ = await cloud.openapi.subscribeMessage.send( subscribeData );
+
+            if ( String( send$.errCode ) !== '0' ) {
+                throw send$.errMsg;
+            }
+
+            return ctx.body = {
+                status: 200
+            }
+        } catch ( e ) {
+            return ctx.body = { 
+                status: 500,
+                data: e
+            };
+        }
+    })
+
+    /** 
+     * @description
+     */
+    app.router('push-subscribe-cloud', async( ctx, next ) => {
+        try {
+            const { type, texts } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const page = event.data.page || 'pages/trip-enter/index';
+            const template = CONFIG.subscribe_templates[ type ];
+
+            let textData = { };
+            texts.map(( text, k ) => {
+                textData = {
+                    ...textData,
+                    [ template.textKeys[ k ]]: {
+                        value: text
+                    }
+                };
+            });
+
+            const subscribeData = {
+                page,
+                data: textData,
+                touser: openid,
+                templateId: template.id
+            };
+
+            // 获取token
+            const result = await (axios as any)({
+                method: 'get',
+                url: `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${CONFIG.app.id}&secret=${CONFIG.app.secrect}`
+            });
+            
+            const { access_token, errcode } = result.data;
+
+            if ( errcode ) {
+                throw '生成access_token错误'
+            }
+
+            const send = await (axios as any)({
+                data: subscribeData,
+                method: 'post',
+                url: `https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=${access_token}`
+            });
+
+            if ( String( send.data.errcode ) !== '0' ) {
+                throw send.data.errmsg;
+            }
+
+            return ctx.body = {
+                status: 200
+            }
+        } catch ( e ) {
+            return ctx.body = { 
+                status: 500,
+                data: e
+            };
+        }
+    });
 
     /**
      * @description
@@ -1324,7 +1436,7 @@ export const main = async ( event, context ) => {
             const push$ = await cloud.callFunction({
                 name: 'common',
                 data: {
-                    $url: 'push-template-cloud',
+                    $url: 'push-subscribe-cloud',
                     data: {
                         openid,
                         type: 'hongbao',
