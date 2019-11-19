@@ -1,5 +1,5 @@
 import * as cloud from 'wx-server-sdk';
-import { overtimeTrip, almostOver } from './trip';
+import { overtimeTrip, almostOver, autoTrip } from './trip';
 import { clearFormIds, clearUseless } from './form-ids';
 import { catchLostOrders, removeUselessOrders } from './shopping-list';
 import { overtime, payedFix, priceFix, payLastFix, pushNew, pushLastPay } from './order';
@@ -23,6 +23,7 @@ const _ = db.command;
 export const main = async ( event, context ) => {
     try {
         
+        await autoTrip( );
         await userGetExp( );
         await pushNew( );
         await pushLastPay( );

@@ -181,7 +181,7 @@ export const priceFix = async ( ) => {
         return { status: 200 }
 
     } catch ( e ) {
-        console.log('!!!!定时器订单priceFix错误',)
+        console.log('!!!!定时器订单priceFix错误', e );
         return { status: 500 }
     }
 }

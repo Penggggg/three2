@@ -57,8 +57,8 @@ Component({
         postageFullFree: false,
         // 是否已发布
         published: false,
-        // 是否已过了开始时间
-        hasBeenPassStart: false,
+        // 能否编辑券类
+        canEditCoupons: false,
         // 是否可以显示结束行程、首款按钮
         canBeEnd: false,
         // 是否有下一趟行程
@@ -69,7 +69,6 @@ Component({
         
         // 表单数据
         meta( ) {
-            const { published, hasBeenPassStart } = this.data;
             const now = new Date( );
             const year = now.getFullYear( );
             const month = now.getMonth( ) + 1;
@@ -89,31 +88,6 @@ Component({
                     rules: [{
                       validate: val => !!val,
                       message: '行程名称不能为空'
-                    }]
-                },
-                // {
-                //     key: 'destination',
-                //     label: '行程地点',
-                //     type: 'input',
-                //     max: 50,
-                //     placeholder: '如：香港',
-                //     value: undefined,
-                //     disabled: published && hasBeenPassStart,
-                //     rules: [{
-                //       validate: val => !!val,
-                //       message: '行程目的地不能为空'
-                //     }]
-                // },
-                {
-                    key: 'start_date',
-                    label: '开始时间',
-                    type: 'date',
-                    start: `${year}-${String( month ).length < 2 ? '0' + month  : month}-${String( date ).length < 2 ? '0' + date  : date}`,
-                    value: undefined,
-                    disabled: published && hasBeenPassStart,
-                    rules: [{
-                      validate: val => !!val,
-                      message: '开始时间不能为空'
                     }]
                 }, {
                     key: 'end_date',
@@ -136,18 +110,18 @@ Component({
 
         // 表单数据2
         meta2( ) {
-            const { published, tid } = this.data;
+            const { published, tid, canEditCoupons } = this.data;
             const meta = [
                 {
                     title: '营销工具',
                     desc: '裂变与粘性'
                 }, {
                     key: 'reduce_price',
-                    label: '行程立减',
+                    label: '消费立减',
                     type: 'number',
-                    placeholder: '客户分享才能获得全额优惠',
+                    placeholder: '客户分享代购行程后，才能获得立减优惠',
                     value: undefined,
-                    disabled: published && !!tid,
+                    disabled: !canEditCoupons && !!tid,
                     rules: [{
                         validate: val => !!val,
                         message: '请设置行程立减多少元'
@@ -159,7 +133,6 @@ Component({
 
         // 表单数据3
         meta3( ) {
-            // const { postageFullFree, postage } = this.data;
             const { payment, published, tid } = this.data;
             const meta = [
                 {
@@ -217,25 +190,6 @@ Component({
      */
     methods: {
 
-        /** 拉取最新的两个行程 */
-        fetchLastTrip( ) {
-            http({
-                data: { },
-                errMsg: '加载失败，请重试',
-                loadingMsg: '加载中...',
-                url: `trip_enter`,
-                success: res => {
-                    const { status, data } = res;
-                    if ( status !== 200 ) { return; }
-                    const { tid } = this.data;
-                    this.setData({
-                        hasNextTrip: !!data[ 1 ],
-                        hasBeenPassStart: !!data[ 0 ] && !!tid && data[ 0 ]._id === tid
-                    });
-                }
-            })
-        },
-
         /** 拉取行程详情 */
         fetchDetail( id ) {
 
@@ -257,7 +211,7 @@ Component({
                     if ( status !== 200 ) { return; }
 
                     const { title, destination, start_date, end_date, cashcoupon_atleast, isClosed,
-                        cashcoupon_values, postagefree_atleast, reduce_price, fullreduce_atleast,
+                        cashcoupon_values, postagefree_atleast, reduce_price, fullreduce_atleast, canEditCoupons,
                         fullreduce_values, postage, payment, published, selectedProductIds, selectedProducts } = data;
                   
                         const dealDate = timeStamp => {
@@ -276,23 +230,24 @@ Component({
                             title,
                             destination,
                             end_date: dealDate( end_date ),
-                            start_date: dealDate( start_date )
+                            // start_date: dealDate( start_date )
                         });
     
                         form2 && form2.set({
                             reduce_price
                         });
     
-                        form3 && form3.set({
-                            postage,
-                            payment,
-                            published,
-                            postagefree_atleast
-                        });
+                        // form3 && form3.set({
+                        //     postage,
+                        //     payment,
+                        //     published,
+                        //     postagefree_atleast
+                        // });
     
                         this.setData({
                             published,
                             isClosed,
+                            canEditCoupons,
                             selectedProducts: selectedProducts || [ ],
                             selectedProductIds: selectedProductIds || [ ],
                             cashcoupon_atleast: cashcoupon_atleast || null,
@@ -387,9 +342,9 @@ Component({
 
         /** 展示/关闭行程满减 */
         toggleFullReduce( ) {
-            const { hasBeenPassStart, tid, showFullReduce, fullreduce_values, fullreduce_atleast } = this.data;
+            const { canEditCoupons, tid, showFullReduce, fullreduce_values, fullreduce_atleast } = this.data;
             if ( !showFullReduce ) {
-                if ( !!tid && hasBeenPassStart ) {
+                if ( !!tid && !canEditCoupons ) {
                     return wx.showToast({
                         icon: 'none',
                         title: '进行中的行程不能修改'
@@ -449,9 +404,9 @@ Component({
 
         /** 行程代金券弹框 */
         toggleCashCoupon( ) {
-            const { hasBeenPassStart, tid, showCashCoupon, cashcoupon_atleast, cashcoupon_values } = this.data;
+            const { canEditCoupons, tid, showCashCoupon, cashcoupon_atleast, cashcoupon_values } = this.data;
             if ( !showCashCoupon ) {
-                if ( !!tid && hasBeenPassStart ) {
+                if ( !!tid && !canEditCoupons ) {
                     return wx.showToast({
                         icon: 'none',
                         title: '进行中的行程不能修改'
@@ -498,17 +453,6 @@ Component({
             }
         },
 
-        /** 邮费监听 */
-        onPostageChange( e ) {
-            const { postage, payment, published } = e.detail;
-            // this.setData({
-                // postage: postage || null,
-                // payment: payment || null,
-                // published: published,
-                // postageFullFree: postage === '0'
-            // });
-        },
-
         onSubscribe( e ) {
             app.getSubscribe('newOrder,trip');
         },
@@ -523,12 +467,12 @@ Component({
 
             const r1 = form1.getData( );
             const r2 = form2.getData( );
-            const r3 = form3.getData( );
+            // const r3 = form3.getData( );
             
             const { start_date, end_date } = r1.data;
             const { fullreduce_atleast, fullreduce_values, cashcoupon_atleast, cashcoupon_values, selectedProductIds } = this.data;
 
-            if ( !r1.result || !r2.result || !r3.result ) {
+            if ( !r1.result || !r2.result  ) {
                 return wx.showToast({
                     icon: 'none',
                     title: '请完善行程信息',
@@ -539,7 +483,11 @@ Component({
                 let tripDetail = Object.assign({
                     ...r1.data,
                     ...r2.data,
-                    ...r3.data,
+                    // ...r3.data,
+                    // ! 付款方式：默认为付订金
+                    payment: '1',
+                    // ! 默认为立即发布
+                    published: true,
                     sales_volume: 0,
                     fullreduce_atleast,
                     fullreduce_values,
@@ -549,7 +497,7 @@ Component({
                     updateTime: new Date( ).getTime( ),
                 }, {
                     end_date: new Date( `${new Date( end_date ).toDateString( ).replace(/\-/g, '/')} 23:59:50` ).getTime( ),
-                    start_date: new Date( `${new Date( start_date ).toDateString( ).replace(/\-/g, '/')} 08:00:00` ).getTime( )
+                    // start_date: new Date( `${new Date( start_date ).toDateString( ).replace(/\-/g, '/')} 08:00:00` ).getTime( )
                 });
         
                 if ( !tid ) {
@@ -577,37 +525,28 @@ Component({
                             setTimeout(( ) => {
                                 navTo(`/pages/manager-trip-list/index`);
                             }, 200 );
+                            // 创建成功，有弹框
+                            // 这里改成弹框 
                         }
                     }
                 });
             };
 
-            if (( !tid && r3.data.published ) ||( !!tid && !published && !r3.data.published )) {
-                return wx.showModal({
-                    title: 'Tips',
-                    confirmText: '确认',
-                    content: `行程将推送给7天使用过商城的客户`,
-                    success: res => {
-                        if ( res.cancel ) { return; }
-                        send( );
-                    }
-                });
-            } else {
-                send( );
-            }
+
+            send( );
 
         },
 
         /** 关闭行程 */
         closeTrip( e ) {
 
-            const { tid, hasNextTrip } = this.data;
+            const { tid } = this.data;
 
             if ( !tid ) { return; }
             wx.showModal({
                 title: 'Tips',
                 confirmText: '确认关闭',
-                content: `关闭行程后无法撤销${ !hasNextTrip ? '、请尽快创建下一趟行程' : ''} `,
+                content: `关闭行程后无法撤销`,
                 success: res => {
                     if ( res.cancel ) { return; }
                     http({
@@ -659,6 +598,5 @@ Component({
 
     attached: function ( ) {
         this.fetchDic( );
-        this.fetchLastTrip( );
     }
 })

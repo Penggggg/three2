@@ -109,7 +109,7 @@ export const catchLostOrders = async ( ) => {
         }
 
     } catch ( e ) {
-        console.log('!!!!定时器订单catchLostOrders错误',)
+        console.log('!!!!定时器订单catchLostOrders错误', e );
         return { status: 500 };
     }
 }

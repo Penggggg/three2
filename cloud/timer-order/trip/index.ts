@@ -22,7 +22,7 @@ const getNow = ( ts = false ): any => {
 }
 
 /**
- * 订单1: 所有超过endtime的trip，应该自动设回去isClose
+ * 行程1: 即将过期的行程，提醒代购
  */
 export const almostOver = async ( ) => {
     try {
@@ -82,7 +82,7 @@ export const almostOver = async ( ) => {
 }
 
 /**
- * 订单2: 所有超过endtime的trip，应该自动设回去isClose
+ * 行程2: 所有超过endtime的trip，应该自动设回去isClose
  */
 export const overtimeTrip = async ( ) => {
     try {
@@ -106,10 +106,10 @@ export const overtimeTrip = async ( ) => {
         if ( trips$.data.length > 0 ) {
             // 推送代购通知
             const members = await db.collection('manager-member')
-            .where({
-                push: true
-            })
-            .get( );
+                .where({
+                    push: true
+                })
+                .get( );
 
             await Promise.all(
                 members.data.map( async member => {
@@ -137,3 +137,75 @@ export const overtimeTrip = async ( ) => {
         return { status: 500 }
     }
 };
+
+/**
+ * 行程3：自动创建 sys类型的 行程
+ */
+export const autoTrip = async ( ) => {
+    try {
+        
+        const runningTrip$ = await db.collection('trip')
+            .where({
+                isClosed: false,
+                published: true,
+            })
+            .count( );
+           
+        // 防止重复、不需要 sysTrip
+        if ( runningTrip$.total > 0 ) { 
+            return { status: 200 }
+        }
+
+        // 自动创建
+        await db.collection('trip')
+            .add({
+                data: {
+                    type: 'sys',
+                    payment: '1',
+                    warning: true,
+                    published: true,
+                    isClosed: false,
+                    reduce_price: 1,
+                    callMoneyTimes: 0,
+                    title: '小程序-群拼团',
+                    selectedProductIds: [ ],
+                    createTime: getNow( true ),
+                    start_date: getNow( true ),
+                    end_date: getNow( true ) + 30 * 24 * 60 * 60 * 1000
+                }
+            });
+
+        // 推送代购通知
+        const members = await db.collection('manager-member')
+            .where({
+                push: true
+            })
+            .get( );
+
+        await Promise.all(
+            members.data.map( async member => {
+                // 调用推送
+                const push$ = await cloud.callFunction({
+                    name: 'common',
+                    data: {
+                        $url: 'push-subscribe-cloud',
+                        data: {
+                            openid: member.openid,
+                            type: 'trip',
+                            page: `pages/manager-trip-list/index`,
+                            texts: [`已自动创建代购行程`, `请编辑推荐客户的商品`]
+                        }
+                    }
+                });
+            })
+        );
+        
+        return {
+            status: 200
+        }
+
+    } catch ( e ) {
+        console.log('!!!!autoTrip')
+        return { status: 500 }
+    }
+}

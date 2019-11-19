@@ -27,7 +27,6 @@ const getNow = ( ts = false ): any => {
  * @description 行程模块
  * -------- 字段 ----------
         title 标题 string
- *!     destination 目的地 string
         warning: 是否发送过期警告,
         start_date 开始时间 number
         end_date 结束时间 number
@@ -45,6 +44,7 @@ const getNow = ( ts = false ): any => {
         updateTime 更新时间
         isClosed: 是否已经手动关闭
         callMoneyTimes: 发起催款次数
+        type: 类型，sys（系统自动发起）、undefined（手动创建）
  */
 export const main = async ( event, context ) => {
 
@@ -224,14 +224,13 @@ export const main = async ( event, context ) => {
         try {
 
             const { moreDetail } = event.data;
+            const tid = event.data._id || event.data.tid;
             
             // 获取基本详情
             const data$ = await db.collection('trip')
-                    .where({
-                        _id: event.data._id || event.data.tid
-                    })
-                    .get( );
-            const meta = data$.data[ 0 ];
+                .doc( tid )
+                .get( );
+            const meta = data$.data;
 
             if ( moreDetail !== false ) {
                 // 通过已选的商品ids,拿到对应的图片、title、_id
@@ -254,10 +253,17 @@ export const main = async ( event, context ) => {
                 meta.selectedProducts = [ ];
             }
             
+            const canEdit$ = await db.collection('coupon')
+                .where({
+                    tid
+                })
+                .count( );
+
+            meta.canEditCoupons = canEdit$.total === 0;
 
             return ctx.body = {
                 status: 200,
-                data: data$.data[ 0 ]
+                data: meta
             };
 
         } catch( e ) {
@@ -275,10 +281,11 @@ export const main = async ( event, context ) => {
     app.router('edit', async( ctx, next ) => {
         try {
 
-            let trip: any = null;
+            let lastTrip: any = null;
+            let start_date = getNow( true );
             let _id = event.data._id;
             const tid = event.data._id;
-            const { published, title, start_date, reduce_price } = event.data;
+            const { published, title, reduce_price } = event.data;
             
             const getErr = message => {
                 return ctx.body = {
@@ -298,107 +305,94 @@ export const main = async ( event, context ) => {
 
             const end_date = fixEndDate( Number( event.data.end_date ));
 
-            /**
-             * 校验1：
-             * 如果行程选择“已发布”
-             * 需要检查是否有 已发布行程的结束时间 大于等于 当前行程的开始时间
-             */
-            if ( published ) {
+            // 获取上个非“sys”类型行程的end_date作为下个行程的start_date
+            const trip$ = await db.collection('trip')
+                .where({
+                    type: _.neq('sys')
+                })
+                .limit( 1 )
+                .orderBy('createTime', 'desc')
+                .get( );
+            
+            lastTrip = trip$.data[ 0 ];
 
-                let where$ = {
-                    isClosed: false,
-                    start_date: _.lt( getNow( true )),
-                    end_date: _.gte( event.data.start_date )
+            // 创建行程
+            if ( !_id ) {
+
+                const count$ = await db.collection('trip')
+                    .where({
+                        isClosed: false,
+                        published: true,
+                    })
+                    .count( );
+                
+                if ( count$.total ) {
+                    return getErr('有未结束行程,请结束行程后再创建');
+                }
+
+                if ( !!lastTrip ) {
+                    start_date = lastTrip.end_date + 100;
+                }
+
+                const createData = {
+                    ...event.data,
+                    end_date,
+                    start_date,
+                    warning: false,
+                    callMoneyTimes: 0
                 };
 
-                if ( !!tid ) {
-                    where$ = Object.assign({ }, where$, {
-                        _id: _.neq( tid )
-                    });
-                }
-
-                const rule1$ = await db.collection('trip')
-                    .where(  where$ )
-                    .count( );
-        
-                if ( rule1$.total > 0 ) {
-                    return getErr('开始时间必须大于上趟行程的结束时间');
-                }
-            } 
-
-            /**
-             * 校验2:
-             * 结束时间不能小于开始时间
-             */
-            if ( start_date >= end_date  ) {
-                return getErr('开始时间必须大于结束时间');
-            }
-
-            /** 获取目标trip */
-            if ( !!_id ) {
-                const result$ = await db.collection('trip')
-                    .doc( _id )
-                    .get( );
-                trip = result$.data;
-            }
-
-            // 创建 
-            if ( !_id ) {
-    
                 const create$ = await db.collection('trip')
                     .add({
-                        data: Object.assign({ }, event.data, {
-                            end_date,
-                            warning: false,
-                            callMoneyTimes: 0
-                        })
+                        data: createData
                     });
                 _id = create$._id;
-    
-            // 编辑
+            // 编辑行程、覆盖sysTrip
             } else {
     
                 const origin$ = await db.collection('trip')
-                                    .where({
-                                        _id
-                                    })
-                                    .get( );
+                    .where({
+                        _id
+                    })
+                    .get( );
                 
                 const origin = origin$.data[ 0 ];
+                const isClosed = getNow( true ) >= Number( end_date );
     
                 delete origin['_id'];
                 delete event.data['_id'];
+                delete event.data['createTime'];
                 delete event.data['sales_volume']
                 
                 const temp = Object.assign({ }, origin, {
                     ...event.data,
-                    callMoneyTimes: end_date > origin['end_date'] ? 0 : origin['callMoneyTimes'],
-                    isClosed: getNow( true ) >= Number( end_date ) 
-                })
-    
+                    isClosed,
+                    type: 'custom',
+                    callMoneyTimes: end_date > origin['end_date'] ? 0 : origin['callMoneyTimes']
+                });
+
                 await db.collection('trip')
-                        .doc( _id )
-                        .set({
-                            data: temp
-                        });
+                    .doc( _id )
+                    .set({
+                        data: temp
+                    });   
             }
 
             /**
              * 推送
-             * 创建时候的发布、
-             * 编辑的时候发布
+             * 创建时候的推送
              */
-            if ((!tid && published ) || ( !!trip && !trip.published && !!published )) {
+            if (( !tid && published )) {
 
                 const time = new Date( start_date );
 
                 // 推送代购通知
                 const members = await db.collection('manager-member')
-                .where({
-                    push: true
-                })
-                .get( );
-            
+                    .where({
+                        push: true
+                    })
+                    .get( );
+
                 await Promise.all(
                     members.data.map( async member => {
                         // 4、调用推送
@@ -410,7 +404,7 @@ export const main = async ( event, context ) => {
                                     openid: member.openid,
                                     type: 'trip',
                                     page: 'pages/manager-trip-list/index',
-                                    texts: [`${title}`, `新行程已推送客户,为你开通了订单推送`]
+                                    texts: [`${title}`, `代购行程推送到客户，且开通了订单推送`]
                                 }
                             }
                         });
