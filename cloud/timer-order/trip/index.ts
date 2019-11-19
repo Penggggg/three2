@@ -170,6 +170,7 @@ export const autoTrip = async ( ) => {
                     title: '小程序-群拼团',
                     selectedProductIds: [ ],
                     createTime: getNow( true ),
+                    updateTime: getNow( true ),
                     start_date: getNow( true ),
                     end_date: getNow( true ) + 14 * 24 * 60 * 60 * 1000
                 }

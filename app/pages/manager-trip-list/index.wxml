@@ -1,18 +1,6 @@
 <!--app/pages/manager-goods-list/index.wxml-->
 <view class="p-manager-goods-list">
 
-    <!-- 顶部通知栏 -->
-    <wxc-notice
-        class="pmgl-notice"
-        scroll="{{ true }}"
-        show-icon="{{ true }}"
-        wx:if="{{ isNotAvailableTrip }}"
-        color="#333"
-        icon-color="#333"
-        bgColor="transparent"
-        notice="没有下一个【即将开始】的行程，请尽快创建！"
-    />
-
     <!-- 暂无更多 -->
     <view
         class="pmgl-nomore"
@@ -55,15 +43,21 @@
 
                         <view class="pmgl-item-title">{{ item.title }}</view>
                         <view
+                            wx:if="{{ !!item.label }}"
+                            class="pmgl-item-time {{ item.red ? 'red' : '' }}"
+                        >
+                            {{ item.label }}
+                        </view>
+                        <view
+                            wx:else
                             class="pmgl-item-time {{ item.red ? 'red' : '' }}"
                         >
                             {{ 
-                                item.ing ?
+                                !item.ing ?
                                     item.endDate + '结束' :
                                     item.state
                             }}
                         </view>
-
                     </view>
 
                     <view class="pmgl-action">

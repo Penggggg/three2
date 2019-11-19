@@ -135,7 +135,7 @@ Page({
          * ! 注意，时间对比。开始时间是 指定日期的早上8点；结束日期是 指定日期的晚上24:00
          */
         const meta = list.map(( x, k ) => {
-            const { _id, title, sales_volume, start_date, published, end_date, orders, isClosed, clients, notPayAllClients } = x;
+            const { _id, type, title, sales_volume, start_date, published, end_date, orders, isClosed, clients, notPayAllClients } = x;
 
             const state$ = !published ?
                 '未发布' :
@@ -163,6 +163,7 @@ Page({
                 endDate2: simpleTime2( end_date ),
                 startDate2: simpleTime2( start_date ),
                 red: state$ === '未发布' || state$ === '进行中' || state$ === '即将开始',
+                label: type === 'sys' ? '自动创建' : ''
             }
         });
         return meta;
