@@ -126,7 +126,7 @@
         </view>
     </scroll-view>
 
-    <!-- 可视按钮 -->
+    <!-- 创建按钮 -->
     <form
         bindsubmit="navigate"
         report-submit="{{ true }}"
@@ -140,5 +140,19 @@
             <wxc-icon color="#fff" size="45" type="add" /> 
         </button>
     </form>
+
+    <!-- 提示 -->
+    <my-single-theme-modal
+        title="创建完成"
+        content="可以拼团啦"
+        show="{{ showSuccess }}"
+    >
+        <button 
+            open-type="share"
+            class="pmgl-modal-btn fix-btn"
+        >
+            分享给客户
+        </button>
+    </my-single-theme-modal>
 
 </view>

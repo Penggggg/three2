@@ -270,3 +270,14 @@
 .fix-btn:after {
   border:none;
 }
+
+.pmgl-modal-btn {
+  width: 100%;
+  border: 3px;
+  color: #fff;
+  padding: 0rpx 0;
+  text-align: center;
+  background: #f4d294;
+  font-size: 40rpx;
+  letter-spacing: 0.1em;
+}

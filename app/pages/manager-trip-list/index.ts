@@ -34,7 +34,9 @@ Page({
             'background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);',
             'background-image: linear-gradient(-225deg, #20E2D7 0%, #F9FEA5 100%);',
             'background-image: linear-gradient(-225deg, #9EFBD3 0%, #57E9F2 48%, #45D4FB 100%);',
-        ]
+        ],
+        // 展示创建成功提示
+        showSuccess: false
     },
 
     /** 跳页 */
@@ -195,10 +197,15 @@ Page({
     },
   
     /**
-     * 生命周期函数--监听页面加载
+     * query {
+     *   s: 1/0 创建成功，有弹框
+     * }
      */
-    onLoad: function ( ) {
+    onLoad: function ( query: any ) {
         wx.hideShareMenu({ });
+        this.setData!({
+            showSuccess: String( query.s ) === '1'
+        })
     },
   
     /**
@@ -250,7 +257,14 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    // onShareAppMessage: function () {
-  
-    // }
+    onShareAppMessage: function ( ) {
+        this.setData!({
+            showSuccess: false
+        });
+        return {
+            title: '超值拼团～进来看看吧',
+            path: '/pages/ground-pin/index',
+            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+        }
+    }
 })

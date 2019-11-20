@@ -523,7 +523,9 @@ Component({
                                 title: tid ? '更新成功' : '创建成功！'
                             });
                             setTimeout(( ) => {
-                                navTo(`/pages/manager-trip-list/index`);
+                                wx.redirectTo({
+                                    url: `/pages/manager-trip-list/index?s=1`
+                                });
                             }, 200 );
                             // 创建成功，有弹框
                             // 这里改成弹框 

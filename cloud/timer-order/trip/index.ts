@@ -193,7 +193,7 @@ export const autoTrip = async ( ) => {
                         data: {
                             openid: member.openid,
                             type: 'trip',
-                            page: `pages/manager-trip-list/index`,
+                            page: `pages/manager-trip-list/index?s=1`,
                             texts: [`已自动创建代购行程`, `请编辑推荐客户的商品`]
                         }
                     }
