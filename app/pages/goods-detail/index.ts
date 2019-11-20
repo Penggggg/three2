@@ -307,9 +307,6 @@ Page({
                     activities: activities$
                 });
 
-                this.setData!({
-                    showTips: 'show'
-                });
                 // 弹起拼团框
                 if ( !!from && delayeringGood( res.data ).hasPin ) {
                     this.setData!({
