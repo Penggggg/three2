@@ -257,7 +257,7 @@
       type="text"
       value="{{ selecingTag }}"
       bind:input="editingTag"
-      placeholder="请输入新的标签名"
+      placeholder="如：补水"
     />
   </i-modal>
 

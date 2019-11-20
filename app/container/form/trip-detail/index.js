@@ -83,7 +83,7 @@ Component({
                     label: '行程名称',
                     type: 'input',
                     max: 50,
-                    placeholder: '如：28号香港之旅',
+                    placeholder: '如：28号香港采购',
                     value: undefined,
                     rules: [{
                       validate: val => !!val,
@@ -114,12 +114,12 @@ Component({
             const meta = [
                 {
                     title: '营销工具',
-                    desc: '裂变与粘性'
+                    // desc: '裂变与粘性'
                 }, {
                     key: 'reduce_price',
                     label: '消费立减',
                     type: 'number',
-                    placeholder: '客户分享代购行程后，才能获得立减优惠',
+                    placeholder: '客户分享后，才获得立减优惠',
                     value: undefined,
                     disabled: !canEditCoupons && !!tid,
                     rules: [{

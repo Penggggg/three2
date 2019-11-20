@@ -69,7 +69,7 @@ Component({
                   label: '商品名称',
                   type: 'input',
                   max: 50,
-                  placeholder: '如：YSL莹亮纯魅唇膏多色可选',
+                  placeholder: '如：YSL莹亮纯魅唇膏',
                   value: undefined,
                   rules: [{
                     validate: val => !!val,
@@ -79,7 +79,7 @@ Component({
                   key: 'detail',
                   label: '商品描述',
                   type: 'textarea',
-                  placeholder: `可长可短的一段介绍(回车可换行)`,
+                  placeholder: `一段介绍（回车换行）`,
                   value: undefined,
                   rules: [ ]
                 }, {
@@ -118,7 +118,7 @@ Component({
                   key: 'fadePrice',
                   label: '划线价',
                   type: 'number',
-                  placeholder: '建议输入比原价格稍高的价位',
+                  placeholder: '建议比单价稍高，用于对比',
                   value: undefined,
                   rules: [{
                     validate: val => !!val,
@@ -138,7 +138,7 @@ Component({
                   key: 'price',
                   label: '价格',
                   type: 'number',
-                  placeholder: '商品单价',
+                  placeholder: '如：128',
                   value: undefined,
                   rules: [{
                     validate: val => !!val,
@@ -152,7 +152,7 @@ Component({
                   key: 'groupPrice',
                   label: '团购价',
                   type: 'number',
-                  placeholder: '鼓励多个客户在一趟团购行程中同时下单',
+                  placeholder: '诱导客户相互分享、多下单',
                   value: undefined,
                   rules: [{
                     validate: val => val !== null && val !== undefined && !!String( val ).trim( ) ? Number( String( val ).trim( )) > 0 : true,
@@ -163,7 +163,7 @@ Component({
                   key: 'stock',
                   label: '库存',
                   type: 'number',
-                  placeholder: '不填写，则无限库存',
+                  placeholder: '不填则无限制',
                   value: undefined
                 })
               }
@@ -182,13 +182,13 @@ Component({
                   key: 'depositPrice',
                   label: '商品订金',
                   type: 'number',
-                  placeholder: '购买时先付订金',
+                  placeholder: '先付订金，后付尾款',
                   value: undefined
                 }, {
                   key: 'limit',
                   label: '限购数量',
                   type: 'number',
-                  placeholder: '不填则表示不限购',
+                  placeholder: '不填则不限购',
                   value: undefined
                 }, {
                   key: 'visiable',
