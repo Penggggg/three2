@@ -307,6 +307,9 @@ Page({
                     activities: activities$
                 });
 
+                this.setData!({
+                    showTips: 'show'
+                });
                 // 弹起拼团框
                 if ( !!from && delayeringGood( res.data ).hasPin ) {
                     this.setData!({
@@ -407,6 +410,9 @@ Page({
 
     onSubscribe( ) {
         app.getSubscribe('buyPin,waitPin,trip');
+        this.setData!({
+            showTips: 'hide'
+        });
     },
 
     // 进入商品管理
@@ -553,10 +559,9 @@ Page({
         
         this.runComputed( );
 
-        // if ( !options!.id && !scene && !'71f2cd945cab4fc10261232b3f358619' ) { return; }
-        // this.setData!({
-        //     id: options!.id || scene || '71f2cd945cab4fc10261232b3f358619',
-        // });
+        this.setData!({
+            id: '71f2cd945cab5006026149d8725857e3'
+        })
 
         if ( options!.id || scene ) { 
             this.setData!({

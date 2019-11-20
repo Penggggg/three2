@@ -379,7 +379,7 @@
     </view>
 
     <!-- 团购提示弹框 -->
-    <wxc-mask
+    <!-- <wxc-mask
         content-align="cc"
         status="{{ showTips }}"
         bindmasktap="toggleTips"
@@ -418,7 +418,7 @@
                 有群友人买了同款商品，就会"自动拼团”，并得到更划算的“拼团价”。若闺蜜或群友刚好需要～就邀请她们一起买，一起捡便宜！
             </view>
 
-            <!-- 行程清单 -->
+
             <swiper
                 autoplay="{{ true }}"
                 circular="{{ true }}"
@@ -447,11 +447,9 @@
                             </view>
                             <view class="gd-swiper-title del small">
                                 ¥{{ item.price }}
-                                <!-- ¥{{ item.groupPrice }} -->
                             </view>
                             <view class="gd-swiper-title small color">
                                 拼: {{ item.groupPrice }}
-                                <!-- 省 ¥{{ item.delta }} -->
                             </view>
                             <view
                                 class="gd-swiper-tag"
@@ -483,6 +481,87 @@
                 </button>
             </form>
 
+        </view>
+    </wxc-mask> -->
+
+    <!-- 拼团对比提示 -->
+    <wxc-mask
+        content-align="cc"
+        status="{{ showTips }}"
+        bindmasktap="toggleTips"
+    >
+        <view class="gd-compare-modal">
+            <view class="gd-compare-con">
+                <view class="gd-compare-side left">
+                    <view class="gd-compare-title">
+                        超便宜
+                    </view>
+                    <view>
+                        <wxc-price
+                            icon="sub"
+                            decimal="small"
+                            class="gd-compare-price mr"
+                        > 
+                            128
+                        </wxc-price>
+                        <wxc-price
+                            icon="sub"
+                            status="del"
+                            decimal="small"
+                            del-color="#fff"
+                            class="gd-compare-price small"
+                        > 
+                            169
+                        </wxc-price>
+                    </view>
+                    <view class="gd-compare-tips left">
+                        拼团买
+                    </view>
+                </view>
+                <view class="gd-compare-side right">
+                    <view class="gd-compare-title black">
+                        原价
+                    </view>
+                    <view>
+                        <wxc-price
+                            icon="sub"
+                            status="del"
+                            decimal="small"
+                            class="gd-compare-price"
+                        > 
+                            169
+                        </wxc-price>
+                    </view>
+                    <view class="gd-compare-tips right">
+                        直接买
+                    </view>
+                </view>
+                <view class="gd-compare-con-line"></view>
+                <view class="gd-compare-con-ball"></view>
+                <wxc-icon
+                    size="20"
+                    color="#fff"
+                    type="arrow-left"
+                    class="gd-compare-arrow left"
+                />
+                <wxc-icon
+                    size="20"
+                    color="#fff"
+                    type="arrow-right"
+                    class="gd-compare-arrow right"
+                />
+            </view>
+            <view class="gd-compare-btn-con">
+                <view class="gd-compare-pin-tips">
+                    群里有人下单后，即可拼团
+                </view>
+                <button 
+                    bindtap="onSubscribe"
+                    class="gd-compare-btn"
+                >
+                    知道了
+                </button>
+            </view>
         </view>
     </wxc-mask>
 
