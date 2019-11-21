@@ -794,11 +794,17 @@
 
 .gd-compare-title.black {
     color: #33304d;
+    text-shadow: none;
 }
 
 .gd-compare-price {
     color: #fff;
-    font-size: 36rpx;
+    font-size: 38rpx;
+    font-weight: bold;
+}
+
+.gd-compare-price.black {
+    color: #33304d;
 }
 
 .gd-compare-price.mr {

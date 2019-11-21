@@ -62,7 +62,7 @@ Page({
         // 正在展示海报
         showingPoster: false,
 
-        // 展示弹框
+        // 展示拼团玩法的弹框
         showTips: 'hide',
 
         // 分享Tips
@@ -249,7 +249,8 @@ Page({
             // 详情
             detail$: function( ) {
                 const { detail } = this.data;
-                return delayeringGood( detail )
+                const r = delayeringGood( detail )
+                return r;
             }
 
         })
@@ -307,6 +308,9 @@ Page({
                     activities: activities$
                 });
 
+                this.setData!({
+                    showTips: 'show'
+                });
                 // 弹起拼团框
                 if ( !!from && delayeringGood( res.data ).hasPin ) {
                     this.setData!({
@@ -557,7 +561,7 @@ Page({
         this.runComputed( );
 
         this.setData!({
-            id: '71f2cd945cab5006026149d8725857e3'
+            id: '71f2cd945cab4fc10261232b3f358619'
         })
 
         if ( options!.id || scene ) { 
@@ -574,7 +578,7 @@ Page({
         
         setTimeout(( ) => {
             this.watchRole( );
-            this.checkLike( );
+            // this.checkLike( );
             this.fetchLast( );
         }, 20 );
     },
