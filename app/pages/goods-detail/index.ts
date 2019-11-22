@@ -63,10 +63,13 @@ Page({
         showingPoster: false,
 
         // 展示拼团玩法的弹框
-        showTips: 'hide',
+        showPlayTips: 'hide',
 
-        // 分享Tips
-        showShareTips: 'hide',
+        // 展示分享赚钱
+        showShareGetMoney: false,
+
+        // 展示拼团商品列表
+        showPinGoods: 'hide',
 
         // 分享Tips2
         showShareTips2: false,
@@ -250,6 +253,7 @@ Page({
             detail$: function( ) {
                 const { detail } = this.data;
                 const r = delayeringGood( detail )
+                console.log('...', r );
                 return r;
             }
 
@@ -308,13 +312,10 @@ Page({
                     activities: activities$
                 });
 
-                this.setData!({
-                    showTips: 'show'
-                });
                 // 弹起拼团框
                 if ( !!from && delayeringGood( res.data ).hasPin ) {
                     this.setData!({
-                        showTips: 'show'
+                        showPlayTips: 'show'
                     });
                 } else if ( !from && delayeringGood( res.data ).hasPin ) {
                     this.checkOpenPin( );
@@ -387,33 +388,35 @@ Page({
     },
 
     // 展开提示
-    toggleTips( e? ) {
-        const { showTips } = this.data;
+    togglePalyTips( e? ) {
+        const { showPlayTips } = this.data;
         this.setData!({
-            showTips: showTips === 'show' ? 'hide' : 'show'
+            showPlayTips: showPlayTips === 'show' ? 'hide' : 'show'
         });
     },
 
-    // 展开分享提示
-    toggleTips2( e? ) {
-        const { showShareTips } = this.data;
+    toggleShareGetMoney( ) {
+        const { showShareGetMoney } = this.data;
         this.setData!({
-            showShareTips: showShareTips === 'show' ? 'hide' : 'show'
+            showShareGetMoney: !showShareGetMoney
         });
+        if ( !showShareGetMoney ) {
+            this.onSubscribe( );
+        }
     },
 
-    toggleTips3( e? ) {
-        const { showShareTips2 } = this.data;
+    togglePinGoods( ) {
+        const { showPinGoods } = this.data;
         this.setData!({
-            showShareTips2: !showShareTips2,
+            showPinGoods: showPinGoods === 'hide' ? 'show' : 'hide'
         });
+        if ( showPinGoods === 'hide' ) {
+            this.onSubscribe( );
+        }
     },
 
     onSubscribe( ) {
         app.getSubscribe('buyPin,waitPin,trip');
-        this.setData!({
-            showTips: 'hide'
-        });
     },
 
     // 进入商品管理
@@ -473,7 +476,7 @@ Page({
         });
     },
 
-    /** 检查是否有主动弹开过拼团 */
+    /** 检查是否有主动弹开过拼团玩法 */
     checkOpenPin( ) {
         const { detail } = this.data;
         if ( !detail ) { return }
@@ -485,7 +488,7 @@ Page({
 
             if ( !!priceGap && Date.now( ) - Number( openRecord ) >= oneDay ) {
                 wx.setStorageSync( storageKey, String( Date.now( )));
-                this.toggleTips( );
+                this.togglePalyTips( );
             }
         }
     },

@@ -1,0 +1,6 @@
+<view 
+    class="c-icon-question"
+    style="font-size: {{ size + 'rpx' }}; line-height: {{ roundSize + 'rpx' }}; width: {{ roundSize + 'rpx' }}; height: {{ roundSize + 'rpx' }}; color: {{ color }}; border: 1px solid {{ color }};"
+>
+    ?
+</view>

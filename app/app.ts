@@ -234,7 +234,7 @@ App<MyApp>({
             .then(( ) => {
                 this.getUserInfo( );
                 this.getAppConfig( );
-                this.getIsNewCustom( );
+                // this.getIsNewCustom( );
                 this.getSubscribeTemplated( );
             })
             .catch( e => {

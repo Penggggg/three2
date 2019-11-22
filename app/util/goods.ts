@@ -13,6 +13,9 @@ const delayeringGood = ( x, pushIntegralRate = 0 ) => {
         return null
     }
 
+    // 最低拼团价，对应的原价
+    let lowest_pin_origin_price$ = x.price;
+
     // 初始化：价格数组（含团购价、特价）
     let allPriceArr: any[ ] = [ ];
 
@@ -53,10 +56,23 @@ const delayeringGood = ( x, pushIntegralRate = 0 ) => {
     // 没有型号
     if ( !x.standards || x.standards.length === 0 ) {
         decorateItem( x );
-    
+        lowest_pin_origin_price$ = x.price;
     // 有型号
     } else {
         x.standards.map( decorateItem );
+
+        let standardSet: any = null;
+        let lowest_standard_price = 0;
+
+        x.standards.map( x => {
+            if ( x.groupPrice < lowest_standard_price || lowest_standard_price === 0 ) {
+                standardSet = x;
+                lowest_standard_price = x.groupPrice;
+            }
+        });
+        if ( !!standardSet ) {
+            lowest_pin_origin_price$ = standardSet.price;
+        }
     }
 
     // 重新排序价格和库存
@@ -101,6 +117,9 @@ const delayeringGood = ( x, pushIntegralRate = 0 ) => {
 
         // 最低价格（含团购价）
         lowest_price$: allPriceArr[ 0 ],
+
+        // 最低价格（含团购价）的原价
+        lowest_pin_origin_price$,
 
         /** 是否有活动 */
         hasActivity: !!x.activity || (Array.isArray( x.activities ) && x.activities.length > 0),

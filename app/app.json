@@ -33,6 +33,7 @@
   ],
   "usingComponents": {
     "my-nav": "./container/nav-bar/index",
+    "my-icon-question": "./components/icon-question/index",
     "my-sku-popup": "./container/sku-popup/index",
     "my-img-upload": "./components/img-upload/index",
     "my-active-form": "./components/active-form/index",

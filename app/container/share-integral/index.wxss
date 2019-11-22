@@ -3,7 +3,7 @@
     padding-top: 50rpx;
     overflow-y: scroll;
     background: #fafafa;
-    border-radius: 3px;
+    border-radius: 30px;
     padding-bottom: 50rpx;
 }
 
@@ -44,21 +44,24 @@
 }
 
 .gd-pin-tips-title {
-    color: #333;
+    color: #272839;
     font-size: 35rpx;
     text-align: center;
-    margin-top: 40rpx;
+    margin: 40rpx 0 10rpx;
     font-weight: bold;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.1em;
 }
 
 .gd-pin-tips-content {
+    color: #797979;
     font-size: 22rpx;
-    padding: 25rpx 35rpx;
+    line-height: 36rpx;
     letter-spacing: 0.05em;
-    color: rgba( 0, 0, 0, 0.45 );
     text-align: center;
-    text-indent: 2em;
+}
+
+.gd-pin-tips-content.mb {
+    margin-bottom: 55rpx;
 }
 
 .gd-pin-close {
@@ -118,7 +121,8 @@
     color: #fff;
     font-weight: normal;
     font-size: 26rpx !important;
-    background: #535bf3 !important;
+    /* background: #535bf3 !important; */
+    background: #ffd9d2 !important;
     padding: 15rpx 25rpx !important;
     box-sizing: content-box !important;
 }
