@@ -172,9 +172,7 @@
 
         <!-- 行程内，其他可拼商品 -->
 
-        <!-- 他们都在拼( 型号？) -->
-
-        <!-- 他们都在看 -->
+        <!-- 他们都在拼( 有单 ) / 他们都在看（无单）-->
 
         <!-- 特价活动 -->
 
@@ -193,6 +191,7 @@
         someCanPin="{{ pinCount$ > 0 }}"
         tripShoppinglist="{{ shopping }}"
         bind:toggle="onSkuToggle"
+        bind:custom="onSkuTap"
     />
 
     <!-- 团购商品列表弹框 -->

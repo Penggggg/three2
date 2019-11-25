@@ -116,9 +116,10 @@
         isNew="{{ isNew }}"
         shouldPrepay="{{ shouldPrepay }}"
         open="{{ openSku }}"
-        bind:close="onCloseSku"
         skuItems="{{ skuItems$ }}"
         bind:confirm="onConfirmSku"
         depositPrice="{{ detail.depositPrice }}"
+        bind:close="onCloseSku"
+        bind:custom="onTapSku"
     />
 </view>

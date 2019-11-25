@@ -298,21 +298,21 @@ Component({
         /** 检查是否需要付订金 */
         checkPrePay( tid ) {
             if ( !tid ) { return; }
-            http({
-                data: {
-                    tid
-                },
-                url: 'common_should-prepay',
-                success: res => {
-                    const { status, data } = res;
-                    if ( status !== 200 ) { return; }
-                    const { isNew, shouldPrepay } = data;
-                    this.setData({
-                        isNew,
-                        shouldPrepay
-                    });
-                }
-            })
+            // http({
+            //     data: {
+            //         tid
+            //     },
+            //     url: 'common_should-prepay',
+            //     success: res => {
+            //         const { status, data } = res;
+            //         if ( status !== 200 ) { return; }
+            //         const { isNew, shouldPrepay } = data;
+            //         this.setData({
+            //             isNew,
+            //             shouldPrepay
+            //         });
+            //     }
+            // })
         },
         onSubscribe( e ) {
             app.getSubscribe('buyPin,waitPin,buy');
@@ -542,6 +542,10 @@ Component({
         /** 拼团广场 */
         goGroundPin( ) {
             navTo('/pages/ground-pin/index')
+        },
+        /** sku组件点击 */
+        onTapSku( e ) {
+            this.triggerEvent('custom', e.detail );
         }
     },
 

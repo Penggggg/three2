@@ -1020,9 +1020,8 @@ Page({
             }
         });
         app.watch$('appConfig', val => {
-            const value = (val || { })['push-integral-money-rate'];
-            value !== undefined && this.setData({
-                pushIntegralMoneyRate: (val || { })['push-integral-money-rate']
+            !!val && this.setData({
+                pushIntegralMoneyRate: val['push-integral-money-rate'] || 0
             });
         });
     },

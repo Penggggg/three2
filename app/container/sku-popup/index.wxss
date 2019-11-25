@@ -1,3 +1,17 @@
+
+  .fix-btn {
+    background: transparent;
+    outline:none;
+    border:none;
+    list-style: none;
+    padding: 0;
+    text-align: left;
+  }
+  
+  .fix-btn:after {
+    border:none;
+  }
+  
 /* container/sku-popup/index.wxss */
 .sku-bg {
     left: 0;
@@ -120,6 +134,11 @@
     margin-top: 0;
 }
 
+.sku-title.grey {
+    font-size: 22rpx;
+    color: #4d4d4d;
+}
+
 .sku-pin-title {
     font-size: 22rpx;
     color: #4d4d4d;
@@ -164,6 +183,10 @@
 
 .sku-info-title.mt {
     margin-top: 18rpx;
+}
+
+.sku-info-title.ml {
+    margin-left: 10rpx;
 }
 
 .sku-info-title.il {
@@ -276,6 +299,11 @@
 
 .sku-dingjin {
     position: relative;
+}
+
+.sku-question {
+    display: inline;
+    margin-left: 20rpx;
 }
 
 .sku-dingjin-tips {

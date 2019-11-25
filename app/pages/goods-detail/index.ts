@@ -563,6 +563,14 @@ Page({
         });
     },
 
+    /** sku某部分点击 */
+    onSkuTap( e ) {
+        const type = e.detail;
+        if ( type === 'moneyQuestion' ) {
+            this.toggleShareGetMoney( );
+        }
+    },
+
     /**
      * 生命周期函数--监听页面加载
      * {
