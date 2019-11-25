@@ -170,19 +170,30 @@
             </view>
         </view>
 
-        <!-- 倒计时？？ -->      
-
-        <!-- 底部sku bar -->
-
         <!-- 行程内，其他可拼商品 -->
 
-        <!-- 他们都在拼 -->
+        <!-- 他们都在拼( 型号？) -->
 
         <!-- 他们都在看 -->
 
         <!-- 特价活动 -->
 
     </view> 
+
+    <!-- 商品下面的栏、倒计时 -->
+    <my-goods-detail-bar
+        wx:if="{{ detail$ }}"
+        tid="{{ tid }}"
+        pid="{{ id }}"
+        detail="{{ detail }}"
+        tripDetail="{{ trip }}"
+        canPin="{{ detail$.hasPin }}"
+        canPinSku="{{ canPinSku }}"
+        activities="{{ activities }}"
+        someCanPin="{{ pinCount$ > 0 }}"
+        tripShoppinglist="{{ shopping }}"
+        bind:toggle="onSkuToggle"
+    />
 
     <!-- 团购商品列表弹框 -->
     <wxc-mask

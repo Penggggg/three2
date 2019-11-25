@@ -253,11 +253,55 @@ Page({
             detail$: function( ) {
                 const { detail } = this.data;
                 const r = delayeringGood( detail )
-                console.log('...', r );
+                console.log('====', r );
                 return r;
+            },
+
+            // 此账号，是否有单
+            hasOrder$( ) {
+                const { openid, tripShoppinglist } = this.data;
+                const r = (tripShoppinglist || [ ])
+                    .filter( sl => {
+                        const { uids } = sl;
+                        return uids.includes( openid );
+                    })
+                
+                const result = Array.isArray( tripShoppinglist ) && tripShoppinglist.length > 0
+                    ? r.length > 0 : false;
+                return result;
             }
 
         })
+    },
+
+    /** 监听全局管理员权限 */
+    watchRole( ) {
+        (app as any).watch$('role', ( val ) => {
+            this.setData!({
+                showBtn: ( val === 1 )
+            })
+        });
+        (app as any).watch$('isNew', val => {
+            this.setData!({
+                isNew: val
+            });
+        });
+        (app as any).watch$('appConfig', val => {
+            if ( !val ) { return; }
+            this.setData!({
+                ipName: val['ip-name'],
+                ipAvatar: val['ip-avatar'],
+                pushIntegralRate: (val || { })['push-integral-get-rate'] || 0,
+                canIntegrayShare: !!(val || { })['good-integral-share'] || false
+            });
+            this.createShare( );
+        });
+        (app as any).watch$('openid', val => {
+            this.setData!({
+                openid: val
+            });
+            this.createShare( );
+        });
     },
 
     /** 拉取商品详情 */
@@ -422,36 +466,6 @@ Page({
     // 进入商品管理
     goManager( ) {
         navTo(`/pages/manager-goods-detail/index?id=${this.data.id}`)
-    },
-
-    /** 监听全局管理员权限 */
-    watchRole( ) {
-        (app as any).watch$('role', ( val ) => {
-            this.setData!({
-                showBtn: ( val === 1 )
-            })
-        });
-        (app as any).watch$('isNew', val => {
-            this.setData!({
-                isNew: val
-            });
-        });
-        (app as any).watch$('appConfig', val => {
-            if ( !val ) { return; }
-            this.setData!({
-                ipName: val['ip-name'],
-                ipAvatar: val['ip-avatar'],
-                pushIntegralRate: (val || { })['push-integral-get-rate'] || 0,
-                canIntegrayShare: !!(val || { })['good-integral-share'] || false
-            });
-            this.createShare( );
-        });
-        (app as any).watch$('openid', val => {
-            this.setData!({
-                openid: val
-            });
-            this.createShare( );
-        });
     },
     
     /** 预览图片 */
@@ -656,19 +670,27 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( e ) {
-        const { detail, pin$, activities, priceGap, trip, openid } = this.data;
+        // const { detail, pin$, activities, priceGap, trip, openid } = this.data;
+        // return {
+        //     title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
+        //                 activities.length === 0 ?
+        //                     `拼团买！一起省${String( priceGap ).replace(/\.00/g, '')}元！` :
+        //                     '限时特价超实惠！' : 
+        //                 trip && trip.reduce_price ? 
+        //                     `立减${trip.reduce_price}元！` :
+        //                     '给你看看这宝贝！'
+        //         }${detail.title}`,
+        //     // 分享不应该带tid
+        //     path: `/pages/goods-detail/index?id=${detail._id}&from=${openid}`,
+        //     imageUrl: `${detail.img[ 0 ]}`
+        // }
+        const { hasOrder$, detail$, openid } = (this.data as any);
         return {
-            title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
-                        activities.length === 0 ?
-                            `拼团买！一起省${String( priceGap ).replace(/\.00/g, '')}元！` :
-                            '限时特价超实惠！' : 
-                        trip && trip.reduce_price ? 
-                            `立减${trip.reduce_price}元！` :
-                            '给你看看这宝贝！'
-                }${detail.title}`,
-            // 分享不应该带tid
-            path: `/pages/goods-detail/index?id=${detail._id}&from=${openid}`,
-            imageUrl: `${detail.img[ 0 ]}`
+            imageUrl: `${detail$.img[ 0 ]}`,
+            path: `/pages/goods-detail/index?id=${detail$._id}&from=${openid}`,
+            title: !!detail$ && detail$.hasPin && !hasOrder$ ?
+                `有人想要吗？拼团买，我们都能省！${detail$.title}` :
+                `推荐「${detail$.tagText}」神器!${detail$.title}`
         }
     }
   })

@@ -9,8 +9,8 @@ const pushIntegralRate = 0.05;
  */
 const delayeringGood = ( x, pushIntegralRate = 0 ) => {
  
-    if ( !x ) {
-        return null
+    if ( !x || Object.keys( x ).length === 0 ) {
+        return { };
     }
 
     // 最低拼团价，对应的原价

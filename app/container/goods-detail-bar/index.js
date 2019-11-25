@@ -3,10 +3,11 @@ const { http } = require('../../util/http.js');
 const { wxPay } = require('../../util/pay.js');
 const { navTo } = require('../../util/route.js');
 const { createOrders } = require('../../util/order.js');
+const { computed } = require('../../lib/vuefy/index.js');
 
 Component({
 
-    behaviors: [require('../../behaviores/computed/index.js')],
+    // behaviors: [require('../../behaviores/computed/index.js')],
     /**
      * 组件的属性列表
      */
@@ -28,7 +29,7 @@ Component({
         // 商品详情
         detail: {
             type: Object,
-            value: null,
+            value: { },
             observer: 'dealDetail'
         },
         // 活动列表
@@ -48,6 +49,24 @@ Component({
         someCanPin: {
             type: Boolean,
             value: false
+        },
+        /** 
+         * 本躺行程的购物清单 
+         * 全属性，且不止自己
+         */
+        tripShoppinglist: {
+            type: Array,
+            value: [ ]
+        },
+        /** 此产品是否可以拼团 */
+        canPin: {
+            type: Boolean,
+            value: true
+        },
+        /** 行程详情 */
+        tripDetail: {
+            type: Object,
+            value: { }
         }
     },
 
@@ -55,6 +74,7 @@ Component({
      * 组件的初始数据
      */
     data: {
+        openid: '',
         // 按钮列表
         btnList: [
             {
@@ -79,7 +99,7 @@ Component({
             // }
         ],
         // 库存
-        hasStock: false,
+        hasStock: true,
         // 动画
         animationSku: null,
         // 动画
@@ -101,92 +121,180 @@ Component({
         disabled: false,
     },
 
-    computed: {
-        /**
-         * @description
-         * sku展示队列
-         * _id
-         * img 图片
-         * sid 型号id
-         * pid 产品id
-         * stock 库存
-         * title 名称
-         * price 价格
-         * limit 限购数量
-         * canSelect 是否能选
-         * canPin 本趟是否能拼团
-         */
-        skuItems$( ) {
-            const { detail, activities, canPinSku } = this.data;
+    // computed: {
 
-            if ( !detail ) { 
-                return [ ];
-            }
-
-            let skuItems = [ ];
-            const { _id, stock, standards, price, title, img, limit, groupPrice } = detail;
-
-            if ( standards.length === 0 ) {
-                // 只有单品本身
-                const ac = activities.find( ac => ac.pid === _id );
-
-                skuItems = [{
-                    _id,
-                    title: '默认型号',
-                    price,
-                    stock,
-                    pid: _id,
-                    img: img[ 0 ],
-                    sid: null,
-                    limit,
-                    groupPrice,
-                    canPin: !!canPinSku.find( x => x.pid === _id ),
-                    canSelect: stock !== 0
-                }];
-
-                // 根据活动 更改价格
-                if ( ac ) {
-                    skuItems = [ Object.assign({ }, skuItems[ 0 ], {
-                        acid: ac._id,
-                        price: ac.ac_price,
-                        groupPrice: ac.ac_groupPrice
-                    })];
-                }
-            } else {
-
-                // 有型号
-                skuItems = standards.map( x => ({
-                    _id: x._id,
-                    sid: x._id,
-                    pid: x.pid, 
-                    title: x.name,
-                    img: x.img,
-                    stock: x.stock,
-                    price: x.price,
-                    limit: x.limit,
-                    groupPrice: x.groupPrice,
-                    canPin: !!canPinSku.find( y => y.pid === x.pid && y.sid === x._id ),
-                    canSelect: x.stock !== 0
-                }))
-
-                // 根据活动 更改价格
-                skuItems = skuItems.map( sku => {
-                    const target = activities.find( ac => ac.pid === sku.pid && ac.sid === sku.sid );
-                    return Object.assign({ }, sku, {
-                        acid: target ? target._id : undefined,
-                        price: target ? target.ac_price : sku.price,
-                        groupPrice: target ? target.ac_groupPrice : sku.groupPrice,
-                    });
-                });
-            } 
-            return skuItems;
-        }
-    },
+    // },
 
     /**
      * 组件的方法列表
      */
     methods: {
+        runComputed( ) {
+            computed( this, {
+                /**
+                 * @description
+                 * sku展示队列
+                 * _id
+                 * img 图片
+                 * sid 型号id
+                 * pid 产品id
+                 * stock 库存
+                 * title 名称
+                 * price 价格
+                 * limit 限购数量
+                 * canSelect 是否能选
+                 * canPin 本趟是否能拼团
+                 */
+                skuItems$( ) {
+                    const { detail, activities, canPinSku } = this.data;
+
+                    if ( !detail ) { 
+                        return [ ];
+                    }
+
+                    let skuItems = [ ];
+                    const { _id, stock, standards, price, title, img, limit, groupPrice } = detail;
+
+                    if ( standards.length === 0 ) {
+                        // 只有单品本身
+                        const ac = activities.find( ac => ac.pid === _id );
+
+                        skuItems = [{
+                            _id,
+                            title: '默认型号',
+                            price,
+                            stock,
+                            pid: _id,
+                            img: img[ 0 ],
+                            sid: null,
+                            limit,
+                            groupPrice,
+                            canPin: !!canPinSku.find( x => x.pid === _id ),
+                            canSelect: stock !== 0
+                        }];
+
+                        // 根据活动 更改价格
+                        if ( ac ) {
+                            skuItems = [ Object.assign({ }, skuItems[ 0 ], {
+                                acid: ac._id,
+                                price: ac.ac_price,
+                                groupPrice: ac.ac_groupPrice
+                            })];
+                        }
+                    } else {
+
+                        // 有型号
+                        skuItems = standards.map( x => ({
+                            _id: x._id,
+                            sid: x._id,
+                            pid: x.pid, 
+                            title: x.name,
+                            img: x.img,
+                            stock: x.stock,
+                            price: x.price,
+                            limit: x.limit,
+                            groupPrice: x.groupPrice,
+                            canPin: !!canPinSku.find( y => y.pid === x.pid && y.sid === x._id ),
+                            canSelect: x.stock !== 0
+                        }))
+
+                        // 根据活动 更改价格
+                        skuItems = skuItems.map( sku => {
+                            const target = activities.find( ac => ac.pid === sku.pid && ac.sid === sku.sid );
+                            return Object.assign({ }, sku, {
+                                acid: target ? target._id : undefined,
+                                price: target ? target.ac_price : sku.price,
+                                groupPrice: target ? target.ac_groupPrice : sku.groupPrice,
+                            });
+                        });
+                    } 
+                    return skuItems;
+                },
+                /**
+                 * 此账号，是否有单
+                 */
+                hasOrder$( ) {
+                    const { openid, tripShoppinglist } = this.data;
+                    const r = (tripShoppinglist || [ ])
+                        .filter( sl => {
+                            const { uids } = sl;
+                            return uids.includes( openid );
+                        })
+                    
+                    const result = Array.isArray( tripShoppinglist ) && tripShoppinglist.length > 0
+                        ? r.length > 0 : false;
+                    return result;
+                },
+                /**
+                 * 此账号，是否所有已下单sku中，均已经拼团成功
+                 */
+                allPinSuccess$( ) {
+                    const { openid, tripShoppinglist } = this.data;
+                    const r = (tripShoppinglist || [ ])
+                        .filter( sl => {
+                            const { uids } = sl;
+                            return uids.includes( openid );
+                        })
+                        .every( sl => {
+                            return (sl.uids || [ ]).length > 1;
+                        });
+
+                    return Array.isArray( tripShoppinglist ) && tripShoppinglist.length > 0
+                        ? r : false;
+                },
+                /**
+                 * 现在到凌晨1点的倒计时
+                 */
+                countDownNight$( ) {
+                    const now = new Date( );
+                    const y = now.getFullYear( );
+                    const m = now.getMonth( ) + 1;
+                    const d = now.getDate( );
+                    const todayOne = new Date(`${y}/${m}/${d} 01:00:00`);
+                    const tomorrowOne = todayOne.getTime( ) + 24 * 60 * 60 * 1000;
+                    return (( tomorrowOne - Date.now( )) / 1000 ).toFixed( 0 );
+                },
+                /**
+                 * 现在到行程结束的倒计时
+                 */
+                countDownTrip$( ) {
+                    const tripDetail = this.data.tripDetail || { };
+                    const { end_date } = tripDetail;
+                    if ( !end_date ) { return 0; }
+                    return (( end_date - Date.now( )) / 1000 ).toFixed( 0 );
+                },
+                /**
+                 * 是否有错误而不能购买商品
+                 */
+                hasErr$( ) {
+                    const { preview, detail, hasStock } = this.data;
+                    if ( !preview && !!detail && detail.isDelete ) {
+                        return '已删除'
+                    }
+                    if ( !preview && !!detail && !detail.visiable ) {
+                        return '已下架'
+                    }
+                    if ( !preview && !!detail && detail.visiable && !hasStock ) {
+                        return '已售罄'
+                    }
+                    return ''
+                }
+            });
+        },
+        /** 监听全局状态 */
+        watchRole( ) {
+            app.watch$('openid', val => {
+                this.setData({
+                    openid: val
+                });
+            });
+            app.watch$('isUserAuth', val => {
+                if ( val === undefined ) { return; }
+                this.setData({
+                    isUserAuth: val
+                });
+            });
+        },
         /** 检查是否需要付订金 */
         checkPrePay( tid ) {
             if ( !tid ) { return; }
@@ -222,7 +330,7 @@ Component({
             });
             if ( !openSku && e ) {
                 this.setData({
-                    skuSelectType: e.currentTarget.dataset.type
+                    skuSelectType: e.currentTarget.dataset.type || 'buy'
                 });
             }
 
@@ -424,26 +532,22 @@ Component({
             const { preview } = this.data;
             !preview && navTo( e.currentTarget.dataset.url );
         },
-        /** 监听用户授权情况 */
-        checkAuth( ) {
-            app.watch$('isUserAuth', val => {
-                if ( val === undefined ) { return; }
-                this.setData({
-                    isUserAuth: val
-                });
-            });
-        },
         /** 获取用户信息授权 */
         getUserAuth( ) {
             app.getWxUserInfo(( ) => {
                 // 进行结算
                 this.batchSettle( );
             });
+        },
+        /** 拼团广场 */
+        goGroundPin( ) {
+            navTo('/pages/ground-pin/index')
         }
     },
 
     attached: function( ) {
-
+        this.runComputed( );
+        this.watchRole( );
     }
 
 })

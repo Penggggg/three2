@@ -20,6 +20,7 @@
     background: #fff;
     min-height: 100vh;
     box-sizing: border-box;
+    padding-bottom: 120rpx;
 }
 
 .pgd-tips-skt {
@@ -588,7 +589,7 @@
 }
 
 .text-info-block {
-    padding: 50rpx 100rpx;
+    padding: 50rpx 100rpx 10rpx;
 }
 
 .text-info-item {
