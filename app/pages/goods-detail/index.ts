@@ -18,6 +18,9 @@ Page({
      * 页面的初始数据
      */
     data: {
+        // 是否有用户授权
+        isUserAuth: true,
+
         // ip
         ipName: '',
 
@@ -253,7 +256,6 @@ Page({
             detail$: function( ) {
                 const { detail } = this.data;
                 const r = delayeringGood( detail )
-                console.log('====', r );
                 return r;
             },
 
@@ -301,6 +303,12 @@ Page({
                 openid: val
             });
             this.createShare( );
+        });
+        app.watch$('isUserAuth', val => {
+            if ( val === undefined ) { return; }
+            this.setData!({
+                isUserAuth: val
+            });
         });
     },
 
@@ -436,6 +444,15 @@ Page({
         const { showPlayTips } = this.data;
         this.setData!({
             showPlayTips: showPlayTips === 'show' ? 'hide' : 'show'
+        });
+    },
+
+    // 获取授权、关闭拼团玩法提示
+    getUserAuth( ) {
+        app.getWxUserInfo(( ) => {
+            this.setData!({
+                showPlayTips: 'hide'
+            });
         });
     },
 

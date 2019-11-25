@@ -168,30 +168,6 @@
                         lazy-load="{{ true }}"
                         src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
                    />
-                   <image
-                        class='pgd-visitor-img'
-                        mode="aspectFill"
-                        lazy-load="{{ true }}"
-                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
-                   />
-                   <image
-                        class='pgd-visitor-img'
-                        mode="aspectFill"
-                        lazy-load="{{ true }}"
-                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
-                   />
-                   <image
-                        class='pgd-visitor-img'
-                        mode="aspectFill"
-                        lazy-load="{{ true }}"
-                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
-                   />
-                   <image
-                        class='pgd-visitor-img'
-                        mode="aspectFill"
-                        lazy-load="{{ true }}"
-                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
-                   />
                 </view>
                 <view class="pgd-visitor-btn">
                     <button 
@@ -441,8 +417,17 @@
                     先订金/后尾款            
                 </view>
                 <button 
+                    wx:if="{{ isUserAuth }}"
                     class="gd-compare-btn"
                     bindtap="togglePalyTips"
+                >
+                    知道啦
+                </button>
+                <button 
+                    wx:else
+                    open-type="getUserInfo"
+                    class="gd-compare-btn"
+                    bindgetuserinfo="getUserAuth"
                 >
                     知道啦
                 </button>
