@@ -94,7 +94,7 @@
                 class='gdb-btn-img big mr'
                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-good-bar-share.png"
             />
-            <view class="text-mr">差1单拼成</view>
+            <view class="text-mr">差1人拼成</view>
             <wxc-countdown
                 format="hh:mm:ss"
                 countdown="{{ countDownNight$ }}"

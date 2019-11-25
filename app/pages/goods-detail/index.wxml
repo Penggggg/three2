@@ -125,7 +125,7 @@
                 <form
                 >
                     <button
-                        class="fix-btn"
+                        class="fix-btn pgd-question-btn"
                         bindtap="toggleShareGetMoney"
                     >   
                         <my-icon-question 
@@ -134,6 +134,77 @@
                 </form>
             </view>
         </view>
+
+        <!-- 他们都在看（无单）-->
+        <view class="pgd-visiting-con">
+           <!-- 标题、tips  -->
+            <view class="pgd-visiting-title-con">
+                <view class="pgd-visiting-title-block">
+                    <view class="pgd-visiting-title">3个群友</view>
+                    <view class="pgd-visiting-title-info">感兴趣</view>
+                </view>
+                <view class="pgd-visiting-tips">
+                    <!-- 邀请拼团 -->
+                </view>
+            </view>
+           <!-- 头像列表、按钮 -->
+           <view class="pgd-visitor-list-con">
+                <view class="pgd-visitor-list">
+                   <image
+                        class='pgd-visitor-img'
+                        mode="aspectFill"
+                        lazy-load="{{ true }}"
+                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
+                   />
+                   <image
+                        class='pgd-visitor-img'
+                        mode="aspectFill"
+                        lazy-load="{{ true }}"
+                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
+                   />
+                   <image
+                        class='pgd-visitor-img'
+                        mode="aspectFill"
+                        lazy-load="{{ true }}"
+                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
+                   />
+                   <image
+                        class='pgd-visitor-img'
+                        mode="aspectFill"
+                        lazy-load="{{ true }}"
+                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
+                   />
+                   <image
+                        class='pgd-visitor-img'
+                        mode="aspectFill"
+                        lazy-load="{{ true }}"
+                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
+                   />
+                   <image
+                        class='pgd-visitor-img'
+                        mode="aspectFill"
+                        lazy-load="{{ true }}"
+                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
+                   />
+                   <image
+                        class='pgd-visitor-img'
+                        mode="aspectFill"
+                        lazy-load="{{ true }}"
+                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
+                   />
+                </view>
+                <view class="pgd-visitor-btn">
+                    <button 
+                        open-type="share"
+                        class="fix-btn pgd-visitor-share-btn shine"
+                    >
+                        一起拼
+                    </button>
+                </view>
+            </view>
+        </view>
+
+        <!-- 他们都在拼( 有单 )  -->
 
         <!-- banner -->
         <view class="detail-info-banner">
@@ -170,11 +241,9 @@
             </view>
         </view>
 
-        <!-- 行程内，其他可拼商品 -->
-
-        <!-- 他们都在拼( 有单 ) / 他们都在看（无单）-->
-
         <!-- 特价活动 -->
+
+        <!-- 行程内，其他可拼商品 -->
 
     </view> 
 
