@@ -27,7 +27,9 @@ App<MyApp>({
         /** 订阅类型 */
         subscribeTpye: '',
         /** 订阅模板 */
-        subscribeTemplates: [ ]
+        subscribeTemplates: [ ],
+        /** 此账号可用抵现金 */
+        pushIntegral: 0
     },
 
     /** 全局store */
@@ -41,7 +43,8 @@ App<MyApp>({
         appConfig: null,
         showSubscribeTips: false,
         subscribeTpye: '',
-        subscribeTemplates: [ ]
+        subscribeTemplates: [ ],
+        pushIntegral: 0
     },
 
     /** 监听函数的对象数组 */
@@ -109,6 +112,23 @@ App<MyApp>({
             success: res => {
                 this.setGlobalData({
                     isNew: res.data
+                });
+            }
+        })
+    },
+
+    /** 获取当前账号的抵现金 */
+    getPushIntegral( ) {
+        http({
+            data: {
+                showMore: true,
+            },
+            url: 'common_push-integral',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setGlobalData({
+                    pushIntegral: data.integral
                 });
             }
         })
@@ -234,6 +254,7 @@ App<MyApp>({
             .then(( ) => {
                 this.getUserInfo( );
                 this.getAppConfig( );
+                this.getPushIntegral( );
                 // this.getIsNewCustom( );
                 this.getSubscribeTemplated( );
             })
@@ -260,6 +281,7 @@ export interface MyApp {
     getAppConfig: ( ) => void
     getUserInfo: ( cb?: () => void ) => void,
     getIsNewCustom:  ( ) => void,
+    getPushIntegral: ( ) => void,
     getSubscribeTemplated: ( ) => void,
     getWxUserInfo: ( cb?: ( ) => void ) => void,
     getSubscribe: ( type?: any ) => void,
@@ -282,4 +304,5 @@ type globalState = {
     showSubscribeTips: boolean
     subscribeTpye: any,
     subscribeTemplates: any[]
+    pushIntegral: number
 }

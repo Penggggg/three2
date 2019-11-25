@@ -22,6 +22,7 @@ Component({
      * 组件的初始数据
      */
     data: {
+        // modal
         showShareTips: 'hide',
 
         // 积分推广文案
@@ -31,18 +32,32 @@ Component({
             '获抵现金',
             '当现金用'
         ],
+
+        // 当前账号可用抵现金
+        pushIntegral: 0
     },
 
     /**
      * 组件的方法列表
      */
     methods: {
+        /** 监听全局状态 */
+        watchRole( ) {
+            app.watch$('pushIntegral', val => {
+                this.setData({
+                    pushIntegral: val
+                });
+            });
+        },
 
         // 开关
         onShow( isShow ) {
             this.setData({
                 showShareTips: isShow ? 'show' : 'hide'
             });
+            if ( isShow ) {
+                app.getPushIntegral( );
+            }
         },
 
         toggleTips2( e = { detail: null }) {
@@ -57,5 +72,9 @@ Component({
             app.getSubscribe('buyPin,waitPin,trip');
         },
 
+    },
+
+    attached: function( ) {
+        this.watchRole( );
     }
 })

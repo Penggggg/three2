@@ -43,6 +43,14 @@
     width: 60rpx;
 }
 
+.gd-pin-push-intrgral {
+    color: #fff;
+    font-weight: bold;
+    font-size: 40rpx;
+    letter-spacing: 0.1em;
+    text-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.25 );
+}
+
 .gd-pin-tips-title {
     color: #272839;
     font-size: 35rpx;

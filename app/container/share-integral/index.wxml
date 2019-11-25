@@ -10,10 +10,17 @@
             <view class="gd-pin-tips-icon-block">
                 <view class="gd-pin-tips-icon-round">
                     <image
+                        wx:if="{{ !pushIntegral }}"
                         mode="widthFix"
                         class="gd-pin-tips-icon"
                         src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-money-white.png"
                     />
+                    <wxc-price
+                        wx:else
+                        class="gd-pin-push-intrgral"
+                    > 
+                        {{ pushIntegral }}
+                    </wxc-price>
                 </view>
             </view>
 

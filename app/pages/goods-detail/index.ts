@@ -431,7 +431,7 @@ Page({
         });
     },
 
-    // 展开提示
+    // 展开拼团玩法提示
     togglePalyTips( e? ) {
         const { showPlayTips } = this.data;
         this.setData!({
@@ -439,6 +439,7 @@ Page({
         });
     },
 
+    // 展示推广积分规则
     toggleShareGetMoney( ) {
         const { showShareGetMoney } = this.data;
         this.setData!({
@@ -449,6 +450,7 @@ Page({
         }
     },
 
+    // 展示拼团列表
     togglePinGoods( ) {
         const { showPinGoods } = this.data;
         this.setData!({
