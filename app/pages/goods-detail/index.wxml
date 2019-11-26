@@ -136,11 +136,14 @@
         </view>
 
         <!-- 他们都在看（无单）-->
-        <view class="pgd-visiting-con">
+        <view 
+            class="pgd-visiting-con"
+            wx:if="{{ visitors$.length > 0 }}"
+        >
            <!-- 标题、tips  -->
             <view class="pgd-visiting-title-con">
                 <view class="pgd-visiting-title-block">
-                    <view class="pgd-visiting-title">3个群友</view>
+                    <view class="pgd-visiting-title">{{ visitors$.length }}个群友</view>
                     <view class="pgd-visiting-title-info">感兴趣</view>
                 </view>
                 <view class="pgd-visiting-tips">
@@ -151,22 +154,12 @@
            <view class="pgd-visitor-list-con">
                 <view class="pgd-visitor-list">
                    <image
-                        class='pgd-visitor-img'
+                        wx:key="index"
                         mode="aspectFill"
-                        lazy-load="{{ true }}"
-                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
-                   />
-                   <image
+                        wx:for="{{ visitors }}"
                         class='pgd-visitor-img'
-                        mode="aspectFill"
                         lazy-load="{{ true }}"
-                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
-                   />
-                   <image
-                        class='pgd-visitor-img'
-                        mode="aspectFill"
-                        lazy-load="{{ true }}"
-                        src="https://wx46190709a1df31ab-1257764567.cos.ap-guangzhou.myqcloud.com/ip-avatar.jpeg"
+                        src="{{ item.avatarUrl }}"
                    />
                 </view>
                 <view class="pgd-visitor-btn">

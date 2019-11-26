@@ -128,7 +128,8 @@ export const collections = [
     'analyse-data',
     'share-record',
     'integral-use-record',
-    'push-timer'
+    'push-timer',
+    'good-visiting-record'
 ];
 
 /** 权限模块 */

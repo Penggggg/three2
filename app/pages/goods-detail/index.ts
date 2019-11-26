@@ -105,7 +105,10 @@ Page({
         pushIntegralRate: 0,
 
         // 是否展开sku
-        openingSku: false
+        openingSku: false,
+
+        // 访问记录
+        visitors: [ ]
     },
 
     /** 设置computed */
@@ -271,6 +274,12 @@ Page({
                 const result = Array.isArray( tripShoppinglist ) && tripShoppinglist.length > 0
                     ? r.length > 0 : false;
                 return result;
+            },
+
+            // 商品的访问记录
+            visitors$( ) {
+                const { visitors, openid } = this.data;
+                return visitors.filter( x => x.openid !== openid );
             }
 
         })
@@ -401,6 +410,26 @@ Page({
         })
     },
 
+    /** 拉取当前商品的访问记录 */
+    fetchVisitRecord( pid, start, before ) {
+        if ( !start || !before ) { return; }
+        http({
+            url: 'good_good-visitors',
+            data: {
+                pid,
+                start, 
+                before
+            },
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setData!({
+                    visitors: data
+                });
+            }
+        });
+    },
+
     /** 拉取两个最新行程 */
     fetchLast( ) {
         const { id } = this.data;
@@ -410,16 +439,17 @@ Page({
             success: res => {
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
+                const trip = data[ 0 ];
+                if ( !!trip ) {
+                    const { _id, start_date, end_date } = trip;
+                    const tid = _id
 
-                if ( !!data[ 0 ]) {
-                    const tid = data[ 0 ]._id
+                    this.fetchShopping( id, tid );
+                    this.fetchVisitRecord( id, start_date, end_date );
 
-                    if ( !!tid ) {
-                        this.fetchShopping( id, tid );
-                    }
                     this.setData!({
                         tid,
-                        trip: data[ 0 ]
+                        trip
                     });
                 }
             }
@@ -659,10 +689,16 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow: function ( ) {
-        const { id, tid } = this.data;
-
+        const { id, tid, trip } = this.data;
+        
         this.fetDetail( id );
         this.fetchShopping( id, tid );
+
+        if ( !!trip ) {
+            const { start_date, end_date } = (trip as any);
+             this.fetchVisitRecord( id, start_date, end_date );
+        }
+
     },
   
     /**
