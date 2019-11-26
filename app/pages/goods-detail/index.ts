@@ -80,7 +80,7 @@ Page({
         // 拼团列表
         pin: [ ],
 
-        // 商品在本行程的购物清单列表
+        // 本行程的购物清单列表
         shopping: [ ],
 
         // 一口价活动列表
@@ -143,6 +143,29 @@ Page({
                     const meta = gap !== '0' && !!gap ? gap : '';
                     return meta;
                 }
+            },
+
+            // 马上可以拼团的个数
+            pinCount$: function( ) {
+                const { id, detail } = this.data;
+                const goodShopping = this.data.shopping.filter( x => x.pid === id );
+                if ( !detail ) { 
+                    return 0;
+                }
+
+                const { standards, groupPrice } = detail;
+
+                if ( !!standards && standards.length > 0 ) {
+                    return standards
+                        .filter( x => !!goodShopping.find( s => s.sid === x._id && s.pid === x.pid ))
+                        .length;
+
+                } else if ( !!groupPrice ) {
+                    const { _id } = detail;
+                    return !!goodShopping.find( s => s.pid === _id ) ? 1 : 0
+                }
+
+                return 0;
             },
 
             // 拼团列表
@@ -213,38 +236,6 @@ Page({
                 return meta2;
             },
 
-            // 马上可以拼团的个数
-            pinCount$: function( ) {
-                const { detail, shopping } = this.data;
-                if ( !detail ) { 
-                    return 0;
-                }
-
-                const { standards, groupPrice } = detail;
-
-                if ( !!standards && standards.length > 0 ) {
-                    return standards
-                        .filter( x => !!shopping.find( s => s.sid === x._id && s.pid === x.pid ))
-                        .length;
-
-                } else if ( !!groupPrice ) {
-                    const { _id } = detail;
-                    return !!shopping.find( s => s.pid === _id ) ? 1 : 0
-                }
-
-                return 0;
-            },
-
-            // 是否有型号
-            hasStanders$: function( ) {
-                const { detail } = this.data;
-                if ( !detail ) { 
-                    return false;
-                }
-                const { standards } = detail;
-                return !!standards && standards.length > 0 ;
-            },
-
             // 积分区间
             integral$: function( ) {
                 const { detail, pushIntegralRate } = this.data;
@@ -280,7 +271,58 @@ Page({
             visitors$( ) {
                 const { visitors, openid } = this.data;
                 return visitors.filter( x => x.openid !== openid );
-            }
+            },
+
+            // 当前商品的购物清单
+            shopping$( ) {
+                const { shopping, id } = this.data;
+                return shopping
+                    .filter( x => x.pid === id )
+                    .map( sl => {
+                        let name = ''
+                        const { users, sid, detail } = sl;
+                        const { standards } = detail;
+                        if ( !!sid ) {
+                            const standard = standards.find( x => x._id === sid );
+                            name = !!standard ? standard.name : ''
+                        }
+                        return {
+                            ...sl,
+                            name,
+                            firstUser: users[ 0 ],
+                            otherUser: users.slice( 1 ),
+
+                        }
+                    })
+            },
+
+            // 行程中的其他购物清单
+            othrShopping$( ) {
+                const { shopping, id } = this.data;
+                return shopping.filter( x => x.pid !== id );
+            },
+
+            // 行程中，当前产品所有型号加起来，有多少人在拼团
+            allPinPlayers$( ) {
+                const { id, shopping } = this.data;
+                const goodShopping = shopping.filter( x => x.pid === id );
+                return goodShopping.reduce(( x, sl ) => {
+                    return x + sl.uids.length;
+                }, 0 );
+            },
+
+            /**
+             * 现在到凌晨1点的倒计时
+             */
+            countDownNight$( ) {
+                const now = new Date( );
+                const y = now.getFullYear( );
+                const m = now.getMonth( ) + 1;
+                const d = now.getDate( );
+                const todayOne = new Date(`${y}/${m}/${d} 01:00:00`);
+                const tomorrowOne = todayOne.getTime( ) + 24 * 60 * 60 * 1000;
+                return (( tomorrowOne - Date.now( )) / 1000 ).toFixed( 0 );
+            },
 
         })
     },
@@ -385,16 +427,17 @@ Page({
         });
     },
 
-    /** 拉取当前商品的购物请单信息 */
+    /** 拉取行程的购物请单信息 */
     fetchShopping( pid, tid ) {
         if ( !pid || !tid ) { return; }
 
         http({
             url: 'shopping-list_pin',
             data: {
-                pid,
+                // pid,
                 tid,
-                detail: false
+                detail: true,
+                showUser: true
             },
             success: res => {
                 const { status, data } = res;
@@ -733,20 +776,6 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( e ) {
-        // const { detail, pin$, activities, priceGap, trip, openid } = this.data;
-        // return {
-        //     title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
-        //                 activities.length === 0 ?
-        //                     `拼团买！一起省${String( priceGap ).replace(/\.00/g, '')}元！` :
-        //                     '限时特价超实惠！' : 
-        //                 trip && trip.reduce_price ? 
-        //                     `立减${trip.reduce_price}元！` :
-        //                     '给你看看这宝贝！'
-        //         }${detail.title}`,
-        //     // 分享不应该带tid
-        //     path: `/pages/goods-detail/index?id=${detail._id}&from=${openid}`,
-        //     imageUrl: `${detail.img[ 0 ]}`
-        // }
         const { hasOrder$, detail$, openid } = (this.data as any);
         return {
             imageUrl: `${detail$.img[ 0 ]}`,

@@ -135,12 +135,12 @@
             </view>
         </view>
 
-        <!-- 他们都在看（无单）-->
+        <!-- 他们都在看（无单 ）、倒计时 -->
         <view 
             class="pgd-visiting-con"
-            wx:if="{{ visitors$.length > 0 }}"
+            wx:if="{{ shopping$.length === 0 && visitors$.length > 0 }}"
         >
-           <!-- 标题、tips  -->
+            <!-- 标题、tips  -->
             <view class="pgd-visiting-title-con">
                 <view class="pgd-visiting-title-block">
                     <view class="pgd-visiting-title">{{ visitors$.length }}个群友</view>
@@ -156,11 +156,31 @@
                    <image
                         wx:key="index"
                         mode="aspectFill"
-                        wx:for="{{ visitors }}"
+                        wx:for="{{ visitors$s }}"
                         class='pgd-visitor-img'
                         lazy-load="{{ true }}"
                         src="{{ item.avatarUrl }}"
                    />
+                </view>
+                <view class="pgd-pin-item-sku"></view>
+                <view
+                    class="pgd-pin-item-tips-con"
+                >
+                    <view   
+                        class="pgd-pin-item-tips"
+                    >
+                        和<view class="pgd-pin-item-red">她们</view>拼团
+                    </view>
+                    <view
+                        class="pgd-pin-item-countdown"
+                    >
+                        <wxc-countdown
+                            countdown="{{ countDownNight$ }}"
+                            format="hh:mm:ss"
+                            num-style="font-size: 22rpx; color: #fff; background: #272839; padding: 0rpx 6rpx; text-align: center; border-radius: 15px"
+                            symbol-style="font-size: 20rpx; color: #272839;padding: 0 3rpx"
+                        />
+                    </view>
                 </view>
                 <view class="pgd-visitor-btn">
                     <button 
@@ -173,7 +193,89 @@
             </view>
         </view>
 
-        <!-- 他们都在拼( 有单 )  -->
+        <!-- 他们都在拼( 有单 )、倒计时  -->
+        <view 
+            class="pgd-pin-con"
+            wx:if="{{ shopping$.length > 0 }}"
+        >
+            <view class="pgd-pin-title-block">
+                <view class="pgd-pin-title">{{ allPinPlayers$ }}个群友</view>
+                <view class="pgd-pin-title-info">在拼团</view>
+            </view>
+            <view class="pgd-pin-list-con">
+                <view
+                    class="pgd-pin-list"
+                    wx:key="index"
+                    wx:for="{{ shopping$ }}"
+                >
+                    <!-- 头像 -->
+                    <view
+                        class="pgd-pin-item-avatar-list"
+                    >
+                        <image
+                            mode="aspectFill"
+                            lazy-load="{{ true }}"
+                            class='pgd-pin-item-avatar'
+                            src="{{ item.firstUser.avatarUrl }}"
+                        />
+                        <view class="pgd-pin-item-users">
+                            <image
+                                mode="aspectFill"
+                                lazy-load="{{ true }}"
+                                class='pgd-pin-item-avatar small'
+                                wx:key="k"
+                                wx:for-index="k"
+                                wx:for-item="user"
+                                src="{{ user.avatar }}"
+                                wx:for="{{ item.otherUser }}"
+                            />
+                        </view>
+                    </view>
+                    <!-- sku名称，只显示sku的 -->
+                    <view
+                        class="pgd-pin-item-sku"
+                    >
+                        {{ item.name }}
+                    </view>
+                    <!-- 提示 + 倒计时 -->
+                    <view
+                        class="pgd-pin-item-tips-con"
+                    >
+                        <view   
+                            wx:if="{{ item.uids.length === 1 }}"
+                            class="pgd-pin-item-tips"
+                        >
+                            还差<view class="pgd-pin-item-red">1人</view>拼成
+                        </view>
+                        <view   
+                            wx:else
+                            class="pgd-pin-item-tips"
+                        >
+                            成团!<view class="pgd-pin-item-red">可拼</view> 
+                        </view>
+                        <view
+                            class="pgd-pin-item-countdown"
+                        >
+                            <wxc-countdown
+                                countdown="{{ countDownNight$ }}"
+                                format="hh:mm:ss"
+                                num-style="font-size: 22rpx; color: #fff; background: #272839; padding: 0rpx 6rpx; text-align: center; border-radius: 15px"
+                                symbol-style="font-size: 20rpx; color: #272839;padding: 0 3rpx"
+                            />
+                        </view>
+                    </view>
+                    <!-- 按钮 -->
+                    <view class="pgd-pin-btn-con">
+                        <button 
+                            open-type="share"
+                            class="fix-btn pgd-pin-btn shine"
+                        >
+                            一起拼
+                        </button>
+                    </view>
+                </view>
+            </view>
+        </view>
 
         <!-- banner -->
         <view class="detail-info-banner">
@@ -210,7 +312,7 @@
             </view>
         </view>
 
-        <!-- 特价活动 -->
+        <!-- 特价活动、暂时忽略 -->
 
         <!-- 行程内，其他可拼商品 -->
 
@@ -227,7 +329,7 @@
         canPinSku="{{ canPinSku }}"
         activities="{{ activities }}"
         someCanPin="{{ pinCount$ > 0 }}"
-        tripShoppinglist="{{ shopping }}"
+        tripShoppinglist="{{ shopping$ }}"
         bind:toggle="onSkuToggle"
         bind:custom="onSkuTap"
     />

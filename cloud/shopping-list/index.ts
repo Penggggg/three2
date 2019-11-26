@@ -880,7 +880,7 @@ export const main = async ( event, context ) => {
                     list.sid
                 ))
             ).filter( x => !!x );
-            
+
             // 商品
             let allGoods$: any = await Promise.all( goodIds.map( goodId => {
                 return db.collection('goods')
@@ -890,17 +890,17 @@ export const main = async ( event, context ) => {
 
             allGoods$ = allGoods$.map( x => x.data );
 
-            // 型号
-            let allStandars$: any = await Promise.all( standarsIds.map( sid => {
-                return db.collection('standards')
-                    .doc( String( sid ))
-                    .get( );
-            }));
-
-            allStandars$ = allStandars$.map( x => x.data );
-
             // 查询每条清单底下每个商品的详情
             if ( detail === undefined || !!detail ) {
+
+                // 型号
+                let allStandars$: any = await Promise.all( standarsIds.map( sid => {
+                    return db.collection('standards')
+                        .doc( String( sid ))
+                        .get( );
+                }));
+
+                allStandars$ = allStandars$.map( x => x.data );
 
                 const good$ = data$.map( list => {
 
@@ -922,9 +922,10 @@ export const main = async ( event, context ) => {
     
                 // 注入商品详情
                 data = data$.map(( shopping, k ) => {
-                    return Object.assign({ }, shopping, {
+                    return {
+                        ...shopping, 
                         detail: good$[ k ]
-                    })
+                    };
                 });
 
             }
@@ -957,9 +958,10 @@ export const main = async ( event, context ) => {
                 users$ = users$.map( x => x.data[ 0 ]);
 
                 data = data.map(( shopping, k ) => {
-                    return Object.assign({ }, shopping, {
+                    return {
+                        ...shopping,
                         users: shopping.uids.map( uid => users$.find( x => x.openid === uid ))
-                    })
+                    }
                 });
 
             }

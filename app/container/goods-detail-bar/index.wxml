@@ -64,11 +64,6 @@
             bindtap="toggleSku"
         >
             <view class="text-mr">下单开团</view>
-            <wxc-countdown
-                format="hh:mm:ss"
-                countdown="{{ countDownNight$ }}"
-                num-style="font-size: 28rpx; color: #fff; background: transparent;"
-            />
         </button>
 
         <button 
@@ -77,11 +72,6 @@
             bindtap="toggleSku"
         >
             <view class="text-mr">马上跟团</view>
-            <wxc-countdown
-                format="hh:mm:ss"
-                countdown="{{ countDownNight$ }}"
-                num-style="font-size: 28rpx; color: #fff; background: transparent;"
-            />
         </button>
 
         <button 
