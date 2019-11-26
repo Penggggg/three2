@@ -663,6 +663,16 @@ Page({
         }
     },
 
+    /** 展开、关闭sku框 */
+    onToggleSku( ) {
+        const { openingSku } = this.data;
+        const sku = (this as any).selectComponent('#sku');
+        sku.toggleSku( );
+        if ( !openingSku ) {
+            this.onSubscribe( );
+        }
+    },
+
     /**
      * 生命周期函数--监听页面加载
      * {

@@ -67,7 +67,7 @@ Component({
         tripDetail: {
             type: Object,
             value: { }
-        }
+        },
     },
 
     /**
@@ -328,7 +328,7 @@ Component({
             this.setData({
                 openSku: !openSku
             });
-            if ( !openSku && e ) {
+            if ( !openSku && !!e ) {
                 this.setData({
                     skuSelectType: e.currentTarget.dataset.type || 'buy'
                 });

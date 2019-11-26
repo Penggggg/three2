@@ -267,7 +267,7 @@
                     <!-- 按钮 -->
                     <view class="pgd-pin-btn-con">
                         <button 
-                            open-type="share"
+                            bindtap="onToggleSku"
                             class="fix-btn pgd-pin-btn shine"
                         >
                             一起拼
@@ -316,10 +316,13 @@
 
         <!-- 行程内，其他可拼商品 -->
 
+        <!-- 红包 -->
+
     </view> 
 
     <!-- 商品下面的栏、倒计时 -->
     <my-goods-detail-bar
+        id="sku"
         wx:if="{{ detail$ }}"
         tid="{{ tid }}"
         pid="{{ id }}"
@@ -529,5 +532,8 @@
             </view>
         </view>
     </wxc-mask>
+
+    <!-- 订阅消息模块 -->
+    <my-subscribe-tips />
 
 </view>
