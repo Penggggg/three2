@@ -254,7 +254,7 @@ App<MyApp>({
             .then(( ) => {
                 this.getUserInfo( );
                 this.getAppConfig( );
-                this.getPushIntegral( );
+                // this.getPushIntegral( );
                 // this.getIsNewCustom( );
                 this.getSubscribeTemplated( );
             })

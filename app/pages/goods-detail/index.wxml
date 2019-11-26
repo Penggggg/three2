@@ -452,9 +452,9 @@
 
     <!-- 拼团玩法提示 -->
     <wxc-mask
+        locked="true"
         content-align="cc"
         status="{{ showPlayTips }}"
-        bindmasktap="togglePalyTips"
     >
         <view class="gd-compare-modal">
             <view class="gd-compare-con">
