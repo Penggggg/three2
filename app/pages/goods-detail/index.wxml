@@ -392,9 +392,44 @@
 
     <!-- 红包 -->
 
-    <!-- 修改的按钮 -->
+    <!-- 社交弹框 -->
 
-    <!-- 海报生成 -->
+    <!-- 海报的按钮 -->
+    <view 
+        bindtap="openPoster"
+        class="gd-admin-action"
+    >
+        <image
+            mode="aspectFill"
+            lazy-load="{{ true }}"
+            class="gd-admin-action-img"
+            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-pengyouquan.png"
+        />
+    </view>
+
+    <!-- 修改的按钮 -->
+    <view 
+        class="gd-admin-action modify"
+        wx:if="{{ !openingSku && showBtn && !showingPoster }}"
+        bindtap="goManager"
+    >
+        <image
+            mode="aspectFill"
+            lazy-load="{{ true }}"
+            class="gd-admin-action-img small"
+            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-any-modify-ffffff-outline.png"
+        />
+    </view>
+
+    <!-- 海报生成器 -->
+    <my-good-poster
+        id="poster"
+        good="{{ detail }}"
+        someCanPin="{{ pinCount$ > 0 }}"
+        goodCanPin="{{ !!priceGap && priceGap !== '0' }}"
+        wx:if="{{ !openingSku && showBtn && !loading }}"
+        bindtoggle="onPostToggle"
+    />
 
     <!-- 商品下面的栏、倒计时 -->
     <my-goods-detail-bar

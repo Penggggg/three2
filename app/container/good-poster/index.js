@@ -122,14 +122,22 @@ Component({
                 },
                 url: `common_create-qrcode`,
                 success: res => {
-                    const { goodMeta } = this.data;
-                    const decorateGood = delayeringGood( goodMeta );
                     const { status, data } = res;
+                    const { goodMeta } = this.data;
                     const fsm = wx.getFileSystemManager( );
+                    const decorateGood = delayeringGood( goodMeta );
+                    const qrCode = wx.env.USER_DATA_PATH + '/wa_qrcode_temp.png';
+
                     if ( status !== 200 ) { return; }
+
+                    // 这里要删除临时文件！！！
+                    try {
+                        fsm.removeSavedFile({
+                            filePath: qrCode
+                        });
+                    } catch ( e ) { }
                     
                     // 二维码
-                    const qrCode = wx.env.USER_DATA_PATH + '/wa_qrcode_temp.png';
                     fsm.writeFileSync( qrCode, data, 'binary' );
 
                     // 画布

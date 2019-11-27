@@ -562,7 +562,7 @@ Page({
 
     // 进入商品管理
     goManager( ) {
-        navTo(`/pages/manager-goods-detail/index?id=${this.data.id}`)
+        navTo(`/pages/manager-goods-detail/index?id=${this.data.id}`);
     },
 
     // 进入拼团广场
@@ -653,7 +653,7 @@ Page({
         });
     },
 
-    /** 海报开关 */
+    /** 海报开关监听 */
     onPostToggle( e ) {
         const val = e.detail;
         this.setData!({
@@ -662,6 +662,16 @@ Page({
         wx.setNavigationBarTitle({
             title: val ? '分享商品' : '商品详情'
         });
+    },
+
+    /** 海报--开 */
+    openPoster( ) {
+        const { showingPoster } = this.data;
+        const poster = (this as any).selectComponent('#poster');
+        poster.toggle( );
+        if ( !showingPoster ) {
+            this.onSubscribe( );
+        }
     },
 
     /** sku选择弹框 */
@@ -703,9 +713,9 @@ Page({
 
         this.runComputed( );
 
-        // this.setData!({
-        //     id: 'ee3099285cdbf38f12869b13363bc206'
-        // })
+        this.setData!({
+            id: 'ee3099285cdbf38f12869b13363bc206'
+        })
 
         if ( options!.id || scene ) { 
             this.setData!({

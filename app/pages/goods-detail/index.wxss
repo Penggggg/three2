@@ -1019,3 +1019,33 @@
     height: 24rpx;
     margin-right: 5rpx;
 }
+
+.gd-admin-action {
+    top: 50rpx;
+    right: 50rpx;
+    position: fixed;
+    border-radius: 50%;
+    display: flex;
+    background: #fff;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.2 );
+}
+
+.gd-admin-action.modify {
+    right: 140rpx;
+    width: 70rpx;
+    height: 70rpx;
+    background: rgba( 0, 0, 0, 0.2 );
+}
+
+.gd-admin-action-img {
+    width: 70rpx;
+    height: 70rpx;
+    border-radius: 50%;
+}
+
+.gd-admin-action-img.small {
+    width: 40rpx;
+    height: 40rpx;
+}

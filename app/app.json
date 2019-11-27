@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/trip-enter/index",
     "pages/goods-detail/index",
+    "pages/trip-enter/index",
     "pages/order-list/index",
     
     "pages/good-activity/index",
