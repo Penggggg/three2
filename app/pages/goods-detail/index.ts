@@ -703,9 +703,9 @@ Page({
 
         this.runComputed( );
 
-        this.setData!({
-            id: '71f2cd945cab4fc10261232b3f358619'
-        })
+        // this.setData!({
+        //     id: 'ee3099285cdbf38f12869b13363bc206'
+        // })
 
         if ( options!.id || scene ) { 
             this.setData!({

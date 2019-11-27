@@ -76,7 +76,7 @@ Page({
                 const meta = [
                     {
                         key: 'ac_price',
-                        label: '活动价',
+                        label: '活动单价',
                         type: 'number',
                         placeholder: '请输入商品活动价',
                         value: undefined,

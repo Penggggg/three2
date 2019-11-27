@@ -79,6 +79,21 @@ const delayeringGood = ( x, pushIntegralRate = 0 ) => {
     allPriceArr = allPriceArr.sort(( x, y ) => x - y );
     allStockArr = allStockArr.sort(( x, y ) => x - y );
 
+    // 最低价
+    let lowest_price$ = allPriceArr[ 0 ];
+
+    // 有特价
+    ( x.activities || [ ]).map( activity => {
+        if ( 
+            !!activity.ac_price &&
+            !!activity.ac_groupPrice && 
+            lowest_price$ === activity.ac_groupPrice 
+        ) {
+            lowest_pin_origin_price$ = activity.ac_price;
+        }
+    });
+
+
     return Object.assign({ }, x, {
 
         pid: x._id,
@@ -116,7 +131,7 @@ const delayeringGood = ( x, pushIntegralRate = 0 ) => {
             `${allPriceArr[ allPriceArr.length - 1 ] - allPriceArr[ 0 ]}`,
 
         // 最低价格（含团购价）
-        lowest_price$: allPriceArr[ 0 ],
+        lowest_price$,
 
         // 最低价格（含团购价）的原价
         lowest_pin_origin_price$,
