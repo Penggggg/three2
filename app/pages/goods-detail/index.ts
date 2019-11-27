@@ -279,27 +279,32 @@ Page({
                 return shopping
                     .filter( x => x.pid === id )
                     .map( sl => {
-                        let name = ''
                         const { users, sid, detail } = sl;
-                        const { standards } = detail;
-                        if ( !!sid ) {
-                            const standard = standards.find( x => x._id === sid );
-                            name = !!standard ? standard.name : ''
-                        }
+                        const { name } = detail;
                         return {
                             ...sl,
                             name,
                             firstUser: users[ 0 ],
                             otherUser: users.slice( 1 ),
-
                         }
                     })
             },
 
             // 行程中的其他购物清单
-            othrShopping$( ) {
+            otherShopping$( ) {
                 const { shopping, id } = this.data;
-                return shopping.filter( x => x.pid !== id );
+                return shopping
+                    .filter( x => x.pid !== id )
+                    .map( sl => {
+                        const { users, sid, detail } = sl;
+                        const { name } = detail;
+                        return {
+                            ...sl,
+                            name,
+                            firstUser: users[ 0 ],
+                            otherUser: users.slice( 1 ),
+                        }
+                    })
             },
 
             // 行程中，当前产品所有型号加起来，有多少人在拼团
@@ -559,7 +564,18 @@ Page({
     goManager( ) {
         navTo(`/pages/manager-goods-detail/index?id=${this.data.id}`)
     },
+
+    // 进入拼团广场
+    goGround( ) {
+        navTo('/pages/ground-pin/index')
+    },
     
+    // 进入商品详情
+    goGoodDetail({ currentTarget }) {
+        const { pid } = currentTarget.dataset;
+        navTo(`/pages/goods-detail/index?id=${pid}`)
+    },
+
     /** 预览图片 */
     previewImg({ currentTarget }) {
         const { img } = currentTarget.dataset;
@@ -684,7 +700,7 @@ Page({
     onLoad: function (options) {
 
         const scene = decodeURIComponent( options!.scene || '' )
-        
+
         this.runComputed( );
 
         this.setData!({
