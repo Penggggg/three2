@@ -165,7 +165,7 @@
     border-radius: 30px;
     text-align: center;
     background: rgba( 0, 0, 0, 0.25 );
-    pointer-events: none;
+     
     transition: all ease 0.4s;
 }
 
@@ -235,7 +235,7 @@
     -webkit-animation-delay: 0s;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-direction: normal;
-    pointer-events: none;
+     
 }
 
 .pm-checkin-task-btn {
@@ -383,12 +383,19 @@
 }
 
 .pm-tips-con {
-    z-index: 10;
+    z-index: 0;
     bottom: 200rpx;
     position: fixed;
     background: #fff;
     border-radius: 5px;
     box-shadow: 5px 5px 15px rgba( 0, 0, 0, 0.10 );
+    -webkit-animation-name:'shake';
+    -webkit-animation-duration: 1.2s;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-delay: 0s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: normal;
+     
 }
 
 .pm-tips-con.left {
@@ -407,13 +414,14 @@
 }
 
 .pm-tips-price {
-    top: 80%;
-    left: 70%;
+    left: 0%;
+    bottom: 10rpx;
     color: #fff;
     position: absolute;
-    font-size: 22rpx;
     width: 100%;
-    transform: translate( -50%, -50% );
+    font-size: 20rpx;
+    line-height: 20rpx;
+    text-align: center;
 }
 
 .pm-tips-text {
@@ -430,3 +438,21 @@
     box-sizing: border-box;
     border-radius: 3px;
 }
+
+@keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    
+    20%, 80% {
+      transform: translate3d(1px, 0, 0);
+    }
+  
+    30%, 50%, 70% {
+      transform: translate3d(-2px, 0, 0);
+    }
+  
+    40%, 60% {
+      transform: translate3d(2px, 0, 0);
+    }
+  }

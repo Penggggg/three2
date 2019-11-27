@@ -106,7 +106,7 @@
     -webkit-animation-delay: 0s;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-direction: normal;
-    pointer-events: none;
+     
 }
 
 @keyframes ripple3 {

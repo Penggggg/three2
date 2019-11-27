@@ -197,7 +197,7 @@
             <view class="pm-hongbao-content">
                 <view class="pm-hongbao-title center">
                     <!-- - 下单就能用 - -->
-                    - 送现金 下单用 -
+                    - 抵现金 下单用 -
                 </view>
                 <view class="pm-hongbao-price-block center">
                     <wxc-price
@@ -210,13 +210,14 @@
                 </view>
                 <view class="pm-hongbao-text-block">
                     <view class="pm-hongbao-bigtips center">
-                        今日领取成功
+                        领取成功
                     </view>
                     <view class="pm-hongbao-smalltips mt center">
-                        每天登陆
+                        每天登陆可
                     </view>
                     <view class="pm-hongbao-smalltips center">
-                        全周<view class="pm-hongbao-price2 bold">可领¥{{ currentLevelSignGift$ }}元</view>
+                        <!-- 全周<view class="pm-hongbao-price2 bold">可领¥{{ currentLevelSignGift$ }}元</view> -->
+                        <view class="pm-hongbao-price2 bold">领抵现金</view>
                     </view>
 
                     <!-- 发起推送 -->
@@ -254,7 +255,7 @@
             </view>
 
             <!-- 关闭按钮 -->
-            <form
+            <!-- <form
                 class="pm-hongbao-close-form"
                 bindsubmit="toggleGift"
                 report-submit="{{ true }}"
@@ -265,15 +266,16 @@
                 >
                     X 
                 </button>
-            </form>
+            </form> -->
         </view>
         
     </wxc-mask>
 
+    <!-- 下方小红包 -->
     <view
         bindtap="fetchPushIntegral"
         class="pm-tips-con left"
-        wx:if="{{ simple && !showSign }}"
+        wx:if="{{ !isGetMoney && simple && !showSign }}"
     >
         <image
             mode="aspectFill"
@@ -283,7 +285,7 @@
         <view
             class="pm-tips-price"
         > 
-            现金
+            抵现金
         </view>
         <view class="pm-tips-text">
             签到

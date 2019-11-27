@@ -117,7 +117,7 @@ App<MyApp>({
         })
     },
 
-    /** 获取当前账号的抵现金 */
+    /** 获取当前账号的抵现金、签到经验 */
     getPushIntegral( ) {
         http({
             data: {

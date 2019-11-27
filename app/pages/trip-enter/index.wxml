@@ -382,7 +382,7 @@
 
     <!-- 抵现积分、签到打卡 -->
     <my-user-sign-gift
-        simple="{{ !hasGetAllLijian }}"
+        simple="{{ true }}"
         wx:if="{{ initHongbao }}"
     />
 

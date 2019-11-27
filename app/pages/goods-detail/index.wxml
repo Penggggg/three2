@@ -390,7 +390,11 @@
         </view>
     </view> 
 
-    <!-- 红包 -->
+    <!-- 抵现金红包 、不含签到打卡 -->
+    <my-user-sign-gift
+        simple="{{ true }}"
+        onlyGetMoney="{{ true }}"
+    />
 
     <!-- 社交弹框 -->
 
