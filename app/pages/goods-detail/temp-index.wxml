@@ -538,7 +538,7 @@
             </view>
             <view class="gd-compare-btn-con">
                 <view class="gd-compare-pin-tips">
-                    群里有其他人下单，即可拼团
+                    群里有群友下单，即可拼团
                 </view>
                 <button 
                     bindtap="onSubscribe"

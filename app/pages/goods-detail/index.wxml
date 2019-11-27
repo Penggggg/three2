@@ -485,7 +485,7 @@
             </view>
 
             <view class="gd-pin-tips-content mt">
-                群里有其他人下单，就可拼团            
+                群里有群友下单，就可拼团            
             </view>
 
             <view class="gd-pin-tips-content mb">
@@ -621,7 +621,7 @@
             </view>
             <view class="gd-compare-btn-con">
                 <view class="gd-compare-pin-tips mt">
-                    群里有其他人下单，就可拼团
+                    群里有群友下单，就可拼团
                 </view>
                 <view class="gd-compare-pin-tips mb">
                     先订金/后尾款            
