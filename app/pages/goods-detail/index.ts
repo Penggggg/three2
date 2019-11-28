@@ -249,7 +249,7 @@ Page({
             // 详情
             detail$: function( ) {
                 const { detail } = this.data;
-                const r = delayeringGood( detail )
+                const r = delayeringGood( detail );
                 return r;
             },
 
@@ -271,6 +271,32 @@ Page({
             visitors$( ) {
                 const { visitors, openid } = this.data;
                 return visitors.filter( x => x.openid !== openid );
+            },
+
+            // 商品的访问 + 社交属性模块
+            social$( ) {
+                const { visitors, openid, detail } = this.data;
+                const good = delayeringGood( detail ); 
+                const getRandom = n => Math.floor( Math.random( ) * n );
+                
+                const allTexts = [
+                    `群里的她也在看`,
+                    `群里的她也关注「${good.tagText}」`,
+                    `她也感兴趣，跟她拼团`
+                ];
+
+                
+                const allVisitors = visitors
+                    .filter( x => true|| x.openid !== openid )
+                    .map( x => {
+                        const randomNum = getRandom( allTexts.length );
+                        return {
+                            avatar: x.avatarUrl,
+                            text: allTexts[ randomNum ]
+                        }
+                    })
+                return allVisitors;
+
             },
 
             // 当前商品的购物清单

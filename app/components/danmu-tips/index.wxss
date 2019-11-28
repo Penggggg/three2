@@ -1,0 +1,30 @@
+.com-danmu-tips {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    border-radius: 50rpx;
+    padding: 0rpx 2rpx 0rpx 10rpx;
+    box-sizing: content-box;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.cdt-swiper {
+    transition: all ease 0.4s;
+}
+
+.cdt-item {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.cdt-avatar {
+    border-radius: 50%;
+    margin-right: 10rpx;
+    border: 1px solid #fff;
+}
+
+.cdt-text {
+    color: #fff;
+    letter-spacing: 0.05em;
+}

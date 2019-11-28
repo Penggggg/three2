@@ -37,6 +37,7 @@
     "my-sku-popup": "./container/sku-popup/index",
     "my-img-upload": "./components/img-upload/index",
     "my-active-form": "./components/active-form/index",
+    "my-danmu-tips": "./components/danmu-tips/index",
     "my-product-selector": "./container/product-selector/index",
     "my-goods-detail-bar": "./container/goods-detail-bar/index",
     "my-single-theme-modal": "./components/single-theme-modal/index",
