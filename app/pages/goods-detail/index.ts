@@ -287,7 +287,7 @@ Page({
 
                 
                 const allVisitors = visitors
-                    .filter( x => true|| x.openid !== openid )
+                    .filter( x => x.openid !== openid )
                     .map( x => {
                         const randomNum = getRandom( allTexts.length );
                         return {
