@@ -307,9 +307,9 @@ Component({
         },
 
         /** 获取当前人的推广积分、签到经验 */
-        fetchPushIntegral( ) {
+        fetchPushIntegral( e = null, mustFetch = false ) {
             const { onlyGetMoney } = this.data;
-            if ( onlyGetMoney ) {
+            if ( onlyGetMoney && !mustFetch ) {
                 return this.checkGetIntegral( true );
             }
             http({
@@ -400,7 +400,7 @@ Component({
                     
                     wx.setStorageSync( storageKey['integral-get-last-time'], String( Date.now( )));
 
-                    this.fetchPushIntegral( );
+                    this.fetchPushIntegral( null, true );
                     !!close && this.toggleGift( );
                 }
             })

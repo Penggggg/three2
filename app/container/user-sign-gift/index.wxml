@@ -213,11 +213,11 @@
                         领取成功
                     </view>
                     <view class="pm-hongbao-smalltips mt center">
-                        每天登陆可
+                        每天可领抵现金
                     </view>
                     <view class="pm-hongbao-smalltips center">
                         <!-- 全周<view class="pm-hongbao-price2 bold">可领¥{{ currentLevelSignGift$ }}元</view> -->
-                        <view class="pm-hongbao-price2 bold">领抵现金</view>
+                        <view class="pm-hongbao-price2 bold">总¥{{ pushIntegral }}</view>
                     </view>
 
                     <!-- 发起推送 -->
