@@ -1,0 +1,50 @@
+<view>
+    <wxc-mask
+        locked="true"
+        content-align="cc"
+        status="{{ showModal }}"
+    >   
+        <view class="con-share-feedback">
+
+            <!-- 背景 -->
+            <view class="csf-bg-top">
+                <image 
+                    class="csf-img"
+                    mode="aspectFill"
+                    lazy-load="{{ true }}"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/material-any-fans-colorful-full.png"
+                />
+            </view>
+
+            <!-- 标题 -->
+            <view class="csf-title">
+                群友互助
+            </view>
+
+            <!-- 内容 -->
+            <view class="csf-info-block">
+                <view class="csf-info">
+                    感谢你的分享
+                </view>
+                <view class="csf-info">
+                    {{ discount ?
+                        '有可能让群友和你都省下' + discount + '元！' : 
+                        '有可能让群友和你得到实惠！'
+                    }}
+                </view>
+            </view>
+
+            <!-- 按钮 -->
+            <button 
+                class="fix-btn csf-btn"
+                bindtap="toggle"
+            >
+                感谢你
+            </button>
+
+        </view>
+    </wxc-mask>
+
+    <!-- 订阅消息模块 -->
+    <my-subscribe-tips />
+</view>

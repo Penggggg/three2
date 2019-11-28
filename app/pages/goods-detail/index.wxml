@@ -657,4 +657,10 @@
     <!-- 订阅消息模块 -->
     <my-subscribe-tips />
 
+    <!-- 分享反馈 -->
+    <my-share-feedback 
+        id="share-feedback"
+        discount="{{ detail$.priceGap }}"
+    />
+
 </view>

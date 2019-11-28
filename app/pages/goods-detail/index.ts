@@ -840,6 +840,12 @@ Page({
      */
     onShareAppMessage: function ( e ) {
         const { hasOrder$, detail$, openid } = (this.data as any);
+
+        setTimeout(( ) => {
+            const shareFedback = (this as any).selectComponent('#share-feedback');
+            shareFedback.toggle( );
+        }, 500 );
+
         return {
             imageUrl: `${detail$.img[ 0 ]}`,
             path: `/pages/goods-detail/index?id=${detail$._id}&from=${openid}`,

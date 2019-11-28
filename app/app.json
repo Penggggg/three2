@@ -42,6 +42,7 @@
     "my-goods-detail-bar": "./container/goods-detail-bar/index",
     "my-single-theme-modal": "./components/single-theme-modal/index",
     "my-coupon-item-1": "./container/coupon-item-1/index",
+    "my-share-feedback": "./container/share-feedback/index",
     "my-switch-text": "./components/switch-text/index",
     "my-title-decorate": "./components/title-decorate/index",
     "my-subscribe-tips": "./container/subscribe-tips/index",
