@@ -250,6 +250,7 @@ Page({
             detail$: function( ) {
                 const { detail } = this.data;
                 const r = delayeringGood( detail );
+                console.log('...', r );
                 return r;
             },
 

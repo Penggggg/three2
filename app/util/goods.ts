@@ -123,12 +123,12 @@ const delayeringGood = ( x, pushIntegralRate = 0 ) => {
                     `${(allPriceArr[ 0 ] * pushIntegralRate).toFixed( 1 )} ~ ${(allPriceArr[ allPriceArr.length - 1 ] * pushIntegralRate).toFixed( 1 )}`,
 
         // 最大积分
-        integral2$: (allPriceArr[ allPriceArr.length - 1 ] * pushIntegralRate).toFixed( 1 ),
+        maxIntegral$: Number((allPriceArr[ allPriceArr.length - 1 ] * pushIntegralRate).toFixed( 1 )),
 
         // 最大幅度差价
         priceGap: allPriceArr.length === 0 ?
             0 :
-            `${allPriceArr[ allPriceArr.length - 1 ] - allPriceArr[ 0 ]}`,
+            Math.ceil( allPriceArr[ allPriceArr.length - 1 ] - allPriceArr[ 0 ]),
 
         // 最低价格（含团购价）
         lowest_price$,
