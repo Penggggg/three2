@@ -403,10 +403,11 @@
         data="{{ social$ }}"
     />
 
-    <!-- 海报的按钮 -->
-    <view 
+    <!-- 管理员的海报按钮 -->
+    <button 
+        wx:if="{{ !openingSku && showAdmBtn && !showingPoster }}"
         bindtap="openPoster"
-        class="gd-admin-action"
+        class="fix-btn gd-admin-action"
     >
         <image
             mode="aspectFill"
@@ -414,12 +415,26 @@
             class="gd-admin-action-img"
             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-pengyouquan.png"
         />
-    </view>
+    </button>
+
+    <!-- 普通用户的海报按钮 -->
+    <button 
+        wx:if="{{ !openingSku && !showAdmBtn }}"
+        open-type="share"
+        class="fix-btn gd-admin-action"
+    >
+        <image
+            mode="aspectFill"
+            lazy-load="{{ true }}"
+            class="gd-admin-action-img"
+            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-pengyouquan.png"
+        />
+    </button>
 
     <!-- 修改的按钮 -->
     <view 
+        wx:if="{{ !openingSku && showAdmBtn && !showingPoster }}"
         class="gd-admin-action modify"
-        wx:if="{{ !openingSku && showBtn && !showingPoster }}"
         bindtap="goManager"
     >
         <image
@@ -436,7 +451,7 @@
         good="{{ detail }}"
         someCanPin="{{ pinCount$ > 0 }}"
         goodCanPin="{{ !!priceGap && priceGap !== '0' }}"
-        wx:if="{{ !openingSku && showBtn && !loading }}"
+        wx:if="{{ !openingSku && showAdmBtn && !loading }}"
         bindtoggle="onPostToggle"
     />
 

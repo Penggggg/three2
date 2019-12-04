@@ -253,6 +253,14 @@ Component({
             app.getSubscribe('newOrder,trip');
         },
 
+        /** 关闭画布 */
+        close( e ) {
+            this.setData({
+                show: false
+            });
+            this.triggerEvent('toggle', false );
+        },
+
         /** 保存canvas到本地图片 */
         save( ) {
             const { canvasHeight, loading } = this.data;

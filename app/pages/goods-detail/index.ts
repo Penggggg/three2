@@ -60,7 +60,7 @@ Page({
         animationMiddleHeaderItem: null,
 
         // 展示管理入口
-        showBtn: false,
+        showAdmBtn: false,
 
         // 正在展示海报
         showingPoster: false,
@@ -363,7 +363,7 @@ Page({
     watchRole( ) {
         (app as any).watch$('role', ( val ) => {
             this.setData!({
-                showBtn: ( val === 1 )
+                showAdmBtn: ( val === 1 )
             })
         });
         (app as any).watch$('isNew', val => {
@@ -701,6 +701,14 @@ Page({
         }
     },
 
+    /** 海报--关 */
+    closePoster( ) {
+        try {
+            const poster = (this as any).selectComponent('#poster');
+            poster.close( );
+        } catch ( e ) { }
+    },
+
     /** sku选择弹框 */
     onSkuToggle( e ) {
         this.setData!({
@@ -841,6 +849,7 @@ Page({
     onShareAppMessage: function ( e ) {
         const { hasOrder$, detail$, openid } = (this.data as any);
 
+        this.closePoster( );
         setTimeout(( ) => {
             const shareFedback = (this as any).selectComponent('#share-feedback');
             shareFedback.toggle( );
