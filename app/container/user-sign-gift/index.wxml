@@ -274,7 +274,7 @@
     <!-- 下方小红包 -->
     <view
         bindtap="fetchPushIntegral"
-        class="pm-tips-con left"
+        class="pm-tips-con right"
         wx:if="{{ !isGetMoney && simple && !showSign }}"
     >
         <image

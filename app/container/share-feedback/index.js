@@ -1,4 +1,6 @@
 const app = getApp( );
+const storageKey = 'share-feedback-trip-share';
+const { http } = require('../../util/http.js');
 
 /**
  * 分享反馈组件
@@ -10,19 +12,12 @@ Component({
     properties: {
 
         /**
-         * 行程
+         * 行程id
          */
         tid: {
             type: String,
-            value: ''
-        },
-
-        /**
-         * 商品
-         */
-        pid: {
-            type: String,
-            value: ''
+            value: '',
+            observer: 'onCheckIsFirstShare'
         },
 
         /**
@@ -31,6 +26,14 @@ Component({
         discount: {
             type: Number,
             value: 0
+        },
+
+        /**
+         * 分享奖励
+         */
+        reward: {
+            type: Number,
+            value: 0.88
         }
 
     },
@@ -83,6 +86,47 @@ Component({
         onSubscribe( ) {
             app.getSubscribe('buyPin,waitPin,trip');
         },
+
+        /**
+         * 检查改行程是否有过转发
+         */
+        onCheckIsFirstShare( tid ) {
+            if ( !tid ) { return; }
+            const storageData = JSON.parse( wx.getStorageSync( storageKey ) || '{ }');
+            const existedRecord = !!storageData[ tid ];
+            this.setData({
+                isFirst: existedRecord
+            });
+        },
+
+        /**
+         * 领取分享奖励 抵现金
+         */
+        getReward( ) {
+            const { reward, tid } = this.data;
+            http({
+                url: 'common_get-integral',
+                data: {
+                    integral: reward
+                },
+                loadingMsg: '领取中...',
+                success: res => {
+                    const { status } = res;
+                    if ( status !== 200 ) { return; }
+
+                    wx.setStorageSync( storageKey, JSON.stringify({
+                        [ tid ]: 1
+                    }));
+
+                    wx.showToast({
+                        title: '领取成功'
+                    });
+
+                    this.toggle( );
+                    this.onCheckIsFirstShare( tid );
+                }
+            });
+        }
 
     },
 

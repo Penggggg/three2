@@ -660,6 +660,7 @@
     <!-- 分享反馈 -->
     <my-share-feedback 
         id="share-feedback"
+        tid="{{ tid }}"
         discount="{{ detail$.priceGap }}"
     />
 

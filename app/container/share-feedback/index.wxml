@@ -17,8 +17,19 @@
             </view>
 
             <!-- 标题 -->
-            <view class="csf-title">
+            <view 
+                wx:if="{{ isFirst }}"
+                class="csf-title"
+            >
                 群友互助
+            </view>
+
+            <!-- 标题 -->
+            <view 
+                wx:else
+                class="csf-title"
+            >
+                ¥{{ reward }}抵现金
             </view>
 
             <!-- 内容 -->
@@ -36,10 +47,20 @@
 
             <!-- 按钮 -->
             <button 
+                wx:if="{{ isFirst }}"
                 class="fix-btn csf-btn"
                 bindtap="toggle"
             >
                 感谢你
+            </button>
+
+             <!-- 按钮 -->
+            <button 
+                wx:else
+                bindtap="getReward"
+                class="fix-btn csf-btn"
+            >
+                请收下
             </button>
 
         </view>
