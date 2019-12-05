@@ -399,6 +399,7 @@
         top="{{ 50  }}"
         left="{{ 50 }}"
         data="{{ social$ }}"
+        wx:if="{{ social$.length > 1 }}"
     />
 
     <!-- 管理员的海报按钮 -->

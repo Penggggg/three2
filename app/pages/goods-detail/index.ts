@@ -283,9 +283,9 @@ Page({
                 const getRandom = n => Math.floor( Math.random( ) * n );
                 
                 const allTexts = [
-                    `群里的她也在看`,
-                    `群里的她也关注「${good.tagText}」`,
-                    `她也感兴趣，跟她拼团`
+                    `群友也在看`,
+                    `群友在关注「${good.tagText}」`,
+                    `群友感兴趣，跟她拼团`
                 ];
 
                 
