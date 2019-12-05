@@ -65,6 +65,8 @@
                                 {{ detail$.hasPin ? '拼团买' : '超划算' }}{{ detail$.hasActivity ? ' 特价' : '' }}
                             </view>
                             <my-icon-question 
+                                color="#FF0066"
+                                invert="{{ true }}"
                             />
                         </view>
                         <view class="pgb-taobao">
@@ -115,7 +117,7 @@
                 wx:if="{{ canIntegrayShare }}"
             >
                 <radio 
-                    color="#6cd6d7"
+                    color="#FF0066"
                     class="pgd-ad-radio" 
                     checked="{{ true }}"
                 />
@@ -129,6 +131,7 @@
                         bindtap="toggleShareGetMoney"
                     >   
                         <my-icon-question 
+                            color="#FF0066"
                         />
                     </button>
                 </form>

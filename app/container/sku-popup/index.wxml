@@ -244,6 +244,7 @@
                         >
                             <my-icon-question 
                                 color="#ff5777"
+                                invert="{{ true }}"
                             />
                         </button>
                     </view>

@@ -34,15 +34,31 @@
     box-sizing: border-box;
 }
 
-.gdb-btn-group {
+.gdb-small-btn-con {
     display: flex;
     align-items: center;
-    margin-right: 20rpx;
-    /* background: #63ccc4; */
-    background: transparent;
-    border: 1px solid #63ccc4;
-    padding: 20rpx 30rpx;
-    border-radius: 15px;
+    justify-content: center;
+    border-radius: 50%;
+    width: 80rpx;
+    height: 80rpx;
+    margin-right: 30rpx;
+    background: #ded7f9;   
+}
+
+.gdb-small-btn-con.red {
+    background: #f2d6dd;
+}
+
+.gdb-small-btn {
+    width: 40rpx;
+    height: 40rpx;
+    background: #000;
+    border-radius: 50%;
+    background: #7265d1;
+}
+
+.gdb-small-btn.red {
+    background: #fa446c;
 }
 
 .gdb-btn-img {
@@ -57,6 +73,11 @@
 .gdb-btn-img.big {
     width: 40rpx;
     height: 40rpx;
+}
+
+.gdb-btn-img.bigger {
+    width: 50rpx;
+    height: 50rpx;
 }
 
 .gdb-main-btn-con {

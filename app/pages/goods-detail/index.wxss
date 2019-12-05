@@ -147,6 +147,8 @@
 .pgd-ad-item {
     display: flex;
     align-items: center;
+    box-sizing: border-box;
+    padding-left: 30rpx;
 }
 
 .pgd-ad-item.mb {

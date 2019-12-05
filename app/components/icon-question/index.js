@@ -8,14 +8,27 @@ Component({
      * 组件的属性列表
      */
     properties: {
+        /**
+         * 颜色
+         */
         color: {
             type: String,
             value: '#6cd6d7'
         },
+        /**
+         * 尺寸
+         */
         size: {
             type: Number,
             value: 22,
             observer: 'onSize'
+        },
+        /**
+         * 颜色反转
+         */
+        invert: {
+            type: Boolean,
+            value: false
         }
     },
 

@@ -1,39 +1,31 @@
 <view class="c-good-detail-bar">
 
-    <view class="gdb-btn-group">
-
-        <!-- 拼团广场 -->
+    <!-- 拼团广场 -->
+    <view
+        bindtap="goGroundPin"
+        class="gdb-small-btn-con red"
+    >
         <image
-            mode="aspectFill"
-            class='gdb-btn-img mr'
-            bindtap="goGroundPin"
-            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-good-bar-more-green.png"
-        />
-
-        <!-- 购物车 -->
-        <image
-            wx:if="{{ !!hasOrder$ && !allPinSuccess$ }}"
             mode="aspectFill"
             class='gdb-btn-img big'
-            bindtap="toggleSku"
-            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-good-bar-cart-green.png"
+            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-good-bar-gift-red.png"
         />
-
-        <!-- 分享 -->
-        <button
-            wx:else
-            class="fix-btn img-btn"
-            open-type="share"
-        >
-            <image
-                mode="aspectFill"
-                class='gdb-btn-img big'
-                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-good-bar-share-green.png"
-            />
-        </button>
-
     </view>
 
+    <!-- sku选择  -->
+    <view 
+        bindtap="toggleSku"
+        class="gdb-small-btn-con"
+        wx:if="{{ !!hasOrder$ && !allPinSuccess$ }}"
+    >
+        <image
+            mode="aspectFill"
+            class='gdb-btn-img big'
+            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-good-bar-cart-purple.png"
+        />
+    </view>
+
+    <!-- 售罄等按钮 -->
     <view
         wx:if="{{ hasErr$ }}"
         class="gdb-main-btn-con"
@@ -45,6 +37,7 @@
         </button>
     </view>
     
+    <!-- 主要按钮 -->
     <view 
         wx:if="{{ !hasErr$ }}"
         class="gdb-main-btn-con"
