@@ -19,21 +19,6 @@
         class="pm-checkin-con {{ showSignBlock$ ? 'fixed' : '' }}"
     
     >
-        <!-- 关闭按钮 -->
-        <!-- <form
-            wx:if="{{ showSignBlock$ }}"
-            report-submit="{{ true }}"
-            class="pm-sign-close-form"
-            bindsubmit="toggleSign"
-        >
-            <button
-                form-type="submit"
-                class='fix-btn pm-hongbao-close'
-            >
-                x
-            </button>
-        </form> -->
-
         <!-- 签到版面 -->
         <view
             wx:if="{{ showSign || showSignBlock$ }}"
@@ -274,7 +259,7 @@
     <!-- 下方小红包 -->
     <view
         bindtap="fetchPushIntegral"
-        class="pm-tips-con right"
+        class="pm-tips-con {{ position }}"
         wx:if="{{ !isGetMoney && simple && !showSign }}"
     >
         <image

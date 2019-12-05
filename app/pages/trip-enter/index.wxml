@@ -382,6 +382,7 @@
 
     <!-- 抵现积分、签到打卡 -->
     <my-user-sign-gift
+        position="left"
         simple="{{ true }}"
         wx:if="{{ initHongbao }}"
     />

@@ -28,6 +28,11 @@ Component({
         onlyGetMoney: {
             type: Boolean,
             value: false
+        },
+        // 小红包位置，左/右
+        position: {
+            type: String,
+            value: 'right'
         }
     },
 
@@ -309,9 +314,9 @@ Component({
         /** 获取当前人的推广积分、签到经验 */
         fetchPushIntegral( e = null, mustFetch = false ) {
             const { onlyGetMoney } = this.data;
-            if ( onlyGetMoney && !mustFetch ) {
-                return this.checkGetIntegral( true );
-            }
+            // if ( onlyGetMoney && !mustFetch ) {
+            //     return this.checkGetIntegral( true );
+            // }
             http({
                 data: {
                     showMore: true
@@ -320,10 +325,12 @@ Component({
                 success: res => {
                     const { status, data } = res;
                     if ( status !== 200 ) { return; }
+
                     this.setData({
                         exp: data.exp,
                         pushIntegral: data.integral
                     });
+
                     setTimeout(( ) => {
                         this.initTips( );
                         if ( !onlyGetMoney ) {
@@ -372,7 +379,7 @@ Component({
 
         // 获取今天的免费抵现金
         getFreeIntegral( close = false ) {
-            const { todaySignGift$, isAuth } = this.data;
+            const { todaySignGift$, isAuth, pushIntegral } = this.data;
             if ( !isAuth ) { 
                 return this.setData({
                     showSignGift: true
@@ -395,12 +402,13 @@ Component({
 
                     this.setData({
                         isGetMoney: true,
-                        showSignGift: true
+                        showSignGift: true,
+                        pushIntegral: Number(( pushIntegral + todaySignGift$ ).toFixed( 2 ))
                     });
                     
                     wx.setStorageSync( storageKey['integral-get-last-time'], String( Date.now( )));
 
-                    this.fetchPushIntegral( null, true );
+                    // this.fetchPushIntegral( null, true );
                     !!close && this.toggleGift( );
                 }
             })
