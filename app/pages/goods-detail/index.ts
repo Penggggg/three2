@@ -108,7 +108,10 @@ Page({
         openingSku: false,
 
         // 访问记录
-        visitors: [ ]
+        visitors: [ ],
+
+        // 分享人信息
+        shareFromUser: { }
     },
 
     /** 设置computed */
@@ -250,7 +253,6 @@ Page({
             detail$: function( ) {
                 const { detail } = this.data;
                 const r = delayeringGood( detail );
-                console.log('...', r );
                 return r;
             },
 
@@ -386,6 +388,7 @@ Page({
                 openid: val
             });
             this.createShare( );
+            this.fetchSharer( );
         });
         app.watch$('isUserAuth', val => {
             if ( val === undefined ) { return; }
@@ -527,6 +530,27 @@ Page({
                         trip
                     });
                 }
+            }
+        })
+    },
+
+    /** 获取上个分享人的头像 */
+    fetchSharer( ) {
+        const { openid, from } = this.data;
+        if ( !from || !openid || from === openid ) {
+            return;
+        }
+        http({
+            data: {
+                openid: from 
+            },
+            url: 'common_get-user-info',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 || !data ) { return; }
+                this.setData!({
+                    shareFromUser: data
+                });
             }
         })
     },

@@ -512,7 +512,7 @@
             </view>
 
             <view class="gd-pin-tips-content mt">
-                群里有群友下单，就可拼团            
+                群里有群友下单，就自动拼团            
             </view>
 
             <view class="gd-pin-tips-content mb">
@@ -632,7 +632,23 @@
                     </view>
                 </view>
                 <view class="gd-compare-con-line"></view>
-                <view class="gd-compare-con-ball"></view>
+                <view 
+                    wx:if="{{ !shareFromUser.avatarUrl }}"
+                    class="gd-compare-con-ball"
+                >
+                </view>
+                <view 
+                    wx:if="{{ !!shareFromUser.avatarUrl }}"
+                    class="gd-compare-socail-tips"
+                >
+                    和我拼团, 一起省!
+                </view>
+                <image 
+                    wx:if="{{ !!shareFromUser.avatarUrl }}"
+                    mode="aspectFill"
+                    class="gd-compare-con-ball big"
+                    src="{{ shareFromUser.avatarUrl }}"
+                />
                 <wxc-icon
                     size="20"
                     color="#fff"
@@ -647,28 +663,38 @@
                 />
             </view>
             <view class="gd-compare-btn-con">
-                <view class="gd-compare-pin-tips mt">
-                    群里有群友下单，就可拼团
+                <view class="gd-compare-pin-tips">
+                    群里有群友下单，就自动拼团
                 </view>
-                <view class="gd-compare-pin-tips mb">
+                <view class="gd-compare-pin-tips">
                     先订金/后尾款            
                 </view>
-                <button 
-                    wx:if="{{ isUserAuth }}"
-                    class="gd-compare-btn"
-                    bindtap="togglePalyTips"
-                >
-                    知道啦
-                </button>
-                <button 
-                    wx:else
-                    open-type="getUserInfo"
-                    class="gd-compare-btn"
-                    bindgetuserinfo="getUserAuth"
-                >
-                    知道啦
-                </button>
             </view>
+            <button 
+                wx:if="{{ isUserAuth }}"
+                class="fix-btn gd-compare-btn"
+                bindtap="togglePalyTips"
+            >
+                <wxc-icon
+                    size="24"
+                    type="close"
+                    color="rgba(0,0,0,0.3)"
+                    class="gd-compare-btn-icon"
+                />
+            </button>
+            <button 
+                wx:else
+                open-type="getUserInfo"
+                class="fix-btn gd-compare-btn"
+                bindgetuserinfo="getUserAuth"
+            >
+                <wxc-icon
+                    size="24"
+                    type="close"
+                    color="rgba(0,0,0,0.3)"
+                    class="gd-compare-btn-icon"
+                />
+            </button>
         </view>
     </wxc-mask>
 

@@ -1480,6 +1480,33 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /**
+     * @description
+     * 根据openid返回用户信息（可返回null）
+     */
+    app.router('get-user-info', async ( ctx, next ) => {
+        try {
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const user$ = await db.collection('user')
+                .where({
+                    openid
+                })
+                .get( );
+
+            const data = user$.data[ 0 ] || null;
+
+            return ctx.body = {
+                data,
+                status: 200
+            }
+        } catch ( e ) {
+            return ctx.body = {
+                status: 200,
+                data: e
+            }
+        }
+    })
+
     /** 
      * @description
      * 测试专用

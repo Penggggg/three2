@@ -478,7 +478,7 @@
 }
 
 .gd-compare-btn-con {
-    padding: 0rpx 0rpx 0;
+    padding: 50rpx 0rpx;
 }
 
 .gd-compare-pin-tips {
@@ -497,14 +497,23 @@
 }
 
 .gd-compare-btn {
-    color: #fff;
-    width: 100%;
-    font-size: 28rpx;
-    background: #202020;
-    letter-spacing: 0.1em;
-    border-radius: 0 0 30px 30px;
-    text-align: center;
-    padding: 10rpx 0;
+    left: 50%;
+    width: 70rpx;
+    height: 70rpx;
+    border-radius: 50%;
+    bottom: -120rpx;
+    background: #fff;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate( -50%, 0 );
+    box-shadow: 0 0 10rpx rgba( 255, 255, 255, 0.5 );
+
+}
+
+.gd-compare-btn-icon {
+    line-height: 24rpx;
 }
 
 .gd-compare-con-line {
@@ -527,6 +536,38 @@
     border-radius: 50%;
     transform: translate( -50%, 0 );
     box-shadow: 0 0 15px rgba( 0, 0, 0, 0.08 );
+}
+
+.gd-compare-con-ball.big {
+    width: 80rpx;
+    height: 80rpx;
+    bottom: 35rpx;
+}
+
+.gd-compare-socail-tips {
+    left: 50%;
+    bottom: 130rpx;
+    color: #fff;
+    font-size: 23rpx;
+    padding: 10rpx 20rpx;
+    border-radius: 8px;
+    position: absolute;
+    background: rgba( 0, 0, 0, 0.2 );
+    transform: translate( -50%, 0 );
+    letter-spacing: 0.1em;
+}
+
+.gd-compare-socail-tips:after {
+    bottom: -26rpx;
+    left: 50rpx;
+    content: '';
+    position: absolute;
+    width:0px;
+    height:0px;
+    border-top: 18rpx solid rgba(0,0,0,0.2);
+    border-right: 12rpx solid  rgba(0,0,0,0);
+    border-bottom: 12rpx solid rgba( 0, 0, 0, 0 );
+    border-left: 12rpx solid  rgba(0,0,0,0);
 }
 
 .gd-compare-arrow {
