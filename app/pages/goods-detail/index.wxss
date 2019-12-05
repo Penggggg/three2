@@ -163,6 +163,7 @@
     flex: 1;
     color: #797979;
     font-size: 26rpx;
+    margin-top: 10rpx;
     letter-spacing: 0.05em;
 }
 
@@ -645,10 +646,11 @@
 }
 
 .pgd-question-btn {
-    height: 55rpx;
+    height: 50rpx;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-right: 20rpx;
 }
 
 .pgd-visiting-con {
@@ -720,8 +722,10 @@
     position: relative;
     overflow: visible;
     box-shadow: 3px 3px 15rpx rgba( 0, 0, 0, 0.15 );
-    background-image: linear-gradient(-225deg, #37ecba 0%, #72afd3 100%);
     /* background-image: linear-gradient(225deg, #B6CEE8 0%, #F578DC 100%); */
+    /* background-image: linear-gradient( -225deg, #f093fb 0%, #f5576c 100%); */
+    /* background-image: linear-gradient( -225deg, #b721ff 0%, #21d4fd 100%); */
+    background-image: linear-gradient(-225deg, #A445B2 0%, #D41872 52%, #FF0066 100%);
 }
 
 .pgd-visitor-share-btn.shine:after {
@@ -734,28 +738,28 @@
     border-radius: 30px;
     position: absolute;
     overflow: visible;
-    border: 1px solid #37ecba;
+    border: 1px solid #ff7875;
     box-sizing: content-box;
     background-color: transparent;
     transform: translate( -50%, -50% );
     -webkit-animation-name:'ripple4';
-    -webkit-animation-duration: 1s;
+    -webkit-animation-duration: 1.5s;
     -webkit-animation-timing-function: ease;
     -webkit-animation-delay: 0s;
     -webkit-animation-iteration-count: infinite;
-    -webkit-animation-direction: normal;
+    -webkit-animation-direction: normal; 
      
 }
 
 @keyframes ripple4 {
     0% {
-     opcity:75;
-     border: 1px solid #37ecba;
-   }
-   100% {
-     opacity: 0;
-     border: 8px solid #fff1f0;
-   }
+        opcity:75;
+        border: 1px solid #ff7875;
+      }
+      100% {
+        opacity: 0;
+        border: 5px solid #fff1f0;
+      }
 }
 
 .pgd-visitor-share-btn-img {
@@ -882,8 +886,9 @@
     position: relative;
     overflow: visible;
     box-shadow: 3px 3px 15rpx rgba( 0, 0, 0, 0.15 );
-    background-image: linear-gradient(-225deg, #37ecba 0%, #72afd3 100%);
+    /* background-image: linear-gradient(-225deg, #37ecba 0%, #72afd3 100%); */
     /* background-image: linear-gradient(225deg, #B6CEE8 0%, #F578DC 100%); */
+    background-image: linear-gradient(-225deg, #A445B2 0%, #D41872 52%, #FF0066 100%);
 }
 
 .pgd-pin-btn.shine:after {
@@ -896,7 +901,7 @@
     border-radius: 30px;
     position: absolute;
     overflow: visible;
-    border: 1px solid #37ecba;
+    border: 1px solid #ff7875;
     box-sizing: content-box;
     background-color: transparent;
     transform: translate( -50%, -50% );
