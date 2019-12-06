@@ -456,8 +456,10 @@
 
     <!-- 转发封面 -->
     <my-good-share-cover
+        wx:if="{{ detail }}"
         id="cover"
         good="{{ detail }}"
+        coverText="{{ coverText }}"
         binddone="onCoverDone"
     />
 

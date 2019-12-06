@@ -114,7 +114,10 @@ Page({
         shareFromUser: { },
 
         // 分享封面
-        shareCover: ''
+        shareCover: '',
+
+        // 封面提示
+        coverText: "23人看过"
     },
 
     /** 设置computed */
@@ -558,6 +561,13 @@ Page({
         })
     },
 
+    initCoverText( ) {
+        const num = 18 + Math.ceil( Math.random( ) * 20);
+        this.setData!({
+            coverText: `${num}人看过`
+        });
+    },
+
     /** 创建分享记录 */
     createShare( ) {
         const { id, canIntegrayShare, from, openid } = this.data;
@@ -779,16 +789,14 @@ Page({
     onLoad: function (options) {
 
         const scene = decodeURIComponent( options!.scene || '' )
+        const id = options!.id || scene || '1a2751ef5cab50440283e59a10d24bec';
 
         this.runComputed( );
+        this.initCoverText( );
 
-        this.setData!({
-            id: '1a2751ef5cab50440283e59a10d24bec'
-        })
-
-        if ( options!.id || scene ) { 
+        if ( !!id ) { 
             this.setData!({
-                id: options!.id || scene,
+                id
             });
         }
 
@@ -800,8 +808,8 @@ Page({
         
         setTimeout(( ) => {
             this.watchRole( );
-            // this.checkLike( );
             this.fetchLast( );
+            this.fetDetail( id );
         }, 20 );
     },
   
@@ -839,12 +847,10 @@ Page({
     onShow: function ( ) {
         const { id, tid, trip } = this.data;
         
-        this.fetDetail( id );
         this.fetchShopping( id, tid );
-
         if ( !!trip ) {
             const { start_date, end_date } = (trip as any);
-             this.fetchVisitRecord( id, start_date, end_date );
+            this.fetchVisitRecord( id, start_date, end_date );
         }
 
     },
@@ -893,7 +899,7 @@ Page({
             imageUrl: shareCover || `${detail$.img[ 0 ]}`,
             path: `/pages/goods-detail/index?id=${detail$._id}&from=${openid}`,
             title: !!detail$ && detail$.hasPin && !hasOrder$ ?
-                `有人想要吗？拼团买，我们都能省！${detail$.title}` :
+                `有人想要吗？拼团买，我们都能省！${detail$.title} ${detail$.tagText}` :
                 `推荐「${detail$.tagText}」神器!${detail$.title}`
         }
     }
