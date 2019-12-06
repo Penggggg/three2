@@ -150,13 +150,13 @@ Component({
                 });
                 meta.splice( 9, 0, {
                   key: 'groupPrice',
-                  label: '团购价',
+                  label: '拼价',
                   type: 'number',
-                  placeholder: '诱导客户相互分享、多下单',
+                  placeholder: '让客户相互分享、多下单',
                   value: undefined,
                   rules: [{
                     validate: val => val !== null && val !== undefined && !!String( val ).trim( ) ? Number( String( val ).trim( )) > 0 : true,
-                    message: '价格不能为0'
+                    message: '拼团价必填'
                   }]
                 });
                 meta.splice( 10, 0, {
