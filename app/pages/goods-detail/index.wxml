@@ -454,6 +454,13 @@
         bindtoggle="onPostToggle"
     />
 
+    <!-- 转发封面 -->
+    <my-good-share-cover
+        id="cover"
+        good="{{ detail }}"
+        binddone="onCoverDone"
+    />
+
     <!-- 商品下面的栏、倒计时 -->
     <my-goods-detail-bar
         id="sku"

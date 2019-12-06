@@ -61,6 +61,7 @@
     "my-good-item-9": "./container/good-item-9/index",
     "my-ground-bar": "./container/ground-bar/index",
     "my-good-poster": "./container/good-poster/index",
+    "my-good-share-cover": "./container/good-share-cover/index",
     "my-process-bar": "./components/process-bar/index",
     "my-coupon-lijian": "./container/coupon-lijian/index",
     "my-common-confirm": "./container/common-confirm/index",

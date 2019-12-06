@@ -111,7 +111,10 @@ Page({
         visitors: [ ],
 
         // 分享人信息
-        shareFromUser: { }
+        shareFromUser: { },
+
+        // 分享封面
+        shareCover: ''
     },
 
     /** 设置computed */
@@ -758,6 +761,13 @@ Page({
         }
     },
 
+    /** 转发封面 */
+    onCoverDone( e ) {
+        this.setData!({
+            shareCover: e.detail
+        });
+    },
+
     /**
      * 生命周期函数--监听页面加载
      * {
@@ -871,7 +881,7 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( e ) {
-        const { hasOrder$, detail$, openid } = (this.data as any);
+        const { hasOrder$, detail$, openid, shareCover } = (this.data as any);
 
         this.closePoster( );
         setTimeout(( ) => {
@@ -880,7 +890,7 @@ Page({
         }, 500 );
 
         return {
-            imageUrl: `${detail$.img[ 0 ]}`,
+            imageUrl: shareCover || `${detail$.img[ 0 ]}`,
             path: `/pages/goods-detail/index?id=${detail$._id}&from=${openid}`,
             title: !!detail$ && detail$.hasPin && !hasOrder$ ?
                 `有人想要吗？拼团买，我们都能省！${detail$.title}` :

@@ -43,9 +43,6 @@ Component({
         // 加载
         loading: true,
 
-        // 是否为管理员
-        isAdmin: false,
-
         // 动画
         animationMiddleHeaderItem: null,
 
@@ -70,15 +67,6 @@ Component({
      * 组件的方法列表
      */
     methods: {
-
-        /** 监听全局管理员权限 */
-        watchRole( ) {
-            app.watch$('role', ( val ) => {
-                this.setData({
-                    isAdmin: val === 1
-                });
-            });
-        },
 
         // 初始化动画
         initAnimate( ) {
@@ -344,7 +332,6 @@ Component({
     },
 
     attached: function( ) {
-        this.watchRole( );
-        setTimeout(( ) => this.initTips( ), 5000 );
+
     }
 })
