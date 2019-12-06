@@ -64,7 +64,7 @@
             class="fix-btn gdb-main-btn shine"
             bindtap="toggleSku"
         >
-            <view class="text-mr">马上跟团</view>
+            <view class="text-mr">一起拼团</view>
         </button>
 
         <button 

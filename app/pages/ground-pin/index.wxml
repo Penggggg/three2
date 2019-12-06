@@ -76,7 +76,7 @@
             storageKey="ground-pin"
             open="{{ openTips }}"
             bind:toggle="onToggle"
-            texts="{{[ '大家一起购买同一件宝贝', '就能自动获得更便宜的拼团价', '助手会在群上帮大家找拼团哦']}}"
+            texts="{{[ '和群友购买同一件商品', '就可获得拼团价']}}"
         />
     </view>
 
