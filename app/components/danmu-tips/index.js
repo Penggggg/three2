@@ -80,7 +80,7 @@ Component({
                     const target = data[ current ];
                     if ( !target ) { return 0; }
                     const avatarWdith = target.avatar ? avatarSize + 30 : 0;
-                    const r = avatarWdith + letterSize * target.text.length;
+                    const r = avatarWdith + letterSize * target.text.length - 20;
                     return r;
                 }
             });

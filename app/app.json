@@ -1,9 +1,9 @@
 {
   "pages": [
+    "pages/trip-reward/index",
     "pages/goods-detail/index",
     "pages/trip-enter/index",
     "pages/order-list/index",
-    
     "pages/good-activity/index",
     "pages/manager-goods-active/index",
     "pages/good-new/index",
@@ -28,8 +28,7 @@
     "pages/concat/index",
     "pages/trip-deliver/index",
     "pages/manager-person-info/index",
-    "pages/goods-detail-preview/index",
-    "container/good-item-9/index"
+    "pages/goods-detail-preview/index"
   ],
   "usingComponents": {
     "my-nav": "./container/nav-bar/index",

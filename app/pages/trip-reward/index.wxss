@@ -1,0 +1,62 @@
+.p-trip-reward {
+    min-height: 100vh;
+}
+
+.ptr-loading-tips {
+    color: #999;
+    font-size: 26rpx;
+    text-align: center;
+    padding-top: 200rpx;
+}
+
+.ptr-bg {
+    width: 100%;
+    height: 800rpx;
+    position: relative;
+    /* border-radius: 0 0 30px 30px; */
+    background-image: linear-gradient( -235deg, #e9defa 0%, #fbfcdb 100%);
+}
+
+.ptr-bg-img {
+    bottom: 0;
+    left: 50%;
+    width: 600rpx;
+    height: 700rpx;
+    position: absolute;
+    transform: translate( -50%, -0% );
+}
+
+.ptr-title-con {
+    padding: 0 50rpx;
+    margin: 50rpx 0 30rpx;
+}
+
+.ptr-title {
+    color: #272839;
+    font-size: 45rpx;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    line-height: 60rpx;
+}
+
+.ptr-title.flex {
+    display: flex;
+    align-items: center;
+}
+
+.ptr-title.small {
+    font-size: 32rpx;
+    line-height: 48rpx;
+}
+
+.ptr-title-price {
+    color: #22969e;
+    letter-spacing: 0;
+    font-size: 45rpx;
+}
+
+.ptr-title-inline {
+    color: #22969e;
+    display: inline;
+
+}

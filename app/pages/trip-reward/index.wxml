@@ -1,0 +1,51 @@
+<view class="p-trip-reward">
+
+    <!-- 加载中 -->
+    <view
+        wx:if="{{ loading }}"
+        class="ptr-loading-tips"
+    >
+        加载中...
+    </view>
+
+    <view 
+        wx:else
+    >
+        <!-- 背景 -->
+        <view class="ptr-bg">
+            <image 
+                class="ptr-bg-img"
+                mode="aspectFill"
+                lazy-load="{{ true }}"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/material-any-fans-colorful-full.png"
+            />
+        </view>
+
+        <!-- 标题 -->
+        <view class="ptr-title-con">
+            <view 
+                class="ptr-title"
+            >
+                恭喜你
+            </view>
+            <view 
+                class="ptr-title small flex"
+            >
+                你和群友拼团<view class="ptr-title-inline">省下</view><wxc-price
+                    class="ptr-title-price"
+                > 
+                    78
+                </wxc-price>
+            </view>
+        </view>
+
+        <!-- 社交弹框 -->
+        <my-danmu-tips
+            top="{{ 50  }}"
+            left="{{ 35 }}"
+            data="{{ social$ }}"
+            wx:if="{{ social$.length > 1 }}"
+        />
+    </view>
+
+</view>
