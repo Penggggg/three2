@@ -20,8 +20,9 @@ Page({
     runComputed( ) {
         computed( this, {
 
-            // 商品的访问 + 社交属性模块
+            // 购买记录 + 社交属性模块
             social$( ) {
+                const avatar = 'https://wx.qlogo.cn/mmopen/vi_32/IejMVZTG8WlibHicHIVQhqcNeC4uBxkzH0FFTbRLMicxib8wrxRRWoJY3gvctylATdmAPhiaVicU4sH0NptSszBdyHiaA/132';
                 const getRandom = n => Math.floor( Math.random( ) * n );
                 const allTexts = [
                     `棒! 拼团的群友真给力`,
@@ -30,8 +31,8 @@ Page({
                 ];
                 
                 const visitors = [
-                    'https://wx60bf7f745ce31ef0-1257764567.cos.ap-guangzhou.myqcloud.com/tmp_7e24d0909d341e812968b83ce5a328d102bc1b174a374f4e.jpg',
-                    'https://wx60bf7f745ce31ef0-1257764567.cos.ap-guangzhou.myqcloud.com/tmp_7e24d0909d341e812968b83ce5a328d102bc1b174a374f4e.jpg'
+                    avatar,
+                    avatar
                 ];
                 const allVisitors = visitors
                     .map( x => {
@@ -43,7 +44,85 @@ Page({
                     })
                 return allVisitors;
 
+            },
+
+            // 个人购物清单
+            personal$( ) {
+                const avatar = 'https://wx.qlogo.cn/mmopen/vi_32/IejMVZTG8WlibHicHIVQhqcNeC4uBxkzH0FFTbRLMicxib8wrxRRWoJY3gvctylATdmAPhiaVicU4sH0NptSszBdyHiaA/132';
+                const imgUrl = 'https://wx60bf7f745ce31ef0-1257764567.cos.ap-guangzhou.myqcloud.com/tmp_7e24d0909d341e812968b83ce5a328d102bc1b174a374f4e.jpg';
+                const r = [
+                    {
+                        goodId: '1',
+                        delta: 15,
+                        totalDelta: 45,
+                        price: 86,
+                        groupPrice: 71,
+                        fadePrice: 128,
+                        title: 'SKT护肤霜',
+                        name: '红色',
+                        buyer: [
+                            {
+                                name: 'xxx',
+                                avatar
+                            }, {
+                                name: 'yyy',
+                                avatar
+                            }, {
+                                name: 'zzz',
+                                avatar
+                            }, {
+                                name: 'xxx',
+                                avatar
+                            }
+                        ],
+                        pinSuccess: true,
+                        goodImg: imgUrl
+                    }, {
+                        goodId: '1',
+                        delta: 15,
+                        totalDelta: 45,
+                        price: 86,
+                        groupPrice: 71,
+                        fadePrice: 128,
+                        title: 'SKT护肤霜',
+                        name: '红色',
+                        buyer: [
+                            {
+                                name: 'xxx',
+                                avatar
+                            }, {
+                                name: 'yyy',
+                                avatar
+                            }, {
+                                name: 'zzz',
+                                avatar
+                            }, {
+                                name: 'xxx',
+                                avatar
+                            }, {
+                                name: 'yyy',
+                                avatar
+                            }, {
+                                name: 'zzz',
+                                avatar
+                            }, {
+                                name: 'xxx',
+                                avatar
+                            }, {
+                                name: 'yyy',
+                                avatar
+                            }, {
+                                name: 'zzz',
+                                avatar
+                            }
+                        ],
+                        pinSuccess: true,
+                        goodImg: imgUrl
+                    }
+                ];
+                return r;
             }
+
         });
     },
 
