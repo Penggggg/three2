@@ -103,6 +103,57 @@
             </view>
         </view>
 
+        <!-- 其他人的购物清单 -->
+        <view
+            class="ptr-other-con"
+            wx:if="{{ others$.length > 0 }}"
+        >
+
+            <view class="ptr-other-title">
+                <my-title-decorate  
+                    title="群友拼了"
+                    fontSize="{{ 35 }}"
+                />
+            </view>
+
+            <swiper
+                current="{{ swiperIndex }}"
+                class="ptr-other-swiper"
+                autoplay="{{ false }}"
+                interval="{{ 5000 }}"
+                circular="{{ true }}"
+                indicator-dots="{{ true }}"
+                next-margin="100rpx"
+                previous-margin="100rpx"
+                indicator-color="rgba(0, 0, 0, 0.15)"
+                indicator-active-color="rgba(0, 0, 0, 0.5)"
+                bindchange="onSwiper"
+            >
+                <block
+                    wx:key="index"
+                    wx:for="{{ others$ }}"
+                >
+                    <swiper-item>
+                        <view class="ptr-other-swiper-item-con">
+                            <view 
+                                class="ptr-other-swiper-item {{ swiperIndex !== index ? 'small' : '' }}"
+                            >
+                                <image
+                                    mode="aspectFill"
+                                    class="ptr-other-swiper-img"
+                                    src="{{ item.goodImg }}"
+                                    lazy-load="{{ true }}"
+                                />
+                                <view class="ptr-other-swiper-tips-con">
+                                    {{ item.buyer.length }}群友拼团<view class="ptr-other-swiper-tips">{{ item.name }}{{ item.title }}</view>
+                                </view>
+                            </view>
+                        </view>
+                    </swiper-item>
+                </block>
+            </swiper>
+        </view>
+
         <!-- 社交弹框 -->
         <my-danmu-tips
             top="{{ 50  }}"
@@ -110,6 +161,9 @@
             data="{{ social$ }}"
             wx:if="{{ social$.length > 1 }}"
         />
+
+        <!-- 红包模块 -->
+
     </view>
 
 </view>
