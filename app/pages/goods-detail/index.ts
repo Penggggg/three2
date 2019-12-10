@@ -287,13 +287,13 @@ Page({
                 const { visitors, openid, detail } = this.data;
                 const good = delayeringGood( detail ); 
                 const getRandom = n => Math.floor( Math.random( ) * n );
-                
-                const allTexts = [
-                    `群友也在看`,
-                    `群友在关注「${good.tagText}」`,
-                    `群友感兴趣，跟她拼团`
-                ];
 
+                const allTexts = [
+                    `划算耶！有群友拼团吗`,
+                    `「${good.tagText}」感觉不错`,
+                    `看起来不错！想拼团`,
+                    `有群友拼团吗？我们一起省`
+                ];
                 
                 const allVisitors = visitors
                     .filter( x => x.openid !== openid )
