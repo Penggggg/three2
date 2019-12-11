@@ -10,6 +10,8 @@ Page({
 
     data: {
 
+        tid: '',
+
         /**
          * 加载
          */
@@ -18,7 +20,12 @@ Page({
         /**
          * 其他人清单的 swiper
          */
-        swiperIndex: 0
+        swiperIndex: 0,
+
+        /**
+         * 是否展示弹幕
+         */
+        showDanmu: false
 
     },
 
@@ -31,8 +38,8 @@ Page({
                 const getRandom = n => Math.floor( Math.random( ) * n );
                 const allTexts = [
                     `棒! 拼团的群友真给力`,
-                    `哇! 和群友拼团真划算`,
-                    `哈! 下次继续和群友拼团`
+                    `哇! 和群友拼团好划算`,
+                    `哈! 下次继续用群拼团`
                 ];
                 
                 const visitors = [
@@ -55,6 +62,17 @@ Page({
             personal$( ) {
                 const avatar = 'https://wx.qlogo.cn/mmopen/vi_32/IejMVZTG8WlibHicHIVQhqcNeC4uBxkzH0FFTbRLMicxib8wrxRRWoJY3gvctylATdmAPhiaVicU4sH0NptSszBdyHiaA/132';
                 const imgUrl = 'https://wx60bf7f745ce31ef0-1257764567.cos.ap-guangzhou.myqcloud.com/tmp_7e24d0909d341e812968b83ce5a328d102bc1b174a374f4e.jpg';
+
+                const getRandom = n => Math.floor( Math.random( ) * n );
+                const allTexts = [
+                    `真给力`,
+                    `谢谢你`,
+                    `划算～`,
+                    `棒!`,
+                    `赞!`,
+                    `赚!`
+                ];
+
                 const r = [
                     {
                         goodId: '1',
@@ -81,7 +99,9 @@ Page({
                             }
                         ],
                         pinSuccess: true,
-                        goodImg: imgUrl
+                        goodImg: imgUrl,
+                        tips: allTexts[ getRandom( allTexts.length )],
+                        tipsIndex: getRandom( 9 > 4 ? 3 : 9 ) + 1
                     }, {
                         goodId: '1',
                         delta: 15,
@@ -122,7 +142,37 @@ Page({
                             }
                         ],
                         pinSuccess: true,
-                        goodImg: imgUrl
+                        goodImg: imgUrl,
+                        tips: allTexts[ getRandom( allTexts.length )],
+                        tipsIndex: getRandom( 9 > 4 ? 3 : 9 ) + 1
+                    }, {
+                        goodId: '1',
+                        delta: 15,
+                        totalDelta: 45,
+                        price: 86,
+                        groupPrice: 71,
+                        fadePrice: 128,
+                        title: 'SKT护肤霜',
+                        name: '红色',
+                        buyer: [
+                            {
+                                name: 'xxx',
+                                avatar
+                            }, {
+                                name: 'yyy',
+                                avatar
+                            }, {
+                                name: 'zzz',
+                                avatar
+                            }, {
+                                name: 'xxx',
+                                avatar
+                            }
+                        ],
+                        pinSuccess: false,
+                        goodImg: imgUrl,
+                        tips: allTexts[ getRandom( allTexts.length )],
+                        tipsIndex: getRandom( 9 > 4 ? 3 : 9 ) + 1
                     }
                 ];
                 return r;
@@ -305,7 +355,26 @@ Page({
         });
     },
 
-    onLoad: function (options) {
+    /**
+     * 页面滚动
+     */
+    onScroll( e: any ) {
+        const { showDanmu } = this.data;
+        const { scrollTop } = e.detail;
+        if ( !!showDanmu ) { return; } 
+
+        if ( scrollTop > 100 ) {
+            this.setData!({
+                showDanmu: true
+            });
+        }
+    },
+
+    /**
+     * tid 行程id
+     */
+    onLoad: function ( query: any ) {
+        const { tid } = query;
         this.watchStore( );
         this.runComputed( );
     },
@@ -356,7 +425,10 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( e ) {
+        const { tid } = this.data;
         return {
+            path: `/pages/trip-reward/index?tid=${tid}`,
+            title: '回报群友啦～免费领抵现金！'
         }
     }
   })

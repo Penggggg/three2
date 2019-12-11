@@ -1,6 +1,10 @@
 .p-trip-reward {
-    min-height: 100vh;
-    padding-bottom: 50rpx;
+    height: 100vh;
+}
+
+.ptr-scrollview {
+    height: 100vh;
+    box-sizing: border-box;
 }
 
 .ptr-loading-tips {
@@ -14,7 +18,6 @@
     width: 100%;
     height: 800rpx;
     position: relative;
-    /* border-radius: 0 0 30px 30px; */
     background-image: linear-gradient( -235deg, #e9defa 0%, #fbfcdb 100%);
 }
 
@@ -25,6 +28,60 @@
     height: 700rpx;
     position: absolute;
     transform: translate( -50%, -0% );
+}
+
+.ptr-bg-tips {
+    color: #fff;
+    font-size: 28rpx;
+    padding: 10rpx 15rpx;
+    border-radius: 8px;
+    position: absolute;
+    background: rgba( 0, 0, 0, 0.2 );
+    transform: translate( -50%, 0 );
+    letter-spacing: 0.1em;
+}
+
+.ptr-bg-tips:after {
+    bottom: -23rpx;
+    right: 15rpx;
+    content: '';
+    position: absolute;
+    width:0px;
+    height:0px;
+    border-top: 15rpx solid rgba(0,0,0,0.2);
+    border-right: 10rpx solid  rgba(0,0,0,0);
+    border-bottom: 10rpx solid rgba( 0, 0, 0, 0 );
+    border-left: 10rpx solid  rgba(0,0,0,0);
+}
+
+.ptr-bg-tips1 {
+    left: 200rpx;
+    top: 120rpx;
+}
+
+.ptr-bg-tips1:after {
+    bottom: -23rpx;
+    right: 45rpx;
+}
+
+.ptr-bg-tips2 {
+    right: 0rpx;
+    top: 170rpx;
+}
+
+.ptr-bg-tips2:after {
+    bottom: -23rpx;
+    left: 45rpx;
+}
+
+.ptr-bg-tips3 {
+    right: 25rpx;
+    bottom: 150rpx;
+}
+
+.ptr-bg-tips3:after {
+    bottom: -23rpx;
+    right: 15rpx;
 }
 
 .ptr-title-con {
@@ -59,7 +116,12 @@
 .ptr-title-inline {
     color: #13c2c2;
     display: inline;
+}
 
+.ptr-title-inline.small {
+    color: #272839;
+    font-size: 26rpx;
+    line-height: 40rpx;
 }
 
 .ptr-personal-con {
@@ -95,16 +157,16 @@
 
 .ptr-personal-pin-tips {
     left: 0;
-    bottom: 15rpx;
+    bottom: 20rpx;
     width: 100%;
     color: #fff;
-    font-size: 22rpx;
+    font-size: 24rpx;
     position: absolute;
     position: absolute;
     padding: 10rpx 15rpx;
-    letter-spacing: 0.05em;
     box-sizing: border-box;
     border-radius: 0 0 10px 10px;
+    letter-spacing: 0.1em;
     background: rgba( 0, 0, 0, 0.3 );
 }
 
@@ -133,9 +195,7 @@
     font-size: 25rpx;
     align-items: center;
     letter-spacing: 0.08em;
-    /* color: rgba( 0, 0, 0, 0.35 ); */
     color: #ced3e0;
-    margin-bottom: 15rpx;
 }
 
 .ptr-personal-group-price {
@@ -153,22 +213,38 @@
     top: 10rpx;
     right: 10rpx;
     position: absolute;
-    /* background: #fff; */
     background: #13c2c2;
-    /* color: #13c2c2; */
     color: #fff;
     padding: 10rpx 15rpx;
     letter-spacing: 0.08em;
     border-radius: 10rpx;
     font-size: 25rpx;
+    text-shadow: 0 0 3px rgba(0,0,0,.35);
     box-shadow: 3px 3px 10px rgba( 0, 0, 0, 0.08 );
+}
+
+.ptr-personal-compare.grey {
+    background: rgba(0,0,0,0.2);
+    text-shadow: none;
+}
+
+.ptr-personal-error-tpis {
+    margin-top: 35rpx;
+    font-size: 26rpx;
+    color: #797979;
+    letter-spacing: 0.08em;
+}
+
+.ptr-personal-error-inline {
+    color: #f5222d;
+    display: inline;
 }
 
 .ptr-personal-avatar-list-con {
     display: flex;
     overflow-x: scroll;
     white-space: nowrap;
-    padding: 10rpx 0 15rpx 0;
+    padding: 35rpx 0 15rpx 0;
 }
 
 .ptr-personal-avatar-list {
@@ -176,6 +252,11 @@
     flex-wrap: nowrap; 
     white-space: nowrap;
     align-items: flex-end;
+}
+
+.ptr-personal-avatar-con {
+    display: inline-block;
+    position: relative;
 }
 
 .ptr-personal-avatar {
@@ -186,6 +267,32 @@
     margin-right: 8rpx;
     border: 1px solid #fff;
     box-shadow: 2px 2px 8px rgba( 0, 0, 0, 0.3 );
+}
+
+.ptr-personal-tips {
+    left: 50%;
+    top: -40rpx;
+    color: #fff;
+    font-size: 22rpx;
+    padding: 5rpx 8rpx;
+    border-radius: 8px;
+    position: absolute;
+    background: rgba( 0, 0, 0, 0.2 );
+    transform: translate( -50%, 0 );
+    letter-spacing: 0.1em;
+}
+
+.ptr-personal-tips:after {
+    bottom: -23rpx;
+    left: 12rpx;
+    content: '';
+    position: absolute;
+    width:0px;
+    height:0px;
+    border-top: 15rpx solid rgba(0,0,0,0.2);
+    border-right: 10rpx solid  rgba(0,0,0,0);
+    border-bottom: 10rpx solid rgba( 0, 0, 0, 0 );
+    border-left: 10rpx solid  rgba(0,0,0,0);
 }
 
 .ptr-personal-avatar.big {
@@ -216,7 +323,7 @@
     width: 100%;
     height: 100%;
     position: relative;
-    padding: 0 25rpx 100rpx;
+    padding: 0 35rpx 150rpx;
     box-sizing: border-box;
 }
 
@@ -245,8 +352,7 @@
     bottom: 0rpx;
     width: 100%;
     color: #fff;
-    font-size: 26rpx;
-    position: absolute;
+    font-size: 30rpx;
     position: absolute;
     padding: 15rpx 10rpx 15rpx 25rpx;
     letter-spacing: 0.05em;
@@ -254,6 +360,55 @@
     border-radius: 0 0 15px 15px;
     letter-spacing: 0.08em;
     background: rgba( 0, 0, 0, 0.3 );
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.ptr-other-swiper-tips {
+    white-space: nowrap;
+    margin-right: 15rpx;
+}
+
+.ptr-other-avatar-list {
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
+    overflow-x: scroll;
+    padding-left: 8rpx;
+}
+
+.ptr-other-avatar-con {
+    position: relative;
+    display: inline-block;
+    margin-left: -6rpx;
+}
+
+.ptr-other-avatar {
+    width: 50rpx;
+    height: 50rpx;
+    display: block;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    box-shadow: 2px 2px 8px rgba( 0, 0, 0, 0.3 );
+}
+
+.ptr-other-avatar.ml {
+    margin-left: -6rpx;
+}
+
+.ptr-other-swiper-title {
+    left: 0;
+    width: 100%;
+    bottom: -75rpx;
+    padding-left: 35rpx;
+    box-sizing: border-box;
+    color: #272839;
+    font-size: 32rpx;
+    position: absolute;
+    font-weight: bold;
+    letter-spacing: 0.1em;
     overflow:hidden; 
     display:-webkit-box; 
     -webkit-line-clamp:1;
@@ -264,7 +419,20 @@
 
 .ptr-other-swiper-tips {
     display: inline;
-    /* font-size: 30rpx; */
     margin-left: 10rpx;
+}
+
+.ptr-other-compare-tips {
+    top: 20rpx;
+    right: -30rpx;
+    position: absolute;
+    background: #13c2c2;
+    color: #fff;
+    padding: 10rpx 15rpx;
+    letter-spacing: 0.08em;
+    border-radius: 10rpx;
+    font-size: 25rpx;
+    text-shadow: 0 0 3px rgba(0,0,0,.35);
+    box-shadow: 3px 3px 10px rgba( 0, 0, 0, 0.08 );
 }
 

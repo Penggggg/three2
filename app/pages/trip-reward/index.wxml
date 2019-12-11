@@ -8,8 +8,12 @@
         加载中...
     </view>
 
-    <view 
+    <!-- 内容 -->
+    <scroll-view 
         wx:else
+        scroll-y
+        class="ptr-scrollview"
+        bindscroll="onScroll"
     >
         <!-- 背景 -->
         <view class="ptr-bg">
@@ -19,19 +23,34 @@
                 lazy-load="{{ true }}"
                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/material-any-fans-colorful-full.png"
             />
+            <view 
+                class="ptr-bg-tips ptr-bg-tips1"
+            >
+                哈！群拼团真省钱
+            </view>
+            <view 
+                class="ptr-bg-tips ptr-bg-tips2"
+            >
+                感谢拼团的群友～
+            </view>
+            <!-- <view 
+                class="ptr-bg-tips ptr-bg-tips3"
+            >
+                错过就亏啦～
+            </view> -->
         </view>
 
         <!-- 标题 -->
         <view class="ptr-title-con">
             <view 
-                class="ptr-title"
+                class="ptr-title flex"
             >
-                恭喜！
+                群友<view class="ptr-title-inline small">互助</view>
             </view>
             <view 
                 class="ptr-title small flex"
             >
-                你和群友拼团<view class="ptr-title-inline">省下</view><wxc-price
+                你用群拼团<view class="ptr-title-inline">省了</view><wxc-price
                     class="ptr-title-price"
                 > 
                     78
@@ -54,12 +73,15 @@
                         src="{{ item.goodImg }}"
                         lazy-load="{{ true }}"
                     />
-                    <view class="ptr-personal-pin-tips">
+                    <view 
+                        wx:if="{{ item.pinSuccess }}"
+                        class="ptr-personal-pin-tips"
+                    >
                         {{ item.buyer.length }}群友拼团
                     </view>
                 </view>
 
-                <!-- 标题、价格、头像 -->
+                <!-- 标题、价格、头像、提示 -->
                 <view class="ptr-personal-content-con">
 
                     <view class="ptr-personal-title">
@@ -76,28 +98,45 @@
                     </view>
 
                     <view 
-                        wx:if="{{ item.buyer.length > 0 }}"
+                        wx:if="{{ item.buyer.length > 0 && item.pinSuccess }}"
                         class="ptr-personal-avatar-list-con"
                     >
                         <view class="ptr-personal-avatar-list">
-                            <image
+                            <view 
                                 wx:key="k"
                                 wx:for="{{ item.buyer }}"
                                 wx:for-item="buyer"
                                 wx:for-index="k"
-                                mode="aspectFill"
-                                class="ptr-personal-avatar {{ k === 0 ? 'big' : '' }}"
-                                src="{{ buyer.avatar }}"
-                                lazy-load="{{ true }}"
-                            />
+                                class="ptr-personal-avatar-con"
+                            >
+                                <image
+                                    mode="aspectFill"
+                                    class="ptr-personal-avatar {{ k === 0 ? 'big' : '' }}"
+                                    src="{{ buyer.avatar }}"
+                                    lazy-load="{{ true }}"
+                                />
+                                <view 
+                                    wx:if="{{ k === item.tipsIndex }}"
+                                    class="ptr-personal-tips"
+                                >
+                                    {{ item.tips }}
+                                </view>
+                            </view>
                         </view>
+                    </view>
+
+                    <view 
+                        wx:if="{{ !item.pinSuccess }}"
+                        class="ptr-personal-error-tpis"
+                    >
+                        可惜！<view class="ptr-personal-error-inline">差1人</view>就拼成！
                     </view>
 
                 </view>
 
                 <!-- 对比 -->
-                <view class="ptr-personal-compare">
-                    省27元
+                <view class="ptr-personal-compare {{ !item.pinSuccess ? 'grey' : '' }}">
+                    {{ item.pinSuccess ? '拼团' : '' }}省{{ item.pinSuccess ? 27 : 0 }}元
                 </view>
                 
             </view>
@@ -112,14 +151,14 @@
             <view class="ptr-other-title">
                 <my-title-decorate  
                     title="群友拼了"
-                    fontSize="{{ 35 }}"
+                    fontSize="{{ 36 }}"
                 />
             </view>
 
             <swiper
                 current="{{ swiperIndex }}"
                 class="ptr-other-swiper"
-                autoplay="{{ false }}"
+                autoplay="{{ true }}"
                 interval="{{ 5000 }}"
                 circular="{{ true }}"
                 indicator-dots="{{ true }}"
@@ -138,14 +177,42 @@
                             <view 
                                 class="ptr-other-swiper-item {{ swiperIndex !== index ? 'small' : '' }}"
                             >
+
                                 <image
                                     mode="aspectFill"
                                     class="ptr-other-swiper-img"
                                     src="{{ item.goodImg }}"
                                     lazy-load="{{ true }}"
                                 />
+
                                 <view class="ptr-other-swiper-tips-con">
-                                    {{ item.buyer.length }}群友拼团<view class="ptr-other-swiper-tips">{{ item.name }}{{ item.title }}</view>
+                                    <view class="ptr-other-swiper-tips">
+                                        {{ item.buyer.length }}群友拼团
+                                    </view>
+                                    <view class="ptr-other-avatar-list">
+                                        <view 
+                                            wx:key="k"
+                                            wx:for="{{ item.buyer }}"
+                                            wx:for-item="buyer"
+                                            wx:for-index="k"
+                                            class="ptr-other-avatar-con"
+                                        >
+                                            <image
+                                                mode="aspectFill"
+                                                class="ptr-other-avatar"
+                                                src="{{ buyer.avatar }}"
+                                                lazy-load="{{ true }}"
+                                            />
+                                        </view>
+                                    </view>
+                                </view>
+
+                                <view class="ptr-other-swiper-title">
+                                    {{ item.name }}{{ item.title }}
+                                </view>
+
+                                <view class="ptr-other-compare-tips">
+                                    省27元
                                 </view>
                             </view>
                         </view>
@@ -159,11 +226,11 @@
             top="{{ 50  }}"
             left="{{ 35 }}"
             data="{{ social$ }}"
-            wx:if="{{ social$.length > 1 }}"
+            wx:if="{{ social$.length > 1 && showDanmu }}"
         />
 
         <!-- 红包模块 -->
 
-    </view>
+    </scroll-view>
 
 </view>
