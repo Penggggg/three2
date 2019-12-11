@@ -374,9 +374,14 @@ Page({
      * tid 行程id
      */
     onLoad: function ( query: any ) {
-        const { tid } = query;
+        const tid = query.tid || "e8f863ba5de6241400076921441bc8d5";
         this.watchStore( );
         this.runComputed( );
+        
+        this.setData!({
+            tid
+        });
+
     },
   
     /**
