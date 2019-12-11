@@ -6,16 +6,16 @@
     >
         <view class="cst-con">
             <view class="cst-title">
-                需要您的授权
+                需要您授权
             </view>
-            <view class="cst-tips">
+            <!-- <view class="cst-tips">
                 <view>
                     为了更好的服务
                 </view>
                 <view>
                     请勾选 <view class="cst-bold">保持选择</view> 并点击<view class="cst-bold">允许</view>
                 </view>
-            </view>
+            </view> -->
             <view class="cst-exmple-con">
                 <view class="cst-exmple-title">
                     <!-- 微信授权 -->
@@ -34,9 +34,9 @@
                     <view class="cst-exmple-btn">
                         允许
                     </view>
-                    <view class="cst-tips-btn two">
+                    <!-- <view class="cst-tips-btn two">
                         允许
-                    </view>
+                    </view> -->
                 </view>
                 <view class="cst-exmple-awalys-opt">
                     <radio class="cst-exmple-awalys-radio" checked="{{ true }}" />

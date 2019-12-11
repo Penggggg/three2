@@ -40,7 +40,7 @@
 .cst-exmple-con {
     width: 65vw;
     border-radius: 3px;
-    margin: 20rpx 0 50rpx;
+    margin: 60rpx 0 100rpx;
     background: #f8f8f8;
     position: relative;
     box-shadow: 0 0 10px rgba( 0, 0, 0, 0.1 );
@@ -140,7 +140,7 @@
     text-align: center;
     border-radius: 30px;
     padding: 0rpx 0;
-    width: 100%;
+    width: 80%;
     box-sizing: border-box;
     background: #09bb07;
 }
