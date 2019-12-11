@@ -25,13 +25,13 @@
             />
             <view 
                 wx:if="{{ !showDanmu }}"
-                class="ptr-bg-tips ptr-bg-tips1"
+                class="ptr-bg-tips ptr-bg-tips1 zoom"
             >
                 哈！群拼团真省钱
             </view>
             <view 
                 wx:if="{{ !showDanmu }}"
-                class="ptr-bg-tips ptr-bg-tips2"
+                class="ptr-bg-tips ptr-bg-tips2 zoom delay"
             >
                 感谢拼团的群友～
             </view>
@@ -39,16 +39,28 @@
                 wx:if="{{ showDanmu }}"
                 class="ptr-bg-tips ptr-bg-tips3"
             >
-                错过就亏啦～
+                <view>
+                    {{ personal$.length === 0 ? '错过就亏啦～' : '你真会省～' }}
+                </view>
             </view>
         </view>
 
         <!-- 标题 -->
-        <view class="ptr-title-con">
+        <view 
+            wx:if="{{ personal$.length > 0 }}"
+            class="ptr-title-con"
+        >
             <view 
                 class="ptr-title flex"
             >
                 群友<view class="ptr-title-inline small">互助</view>
+                <image
+                    wx:if="{{ ipAvatar }}"
+                    mode="aspectFill"
+                    class="ptr-title-avatar"
+                    src="{{ ipAvatar }}"
+                    lazy-load="{{ true }}"
+                />
             </view>
             <view 
                 class="ptr-title small flex"
@@ -56,7 +68,35 @@
                 你用群拼团<view class="ptr-title-inline">省了</view><wxc-price
                     class="ptr-title-price"
                 > 
-                    78
+                    {{ summary$.myTotalDelta }}
+                </wxc-price>
+            </view>
+        </view>
+
+        <!-- 标题 -->
+        <view 
+            wx:else
+            class="ptr-title-con"
+        >
+            <view 
+                class="ptr-title flex"
+            >
+                拼团<view class="ptr-title-inline small">省钱</view>
+                <image
+                    wx:if="{{ ipAvatar }}"
+                    mode="aspectFill"
+                    class="ptr-title-avatar"
+                    src="{{ ipAvatar }}"
+                    lazy-load="{{ true }}"
+                />
+            </view>
+            <view 
+                class="ptr-title small flex"
+            >
+                群友互拼<view class="ptr-title-inline">共省</view><wxc-price
+                    class="ptr-title-price"
+                > 
+                    {{ summary$.groupTotalDelta }}
                 </wxc-price>
             </view>
         </view>
@@ -77,10 +117,9 @@
                         lazy-load="{{ true }}"
                     />
                     <view 
-                        wx:if="{{ item.pinSuccess }}"
                         class="ptr-personal-pin-tips"
                     >
-                        {{ item.buyer.length }}群友拼团
+                        {{ item.pinSuccess ? item.buyer.length + '群友拼团' : '没拼成功' }}
                     </view>
                 </view>
 
@@ -96,7 +135,8 @@
                             拼团买¥{{ item.groupPrice }}
                         </view>
                         <view>
-                            淘宝¥{{ item.fadePrice }}
+                            <!-- 淘宝¥{{ item.fadePrice }} -->
+                            直接买{{ item.price }}
                         </view>
                     </view>
 
@@ -120,7 +160,7 @@
                                 />
                                 <view 
                                     wx:if="{{ k === item.tipsIndex }}"
-                                    class="ptr-personal-tips"
+                                    class="ptr-personal-tips zoom {{ index % 2 === 0 ? '' : 'delay' }}"
                                 >
                                     {{ item.tips }}
                                 </view>
@@ -138,8 +178,10 @@
                 </view>
 
                 <!-- 对比 -->
-                <view class="ptr-personal-compare {{ !item.pinSuccess ? 'grey' : '' }}">
-                    {{ item.pinSuccess ? '拼团' : '' }}省{{ item.pinSuccess ? 27 : 0 }}元
+                <view
+                    class="ptr-personal-compare {{ !item.pinSuccess ? 'grey' : '' }}"
+                >
+                    {{ item.pinSuccess ? '拼团' : '' }}省{{ item.pinSuccess ? item.successDelta : 0 }}元
                 </view>
                 
             </view>
@@ -215,7 +257,7 @@
                                 </view>
 
                                 <view class="ptr-other-compare-tips">
-                                    省27元
+                                    {{ item.buyer.length > 1 ? item.buyer.length + '人' : '' }}省{{ item.totalDelta }}元
                                 </view>
                             </view>
                         </view>

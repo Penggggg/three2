@@ -12,10 +12,14 @@ Page({
 
         tid: '',
 
+        openid: '',
+
+        ipAvatar: '',
+
         /**
          * 加载
          */
-        loading: false,
+        loading: true,
 
         /**
          * 其他人清单的 swiper
@@ -25,7 +29,12 @@ Page({
         /**
          * 是否展示弹幕
          */
-        showDanmu: false
+        showDanmu: false,
+
+        /**
+         * 购物清单
+         */
+        list: [ ]
 
     },
 
@@ -58,12 +67,25 @@ Page({
 
             },
 
+            // 其他人(或者是所有人的)的购物清单
+            others$( ) {
+                const { list, openid } = this.data;
+                const otherList = list
+                    .filter( x => {
+                        return !x.users.find( y => y.openid === openid );
+                    })
+                    .sort(( x, y ) => {
+                        return y.users.length - x.users.length
+                    });
+
+                const r = otherList.map( sl => this.transferSl( sl ));
+                return r;
+            },
+
             // 个人购物清单
             personal$( ) {
-                const avatar = 'https://wx.qlogo.cn/mmopen/vi_32/IejMVZTG8WlibHicHIVQhqcNeC4uBxkzH0FFTbRLMicxib8wrxRRWoJY3gvctylATdmAPhiaVicU4sH0NptSszBdyHiaA/132';
-                const imgUrl = 'https://wx60bf7f745ce31ef0-1257764567.cos.ap-guangzhou.myqcloud.com/tmp_7e24d0909d341e812968b83ce5a328d102bc1b174a374f4e.jpg';
-
-                const getRandom = n => Math.floor( Math.random( ) * n );
+                const { list, openid } = this.data;
+                
                 const allTexts = [
                     `真给力`,
                     `谢谢你`,
@@ -73,253 +95,36 @@ Page({
                     `赚!`
                 ];
 
-                const r = [
-                    {
-                        goodId: '1',
-                        delta: 15,
-                        totalDelta: 45,
-                        price: 86,
-                        groupPrice: 71,
-                        fadePrice: 128,
-                        title: 'SKT护肤霜',
-                        name: '红色',
-                        buyer: [
-                            {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }, {
-                                name: 'xxx',
-                                avatar
-                            }
-                        ],
-                        pinSuccess: true,
-                        goodImg: imgUrl,
-                        tips: allTexts[ getRandom( allTexts.length )],
-                        tipsIndex: getRandom( 9 > 4 ? 3 : 9 ) + 1
-                    }, {
-                        goodId: '1',
-                        delta: 15,
-                        totalDelta: 45,
-                        price: 86,
-                        groupPrice: 71,
-                        fadePrice: 128,
-                        title: 'SKT护肤霜',
-                        name: '红色',
-                        buyer: [
-                            {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }, {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }, {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }
-                        ],
-                        pinSuccess: true,
-                        goodImg: imgUrl,
-                        tips: allTexts[ getRandom( allTexts.length )],
-                        tipsIndex: getRandom( 9 > 4 ? 3 : 9 ) + 1
-                    }, {
-                        goodId: '1',
-                        delta: 15,
-                        totalDelta: 45,
-                        price: 86,
-                        groupPrice: 71,
-                        fadePrice: 128,
-                        title: 'SKT护肤霜',
-                        name: '红色',
-                        buyer: [
-                            {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }, {
-                                name: 'xxx',
-                                avatar
-                            }
-                        ],
-                        pinSuccess: false,
-                        goodImg: imgUrl,
-                        tips: allTexts[ getRandom( allTexts.length )],
-                        tipsIndex: getRandom( 9 > 4 ? 3 : 9 ) + 1
-                    }
-                ];
+                const myList = list
+                    .filter( x => {
+                        return x.users.find( y => y.openid === openid );
+                    })
+                    .sort(( x, y ) => {
+                        return y.users.length - x.users.length
+                    });
+
+                const r = myList.map( sl => this.transferSl( sl, allTexts ));
                 return r;
             },
 
-            // 其他人的购物清单
-            others$( ) {
-                const avatar = 'https://wx.qlogo.cn/mmopen/vi_32/IejMVZTG8WlibHicHIVQhqcNeC4uBxkzH0FFTbRLMicxib8wrxRRWoJY3gvctylATdmAPhiaVicU4sH0NptSszBdyHiaA/132';
-                const imgUrl = 'https://wx60bf7f745ce31ef0-1257764567.cos.ap-guangzhou.myqcloud.com/tmp_7e24d0909d341e812968b83ce5a328d102bc1b174a374f4e.jpg';
-                const r = [
-                    {
-                        goodId: '1',
-                        delta: 15,
-                        totalDelta: 45,
-                        price: 86,
-                        groupPrice: 71,
-                        fadePrice: 128,
-                        title: 'SKT护肤霜',
-                        name: '红色',
-                        buyer: [
-                            {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }, {
-                                name: 'xxx',
-                                avatar
-                            }
-                        ],
-                        pinSuccess: true,
-                        goodImg: imgUrl
-                    }, {
-                        goodId: '1',
-                        delta: 15,
-                        totalDelta: 45,
-                        price: 86,
-                        groupPrice: 71,
-                        fadePrice: 128,
-                        title: 'SKT护肤霜',
-                        name: '红色',
-                        buyer: [
-                            {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }, {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }, {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }
-                        ],
-                        pinSuccess: true,
-                        goodImg: imgUrl
-                    }, {
-                        goodId: '1',
-                        delta: 15,
-                        totalDelta: 45,
-                        price: 86,
-                        groupPrice: 71,
-                        fadePrice: 128,
-                        title: 'SKT护肤霜',
-                        name: '红色',
-                        buyer: [
-                            {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }, {
-                                name: 'xxx',
-                                avatar
-                            }
-                        ],
-                        pinSuccess: true,
-                        goodImg: imgUrl
-                    }, {
-                        goodId: '1',
-                        delta: 15,
-                        totalDelta: 45,
-                        price: 86,
-                        groupPrice: 71,
-                        fadePrice: 128,
-                        title: 'SKT护肤霜',
-                        name: '红色',
-                        buyer: [
-                            {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }, {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }, {
-                                name: 'xxx',
-                                avatar
-                            }, {
-                                name: 'yyy',
-                                avatar
-                            }, {
-                                name: 'zzz',
-                                avatar
-                            }
-                        ],
-                        pinSuccess: true,
-                        goodImg: imgUrl
-                    }
-                ];
-                return r; 
+            // 行程清单总概况
+            summary$( ) {
+                const { list, openid } = this.data;
+
+                const allSl = list.map( sl => this.transferSl( sl ));
+                const mySL = list
+                    .filter( x => {
+                        return x.users.find( y => y.openid === openid );
+                    })
+                    .map( sl => this.transferSl( sl ));
+
+                const r = {
+                    // 所有群友，一共省了多少
+                    groupTotalDelta: allSl.reduce(( x, y ) => x + y.totalDelta, 0 ),
+                    // 我一共省了多少
+                    myTotalDelta: mySL.reduce(( x, y ) => x + y.successDelta, 0 )
+                };
+                return r;
             }
 
         });
@@ -330,9 +135,40 @@ Page({
      */
     watchStore( ) {
         app.watch$('appConfig', val => {
-            if ( !val ) { return; }
-            this.setTitle(`${val['ip-name']}群拼团`)
+            if ( !!val ) {
+                this.setTitle(`${val['ip-name'] || ''}群拼团`)
+                this.setData!({
+                    ipAvatar: `${val['ip-avatar'] || ''}`
+                })
+            }
         });
+        app.watch$('openid', val => {
+            !!val && this.setData!({
+                openid: val
+            })
+        });
+    },
+
+    /** 拉取行程的购物请单信息 */
+    fetchShopping( tid ) {
+        if ( !tid ) { return; }
+
+        http({
+            url: 'shopping-list_pin',
+            data: {
+                tid,
+                detail: true,
+                showUser: true
+            },
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setData!({
+                    list: data,
+                    loading: false
+                });
+            }
+        })
     },
 
     /** 
@@ -343,6 +179,41 @@ Page({
         wx.setNavigationBarTitle({
             title
         });
+    },
+
+    /**
+     * 转换格式
+     */
+    transferSl( sl, allTexts = [ ]) {
+
+        const { pid, adjustGroupPrice, adjustPrice, users, detail } = sl;
+        const delta = adjustGroupPrice ? Math.ceil( adjustPrice - adjustGroupPrice ) : 0;
+        const totalDelta = delta * users.length;
+
+        const getRandom = n => Math.floor( Math.random( ) * n );
+
+        return {
+            pid,
+            price: adjustPrice,
+            groupPrice: adjustGroupPrice,
+            fadePrice: detail.good.fadePrice,
+            title: detail.title,
+            name: detail.name || '',
+            goodImg: detail.img,
+            // 总差值
+            delta, 
+            // 购物清单总差值
+            totalDelta,
+            // 我的成功拼团差值
+            successDelta: users.length > 1 ? delta : 0,
+            buyer: users.map( x => ({
+                name: x.nickName,
+                avatar: x.avatarUrl
+            })),
+            pinSuccess: users.length > 1,
+            tips: allTexts[ getRandom( allTexts.length )],
+            tipsIndex: getRandom( users.length > 4 ? 3 : users.length - 1 ) + 1
+        }
     },
 
     /**
@@ -381,6 +252,8 @@ Page({
         this.setData!({
             tid
         });
+
+        this.fetchShopping( tid );
 
     },
   
@@ -429,11 +302,7 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    onShareAppMessage: function ( e ) {
-        const { tid } = this.data;
-        return {
-            path: `/pages/trip-reward/index?tid=${tid}`,
-            title: '回报群友啦～免费领抵现金！'
-        }
-    }
+    // onShareAppMessage: function ( e ) {
+
+    // }
   })
