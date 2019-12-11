@@ -27,13 +27,13 @@
                 wx:if="{{ !showDanmu }}"
                 class="ptr-bg-tips ptr-bg-tips1 zoom"
             >
-                哈！群拼团真省钱
+                感谢拼团的群友～
             </view>
             <view 
                 wx:if="{{ !showDanmu }}"
                 class="ptr-bg-tips ptr-bg-tips2 zoom delay"
             >
-                感谢拼团的群友～
+                哈！群拼团真省钱
             </view>
             <view 
                 wx:if="{{ showDanmu }}"

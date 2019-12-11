@@ -362,7 +362,7 @@
     width: 100%;
     height: 100%;
     position: relative;
-    padding: 0 35rpx 150rpx;
+    padding: 5rpx 35rpx 150rpx;
     box-sizing: border-box;
 }
 
@@ -373,7 +373,7 @@
     transform: scale( 1 );
     transition: all ease 0.5s;
     position: relative;
-    box-shadow: 0 8px 15px rgba( 0, 0, 0, 0.35 );
+    box-shadow: 0 5px 15px rgba( 0, 0, 0, 0.20 );
 }
 
 .ptr-other-swiper-item.small {
