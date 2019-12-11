@@ -224,7 +224,7 @@
                                 wx:key="k"
                                 wx:for-index="k"
                                 wx:for-item="user"
-                                src="{{ user.avatar }}"
+                                src="{{ user.avatarUrl }}"
                                 wx:for="{{ item.otherUser }}"
                             />
                         </view>
@@ -249,7 +249,7 @@
                             wx:else
                             class="pgd-pin-item-tips"
                         >
-                            成团!<view class="pgd-pin-item-red">可拼</view> 
+                            {{ item.uids.length }}群友<view class="pgd-pin-item-red">拼团中</view> 
                         </view>
                         <view
                             class="pgd-pin-item-countdown"

@@ -26,5 +26,6 @@
 
 .cdt-text {
     color: #fff;
+    white-space: nowrap;
     letter-spacing: 0.05em;
 }

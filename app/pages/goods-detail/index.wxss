@@ -984,22 +984,24 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0px 6px rgba(0,0,0,0.13);   
-    background-image: linear-gradient(45deg, #fad0c4 0%, #ffd1ff 100%);
+    border: 1px solid rgba( 0, 0, 0, 0.05 );
+    /* box-shadow: 0 0px 6px rgba(0,0,0,0.13);    */
+    /* background-image: linear-gradient(45deg, #fad0c4 0%, #ffd1ff 100%); */
     /* background-image: linear-gradient(45deg, #20E2D7 0%, #F9FEA5 100%); */
     /* background-image: linear-gradient(-225deg, #9EFBD3 0%, #57E9F2 48%, #45D4FB 100%); */
 }
 
 .gd-other-pin-more-title {
-    color: #fff;
+    /* color: #fff; */
+    color: #797979;
     font-size: 24rpx;
     letter-spacing: 0.2em;
-    text-shadow: 0 0 3px rgba(0,0,0,.15);
+    /* text-shadow: 0 0 3px rgba(0,0,0,.15); */
 }
 
 .gd-other-pin-icon {
-    width: 80rpx;
-    height: 80rpx;
+    width: 100rpx;
+    height: 100rpx;
     margin: 0 0 10rpx;
     border-radius: 50%;
     box-shadow: 3px 3px 10px rgba( 0, 0, 0, 0.15 );
