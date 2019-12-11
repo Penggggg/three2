@@ -24,20 +24,23 @@
                 src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/material-any-fans-colorful-full.png"
             />
             <view 
+                wx:if="{{ !showDanmu }}"
                 class="ptr-bg-tips ptr-bg-tips1"
             >
                 哈！群拼团真省钱
             </view>
             <view 
+                wx:if="{{ !showDanmu }}"
                 class="ptr-bg-tips ptr-bg-tips2"
             >
                 感谢拼团的群友～
             </view>
-            <!-- <view 
+            <view 
+                wx:if="{{ showDanmu }}"
                 class="ptr-bg-tips ptr-bg-tips3"
             >
                 错过就亏啦～
-            </view> -->
+            </view>
         </view>
 
         <!-- 标题 -->
@@ -159,7 +162,7 @@
                 current="{{ swiperIndex }}"
                 class="ptr-other-swiper"
                 autoplay="{{ true }}"
-                interval="{{ 5000 }}"
+                interval="{{ 4000 }}"
                 circular="{{ true }}"
                 indicator-dots="{{ true }}"
                 next-margin="100rpx"

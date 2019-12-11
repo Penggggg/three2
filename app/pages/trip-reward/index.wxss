@@ -57,6 +57,13 @@
 .ptr-bg-tips1 {
     left: 200rpx;
     top: 120rpx;
+
+    -webkit-animation-name:'zoom';
+    -webkit-animation-duration: 2.5s;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-delay: 0s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: alternate;
 }
 
 .ptr-bg-tips1:after {
@@ -67,6 +74,14 @@
 .ptr-bg-tips2 {
     right: 0rpx;
     top: 170rpx;
+    opacity: 0;
+
+    -webkit-animation-name:'zoom';
+    -webkit-animation-duration: 2.5s;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-delay: 2.5s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: alternate;
 }
 
 .ptr-bg-tips2:after {
@@ -82,6 +97,18 @@
 .ptr-bg-tips3:after {
     bottom: -23rpx;
     right: 15rpx;
+}
+
+@keyframes zoom {
+    0% {
+        opacity: 0.3;
+        transform: scale( 0.3 ) translate( -50%, 0 );
+    }
+    
+    100% {
+        opacity: 1;
+        transform: scale( 1 ) translate( -50%, 0 );
+    }
 }
 
 .ptr-title-con {
