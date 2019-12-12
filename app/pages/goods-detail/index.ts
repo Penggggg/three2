@@ -789,7 +789,7 @@ Page({
     onLoad: function (options) {
 
         const scene = decodeURIComponent( options!.scene || '' )
-        const id = options!.id || scene || '1a2751ef5cab50440283e59a10d24bec';
+        const id = options!.id || scene || 'ee3099285cdbf38f12869b13363bc206';
 
         this.runComputed( );
         this.initCoverText( );

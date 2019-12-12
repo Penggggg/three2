@@ -1,0 +1,69 @@
+<swiper
+    wx:if="{{ list.length > 0 }}"
+    current="{{ swiperIndex }}"
+    class="good-gallery-swiper"
+    autoplay="{{ true }}"
+    interval="{{ 4000 }}"
+    circular="{{ true }}"
+    indicator-dots="{{ true }}"
+    next-margin="100rpx"
+    previous-margin="100rpx"
+    indicator-color="rgba(0, 0, 0, 0.15)"
+    indicator-active-color="rgba(0, 0, 0, 0.5)"
+    bindchange="onSwiper"
+>
+    <block
+        wx:key="index"
+        wx:for="{{ list }}"
+    >
+        <swiper-item>
+            <view 
+                class="good-gallery-swiper-item-con"
+                data-data="{{ item }}"
+                bindtap="goGoodDetail"
+            >
+                <view 
+                    class="good-gallery-swiper-item {{ swiperIndex !== index ? 'small' : '' }}"
+                >
+
+                    <image
+                        mode="aspectFill"
+                        class="good-gallery-swiper-img"
+                        src="{{ item.img }}"
+                        lazy-load="{{ true }}"
+                    />
+
+                    <view class="good-gallery-swiper-tips-con">
+                        <view class="good-gallery-swiper-tips">
+                            {{ item.bottomTips }}
+                        </view>
+                        <view class="good-gallery-avatar-list">
+                            <view 
+                                wx:key="k"
+                                wx:for="{{ item.avatars }}"
+                                wx:for-item="avatarUrl"
+                                wx:for-index="k"
+                                class="good-gallery-avatar-con"
+                            >
+                                <image
+                                    mode="aspectFill"
+                                    class="good-gallery-avatar"
+                                    src="{{ avatarUrl }}"
+                                    lazy-load="{{ true }}"
+                                />
+                            </view>
+                        </view>
+                    </view>
+
+                    <view class="good-gallery-swiper-title">
+                        {{ item.title }}
+                    </view>
+
+                    <view class="good-gallery-compare-tips">
+                        {{ item.topTips }}
+                    </view>
+                </view>
+            </view>
+        </swiper-item>
+    </block>
+</swiper>

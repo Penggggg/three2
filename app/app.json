@@ -1,8 +1,8 @@
 {
   "pages": [
     "pages/trip-reward/index",
-    "pages/trip-enter/index",
     "pages/goods-detail/index",
+    "pages/trip-enter/index",
     "pages/order-list/index",
     "pages/good-activity/index",
     "pages/manager-goods-active/index",
@@ -45,6 +45,7 @@
     "my-switch-text": "./components/switch-text/index",
     "my-title-decorate": "./components/title-decorate/index",
     "my-subscribe-tips": "./container/subscribe-tips/index",
+    "my-good-gallery": "./container/good-gallery/index",
     "my-good-classify-list": "./container/good-classify-list/index",
     "my-task-modal": "./container/task-modal/index",
     "my-banner-1": "./container/banner-1/index",

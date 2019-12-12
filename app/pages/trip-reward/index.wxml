@@ -205,74 +205,10 @@
                 />
             </view>
 
-            <swiper
-                current="{{ swiperIndex }}"
-                class="ptr-other-swiper"
-                autoplay="{{ true }}"
-                interval="{{ 4000 }}"
-                circular="{{ true }}"
-                indicator-dots="{{ true }}"
-                next-margin="100rpx"
-                previous-margin="100rpx"
-                indicator-color="rgba(0, 0, 0, 0.15)"
-                indicator-active-color="rgba(0, 0, 0, 0.5)"
-                bindchange="onSwiper"
-            >
-                <block
-                    wx:key="index"
-                    wx:for="{{ others$ }}"
-                >
-                    <swiper-item>
-                        <view 
-                            class="ptr-other-swiper-item-con"
-                            data-data="{{ item }}"
-                            bindtap="goGoodDetail"
-                        >
-                            <view 
-                                class="ptr-other-swiper-item {{ swiperIndex !== index ? 'small' : '' }}"
-                            >
+            <my-good-gallery 
+                list="{{ others$ }}"
+            />
 
-                                <image
-                                    mode="aspectFill"
-                                    class="ptr-other-swiper-img"
-                                    src="{{ item.goodImg }}"
-                                    lazy-load="{{ true }}"
-                                />
-
-                                <view class="ptr-other-swiper-tips-con">
-                                    <view class="ptr-other-swiper-tips">
-                                        {{ item.buyer.length }}群友拼团
-                                    </view>
-                                    <view class="ptr-other-avatar-list">
-                                        <view 
-                                            wx:key="k"
-                                            wx:for="{{ item.buyer }}"
-                                            wx:for-item="buyer"
-                                            wx:for-index="k"
-                                            class="ptr-other-avatar-con"
-                                        >
-                                            <image
-                                                mode="aspectFill"
-                                                class="ptr-other-avatar"
-                                                src="{{ buyer.avatar }}"
-                                                lazy-load="{{ true }}"
-                                            />
-                                        </view>
-                                    </view>
-                                </view>
-
-                                <view class="ptr-other-swiper-title">
-                                    {{ item.name }}{{ item.title }}
-                                </view>
-
-                                <view class="ptr-other-compare-tips">
-                                    {{ item.buyer.length > 1 ? item.buyer.length + '人' : '' }}省{{ item.totalDelta }}元
-                                </view>
-                            </view>
-                        </view>
-                    </swiper-item>
-                </block>
-            </swiper>
         </view>
 
         <!-- 所有人的购物清单 -->

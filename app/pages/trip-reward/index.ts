@@ -90,6 +90,7 @@ Page({
             // 其他人的购物清单
             others$( ) {
                 const { list, openid } = this.data;
+
                 const otherList = list
                     .filter( x => {
                         return !x.users.find( y => y.openid === openid );
@@ -97,9 +98,20 @@ Page({
                     .sort(( x, y ) => {
                         return y.users.length - x.users.length
                     });
-
                 const r = otherList.map( sl => this.transferSl( sl ));
-                return r;
+
+                const result = r.map( x => {
+                    const { pid, goodImg, buyer, totalDelta, name, title } = x;
+                    return {
+                        pid,
+                        img: goodImg,
+                        topTips: `${buyer.length > 1 ? buyer.length + '人' : ''}省${totalDelta}元`,
+                        bottomTips: `${buyer.length}群友拼团`,
+                        avatars: buyer.map( y => y.avatar ),
+                        title: `${name ? name : ''}${title}`
+                    }
+                })
+                return result;
             },
 
             // 个人购物清单
@@ -124,7 +136,7 @@ Page({
                     });
 
                 const r = myList.map( sl => this.transferSl( sl, allTexts ));
-                return [];
+                return r;
             },
 
             // 所有人的购物清单
@@ -263,7 +275,8 @@ Page({
                 this.setData!({
                     list: data,
                     loading: false,
-                    showHongbao: 'show'
+                    // showHongbao: 'show'
+                    showHongbao: 'hide'
                 });
             }
         })
