@@ -275,8 +275,7 @@ Page({
                 this.setData!({
                     list: data,
                     loading: false,
-                    // showHongbao: 'show'
-                    showHongbao: 'hide'
+                    showHongbao: 'show'
                 });
             }
         })
