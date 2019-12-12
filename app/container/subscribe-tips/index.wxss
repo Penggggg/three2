@@ -5,8 +5,8 @@
 .cst-con {
     width: 80vw;
     display: flex;
-    padding: 40rpx 25rpx 20rpx;
-    min-height: 60vh;
+    padding: 40rpx 25rpx 40rpx;
+    /* min-height: 60vh; */
     border-radius: 5px;
     background: #fff;
     align-items: center;

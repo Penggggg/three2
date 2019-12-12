@@ -17,6 +17,11 @@ Page({
         ipAvatar: '',
 
         /**
+         * 是否有用户授权
+         */
+        isAuth: false,
+
+        /**
          * 加载
          */
         loading: true,
@@ -39,7 +44,7 @@ Page({
         /**
          * 展示红包
          */
-        showHongbao: true
+        showHongbao: 'hide'
 
     },
 
@@ -130,6 +135,46 @@ Page({
                     myTotalDelta: mySL.reduce(( x, y ) => x + y.successDelta, 0 )
                 };
                 return r;
+            },
+
+            // 抵现金的奖励金额
+            hongbao$( ) {
+                const { list, openid } = this.data;
+
+                // 我的购物清单
+                const myList = list
+                    .filter( x => {
+                        return x.users.find( y => y.openid === openid );
+                    });
+
+                // 是否有买过东西
+                const hasBuy = myList.length > 0;
+
+                // 奖励金额
+                const gift = hasBuy ? 1.24 : 0.88;
+
+                // 是否有拼团成功
+                const somePinSuccess = myList.some( x => x.users.length > 1 );
+
+                // 文案1
+                const title = hasBuy && somePinSuccess ?
+                    '拼团成功' :
+                    hasBuy && !somePinSuccess ?
+                        '莫灰心' :
+                        '下次跟着拼';
+                
+                // 文安2
+                const summary = hasBuy && somePinSuccess ?
+                    '请再接再厉~' :
+                    hasBuy && !somePinSuccess ?
+                        '差点就拼成!' :
+                        '群拼团 省钱!';
+
+                return {
+                    gift,
+                    title,
+                    summary
+                }
             }
 
         });
@@ -152,6 +197,12 @@ Page({
                 openid: val
             })
         });
+        app.watch$('isUserAuth', val => {
+            if ( val === undefined ) { return; }
+            this.setData!({
+                isAuth: val
+            });
+        });
     },
 
     /** 拉取行程的购物请单信息 */
@@ -170,7 +221,8 @@ Page({
                 if ( status !== 200 ) { return; }
                 this.setData!({
                     list: data,
-                    loading: false
+                    loading: false,
+                    showHongbao: 'show'
                 });
             }
         })
@@ -222,11 +274,37 @@ Page({
     },
 
     /**
+     * 开关红包
+     */
+    toggleHongbao( ) {
+        const { showHongbao } = this.data;
+        this.setData!({
+            showHongbao: showHongbao === 'show' ? 'hide' : 'show'
+        })
+    },
+
+    /**
      * 跳到商品详情
      */
     goGoodDetail( e ) {
         const { data } = e.currentTarget.dataset;
         navTo(`/pages/goods-detail/index?id=${data.pid}`)
+    },
+
+    /**
+     * 订阅
+     */
+    onSubscribe( ) {
+        app.getSubscribe('buyPin,waitPin,trip');
+    },
+
+    /** 
+     * 获取用户授权
+     */
+    getUserAuth( ) {
+        app.getWxUserInfo(( ) => {
+            // this.getFreeIntegral( true );
+        });
     },
 
     /**

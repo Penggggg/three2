@@ -281,6 +281,104 @@
         />
 
         <!-- 红包模块 -->
+        <wxc-mask
+            content-align="cc"
+            status="{{ showHongbao }}"
+            bindmasktap="toggleHongbao"
+        >
+            <!-- 红包现金 -->
+            <view
+                class="ptr-hongbap-block"
+            >   
+                <!-- 红包背景 -->
+                <image
+                    mode="aspectFill"
+                    class='ptr-hongbap-img'
+                    lazy-load="{{ true }}"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/bg-sign-gift.png"
+                />
+
+                <!-- 红包内容 -->
+                <view class="ptr-hongbap-content">
+                    <view class="ptr-hongbap-title center">
+                        - 抵现金 下单用 -
+                    </view>
+                    <view class="ptr-hongbap-price-block center">
+                        <wxc-price
+                            icon="sub"
+                            decimal="small"
+                            class="ptr-hongbap-price"
+                        > 
+                            {{ hongbao$.gift }}
+                        </wxc-price>
+                    </view>
+                    <view class="ptr-hongbap-text-block">
+                        <view class="ptr-hongbap-bigtips center">
+                            {{ hongbao$.title }}
+                        </view>
+                        <view class="ptr-hongbap-smalltips mt center">
+                            {{ hongbao$.summary }}
+                        </view>
+
+                        <!-- 领取 -->
+                        <form
+                            class=""
+                            wx:if="{{ !!isAuth }}"
+                            report-submit="{{ true }}"
+                        >
+                            <button
+                                bindtap="onSubscribe"
+                                form-type="submit"
+                                class='fix-btn ptr-countdown-block'
+                            >
+                                知道了 
+                            </button>
+                        </form>
+
+                        <!-- 授权按钮 -->
+                        <form
+                            wx:else
+                            report-submit="{{ true }}"
+                        >
+                            <button
+                                open-type="getUserInfo"
+                                report-submit="{{ true }}"
+                                bindgetuserinfo="getUserAuth"
+                                class="fix-btn ptr-countdown-block"
+                            >
+                                知道了
+                            </button>
+                        </form>
+
+                    </view>
+                </view>
+                
+            </view>
+            
+        </wxc-mask>
+
+        <!-- 下方小红包 -->
+        <view
+            bindtap="toggleHongbao"
+            class="ptr-tips-con right"
+        >
+            <image
+                mode="aspectFill"
+                class="ptr-tips-icon"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-hongbao.png"
+            />
+            <view
+                class="ptr-tips-price"
+            > 
+                抵现金
+            </view>
+            <view class="ptr-tips-text">
+                领取
+            </view>
+        </view>
+
+        <!-- 订阅消息模块 -->
+        <my-subscribe-tips />
 
     </scroll-view>
 

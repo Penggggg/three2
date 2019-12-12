@@ -213,7 +213,7 @@
                         report-submit="{{ true }}"
                     >
                         <button
-                            bindsubmit="onSubscribe"
+                            bindtap="onSubscribe"
                             form-type="submit"
                             class='fix-btn pm-countdown-block'
                         >
@@ -238,20 +238,7 @@
 
                 </view>
             </view>
-
-            <!-- 关闭按钮 -->
-            <!-- <form
-                class="pm-hongbao-close-form"
-                bindsubmit="toggleGift"
-                report-submit="{{ true }}"
-            >
-                <button
-                    form-type="submit"
-                    class='fix-btn pm-hongbao-close'
-                >
-                    X 
-                </button>
-            </form> -->
+            
         </view>
         
     </wxc-mask>
