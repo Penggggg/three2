@@ -228,6 +228,11 @@
                                 wx:for="{{ item.otherUser }}"
                             />
                         </view>
+                        <view 
+                            class="pgd-pin-zoom-tips zoom1"
+                        >
+                            {{ item.tips }}
+                        </view>
                     </view>
                     <!-- sku名称，只显示sku的 -->
                     <view

@@ -809,6 +809,57 @@
     position: relative;
 }
 
+.pgd-pin-zoom-tips {
+    left: 80rpx;
+    top: -10rpx;
+    color: #fff;
+    font-size: 22rpx;
+    padding: 5rpx 8rpx;
+    border-radius: 8px;
+    position: absolute;
+    background: rgba( 0, 0, 0, 0.2 );
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+}
+
+.pgd-pin-zoom-tips:after {
+    bottom: -23rpx;
+    left: 12rpx;
+    content: '';
+    position: absolute;
+    width:0px;
+    height:0px;
+    border-top: 15rpx solid rgba(0,0,0,0.2);
+    border-right: 10rpx solid  rgba(0,0,0,0);
+    border-bottom: 10rpx solid rgba( 0, 0, 0, 0 );
+    border-left: 10rpx solid  rgba(0,0,0,0);
+}
+
+.zoom1 {
+    -webkit-animation-name:'zoom1';
+    -webkit-animation-duration: 2.5s;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-delay: 0s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: alternate;
+}
+
+.zoom.delay {
+    -webkit-animation-delay: 2.5s;
+}
+
+@keyframes zoom1 {
+    0% {
+        opacity: 0.3;
+        transform: scale( 0.3 );
+    }
+    
+    100% {
+        opacity: 1;
+        transform: scale( 1 );
+    }
+}
+
 .pgd-pin-item-avatar {
     width: 90rpx;
     height: 90rpx;

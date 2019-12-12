@@ -311,16 +311,25 @@ Page({
             // 当前商品的购物清单
             shopping$( ) {
                 const { shopping, id } = this.data;
+
+                const getRandom = n => Math.floor( Math.random( ) * n );
+                const allTexts = [
+                    `谢谢给力的群友~`,
+                    `赞!拼团好划算~`,
+                    `哈!下次继续拼~`
+                ];
+
                 return shopping
                     .filter( x => x.pid === id )
                     .map( sl => {
-                        const { users, sid, detail } = sl;
+                        const { users, detail } = sl;
                         const { name } = detail;
                         return {
                             ...sl,
                             name,
                             firstUser: users[ 0 ],
                             otherUser: users.slice( 1 ),
+                            tips: allTexts[ getRandom( allTexts.length )]
                         }
                     })
             },
