@@ -828,7 +828,7 @@
 .pgd-pin-item-users {
     bottom: 0;
     left: 50%;
-    width: 150rpx;
+    width: 115rpx;
     position: absolute;
     overflow-x: scroll;
     white-space: nowrap;
@@ -837,7 +837,7 @@
 
 .pgd-pin-item-sku {
     flex: 1;
-    padding: 0 15px 0 150rpx;
+    padding: 0 10px 0 120rpx;
     box-sizing: border-box;
     font-size: 24rpx;
     color: #272839;
@@ -847,6 +847,10 @@
     word-break: break-all;
     text-overflow:ellipsis;
     -webkit-box-orient:vertical;
+}
+
+.pgd-pin-item-sku.npl {
+    padding: 0 10px 0 20rpx;
 }
 
 .pgd-pin-item-tips-con {

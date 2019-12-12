@@ -231,7 +231,7 @@
                     </view>
                     <!-- sku名称，只显示sku的 -->
                     <view
-                        class="pgd-pin-item-sku"
+                        class="pgd-pin-item-sku {{ item.otherUser.length === 0 ? 'npl' : '' }}"
                     >
                         {{ item.name }}
                     </view>
