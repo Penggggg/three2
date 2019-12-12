@@ -331,7 +331,7 @@
                                 form-type="submit"
                                 class='fix-btn ptr-countdown-block'
                             >
-                                知道了 
+                                请收下 
                             </button>
                         </form>
 
@@ -346,7 +346,7 @@
                                 bindgetuserinfo="getUserAuth"
                                 class="fix-btn ptr-countdown-block"
                             >
-                                知道了
+                                请收下 
                             </button>
                         </form>
 

@@ -166,15 +166,15 @@ Page({
                 const title = hasBuy && somePinSuccess ?
                     '拼团成功' :
                     hasBuy && !somePinSuccess ?
-                        '莫灰心' :
-                        '下次跟着拼';
+                        '差点拼成' :
+                        '群拼团 省钱!';
                 
                 // 文安2
                 const summary = hasBuy && somePinSuccess ?
-                    '请再接再厉~' :
+                    '省钱啦！请再接再厉~' :
                     hasBuy && !somePinSuccess ?
-                        '差点就拼成!' :
-                        '群拼团 省钱!';
+                        '莫灰心！多邀请群友拼团' :
+                        '下次跟着群友拼';
 
                 return {
                     gift,
@@ -245,7 +245,7 @@ Page({
 
         if ( hasGet ) {
             wx.showToast({
-                title: '你成功领取过啦'
+                title: '已领取过啦'
             });
             return this.toggleHongbao( );
         }
