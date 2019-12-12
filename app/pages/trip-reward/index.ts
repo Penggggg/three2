@@ -17,6 +17,10 @@ Page({
 
         ipAvatar: '',
 
+        ipName: '',
+
+        isAdm: false,
+
         /**
          * 是否有用户授权
          */
@@ -194,6 +198,7 @@ Page({
             if ( !!val ) {
                 this.setTitle(`${val['ip-name'] || ''}群拼团`)
                 this.setData!({
+                    ipName: val['ip-name'],
                     ipAvatar: `${val['ip-avatar'] || ''}`
                 })
             }
@@ -208,6 +213,15 @@ Page({
             this.setData!({
                 isAuth: val
             });
+        });
+        app.watch$('role', val => {
+            if ( val === 0 ) {
+                wx.hideShareMenu({ });
+            } else {
+                wx.showShareMenu({
+                    withShareTicket: false
+                });
+            }
         });
     },
 
@@ -460,7 +474,12 @@ Page({
     /**
      * 用户点击右上角分享
      */
-    // onShareAppMessage: function ( e ) {
-
-    // }
+    onShareAppMessage: function ( e ) {
+        const { ipName, tid, isAdm } = this.data;
+        return {
+            title: `${ipName || '群拼团'}回报大家啦 点击领取抵现金`,
+            imageUrl: '',
+            path: `/pages/trip-reward/index?tid=${tid}`
+        };
+    }
   })
