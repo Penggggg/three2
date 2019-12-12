@@ -19,6 +19,14 @@ Component({
         list: {
             type: Array,
             value: [ ]
+        },
+
+        /**
+         * 右上角的颜色
+         */
+        tipsColor: {
+            type: String,
+            value: '#13c2c2'
         }
 
     },

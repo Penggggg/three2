@@ -328,18 +328,24 @@ Page({
             // 行程中的其他购物清单
             otherShopping$( ) {
                 const { shopping, id } = this.data;
-                return shopping
+
+                const result = shopping
                     .filter( x => x.pid !== id )
-                    .map( sl => {
-                        const { users, sid, detail } = sl;
-                        const { name } = detail;
+                    .map( x => {
+                        const { pid, detail, users, adjustPrice, adjustGroupPrice } = x;
+                        const { name, title } = detail;
+                        const totalDelta = users.length * Math.ceil( adjustPrice - adjustGroupPrice );
                         return {
-                            ...sl,
-                            name,
-                            firstUser: users[ 0 ],
-                            otherUser: users.slice( 1 ),
+                            pid,
+                            img: detail.img,
+                            topTips: `${users.length > 1 ? users.length + '人' : ''}省${totalDelta}元`,
+                            bottomTips: `${users.length}群友拼团`,
+                            avatars: users.map( x => x.avatarUrl ),
+                            title: `${name ? name + ' ' : ''}${title}`
                         }
-                    })
+                    });
+
+                return result;
             },
 
             // 行程中，当前产品所有型号加起来，有多少人在拼团

@@ -558,6 +558,10 @@
     letter-spacing: 0.1em;
 }
 
+.pd-other-title {
+    margin: 50rpx 0 50rpx;
+}
+
 .gd-compare-socail-tips:after {
     bottom: -26rpx;
     left: 50rpx;

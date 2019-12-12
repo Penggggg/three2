@@ -311,7 +311,25 @@
         </view>
 
         <!-- 行程内，其他可拼商品 -->
-        <view 
+        <view
+            wx:if="{{ otherShopping$.length > 0 }}"
+        >
+
+            <view class="pd-other-title">
+                <my-title-decorate  
+                    title="群友拼了"
+                    fontSize="{{ 36 }}"
+                />
+            </view>
+
+            <my-good-gallery 
+                tipsColor="#FF0066"
+                list="{{ otherShopping$ }}"
+            />
+
+        </view>
+
+        <!-- <view 
             class="gd-other-pin-con"
             wx:if="{{ otherShopping$.length > 0 }}"
         >
@@ -385,7 +403,7 @@
                     </view>
                 </view>
             </view>
-        </view>
+        </view> -->
     </view> 
 
     <!-- 抵现金红包 、不含签到打卡 -->

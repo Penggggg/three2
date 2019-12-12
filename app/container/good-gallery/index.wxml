@@ -59,7 +59,10 @@
                         {{ item.title }}
                     </view>
 
-                    <view class="good-gallery-compare-tips">
+                    <view 
+                        class="good-gallery-compare-tips"
+                        style="background: {{ tipsColor }}"
+                    >
                         {{ item.topTips }}
                     </view>
                 </view>

@@ -108,7 +108,7 @@ Page({
                         topTips: `${buyer.length > 1 ? buyer.length + '人' : ''}省${totalDelta}元`,
                         bottomTips: `${buyer.length}群友拼团`,
                         avatars: buyer.map( y => y.avatar ),
-                        title: `${name ? name : ''}${title}`
+                        title: `${name ? name + ' ' : ''}${title}`
                     }
                 })
                 return result;
