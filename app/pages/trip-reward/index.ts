@@ -381,6 +381,13 @@ Page({
     },
 
     /**
+     * 返回主页
+     */
+    goHome( ) {
+        navTo(`/pages/trip-enter/index`);
+    },
+
+    /**
      * 订阅
      */
     onSubscribe( ) {

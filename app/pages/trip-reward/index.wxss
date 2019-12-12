@@ -655,3 +655,34 @@
 .fix-btn:after {
     border:none;
 }
+
+.ptr-btn-con {
+    padding: 0 8vw;
+    margin-bottom: 50rpx;
+    box-sizing: border-box;
+}
+
+.ptr-btn {
+    font-size: 30rpx;
+    padding: 22rpx 0;
+    text-align: center;
+    border-radius: 5px;
+    color: #fff;
+    letter-spacing: 0.2em;
+    position: relative;
+    background-image: linear-gradient( -225deg, #007adf 0%, #00ecbc 80%, #00ecbc 100% );
+}
+
+.ptr-btn-icon {
+    top: 50%;
+    right: 30rpx;
+    width: 60rpx;
+    height: 60rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    position: absolute;
+    background: rgba( 0, 0, 0, 0.08 );
+    transform: translate( 0, -50% );
+}

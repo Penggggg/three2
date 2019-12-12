@@ -301,6 +301,23 @@
             </view>
         </view>
 
+        <!-- 跳转按钮 -->
+        <view class="ptr-btn-con">
+            <view 
+                class="ptr-btn"
+                bindtap="goHome"
+            >
+                更多优惠 
+                <view class="ptr-btn-icon">
+                    <wxc-icon 
+                        size="30" 
+                        color="#fff"
+                        type="arrow-right" 
+                    />
+                </view>
+            </view>
+        </view>
+
         <!-- 社交弹框 -->
         <my-danmu-tips
             top="{{ 50  }}"
@@ -389,7 +406,7 @@
         <!-- 下方小红包 -->
         <view
             bindtap="toggleHongbao"
-            class="ptr-tips-con right"
+            class="ptr-tips-con left"
         >
             <image
                 mode="aspectFill"

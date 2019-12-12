@@ -5,7 +5,7 @@
     autoplay="{{ true }}"
     interval="{{ 4000 }}"
     circular="{{ true }}"
-    indicator-dots="{{ true }}"
+    indicator-dots="{{ list.length > 1 }}"
     next-margin="100rpx"
     previous-margin="100rpx"
     indicator-color="rgba(0, 0, 0, 0.15)"
