@@ -106,7 +106,9 @@
             <view 
                 wx:key="index"
                 wx:for="{{ personal$ }}"
+                data-data="{{ item }}"
                 class="ptr-personal-item {{ index === personal$.length - 1 ? '' : 'mb' }}"
+                bindtap="goGoodDetail"
             >
                 <!-- 主图 -->
                 <view class="ptr-personal-good-img-con">
@@ -218,7 +220,11 @@
                     wx:for="{{ others$ }}"
                 >
                     <swiper-item>
-                        <view class="ptr-other-swiper-item-con">
+                        <view 
+                            class="ptr-other-swiper-item-con"
+                            data-data="{{ item }}"
+                            bindtap="goGoodDetail"
+                        >
                             <view 
                                 class="ptr-other-swiper-item {{ swiperIndex !== index ? 'small' : '' }}"
                             >

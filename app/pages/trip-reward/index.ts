@@ -34,7 +34,12 @@ Page({
         /**
          * 购物清单
          */
-        list: [ ]
+        list: [ ],
+
+        /**
+         * 展示红包
+         */
+        showHongbao: true
 
     },
 
@@ -214,6 +219,14 @@ Page({
             tips: allTexts[ getRandom( allTexts.length )],
             tipsIndex: getRandom( users.length > 4 ? 3 : users.length - 1 ) + 1
         }
+    },
+
+    /**
+     * 跳到商品详情
+     */
+    goGoodDetail( e ) {
+        const { data } = e.currentTarget.dataset;
+        navTo(`/pages/goods-detail/index?id=${data.pid}`)
     },
 
     /**
