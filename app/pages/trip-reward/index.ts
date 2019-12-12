@@ -5,6 +5,7 @@ import { delayeringGood } from '../../util/goods.js';
 import { navTo } from '../../util/route.js';
 
 const app = getApp<any>( );
+const storageKey = 'trip-has-reward-list';
 
 Page({
 
@@ -44,7 +45,12 @@ Page({
         /**
          * 展示红包
          */
-        showHongbao: 'hide'
+        showHongbao: 'hide',
+
+        /**
+         * 是否已经领取过红包了
+         */
+        hasGet: true
 
     },
 
@@ -205,7 +211,9 @@ Page({
         });
     },
 
-    /** 拉取行程的购物请单信息 */
+    /** 
+     * 拉取行程的购物请单信息
+     */
     fetchShopping( tid ) {
         if ( !tid ) { return; }
 
@@ -226,6 +234,41 @@ Page({
                 });
             }
         })
+    },
+
+    /**
+     * 领取红包
+     */
+    fetchGetGift( ) {
+        const { tid, hasGet } = this.data;
+        const hongbao$ = (this as any).data.hongbao$;
+
+        if ( hasGet ) {
+            wx.showToast({
+                title: '你成功领取过啦'
+            });
+            return this.toggleHongbao( );
+        }
+
+        http({
+            url: 'common_get-integral',
+            data: {
+                integral: hongbao$.gift
+            },
+            loadingMsg: '领取中...',
+            success: res => {
+                const { status } = res;
+                if ( status !== 200 ) { return; }
+
+                wx.showToast({
+                    title: '领取成功'
+                });
+
+                this.toggleHongbao( );
+                this.setTripReward( tid );
+                this.checkIsGet( tid );
+            }
+        });
     },
 
     /** 
@@ -296,6 +339,7 @@ Page({
      */
     onSubscribe( ) {
         app.getSubscribe('buyPin,waitPin,trip');
+        this.fetchGetGift( );
     },
 
     /** 
@@ -303,7 +347,29 @@ Page({
      */
     getUserAuth( ) {
         app.getWxUserInfo(( ) => {
-            // this.getFreeIntegral( true );
+            this.fetchGetGift( );
+        });
+    },
+
+    /**
+     * 设置已领取红包
+     * 仅保留10个行程id
+     */
+    setTripReward( tid ) {
+        const tripSum = 10;
+        const hasRewardList = JSON.parse( wx.getStorageSync( storageKey ) || '[ ]');
+        hasRewardList.unshift( tid );
+        wx.setStorageSync( storageKey, JSON.stringify( hasRewardList.slice( 0, tripSum )))
+    },
+
+    /**
+     * 检查该趟行程里面
+     * 是否已经领取过红包
+     */
+    checkIsGet( tid ) {
+        const hasRewardList = JSON.parse( wx.getStorageSync( storageKey ) || '[ ]');
+        this.setData!({
+            hasGet: hasRewardList.includes( tid )
         });
     },
 
@@ -344,6 +410,7 @@ Page({
             tid
         });
 
+        this.checkIsGet( tid );
         this.fetchShopping( tid );
 
     },
