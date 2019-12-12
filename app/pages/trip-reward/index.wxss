@@ -168,6 +168,10 @@
     box-sizing: border-box;
 }
 
+.ptr-personal-con.mb {
+    margin-bottom: 50rpx;
+}
+
 .ptr-personal-item {
     display: flex;
     align-items: center;
@@ -215,6 +219,10 @@
     overflow: hidden;
 }
 
+.ptr-personal-content-con.mb {
+    margin-bottom: 50rpx;
+}
+
 .ptr-personal-title {
     color: #272839;
     font-size: 28rpx;
@@ -227,6 +235,8 @@
     -webkit-box-orient:vertical;
     font-weight: bold;
     margin-bottom: 10rpx;
+    padding-right: 50rpx;
+    box-sizing: border-box;
 }
 
 .ptr-personal-price-con {

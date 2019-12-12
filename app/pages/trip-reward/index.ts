@@ -87,7 +87,7 @@ Page({
 
             },
 
-            // 其他人(或者是所有人的)的购物清单
+            // 其他人的购物清单
             others$( ) {
                 const { list, openid } = this.data;
                 const otherList = list
@@ -124,6 +124,22 @@ Page({
                     });
 
                 const r = myList.map( sl => this.transferSl( sl, allTexts ));
+                return [];
+            },
+
+            // 所有人的购物清单
+            all$( ) {
+                const { list } = this.data;
+                
+                const allTexts = [
+                    `真给力`,
+                    `谢谢你`,
+                    `划算～`,
+                    `棒!`,
+                    `赞!`,
+                    `赚!`
+                ];
+                const r = list.map( sl => this.transferSl( sl, allTexts ));
                 return r;
             },
 
@@ -138,9 +154,12 @@ Page({
                     })
                     .map( sl => this.transferSl( sl ));
 
+                
                 const r = {
                     // 所有群友，一共省了多少
-                    groupTotalDelta: allSl.reduce(( x, y ) => x + y.totalDelta, 0 ),
+                    groupTotalDelta: allSl.reduce(( x, y ) => {
+                        return x + ( y.buyer.length > 1 ? y.totalDelta : 0 );
+                    }, 0 ),
                     // 我一共省了多少
                     myTotalDelta: mySL.reduce(( x, y ) => x + y.successDelta, 0 )
                 };

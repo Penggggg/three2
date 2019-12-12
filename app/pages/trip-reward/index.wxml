@@ -102,7 +102,10 @@
         </view>
 
         <!-- 个人购物清单 -->
-        <view class="ptr-personal-con">
+        <view 
+            class="ptr-personal-con"
+            wx:if="{{ personal$.length > 0 }}"
+        >
             <view 
                 wx:key="index"
                 wx:for="{{ personal$ }}"
@@ -192,7 +195,7 @@
         <!-- 其他人的购物清单 -->
         <view
             class="ptr-other-con"
-            wx:if="{{ others$.length > 0 }}"
+            wx:if="{{ personal$.length > 0 && others$.length > 0 }}"
         >
 
             <view class="ptr-other-title">
@@ -270,6 +273,96 @@
                     </swiper-item>
                 </block>
             </swiper>
+        </view>
+
+        <!-- 所有人的购物清单 -->
+        <view 
+            class="ptr-personal-con mb"
+            wx:if="{{ personal$.length === 0 }}"
+        >
+            <view 
+                wx:key="index"
+                wx:for="{{ all$ }}"
+                data-data="{{ item }}"
+                class="ptr-personal-item {{ index === all$.length - 1 ? '' : 'mb' }}"
+                bindtap="goGoodDetail"
+            >
+                <!-- 主图 -->
+                <view class="ptr-personal-good-img-con">
+                    <image
+                        mode="aspectFill"
+                        class="ptr-personal-good-img"
+                        src="{{ item.goodImg }}"
+                        lazy-load="{{ true }}"
+                    />
+                    <view 
+                        class="ptr-personal-pin-tips"
+                    >
+                        {{ item.pinSuccess ? item.buyer.length + '群友拼团' : '没拼成功' }}
+                    </view>
+                </view>
+
+                <!-- 标题、价格、头像、提示 -->
+                <view class="ptr-personal-content-con mb">
+
+                    <view class="ptr-personal-title">
+                        {{ item.name ? item.name + ' ' : '' }}{{ item.title }}
+                    </view>
+
+                    <view class="ptr-personal-price-con">
+                        <view class="ptr-personal-group-price">
+                            拼团买¥{{ item.groupPrice }}
+                        </view>
+                        <view>
+                            直接买{{ item.price }}
+                        </view>
+                    </view>
+
+                    <view 
+                        wx:if="{{ item.buyer.length > 0 && item.pinSuccess }}"
+                        class="ptr-personal-avatar-list-con"
+                    >
+                        <view class="ptr-personal-avatar-list">
+                            <view 
+                                wx:key="k"
+                                wx:for="{{ item.buyer }}"
+                                wx:for-item="buyer"
+                                wx:for-index="k"
+                                class="ptr-personal-avatar-con"
+                            >
+                                <image
+                                    mode="aspectFill"
+                                    class="ptr-personal-avatar {{ k === 0 ? 'big' : '' }}"
+                                    src="{{ buyer.avatar }}"
+                                    lazy-load="{{ true }}"
+                                />
+                                <view 
+                                    wx:if="{{ k === item.tipsIndex }}"
+                                    class="ptr-personal-tips zoom {{ index % 2 === 0 ? '' : 'delay' }}"
+                                >
+                                    {{ item.tips }}
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+
+                    <view 
+                        wx:if="{{ !item.pinSuccess }}"
+                        class="ptr-personal-error-tpis"
+                    >
+                        可惜！<view class="ptr-personal-error-inline">差1人</view>就拼成！
+                    </view>
+
+                </view>
+
+                <!-- 对比 -->
+                <view
+                    class="ptr-personal-compare {{ !item.pinSuccess ? 'grey' : '' }}"
+                >
+                    {{ item.buyer.length > 1 ? item.buyer.length + '人' : '' }}省{{ item.totalDelta }}元
+                </view>
+                
+            </view>
         </view>
 
         <!-- 社交弹框 -->
