@@ -478,7 +478,7 @@ Page({
         const { ipName, tid, isAdm } = this.data;
         return {
             title: `${ipName || '群拼团'}回报大家啦 点击领取抵现金`,
-            imageUrl: '',
+            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/bg-trip-reward-share-colorful.jpg',
             path: `/pages/trip-reward/index?tid=${tid}`
         };
     }
