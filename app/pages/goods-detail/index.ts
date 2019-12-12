@@ -314,9 +314,10 @@ Page({
 
                 const getRandom = n => Math.floor( Math.random( ) * n );
                 const allTexts = [
-                    `谢谢给力的群友~`,
-                    `赞!拼团好划算~`,
-                    `哈!下次继续拼~`
+                    `谢谢拼团的群友~`,
+                    `赞！又省钱了～`,
+                    `错过就亏啦～`,
+                    `拼团好划算~`
                 ];
 
                 return shopping
