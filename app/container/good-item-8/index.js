@@ -20,7 +20,10 @@ Component({
          * tag
          * price
          * groupPirce
-         * detail
+         * detail,
+         * delta,
+         * zoomTips,
+         * zoomDelay
          */
         good: {
             type: Object,
@@ -54,6 +57,7 @@ Component({
 
         onSubscribe( e ) {
             app.getSubscribe('buyPin,waitPin');
+            this.goDetail( null );
         }
     }
 })

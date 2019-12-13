@@ -35,18 +35,15 @@
         </view>
 
         <!-- 标题 -->
-        <view class="gp-title-block">
+        <view   
+            bindtap="sureOpen"
+            class="gp-title-block"
+        >
             <view class="gp-title bold">
-                热门
-            </view>
-            <view class="gp-title">
-                拼团
-                <view 
-                    bindtap="sureOpen"
-                    class="gp-tips-toggle"
-                >
-                    ?
-                </view>
+                群友拼团
+                <my-icon-question 
+                    color="#ff5777"
+                />
             </view>
         </view>
 
@@ -69,15 +66,13 @@
     </view>
 
     <!-- 提示弹框 -->
-    <view>
-        <my-common-confirm
-            title="拼团省钱"
-            openTime="{{ openTime }}"
-            storageKey="ground-pin"
-            open="{{ openTips }}"
-            bind:toggle="onToggle"
-            texts="{{[ '和群友购买同一件商品', '就可获得拼团价']}}"
-        />
-    </view>
+    <my-common-confirm
+        title="拼团省钱"
+        openTime="{{ openTime }}"
+        storageKey="ground-pin"
+        open="{{ openTips }}"
+        bind:toggle="onToggle"
+        texts="{{[ '和群友购买同一件商品', '就可获得拼团价']}}"
+    />
 
 </view>

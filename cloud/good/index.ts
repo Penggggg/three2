@@ -292,10 +292,10 @@ export const main = async ( event, context ) => {
 
             // 保健品配置
             const bjpConfig$ = await db.collection('app-config')
-            .where({
-                type: 'app-bjp-visible'
-            })
-            .get( );
+                .where({
+                    type: 'app-bjp-visible'
+                })
+                .get( );
             const bjpConfig = bjpConfig$.data[ 0 ];
 
             if ( !!bjpConfig && !bjpConfig.value ) {

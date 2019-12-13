@@ -43,7 +43,16 @@ Page({
         computed( this, {
 
             list$: function( ) {
-                const { list, allShoppinglist } = this.data;
+                const { list, allShoppinglist, search } = this.data;
+
+                const getRandom = n => Math.floor( Math.random( ) * n );
+                const allTexts = [
+                    `谢谢拼团的群友~`,
+                    `赞！又省钱了～`,
+                    `错过就亏啦～`,
+                    `拼团好划算~`
+                ];
+
                 // 拼团总列表
                 const metaList = [ ];
                 
@@ -113,23 +122,37 @@ Page({
                 });
 
                 // 购物清单
-                const meta2 = allShoppinglist.map( s => {
-                    const { good } = s.detail;
+                const meta2 = allShoppinglist
+                    .map( s => {
+                        const { good } = s.detail;
+                        return {
+                            _id: s.pid,
+                            pid: s.pid,
+                            title: good.title,
+                            tag: good.tag,
+                            img: s.detail.img,
+                            price: s.adjustPrice,
+                            detail: good.detail,
+                            users: (s.users || [ ]),
+                            groupPrice: s.adjustGroupPrice,
+                        };
+                    })
+                    .sort(( x, y ) => y.users.length - x.users.length )
+
+                const all = !!search ? 
+                    [ ...meta, ...meta2 ] :
+                    [ ...meta2, ...meta ];
+
+                const result = all.map(( x, k ) => {
+                    const { price, groupPrice } = x;
                     return {
-                        _id: s.pid,
-                        pid: s.pid,
-                        title: good.title,
-                        tag: good.tag,
-                        img: s.detail.img,
-                        price: s.adjustPrice,
-                        detail: good.detail,
-                        users: s.users,
-                        groupPrice: s.adjustGroupPrice,
+                        ...x,
+                        delta: price - groupPrice,
+                        zoomTips: allTexts[ getRandom( allTexts.length )],
+                        zoomDelay: k % 2 === 1
                     };
                 });
-
-                const all = [ ...meta2, ...meta ];
-                return all;
+                return result;
             }
         });
     },
@@ -217,6 +240,7 @@ Page({
 
     /** 输入搜索 */
     onSearch( e ) {
+        console.log( e.detail.value )
         this.setData({
             search: e.detail.value
         });
@@ -304,7 +328,7 @@ Page({
      */
     onShareAppMessage: function () {
         return {
-            title: `分享给你～超值拼团价美妆宝贝`,
+            title: `分享给你！群拼团真划算～`,
             path: `/pages/ground-pin/index`
         }
     }

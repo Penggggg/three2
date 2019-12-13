@@ -1,19 +1,20 @@
 <form
-    bindsubmit="goDetail"
-    report-submit="{{ true }}"
     class="good-item-8-form"
 >
-    <button 
+    <view 
         bindtap="onSubscribe"
         form-type="submit"
         class="fix-btn con-good-item-8 {{ isLeft ? '' : 'right' }}"
     >
+        <!-- 主图 -->
         <image
             mode="aspectFill"
             class="gi8-img"
             src="{{ good.img }}"
             lazy-load="{{ true }}"
         />
+
+        <!-- 文字、头像 -->
         <view class="gi8-info-block {{ isLeft ? '' : 'right' }}">
             
             <view class="gi8-title gi8-text">
@@ -35,64 +36,64 @@
                 class="gi8-action-block {{ isLeft ? '' : 'right' }}"
             >
 
-                <view class="gi8-member-block ">
-                    <wxc-price
-                        status="del"
-                        decimal="small"
-                        class="gi8-price"
-                        del-color="#666"
-                    > 
-                        {{ good.price }}
-                    </wxc-price>
+                <view 
+                    class="gi8-member-block"
+                >
                     <view 
                         class="gi8-members"
                         wx:if="{{ good.users }}"
                     >
                         <!-- 头像列表 -->
-                        <swiper
-                            class="gi8-swiper"
-                            autoplay="{{ true }}"
-                            circular="{{ true }}"
-                            duration="{{ 1000 }}"
-                            interval="{{ 3000 }}"
-                            display-multiple-items="{{ 1 }}"
-                        >
-                            <block
-                                wx:key="index"
-                                wx:for="{{ good.users }}"
-                            >
-                                <swiper-item>
-                                    <image
-                                        mode="scaleToFill"
-                                        class="gi8-avatar"
-                                        lazy-load="{{ true }}"
-                                        src="{{ item.avatarUrl }}"
-                                    />
-                                </swiper-item>
-                            </block>
-                        </swiper>
+                        <image
+                            wx:key="index"
+                            wx:for="{{ good.users }}"
+                            mode="scaleToFill"
+                            class="gi8-avatar {{ index !== 0 ? 'small' : '' }}"
+                            lazy-load="{{ true }}"
+                            src="{{ item.avatarUrl }}"
+                        />
                     </view>
                 </view>
 
                 <view
                     class="gi8-btn"
+                    wx:if="{{ good.delta > 0 }}"
                 >
-                    {{ !!good.users && good.users.length > 0 ? 
-                            !!good.users && good.users.length === 1 ?
-                            '已开团' :
-                                good.users.length + 1 + '人团' : 
-                                '拼团' 
-                    }} <wxc-price
+                    省{{ good.delta }}元
+                </view>
+
+                <view
+                    wx:else
+                    class="gi8-btn"
+                >
+                    超值<wxc-price
                             icon="sub"
                             decimal="small"
                             class="gi8-group-price"
                         > 
-                            {{ good.groupPrice }}
+                            {{ good.price }}
                         </wxc-price>
+                </view>
+
+                <!-- 弹幕提示 -->
+                <view 
+                    wx:if="{{ good.users.length > 0 && good.zoomTips }}"
+                    class="gi8-zoom-tips zoom1 {{ good.zoomDelay ? 'delay' : '' }}"
+                >
+                    {{ good.zoomTips }}
                 </view>
 
             </view>
 
         </view>
-    </button>
+
+        <!-- 开团提示 -->
+        <view 
+            wx:if="{{ good.users.length > 0 }}"
+            class="gi8-pin-tips"
+        >
+            在拼
+        </view>
+
+    </view>
 </form>

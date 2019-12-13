@@ -36,7 +36,7 @@
     color: rgba( 0, 0, 0, 0.35 );
     padding: 15rpx 85rpx 15rpx 25rpx;
     letter-spacing: 0.1em;
-    box-shadow: 3px 0 18px rgba( 0, 0, 0, 0.12 );
+    box-shadow: 3px 0 15px rgba( 0, 0, 0, 0.08 );
 }
 
 .gp-search-icon {
@@ -53,6 +53,7 @@
     height: 50rpx;
     border-radius: 0 2px 2px 0;
     background: #77e5dd;
+    background: #fae7f0;
 }
 
 .gp-title-block {
@@ -66,31 +67,14 @@
     color: #333;
     font-size: 45rpx;
     position: relative;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.12em;
 }
 
 .gp-title.bold {
     font-weight: bold;
 }
 
-.gp-tips-toggle {
-    top: 10rpx;
-    display: flex;
-    right: -46rpx;
-    width: 38rpx;
-    height: 38rpx;
-    color: #fff;
-    font-size: 28rpx;
-    border-radius: 50%;
-    position: absolute;
-    text-align: center;
-    justify-content: center;
-    box-shadow: 3px 3px 15px rgba( 0, 0, 0, 0.15 );
-     /* background: #6a6fd3; */
-    background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);
-}
-
 .gp-good-list {
     box-sizing: border-box;
-    padding: 0 50rpx;
+    padding: 20rpx 50rpx 0;
 }

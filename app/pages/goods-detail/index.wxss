@@ -844,7 +844,7 @@
     -webkit-animation-direction: alternate;
 }
 
-.zoom.delay {
+.zoom1.delay {
     -webkit-animation-delay: 2.5s;
 }
 
