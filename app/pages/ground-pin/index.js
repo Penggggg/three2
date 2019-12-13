@@ -149,9 +149,11 @@ Page({
                         ...x,
                         delta: price - groupPrice,
                         zoomTips: allTexts[ getRandom( allTexts.length )],
-                        zoomDelay: k % 2 === 1
+                        zoomDelay: k % 2 === 1,
+                        tagText: x.tag.join('、')
                     };
                 });
+
                 return result;
             }
         });

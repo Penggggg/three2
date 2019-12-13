@@ -22,8 +22,10 @@ Component({
          * groupPirce
          * detail,
          * delta,
+         * users
          * zoomTips,
-         * zoomDelay
+         * zoomDelay,
+         * tagText
          */
         good: {
             type: Object,
@@ -40,13 +42,22 @@ Component({
      * 组件的初始数据
      */
     data: {
-
+        ipAvatar: ''
     },
 
     /**
      * 组件的方法列表
      */
     methods: {
+
+        watchStore( ) {
+            app.watch$('appConfig', val => {
+                !!val && this.setData({
+                    ipAvatar: val['ip-avatar']
+                });
+            });
+        },
+
         init( val ) {
         },
 
@@ -59,5 +70,9 @@ Component({
             app.getSubscribe('buyPin,waitPin');
             this.goDetail( null );
         }
+    },
+
+    attached: function( ) {
+        this.watchStore( );
     }
 })

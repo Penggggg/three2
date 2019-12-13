@@ -36,12 +36,29 @@
                 class="gi8-action-block {{ isLeft ? '' : 'right' }}"
             >
 
+                <!-- ip头像 -->
+                <view
+                    class="gi8-ip-con"
+                    wx:if="{{ !good.users || good.users.length === 0 }}"
+                >
+                    <image
+                        mode="scaleToFill"
+                        class="gi8-avatar"
+                        lazy-load="{{ true }}"
+                        src="{{ ipAvatar }}"
+                    />
+                    <view class="gi8-ip-tips">
+                        {{ good.tagText || '推荐' }}
+                    </view>
+                </view>
+
+                <!-- 群友列表 -->
                 <view 
+                    wx:else
                     class="gi8-member-block"
                 >
                     <view 
                         class="gi8-members"
-                        wx:if="{{ good.users }}"
                     >
                         <!-- 头像列表 -->
                         <image

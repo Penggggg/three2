@@ -9,6 +9,7 @@
     margin-bottom: 60rpx;
     border-radius: 8px;
     box-sizing: border-box;
+    background: #fff !important;
     box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.08);
 }
 
@@ -22,6 +23,46 @@
     height: 200rpx;
     border-radius: 5px;
     border: 2px solid #fff;
+}
+
+.gi8-ip-con {
+    padding-left: 10rpx;
+    box-sizing: border-box;
+    position: relative;
+    overflow: visible;
+}
+
+.gi8-ip-tips {
+    left: 65rpx;
+    top: -25rpx;
+    color: #fff;
+    font-size: 22rpx;
+    padding: 5rpx 8rpx;
+    border-radius: 8px;
+    position: absolute;
+    background: rgba( 0, 0, 0, 0.2 );
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    transform: translate( -50%, 0 );
+}
+
+.gi8-ip-tips:after {
+    bottom: -23rpx;
+    left: 12rpx;
+    content: '';
+    position: absolute;
+    width:0px;
+    height:0px;
+    border-top: 15rpx solid rgba(0,0,0,0.2);
+    border-right: 10rpx solid  rgba(0,0,0,0);
+    border-bottom: 10rpx solid rgba( 0, 0, 0, 0 );
+    border-left: 10rpx solid  rgba(0,0,0,0);
+}
+
+.gi8-price {
+    color: rgba( 0, 0, 0, 0.5 );
+    font-size: 26rpx;
+    letter-spacing: 0.05em;
 }
 
 .gi8-info-block {
@@ -76,11 +117,6 @@
     position: relative;
 }
 
-.gi8-price {
-    color: #666;
-    font-weight: bold;
-    font-size: 26rpx;
-}
 
 .gi8-btn {
     color: #fff;
@@ -89,9 +125,9 @@
     white-space: nowrap;
     padding: 10rpx 15rpx;
     letter-spacing: 0.1em;
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.2 );
-    background: #fae7f0;
     color: #FF0066;
+    background: #fceff4;
+    /* color: #ef86a3; */
     min-width: 80rpx;
     text-align: center;
     letter-spacing: 0.08em;
