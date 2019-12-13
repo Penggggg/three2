@@ -71,7 +71,7 @@
         data-share="{{ good }}"
         class="fix-btn gi7-share-btn"
     >
-        赚{{ good.integral2$ }}元
+        赚{{ good.maxIntegral$ }}元
         <image
             mode="aspectFill"
             lazy-load="{{ true }}"
