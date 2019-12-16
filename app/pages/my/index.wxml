@@ -21,7 +21,7 @@
                     bindtap="goOrderList"
                 >
                     <view class="pm-bar-item-content">{{ baseInfo.orders }}</view>
-                    <view class="pm-bar-item-title">订单</view>
+                    <view class="pm-bar-item-title">我的拼团</view>
                 </view>
                 <view
                     class="pm-header-bar-item line"

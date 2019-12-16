@@ -557,13 +557,13 @@ Page({
 
                                     price: Number(( price * order.count).toFixed( 2 )),
 
-                                    title: '拼团就减',
+                                    title: '拼成就减',
 
                                     img: order.img[ 0 ],
 
                                     // desc: `${order.name} ${order.standername !== '默认型号' && !!order.standername ? order.standername : ''}`,
 
-                                    desc: `邀请他人拼团购买，立减${Number(( price * order.count).toFixed( 1 ))}元`,
+                                    desc: `邀请群友拼团购买，立减${Number(( price * order.count).toFixed( 1 ))}元`,
 
                                     share: {
                                         title: `省${order.allocatedGroupPrice ?

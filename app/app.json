@@ -1,16 +1,16 @@
 {
   "pages": [
+    "pages/my/index",
+    "pages/trip-enter/index",
+    "pages/order-list/index",
     "pages/ground-pin/index",
     "pages/goods-detail/index",
     "pages/trip-reward/index",
-    "pages/trip-enter/index",
-    "pages/order-list/index",
     "pages/good-activity/index",
     "pages/manager-goods-active/index",
     "pages/good-new/index",
-    
     "pages/trip-enter-temp/index",
-    "pages/my/index",
+    
     "pages/ground-push-integral/index",
     "pages/coupon-list/index",
     "pages/manager-trip-list/index",

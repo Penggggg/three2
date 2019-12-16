@@ -224,7 +224,7 @@
                     <!-- 订单列表 -->
                     <view
                         wx:for-index="k"
-                        wx:key="{{ k }}"
+                        wx:key="k"
                         wx:for-item="order"
                         wx:for="{{ item.meta }}"
                         class="pol-trip-order-item {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}"
@@ -247,7 +247,7 @@
                                 <view
                                     wx:for-index="k"
                                     wx:for-item="i"
-                                    wx:key="{{ k }}"
+                                    wx:key="k"
                                     wx:for="{{ order.statusCN }}"
                                     class="pol-trip-order-status-fix"
                                     wx:if="{{ i === '支付过期' || i === '已取消' || (( i === '待付订金'  || i === '货源不足' || i === '退订金' || i === '拼团成功') && order.b !== '1' )}}"
