@@ -60,7 +60,7 @@ Page({
                 const metaList = [ ];
                 
                 list.map( good => {
-                    const { standards, activities } = good;
+                    const { standards, activities, visitRecord } = good;
                     // 有型号
                     if ( Array.isArray( standards ) && standards.length > 0 ) {
                         standards.map( standard => {
@@ -73,7 +73,9 @@ Page({
                                 name: standard.name,
                                 detail: good.detail,
                                 sid: standard._id,
-                                pid: good._id
+                                pid: good._id,
+                                visitRecord: visitRecord ? visitRecord.avatars : [ ],
+                                visitTips: visitRecord ? `${visitRecord.visitorSum}群友看过` : ``
                             };
                             if ( !!activeTarget ) {
                                 metaList.push({
@@ -98,7 +100,9 @@ Page({
                             img: good.img[ 0 ],
                             title: good.title,
                             detail: good.detail,
-                            pid: good._id
+                            pid: good._id,
+                            visitRecord: visitRecord ? visitRecord.avatars : [ ],
+                            visitTips: visitRecord ? `${visitRecord.visitorSum}群友看过` : ``
                         };
                         if ( !!activeTarget ) {
                             metaList.push({
@@ -151,12 +155,18 @@ Page({
                     return {
                         ...x,
                         delta: price - groupPrice,
-                        zoomTips: allTexts[ getRandom( allTexts.length )],
+                        zoomTips: x.visitTips || allTexts[ getRandom( allTexts.length )],
                         zoomDelay: k % 2 === 1,
-                        tagText: x.tag.join('、')
+                        tagText: x.tag.join('、'),
+                        users: Array.isArray( x.users ) && x.users.length > 0 ? 
+                            x.users :
+                            Array.isArray( x.visitRecord ) && x.visitRecord.length > 0 ? 
+                                x.visitRecord : 
+                                [ ],
+                        isPin: Array.isArray( x.users ) && x.users.length > 0,
+                        isZoom: Array.isArray( x.users ) && x.users.length > 0
                     };
                 });
-
                 return result;
             }
         });

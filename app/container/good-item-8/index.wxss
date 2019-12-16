@@ -221,7 +221,6 @@
     background: rgba( 0, 0, 0, 0.2 );
     letter-spacing: 0.1em;
     white-space: nowrap;
-    opacity: 0;
 }
 
 .gi8-zoom-tips:after {
@@ -238,6 +237,7 @@
 }
 
 .zoom1 {
+    opacity: 0;
     -webkit-animation-name:'zoom1';
     -webkit-animation-duration: 2.5s;
     -webkit-animation-timing-function: ease;

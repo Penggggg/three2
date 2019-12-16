@@ -381,6 +381,7 @@ export const main = async ( event, context ) => {
 
                         const goodVisitRecord$ = await db.collection('good-visiting-record')
                             .where( where$ )
+                            .orderBy('visitTime', 'desc')
                             .limit( 5 )
                             .get( );
 
@@ -401,7 +402,7 @@ export const main = async ( event, context ) => {
                         );
                         return {
                             visitorSum: goodVisitTotal$.total,
-                            avatar: users
+                            avatars: users
                         }
                     })
                 )

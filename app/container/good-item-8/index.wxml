@@ -95,7 +95,7 @@
                 <!-- 弹幕提示 -->
                 <view 
                     wx:if="{{ good.users.length > 0 && good.zoomTips }}"
-                    class="gi8-zoom-tips zoom1 {{ good.zoomDelay ? 'delay' : '' }}"
+                    class="gi8-zoom-tips {{ good.isZoom ? 'zoom1' : '' }} {{ good.zoomDelay ? 'delay' : '' }}"
                 >
                     {{ good.zoomTips }}
                 </view>
@@ -106,7 +106,7 @@
 
         <!-- 开团提示 -->
         <view 
-            wx:if="{{ good.users.length > 0 }}"
+            wx:if="{{ good.isPin }}"
             class="gi8-pin-tips"
         >
             拼团中

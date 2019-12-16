@@ -25,7 +25,9 @@ Component({
          * users
          * zoomTips,
          * zoomDelay,
-         * tagText
+         * tagText,
+         * isPin 是否拼团中
+         * isZoom 是否需要动画弹幕效果
          */
         good: {
             type: Object,
