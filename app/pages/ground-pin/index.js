@@ -75,7 +75,7 @@ Page({
                                 sid: standard._id,
                                 pid: good._id,
                                 visitRecord: visitRecord ? visitRecord.avatars : [ ],
-                                visitTips: visitRecord ? `${visitRecord.visitorSum}群友看过` : ``
+                                visitTips: visitRecord ? `${visitRecord.visitorSum}群友在看` : ``
                             };
                             if ( !!activeTarget ) {
                                 metaList.push({
