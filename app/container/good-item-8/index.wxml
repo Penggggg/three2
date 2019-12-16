@@ -109,7 +109,7 @@
             wx:if="{{ good.users.length > 0 }}"
             class="gi8-pin-tips"
         >
-            在拼
+            拼团中
         </view>
 
     </view>
