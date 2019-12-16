@@ -1,0 +1,115 @@
+<view class="con-task-modal">
+    <!-- 积分提示弹框 -->
+    <wxc-mask
+        content-align="bl"
+        status="{{ showModal }}"
+        bindmasktap="toggle"
+    >
+        <view class="ctm-con">
+
+            <!-- 关闭 -->
+            <view
+                bindtap="toggle"
+                class="ctm-task-close"
+            >
+                <i-icon type="close" color="rgba(0,0,0,0.3)" size="14" />
+            </view>
+
+            <!-- 倒计时 -->
+            <view class="ctm-title">
+                <!-- 我的拼团 -->
+                <view class="ctm-title-countdowm">
+                    <wxc-countdown
+                        countdown="{{ countDownNight$ }}"
+                        format="hh:mm:ss"
+                        num-style="width: 50rpx; height: 50rpx; line-height: 50rpx; font-size: 24rpx; color: #fff; background: #272839; text-align: center; border-radius: 50%"
+                        symbol-style="font-size: 20rpx; color: #272839;padding: 0 3rpx"
+                    />
+                </view>
+            </view>
+
+            <!-- 任务列表 -->
+            <view class="ctm-content">
+                <view
+                    class="ctm-task-item"
+                    wx:key="index"
+                    wx:for="{{ list$ }}"
+                    data-data="{{ item }}"
+                    bindtap="goDetail"
+                >
+                    <!-- 小圆点 -->
+                    <!-- <view class="ctm-task-round {{ item.isPin ? 'finished' : '' }}"></view> -->
+
+                    <!-- 图片 -->
+                    <image 
+                        class="ctm-img {{ !item.isPin ? 'red' : '' }}"
+                        mode="aspectFill"
+                        lazy-load="{{ true }}"
+                        src="{{ item.detail.img }}"
+                    />
+
+                    <!-- 标题、备注 -->
+                    <view class="ctm-task-info">
+                        <view 
+                            class="ctm-task-title"
+                        >
+                            <view
+                                wx:if="{{ item.isPin }}"
+                            >
+                                拼团成功
+                            </view>
+                            <view
+                                wx:else
+                            >
+                                <view class="inline red">差1人</view>拼成
+                            </view>
+                        </view>
+                        <view 
+                            wx:if="{{ item.isPin }}"
+                            class="ctm-task-desc"
+                        >
+                            恭喜!你和群友都省了{{ item.delta }}元～
+                        </view>
+                        <view 
+                            wx:else
+                            class="ctm-task-desc"
+                        >
+                            和群友拼团，立省{{ item.delta }}元！
+                        </view>
+                        <!-- <view 
+                            class="ctm-task-desc"
+                        >
+                            {{ item.count }}件, {{ item.detail.name ? item.detail.name + ' ' : '' }}{{ item.detail.title }}
+                        </view> -->
+                    </view>
+
+                    <!-- 价格 -->
+                    <wxc-price
+                        icon="sub"
+                        class="ctm-task-price {{ item.isPin ? 'finished' : '' }}"
+                    >
+                        {{ item.delta }}
+                    </wxc-price>
+
+                    <!-- 按钮 -->
+                    <view
+                        class="ctm-task-action {{ !item.isPin ? 'shine' : '' }}"
+                    >
+                        <button
+                            class="ctm-task-btn"
+                            wx:if="{{ !item.isPin }}"
+                        >
+                            找人拼
+                        </button>
+                        <view
+                            wx:else
+                            class="ctm-task-btn {{ item.isPin ? 'finished' : '' }}"
+                        >
+                            已拼成
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>   
+    </wxc-mask>
+</view>

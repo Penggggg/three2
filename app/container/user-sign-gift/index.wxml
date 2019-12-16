@@ -67,7 +67,7 @@
                     class="pm-checkin-user"
                 >
                     <view class="pm-checkin-class">
-                        等级: <view class="pm-checkin-class-tips">{{ currentLevel$ }}级</view> 
+                        当前等级: <view class="pm-checkin-class-tips">{{ currentLevel$ }}级</view> 
                         <view>全周可送 ¥{{ currentLevelSignGift$ }}元</view>
                     </view>
                     <view
@@ -78,7 +78,8 @@
                             mode="aspectFill"
                             class='pm-checkin-icon'
                             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-coin-1.png"
-                        /> {{ currentLevel$ + 1 }}级每周送 ¥{{ nextLevelSignGift$ }}元
+                        /> 升级后每周送 ¥{{ nextLevelSignGift$ }}元
+                        <!-- {{ currentLevel$ + 1 }}级每周送 ¥{{ nextLevelSignGift$ }}元 -->
                     </view>
                 </view>
 

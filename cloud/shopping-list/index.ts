@@ -1131,7 +1131,7 @@ export const main = async ( event, context ) => {
      * @description
      * 个人的等待拼团任务列表
      * {
-     *    openid
+     *    openid？
      * }
      */
     app.router('pin-task', async( ctx, next ) => {
@@ -1183,9 +1183,25 @@ export const main = async ( event, context ) => {
                         return x + y.count;
                     }, 0 );
 
+                    // 是否有拼团成功
+                    const groupMenOrders$ = await db.collection('order')
+                        .where({
+                            pid, 
+                            sid, 
+                            tid,
+                            openid: _.neq( openid ),
+                            pay_status: '1',
+                            base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
+                        })
+                        .count( );
+
                     // 获取商品详情
                     const good$ = await db.collection('goods')
                         .doc( String( pid ))
+                        .field({
+                            title: true,
+                            img: true
+                        })
                         .get( );
 
                     // 获取型号详情
@@ -1193,15 +1209,23 @@ export const main = async ( event, context ) => {
                     if ( !!sid ) {
                         const standard$ = await db.collection('standards')
                             .doc( String( sid ))
+                            .field({
+                                name: true,
+                                img: true
+                            })
                             .get( );
                         standard = standard$.data;
                     }
 
                     return {
                         count,
-                        standard,
                         ...shopping,
-                        good: good$.data
+                        isPin: groupMenOrders$.total > 0,
+                        detail: {
+                            ...good$.data,
+                            img: standard ? standard.img : good$.data.img[ 0 ],
+                            name: standard ? standard.name : ''
+                        }
                     }
                 })
             );
@@ -1212,6 +1236,7 @@ export const main = async ( event, context ) => {
             };
 
         } catch ( e ) {
+            console.log('??? ', e );
             return ctx.body = {
                 status: 500
             };
