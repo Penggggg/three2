@@ -637,6 +637,11 @@
         </view>
     </wxc-mask>
 
+    <!-- 任务列表 -->
+    <my-task-modal
+        id="task" 
+    />
+
     <!-- 结算获得代金券 -->
     <wxc-mask 
         content-align="bl"

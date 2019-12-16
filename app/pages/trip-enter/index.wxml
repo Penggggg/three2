@@ -405,6 +405,9 @@
         hasBeenGet="{{ lijian.hasBeenGet }}"
     />
 
+    <!-- 任务列表 -->
+    <my-task-modal />
+
     <!-- 任务模块 -->
     <!-- <my-task-modal /> -->
 

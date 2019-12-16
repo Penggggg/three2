@@ -740,11 +740,6 @@ Page({
                             return shopping.pid === order.pid && shopping.sid === order.sid;
                         });
                     });
-
-                    // 判断订单中，是否存在等待拼团的订单
-                    if ( someWaitPin.length > 0 ) {
-                        this.toggleTask( );
-                    }
                 }
             }
         });
@@ -1115,19 +1110,22 @@ Page({
 
     /** 展示任务弹框 */
     toggleTask( ) {
-        const { showTask } = this.data;
+        // const { showTask } = this.data;
 
         // 即将打开
-        if ( showTask === 'hide' ) {
-            wx.showShareMenu( );
-        } else {
-            wx.hideShareMenu( );
-        }
+        // if ( showTask === 'hide' ) {
+        //     wx.showShareMenu( );
+        // } else {
+        //     wx.hideShareMenu( );
+        // }
 
-        this.setData({
-            showTask: showTask === 'hide' ? 'show' : 'hide',
-            showFinger: false
-        });
+        // this.setData({
+        //     showTask: showTask === 'hide' ? 'show' : 'hide',
+        //     showFinger: false
+        // });
+
+        var el = this.selectComponent('#task');
+        el.toggle();
         
     },
 
