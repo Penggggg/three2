@@ -4,7 +4,7 @@
     <scroll-view 
         scroll-y="{{ true }}"
         lower-threshold="100"
-        bindscrolltolower="fetchPin"
+        bindscrolltolower="fetchGoodRank"
         class="p-groud-pin"
     >
 

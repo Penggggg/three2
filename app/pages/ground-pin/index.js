@@ -13,6 +13,9 @@ Page({
      */
     data: {
 
+        // 
+        trip: null,
+
         // 分页
         page: 0,
 
@@ -169,6 +172,10 @@ Page({
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
 
+                this.setData({
+                    trip: data[ 0 ]
+                });
+
                 this.fetchAllShoppinglist( data[ 0 ] ? data[ 0 ]._id : '' );
 
             }
@@ -178,7 +185,9 @@ Page({
     /** 拉取所有购物清单 */
     fetchAllShoppinglist( tid ) {
         const { allShoppinglist } = this.data;
-        if ( allShoppinglist.length > 0 || !tid ) { return; }
+        if ( allShoppinglist.length > 0 || !tid ) { 
+            return this.fetchGoodRank( )
+        }
 
         http({
             data: {
@@ -196,15 +205,17 @@ Page({
                 const pingList = data.filter( x => !!x.adjustGroupPrice && x.uids.length > 1 );
 
                 this.setData({
-                    allShoppinglist: [ ...waitPin, ...pingList ]
+                    allShoppinglist: [ ...pingList, ...waitPin ]
                 });
+
+                this.fetchGoodRank( )
             }
         });
     },
 
-    /** 拉取拼团列表 */
-    fetchPin( reset = false ) {
-        const { page, canLoadMore, loading, list, search } = this.data;
+    /** 拉取商品列表 */
+    fetchGoodRank( reset = false ) {
+        const { page, canLoadMore, loading, list, search, trip, allShoppinglist } = this.data;
 
         if ( !canLoadMore || !!loading ) { return; }
 
@@ -215,8 +226,10 @@ Page({
         http({
             data: {
                 search,
-                limit: 8,
-                page: page + 1
+                limit: 5,
+                page: page + 1,
+                visitTime: trip ? trip.start_date : '',
+                filterGoodIds: allShoppinglist.map( x => x.pid )
             },
             url: `good_pin-ground`,
             success: res => {
@@ -255,7 +268,7 @@ Page({
             canLoadMore: true
         });
         setTimeout(( ) => {
-            this.fetchPin( true );
+            this.fetchGoodRank( true );
         }, 20 );
     },
 
@@ -279,7 +292,6 @@ Page({
      */
     onLoad: function (options) {
         this.runComputed( );
-        this.fetchPin( );
         this.fetchLast( );
     },
 

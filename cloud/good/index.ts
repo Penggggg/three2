@@ -272,14 +272,17 @@ export const main = async ( event, context ) => {
      *  -------- 请求 ----------
      * {
      *      page: 页数
-     *      search: 搜索
+     *      search: 搜索,
+     *      visitTime: 浏览开始时间，用于获取访客列表， 可无
+     *      filterGoodIds: 过滤指定的商品 string | string[]，可无
      * }
      */
     app.router('pin-ground', async( ctx, next ) => {
         try {
 
-            const { page } = event.data;
+            const { page, visitTime } = event.data;
             const limit = event.data.limit || 10;
+            const filterGoodIds = event.data.filterGoodIds || [ ];
 
             const search$ = event.data.search || '';
             const search = new RegExp( search$.replace(/\s+/g, ""), 'i');
@@ -287,7 +290,8 @@ export const main = async ( event, context ) => {
             let where$ = {
                 title: search,
                 visiable: true,
-                isDelete: _.neq( true )
+                isDelete: _.neq( true ),
+                _id: (_ as any).nor( filterGoodIds.map( x => _.eq( x )))
             };
 
             // 保健品配置
@@ -358,10 +362,60 @@ export const main = async ( event, context ) => {
                 activities: activities$[ k ].data
             }));
 
+            // 获取商品访客记录
+            let visitRecord: any = [ ];
+            if ( !!visitTime ) {
+                visitRecord = await Promise.all(
+                    insertActivity.map( async ( x, k ) => {
+
+                        const pid = x._id;
+
+                        const where$ = {
+                            pid,
+                            visitTime: _.gte( visitTime )
+                        };
+
+                        const goodVisitTotal$ = await db.collection('good-visiting-record')
+                            .where( where$ )
+                            .count( );
+
+                        const goodVisitRecord$ = await db.collection('good-visiting-record')
+                            .where( where$ )
+                            .limit( 5 )
+                            .get( );
+
+                        const users = await Promise.all(
+                            goodVisitRecord$.data.map( async record => {
+                                const { openid } = record;
+                                const user$ = await db.collection('user')
+                                    .where({
+                                        openid
+                                    })
+                                    .field({
+                                        avatarUrl: true,
+                                        nickName: true
+                                    })
+                                    .get( );
+                                return user$.data[ 0 ]
+                            })
+                        );
+                        return {
+                            visitorSum: goodVisitTotal$.total,
+                            avatar: users
+                        }
+                    })
+                )
+            }
+            
+            const insertVisitRecord = insertActivity.map(( x, k ) => ({
+                ...x,
+                visitRecord: visitRecord[ k ]
+            }))
+
             return ctx.body = {
                 status: 200,
                 data: {
-                    data: insertActivity,
+                    data: insertVisitRecord,
                     pagenation: {
                         page,
                         pageSize: limit,
