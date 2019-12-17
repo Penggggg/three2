@@ -51,9 +51,6 @@
             showSign="{{ true }}"
         />
 
-        <!-- 任务列表 -->
-        <my-task-modal />
-
     </view>
     
 
