@@ -57,17 +57,7 @@ Component({
         },
 
         onSubscribe( ) {
-            // app.getSubscribe('buyPin,waitPin,trip');
-            app.getSubscribe('hongbao');
-            setTimeout(( ) => {
-                http({
-                    data: {
-                        type: 'hongbao',
-                        texts: ['呵呵', 'xx']
-                    },
-                    url: 'common_push-subscribe-cloud'
-                })
-            }, 2000 );
+            app.getSubscribe('buyPin,waitPin,trip');
         },
 
         /** 初始化下标 */
