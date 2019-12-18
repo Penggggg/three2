@@ -1,8 +1,8 @@
 {
   "pages": [
+    "pages/ground-pin/index",
     "pages/trip-enter/index",
     "pages/order-list/index",
-    "pages/ground-pin/index",
     "pages/goods-detail/index",
     "pages/trip-reward/index",
     "pages/good-activity/index",

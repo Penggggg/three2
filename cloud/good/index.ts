@@ -287,12 +287,18 @@ export const main = async ( event, context ) => {
             const search$ = event.data.search || '';
             const search = new RegExp( search$.replace(/\s+/g, ""), 'i');
 
-            let where$ = {
+            let where$: any = {
                 title: search,
                 visiable: true,
-                isDelete: _.neq( true ),
-                _id: (_ as any).nor( filterGoodIds.map( x => _.eq( x )))
+                isDelete: _.neq( true )
             };
+
+            if ( filterGoodIds.length > 0 ) {
+                where$ = {
+                    ...where$,
+                    _id: (_ as any).nor( filterGoodIds.map( x => _.eq( x )))
+                }
+            }
 
             // 保健品配置
             const bjpConfig$ = await db.collection('app-config')
@@ -427,6 +433,7 @@ export const main = async ( event, context ) => {
             }
 
         } catch ( e ) {
+            console.log('???', e );
             return ctx.body = { status: 500 };
         }
     })
