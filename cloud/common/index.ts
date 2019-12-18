@@ -1103,6 +1103,7 @@ export const main = async ( event, context ) => {
                 status: 200
             }
         } catch ( e ) {
+            console.log('????', e );
             return ctx.body = { 
                 status: 500,
                 data: e
@@ -1112,6 +1113,7 @@ export const main = async ( event, context ) => {
 
     /** 
      * @description
+     * 订阅推送，云版本
      */
     app.router('push-subscribe-cloud', async( ctx, next ) => {
         try {
@@ -1134,7 +1136,7 @@ export const main = async ( event, context ) => {
                 page,
                 data: textData,
                 touser: openid,
-                templateId: template.id
+                template_id: template.id
             };
 
             // 获取token
@@ -1149,12 +1151,15 @@ export const main = async ( event, context ) => {
                 throw '生成access_token错误'
             }
 
+            console.log('===云版本订阅推送', subscribeData );
+
             const send = await (axios as any)({
                 data: subscribeData,
                 method: 'post',
                 url: `https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=${access_token}`
             });
 
+            console.log('===云版本订阅推送', send.data );
             if ( String( send.data.errcode ) !== '0' ) {
                 throw send.data.errmsg;
             }

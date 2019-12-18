@@ -307,17 +307,6 @@ export const main = async ( event, context ) => {
 
             const end_date = fixEndDate( Number( event.data.end_date ));
 
-            // 获取上个非“sys”类型行程的end_date作为下个行程的start_date
-            const trip$ = await db.collection('trip')
-                .where({
-                    type: _.neq('sys')
-                })
-                .limit( 1 )
-                .orderBy('createTime', 'desc')
-                .get( );
-            
-            lastTrip = trip$.data[ 0 ];
-
             if ( reduce_price < 1 ) {
                 return getErr('立减金额不能少于1元')
             }
@@ -336,14 +325,10 @@ export const main = async ( event, context ) => {
                     return getErr('有未结束行程,请结束行程后再创建');
                 }
 
-                if ( !!lastTrip ) {
-                    start_date = lastTrip.end_date + 100;
-                }
-
                 const createData = {
                     ...event.data,
                     end_date,
-                    start_date,
+                    start_date: getNow( true ),
                     warning: false,
                     callMoneyTimes: 0
                 };
@@ -656,7 +641,7 @@ export const main = async ( event, context ) => {
                             $url: 'push-subscribe-cloud',
                             data: {
                                 openid: member.openid,
-                                type: 'trip',
+                                type: 'getMoney',
                                 page: `pages/manager-trip-order/index?id=${tid}&ac=${1}`,
                                 texts: [`${trip$.data.title}`, `关闭成功！一键收款功能已开启`]
                             }

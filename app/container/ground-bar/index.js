@@ -1,5 +1,6 @@
 const app = getApp( );
 const { navTo } = require('../../util/route.js');
+const { http } = require('../../util/http');
 
 Component({
 
@@ -56,7 +57,17 @@ Component({
         },
 
         onSubscribe( ) {
-            app.getSubscribe('buyPin,waitPin,trip');
+            // app.getSubscribe('buyPin,waitPin,trip');
+            app.getSubscribe('hongbao');
+            setTimeout(( ) => {
+                http({
+                    data: {
+                        type: 'hongbao',
+                        texts: ['呵呵', 'xx']
+                    },
+                    url: 'common_push-subscribe-cloud'
+                })
+            }, 2000 );
         },
 
         /** 初始化下标 */
