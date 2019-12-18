@@ -454,7 +454,7 @@ Component({
         },
 
         onSubscribe( e ) {
-            app.getSubscribe('newOrder,trip');
+            app.getSubscribe('newOrder,trip,getMoney');
         },
 
         /** 表单提交 */

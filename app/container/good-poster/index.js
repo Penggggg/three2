@@ -238,7 +238,7 @@ Component({
                 this.onDraw( );
             }
             this.triggerEvent('toggle', !show );
-            app.getSubscribe('newOrder,trip');
+            app.getSubscribe('newOrder,trip,getMoney');
         },
 
         /** 关闭画布 */

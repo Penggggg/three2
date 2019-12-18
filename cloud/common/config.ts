@@ -77,15 +77,15 @@ export const subscribe_templates = {
         desc: '拼团成功通知	温馨提示、商品名称',
         id: 'yBBlVH0qvipvzSr93d-Own-cYkTnATjUBhd_Qi1L2vc'
     },
-    waitPin: {
-        textKeys: ['thing4', 'thing1'],
-        desc: '拼团进度通知	温馨提示、商品名称',
-        id: 'CC0DCPLC3SFVr1Im7ODEhRnlyMZVB8RIJSmptmLmC_U'
-    },
     hongbao: {
         textKeys: ['thing9', 'thing7'],
         desc: '开奖结果通知：开奖结果、开奖内容',
         id: 'rau9z8QU48gWel5Jn8hLt6-ChVWi8puo8E_QXR1CgMc'
+    },
+    waitPin: {
+        textKeys: ['thing4', 'thing1'],
+        desc: '拼团进度通知	温馨提示、商品名称',
+        id: 'CC0DCPLC3SFVr1Im7ODEhRnlyMZVB8RIJSmptmLmC_U'
     },
     buy: {
         textKeys: ['thing7', 'thing5'],

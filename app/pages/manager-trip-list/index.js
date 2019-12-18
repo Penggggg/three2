@@ -152,7 +152,7 @@ Page({
         route_js_1.navTo("/pages/manager-trip-order/index?id=" + tid);
     },
     onSubscribe: function () {
-        app.getSubscribe('newOrder,trip');
+        app.getSubscribe('newOrder,trip,getMoney');
     },
     onLoad: function (query) {
         wx.hideShareMenu({});

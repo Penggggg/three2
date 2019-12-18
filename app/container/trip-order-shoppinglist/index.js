@@ -274,7 +274,7 @@ Component({
         },
 
         onSubscribe( ) {
-            app.getSubscribe('newOrder,trip');
+            app.getSubscribe('newOrder,trip,getMoney');
         }
     },
 
