@@ -122,7 +122,7 @@ Component({
                     this.setData({
                         list: data
                     });
-                    if ( autoShow ) {
+                    if ( autoShow && data.length > 0 ) {
                         this.toggle( );
                     }
                 }
