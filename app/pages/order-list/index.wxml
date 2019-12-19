@@ -698,4 +698,7 @@
         bind:ok="onPayLast"
     />
 
+    <!-- 订阅消息模块 -->
+    <my-subscribe-tips />
+
 </view>
