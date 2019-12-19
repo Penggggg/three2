@@ -74,9 +74,9 @@ export const almostOver = async ( ) => {
                             $url: 'push-subscribe-cloud',
                             data: {
                                 openid: member.openid,
-                                type: 'trip',
+                                type: 'waitPin',
                                 page: `pages/manager-trip-list/index`,
-                                texts: [`代购行程即将结束`, `请尽快调整售价`]
+                                texts: [`代购行程即将结束`, `请尽快调整群拼团售价`]
                             }
                         }
                     });
@@ -222,7 +222,7 @@ export const autoTrip = async ( ) => {
                             openid: member.openid,
                             type: 'trip',
                             page: `pages/manager-trip-list/index?s=1`,
-                            texts: [`已自动创建代购行程`, `请编辑推荐客户的商品`]
+                            texts: [`已自动创建代购行程`, `可推荐拼团商品啦～`]
                         }
                     }
                 });
