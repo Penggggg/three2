@@ -193,7 +193,7 @@ Page({
     },
 
     onSubscribe( ) {
-        app.getSubscribe('newOrder,trip,getMoney');
+        app.getSubscribe('newOrder,trip,waitPin');
     },
   
     /**

@@ -81,7 +81,7 @@ Component({
 
         /** 订阅-管理 */
         onSubscribe( e ) {
-            app.getSubscribe('newOrder,trip,getMoney');
+            app.getSubscribe('newOrder,trip,waitPin');
         },
 
         /** 地址跳转 */

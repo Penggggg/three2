@@ -23,6 +23,7 @@ export const push_template = {
     waitPin: {
         desc: '拼团待成团提醒：	备注、温馨提示',
         example: '您购买的商品可参加拼团！；立即参加拼团，可以再省xx元！',
+        example2: '昨晚有x人浏览它，有x人成功拼团。',
         value: 'mtTLIp2C-FQ87yn46jpY3cH9ilGIzL434N2QlUS0MH0'
     },
     buy: {

@@ -1518,23 +1518,108 @@ export const main = async ( event, context ) => {
      */
     app.router('test', async ( ctx, next ) => {
         try {
-            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
-            const result = await cloud.openapi.subscribeMessage.send({
-                touser: openid,
-                page: 'pages/trip-enter/index',
-                data: {
-                    thing11: {
-                        value: '呵呵呵额'
-                    },
-                    thing6: {
-                        value: '2015年01月05日'
-                    }
-                },
-                templateId: 'u91Cqoo76phn_0o5N_JdqxFKVUF5-f2W5zEjziGO17g'
-            });
+            
+            // 找到昨晚下午6点后的时间戳
+            const nowTime = getNow( );
+            const y = nowTime.getFullYear( );
+            const m = nowTime.getMonth( ) + 1;
+            const d = nowTime.getDate( );
+            const lastNightTime = new Date(`${y}/${m}/${d} 00:00:00`);
+            const time = lastNightTime.getTime( ) - 6 * 60 * 60 * 1000;
+
+            // 把这个时间点以后的查看商品记录都拿出来
+            const visitorRecords$ = await db.collection('good-visiting-record')
+                .where({
+                    visitTime: _.gte( time )
+                })
+                .field({
+                    pid: true
+                })
+                .get( );
+            const visitorRecords = visitorRecords$.data;
+
+            // 拿到浏览记录最高的商品
+            let maxPid = '';
+            let maxNum = 0;
+            visitorRecords.reduce(( res, record ) => {
+                res[ record.pid ] = !res[ record.pid ] ? 1 : res[ record.pid ] + 1;
+                if ( res[ record.pid ] > maxNum ) {
+                    maxPid = record.pid;
+                    maxNum = res[ record.pid ];
+                }
+                return res;
+            }, { });
+
+            // 若有，获取这个商品的总拼团人数
+            if ( !maxNum || !maxPid ) {
+                return ctx.body = { status: 200 }
+            };
+
+            // 逻辑：通过order的createtime找到tid， 通过 tid+ pid 找到shoppinglist
+            const order$ = await db.collection('order')
+                .where({
+                    createTime: _.gte( time )
+                })
+                .field({
+                    tid: true
+                })
+                .limit( 1 )
+                .get( );
+            const order = order$.data[ 0 ];
+
+            if ( order$.data.length === 0 ) {
+                return ctx.body = { status: 200 }
+            }
+
+            const sl$ = await db.collection('shopping-list')
+                .where({
+                    pid: maxPid,
+                    tid: order.tid
+                })
+                .field({
+                    uids: true
+                })
+                .get( );
+            const sl = sl$.data[ 0 ];
+
+            if ( sl$.data.length === 0 ) {
+                return ctx.body = { status: 200 }
+            }
+
+            // 获取所有管理员
+            const adms$ = await db.collection('manager-member')
+                .where({ })
+                .get( );
+
+            // 获取商品详情
+            const good$ = await db.collection('goods')
+                .doc( String( maxPid ))
+                .field({
+                    title: true
+                })
+                .get( );
+
+            // 推送
+            await Promise.all(
+                adms$.data.map( async adm => {
+                    await cloud.callFunction({
+                        name: 'common',
+                        data: {
+                            $url: 'push-subscribe-cloud',
+                            data: {
+                                openid: adm.openid,
+                                type: 'waitPin',
+                                page: `pages/manager-trip-order/index?id=${order.tid}`,
+                                texts: [`昨天有${maxNum}人浏览，${sl.uids.length}人成功${sl.uids.length > 1 ? '拼团！' : '下单！'}`, `${good$.data.title}`]
+                            }
+                        }
+                    });
+                    return 
+                })
+            );
+
             return ctx.body = {
-                status: 200,
-                data: result
+                status: 200
             }
         } catch ( e ) {
             return ctx.body = { 
