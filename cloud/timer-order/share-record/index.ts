@@ -23,12 +23,24 @@ const getNow = ( ts = false ): any => {
     return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
 }
 
+const checkIsInRange = ( now: Date, range = [ 99 ]) => {
+    return range.some( x => {
+        const h = now.getHours( );
+        return x === h && now.getMinutes( ) === 0;
+    });
+}
+
 /**
  * @description
  * 1: 所有超过7天的无效分享要，自动删除掉
+ * 时间：晚上2点
  */
 export const clearShareRecord = async ( ) => {
     try {
+
+        if ( !checkIsInRange( getNow( ), [ 2 ])) {
+            return { status: 200 };
+        }
 
         const find$ = await db.collection('share-record')
             .where({

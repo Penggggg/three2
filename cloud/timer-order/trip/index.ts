@@ -21,11 +21,23 @@ const getNow = ( ts = false ): any => {
     return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
 }
 
+const checkIsInRange = ( now: Date, range = [ 99 ]) => {
+    return range.some( x => {
+        const h = now.getHours( );
+        return x === h && now.getMinutes( ) === 0;
+    });
+}
+
 /**
  * 行程1: 即将过期的行程，提醒代购
+ * 时间：中午12点才发送
  */
 export const almostOver = async ( ) => {
     try {
+
+        if ( !checkIsInRange( getNow( ), [ 12 ])) {
+            return { status: 200 } 
+        }
 
         const trips$ = await db.collection('trip')
             .where({
@@ -45,14 +57,13 @@ export const almostOver = async ( ) => {
                 })
         }));
 
-
         if ( trips$.data.length > 0 ) {
             // 推送代购通知
             const members = await db.collection('manager-member')
-            .where({
-                push: true
-            })
-            .get( );
+                .where({
+                    push: true
+                })
+                .get( );
 
             await Promise.all(
                 members.data.map( async member => {
@@ -65,7 +76,7 @@ export const almostOver = async ( ) => {
                                 openid: member.openid,
                                 type: 'trip',
                                 page: `pages/manager-trip-list/index`,
-                                texts: [`代购行程将于明天结束`, `请尽快调整售价`]
+                                texts: [`代购行程即将结束`, `请尽快调整售价`]
                             }
                         }
                     });
@@ -73,7 +84,7 @@ export const almostOver = async ( ) => {
             );
         }
 
-        
+        return { status: 200 }
 
     } catch ( e ) {
         console.log('!!!!almostOver')
@@ -86,6 +97,12 @@ export const almostOver = async ( ) => {
  */
 export const overtimeTrip = async ( ) => {
     try {
+
+        // 创建的日期，都是晚上23点截止的
+        if ( !checkIsInRange( getNow( ), [ 22, 23, 0 ])) {
+            return { status: 200 } 
+        }
+
         const trips$ = await db.collection('trip')
             .where({
                 isClosed: false,
@@ -130,7 +147,7 @@ export const overtimeTrip = async ( ) => {
             );
         }
 
-        
+        return { status: 200 }
 
     } catch ( e ) {
         console.log('!!!!overtimeTrip')
@@ -156,6 +173,16 @@ export const autoTrip = async ( ) => {
             return { status: 200 }
         }
 
+        // 计算本周日，晚上23点
+        const now = getNow( );
+        const day = now.getDay( );
+        const oneDay = 24 * 60 * 60 * 1000;
+        const Sunday = new Date( getNow( true ) + ( 7 - day) * oneDay );
+        const y = Sunday.getFullYear( );
+        const m = Sunday.getMonth( ) + 1;
+        const d = Sunday.getDate( );
+        const end_date = new Date(`${y}/${m}/${d} 23:00:00`)
+
         // 自动创建
         await db.collection('trip')
             .add({
@@ -167,12 +194,13 @@ export const autoTrip = async ( ) => {
                     isClosed: false,
                     reduce_price: 1,
                     callMoneyTimes: 0,
-                    title: '小程序-群拼团',
+                    title: '群拼团',
                     selectedProductIds: [ ],
                     createTime: getNow( true ),
                     updateTime: getNow( true ),
                     start_date: getNow( true ),
-                    end_date: getNow( true ) + 14 * 24 * 60 * 60 * 1000
+                    // 本周日晚上23点
+                    end_date
                 }
             });
 

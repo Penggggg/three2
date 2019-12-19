@@ -27,7 +27,7 @@ const getNow = ( ts = false ): any => {
  * @description 行程模块
  * -------- 字段 ----------
         title 标题 string
-        warning: 是否发送过期警告,
+        warning: 是否发送过期警告给adm,
         start_date 开始时间 number
         end_date 结束时间 number
         reduce_price 行程立减 number
@@ -44,7 +44,7 @@ const getNow = ( ts = false ): any => {
         updateTime 更新时间
         isClosed: 是否已经手动关闭
         callMoneyTimes: 发起催款次数
-        type: 类型，sys（系统自动发起）、undefined（手动创建）
+*!      type: 类型，sys（系统自动发起）、undefined（手动创建）
  */
 export const main = async ( event, context ) => {
 
@@ -296,13 +296,14 @@ export const main = async ( event, context ) => {
                 }
             };
 
+            // 行程默认在当天晚上23点结束
             const fixEndDate = endDate => {
                 const t = new Date( endDate );
                 const y = t.getFullYear( );
                 const m = t.getMonth( ) + 1;
                 const d = t.getDate( );
 
-                return new Date(`${y}/${m}/${d} 20:00:00`).getTime( );
+                return new Date(`${y}/${m}/${d} 23:00:00`).getTime( );
             };
 
             const end_date = fixEndDate( Number( event.data.end_date ));
