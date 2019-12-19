@@ -460,6 +460,8 @@ Component({
         /** 表单提交 */
         submit( e ) {
 
+            this.onSubscribe( );
+
             const { tid, published } = this.data;
             const form1 = this.selectComponent('#form1');
             const form2 = this.selectComponent('#form2');

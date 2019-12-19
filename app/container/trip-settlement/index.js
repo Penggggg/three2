@@ -185,7 +185,6 @@ Component({
         },
 
         onSubscribe( ) {
-            app.getSubscribe('buy,getMoney,waitPin');
         }
     },
 

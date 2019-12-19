@@ -164,6 +164,8 @@ Component({
         /** 确认 */
         confirmSelect( e ) {
 
+            this.onSubscribe( );
+
             app.getWxUserInfo(( ) => {
                 const { selectdSkuCount, selectedSku, skuItems } = this.data;
                 this.triggerEvent('confirm', {
@@ -176,7 +178,7 @@ Component({
             });
         },
         onSubscribe( ) {
-            app.getSubscribe('buy,getMoney');
+            app.getSubscribe('buyPin,waitPin,getMoney');
         },
         /** 关闭弹窗 */
         close( ) {

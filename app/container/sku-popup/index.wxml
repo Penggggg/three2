@@ -275,10 +275,9 @@
                 <form
                     wx:else
                     report-submit="{{ true }}"
-                    bindsubmit="confirmSelect"
                 >
                     <button
-                        bindtap="onSubscribe"
+                        bindtap="confirmSelect"
                         class="sku-btn lh"
                         form-type="submit"
                     >

@@ -460,7 +460,7 @@ Component({
         },
 
         onSubscribe( ) {
-            app.getSubscribe('buyPin,waitPin,trip');
+            app.getSubscribe('buyPin,hongbao,trip');
         },
 
         // 初始化经验倒计时

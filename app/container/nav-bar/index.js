@@ -75,7 +75,7 @@ Component({
             navTo( currentTarget.dataset.url )
         },
         onSubscribe( ) {
-            app.getSubscribe('buyPin,waitPin,trip');
+            app.getSubscribe('buyPin,hongbao,trip');
         },
         /** 判断当前路由 */
         init( ) {

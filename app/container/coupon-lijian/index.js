@@ -118,7 +118,7 @@ Component({
 
         /** 订阅授权 */
         onSubscribe( e ) {
-            app.getSubscribe('trip,hongbao');
+            app.getSubscribe('buyPin,hongbao,trip');
         },
 
         /** 获取用户授权 */

@@ -637,7 +637,7 @@ Page({
     },
 
     onSubscribe( ) {
-        app.getSubscribe('buyPin,waitPin,trip');
+        app.getSubscribe('buyPin,hongbao,trip');
     },
 
     // 进入商品管理

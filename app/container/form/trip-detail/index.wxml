@@ -128,12 +128,11 @@
 
             <form
                 class="flex-1"
-                bindsubmit="submit"
                 wx:if="{{ !isClosed }}"
                 report-submit="{{ true }}"
             >
                 <button
-                    bindtap="onSubscribe"
+                    bindtap="submit"
                     form-type="submit"
                     class='fix-btn ptd-btn invert'
                 >

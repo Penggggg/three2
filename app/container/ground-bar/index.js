@@ -57,7 +57,7 @@ Component({
         },
 
         onSubscribe( ) {
-            app.getSubscribe('buyPin,waitPin,trip');
+            app.getSubscribe('buyPin,hongbao,trip');
         },
 
         /** 初始化下标 */

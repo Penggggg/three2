@@ -315,7 +315,7 @@ Component({
             // })
         },
         onSubscribe( e ) {
-            app.getSubscribe('buyPin,waitPin,buy');
+            app.getSubscribe('waitPin,buyPin,getMoney');
         },
         /** 展开/关闭 sku */
         toggleSku( e ) {
@@ -323,6 +323,10 @@ Component({
 
             if ( disabled && !openSku ) {
                 return;
+            }
+
+            if ( !openSku ) {
+                this.onSubscribe( );
             }
 
             this.setData({

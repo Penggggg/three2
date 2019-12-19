@@ -390,7 +390,7 @@ Page({
      * 订阅
      */
     onSubscribe( ) {
-        app.getSubscribe('buyPin,waitPin,trip');
+        app.getSubscribe('buyPin,hongbao,trip');
         this.fetchGetGift( );
     },
 
