@@ -101,8 +101,8 @@ Component({
                       message: '结束时间不能为空'
                     }]
                 }, {
-                    title: '推荐商品',
-                    desc: ''
+                    title: '主推商品',
+                    desc: '在首页展示'
                 }
             ];
             return meta;
@@ -117,9 +117,9 @@ Component({
                     // desc: '裂变与粘性'
                 }, {
                     key: 'reduce_price',
-                    label: '消费立减',
+                    label: '分享立减/元',
                     type: 'number',
-                    placeholder: '客户分享后，才获得立减优惠',
+                    placeholder: '客户分享你的代购行程后，才获得此优惠',
                     value: undefined,
                     disabled: !canEditCoupons && !!tid,
                     rules: [{

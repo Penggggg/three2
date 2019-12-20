@@ -18,10 +18,12 @@ Page({
         }, {
             key: 1,
             label: '清账收款'
-        }, {
-            key: 2,
-            label: '快递信息'
-        }],
+        }
+        // , {
+        //     key: 2,
+        //     label: '快递信息'
+        // }
+        ],
         // 购物清单是否显示边框
         shopping_list_outline: true,
     },

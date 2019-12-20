@@ -67,7 +67,7 @@
             />
 
             <!-- 消费满减 -->
-            <view
+            <!-- <view
                 class="caf-inputs caf-item"
                 bindtap="toggleFullReduce"
             >
@@ -80,7 +80,7 @@
                         {{ !fullreducePrice ? '如：满200元减10元' : '' }}
                     </view>
                 </view>
-            </view>
+            </view> -->
         
             <!-- 行程代金券 -->
             <!-- <view

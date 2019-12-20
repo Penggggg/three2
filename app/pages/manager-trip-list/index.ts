@@ -35,6 +35,10 @@ Page({
             'background-image: linear-gradient(-225deg, #20E2D7 0%, #F9FEA5 100%);',
             'background-image: linear-gradient(-225deg, #9EFBD3 0%, #57E9F2 48%, #45D4FB 100%);',
         ],
+        bg2s: [
+            'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-bg-trip-manager-list-colorful.png',
+            'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-bg2-trip-manager-list-colorful.png'
+        ],
         // 展示创建成功提示
         showSuccess: false
     },
@@ -102,7 +106,6 @@ Page({
                                 this.dealListText( data.data ):
                             [ ...this.data.list, ...this.dealListText( data.data )];
 
-
                         this.setData!({
                             list: meta
                         });
@@ -123,6 +126,8 @@ Page({
     /** 编辑行程列表文字 */
     dealListText( list ) {
 
+        const { bg2s } = this.data
+
         const simpleTime = (ts: number) => {
             const time = new Date( Number( ts ));
             return `${time.getMonth( )+1}月${time.getDate( )}日`
@@ -137,12 +142,12 @@ Page({
          * ! 注意，时间对比。开始时间是 指定日期的早上8点；结束日期是 指定日期的晚上24:00
          */
         const meta = list.map(( x, k ) => {
-            const { _id, type, title, sales_volume, start_date, published, end_date, orders, isClosed, clients, notPayAllClients } = x;
+            const { _id, type, selectedProductIds, title, sales_volume, start_date, published, end_date, orders, isClosed, clients, notPayAllClients } = x;
 
             const state$ = !published ?
                 '未发布' :
                 isClosed ?
-                    '已关闭' :
+                    '已结束' :
                     new Date( ).getTime( ) >= end_date ?
                         '已结束' :
                         new Date( ).getTime( ) >= start_date ?
@@ -151,11 +156,13 @@ Page({
 
             return {
                 _id,
+                tid: _id,
                 title,
                 orders,
                 bg: k % 7,
+                imgBg: k % 2 ? bg2s[ 1 ] : bg2s[ 0 ],
                 sales_volume,
-                state: state$,
+                state$,
                 isClosed,
                 clients,
                 notPayAllClients,
@@ -164,8 +171,9 @@ Page({
                 startDate: simpleTime( start_date ),
                 endDate2: simpleTime2( end_date ),
                 startDate2: simpleTime2( start_date ),
+                hasProductIds: selectedProductIds.length > 0,
                 red: state$ === '未发布' || state$ === '进行中' || state$ === '即将开始',
-                label: type === 'sys' ? '自动创建' : ''
+                label: type === 'sys' && state$ === '进行中' ? '自动创建' : ''
             }
         });
         return meta;
@@ -183,11 +191,13 @@ Page({
     onTab({ currentTarget, detail }) {
         const { tid } = currentTarget.dataset;
         if ( !tid ) { return; }
+        this.onSubscribe( );
         navTo(`/pages/manager-trip-detail/index?id=${tid}`);
     },
 
-    /** 跳动详情的订单 */
+    /** 跳订单列表 */
     goOrder({ currentTarget, detail }) {
+        this.onSubscribe( );
         const { tid } = currentTarget.dataset;
         navTo(`/pages/manager-trip-order/index?id=${tid}`);
     },
@@ -262,9 +272,9 @@ Page({
             showSuccess: false
         });
         return {
-            title: '超值拼团～进来看看吧',
+            title: '超值群拼团～进来看看吧',
             path: '/pages/ground-pin/index',
-            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
+            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/bg-trip-reward-share-colorful.jpg'
         }
     }
 })

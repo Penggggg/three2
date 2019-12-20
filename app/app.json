@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/manager-trip-list/index",
     "pages/trip-enter/index",
     "pages/ground-pin/index",
     "pages/order-list/index",
@@ -12,7 +13,7 @@
     "pages/my/index",
     "pages/ground-push-integral/index",
     "pages/coupon-list/index",
-    "pages/manager-trip-list/index",
+    
     "pages/index/index",
     "pages/manager-trip-order/index",
     "pages/trip-detail/index",

@@ -317,7 +317,7 @@ export const pushNew = async ( ) => {
                         data: {
                             openid,
                             type: 'newOrder',
-                            page: 'pages/manager-trip-list/index',
+                            page: `pages/manager-trip-order-all/index?tid=${trip._id}`,
                             texts: [`你有${count}条新订单`, `点击查看`]
                         }
                     }
