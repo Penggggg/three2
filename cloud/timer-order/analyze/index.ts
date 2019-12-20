@@ -30,12 +30,12 @@ const checkIsInRange = ( now: Date, range = [ 99 ]) => {
 
 /**
  * 运营数据分享：上一个运营活动的数据
- * 时间：早上8点
+ * 时间：早上10点
  */
 export const lastDayData = async ( ) => {
     try {
 
-        if ( !checkIsInRange( getNow( ), [ 8 ])) {
+        if ( !checkIsInRange( getNow( ), [ 10 ])) {
             return { status: 200 };
         }
 
