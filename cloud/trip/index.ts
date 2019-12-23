@@ -120,7 +120,7 @@ export const main = async ( event, context ) => {
                 .count( );
 
             // 获取数据
-            const data$ = await db.collection('trip')
+            const trips$ = await db.collection('trip')
                 .where({
                     title: search
                 })
@@ -129,69 +129,91 @@ export const main = async ( event, context ) => {
                 .orderBy('updateTime', 'desc')
                 .get( );
 
-            // 获取每躺行程的订单数
-            const orders$ = await Promise.all( data$.data.map( x => {
-                return db.collection('order')
-                    .where({
-                        tid: x._id,
-                        pay_status: _.neq('0')
-                    })
-                    .count( );
-            }));
+            const more = await Promise.all(
+                trips$.data.map( async trip => {
 
-            const injectOrderCount = data$.data.map(( x, k ) => {
-                return Object.assign({ }, x, {
-                    orders: orders$[ k ].total
-                })
-            });
+                    // 获取行程的购物清单
+                    const sl$ = await db.collection('shopping-list')
+                        .where({
+                            tid: trip._id
+                        })
+                        .field({
+                            pid: true,
+                            oids: true,
+                            uids: true,
+                            adjustPrice: true,
+                            adjustGroupPrice: true
+                        })
+                        .get( );
+                    const sl = sl$.data;
 
-            // 获取每躺行程的销售额
-            const salesVolume$ = await Promise.all( injectOrderCount.map( x => {
-                return db.collection('order')
-                    .where({
-                        tid: x._id,
-                        pay_status: _.neq('0'),
-                        base_status: _.or( _.eq('0'),_.eq('1'), _.eq('2'), _.eq('3'))
-                    })
-                    .get( );
-            }))
+                    // 统计收益
+                    const slOrders$ = await Promise.all(
+                        sl.map( async s => {
+                            const { oids } = s;
+                            const orders: any = await Promise.all(
+                                oids.map( async o => {
+                                    const order$ = await db.collection('order')
+                                        .doc( String( o ))
+                                        .field({
+                                            count: true,
+                                            allocatedCount: true
+                                        })
+                                        .get( );
+                                    return order$.data;
+                                })
+                            );
+                            return {
+                                ...s,
+                                orders
+                            }
+                        })
+                    );
 
-            const injectSalesVolume = salesVolume$.map(( o, k ) => {
-
-                // 销量
-                const salesVolume = o.data
-                    .filter( x => x.pay_status !== '0' &&
-                        (( x.base_status === '1' ) || ( x.base_status === '2' ) || ( x.base_status === '3' ))
-                    )
-                    .reduce(( x, y ) => {
-                        return x + ( y.allocatedPrice * ( y.allocatedCount || 0 ));
+                    // 统计收益
+                    const income = slOrders$.reduce(( sum, sl: any ) => {
+                        const { orders, uids, adjustPrice, adjustGroupPrice } = sl;
+                        const slInome = orders.reduce(( last, order ) => {
+                            const { allocatedCount, count } = order;
+                            let count_ = allocatedCount !== undefined ? allocatedCount : count;
+                            return last + ( uids.length > 1 ? ( adjustGroupPrice ? adjustGroupPrice : adjustPrice ) : adjustPrice ) * count_;
+                        }, 0 );
+                        return slInome + sum;
                     }, 0 );
 
-                // 总买家
-                const clients = Array.from(
-                    new Set( o.data
-                        .filter( x => 
-                            x.pay_status !== '0' &&
-                            x.base_status !== '4' && 
-                            x.base_status !== '5'
+                    const orders$ = await db.collection('order')
+                        .where({
+                            tid: trip._id,
+                            pay_status: _.eq('1'),
+                            base_status: _.or( _.eq('0'),_.eq('1'), _.eq('2'), _.eq('3'))
+                        })
+                        .field({
+                            openid: true
+                        })
+                        .get( );
+
+                    // 未付款买家
+                    const notPayAllClients = Array.from(
+                        new Set( 
+                            orders$.data
+                                .map( x => x.openid )
                         )
-                        .map( x => x.openid )
-                )).length;
+                    ).length;
 
-                // 未付款买家
-                const notPayAllClients = Array.from(
-                    new Set( o.data
-                        .filter( x => x.pay_status === '1' )
-                        .map( x => x.openid )
-                )).length;
+                    return {
+                        notPayAllClients,
+                        sales_volume: income
+                    }
 
+                })
+            );
 
-                return Object.assign({ }, injectOrderCount[ k ], {
-                    clients,
-                    notPayAllClients,
-                    sales_volume: salesVolume
-                });
-            });
+            const inject = trips$.data.map(( trip, key ) => {
+                return {
+                    ...trip,
+                    ...more[ key ]
+                }
+            })
             
             return ctx.body = {
                 status: 200,
@@ -199,7 +221,7 @@ export const main = async ( event, context ) => {
                     search: event.data.title.replace(/\s+/g, ''),
                     pageSize: limit,
                     page: event.data.page,
-                    data: injectSalesVolume,
+                    data: inject,
                     total: total$.total,
                     totalPage: Math.ceil( total$.total / limit )
                 }
