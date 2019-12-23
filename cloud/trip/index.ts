@@ -893,7 +893,7 @@ export const main = async ( event, context ) => {
                             $url: 'push-subscribe-cloud',
                             data: {
                                 openid: adm.openid,
-                                type: 'tid',
+                                type: 'trip',
                                 page: `pages/trip-reward/index?tid=${tid}`,
                                 texts: ['群拼团报告已出！', '点击并分享给群友吧～']
                             }
