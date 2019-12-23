@@ -69,7 +69,7 @@
                             class="pmgl-small-label red"
                             wx:elif="{{ item.notPayAllClients }}"
                         >
-                            {{ item.notPayAllClients }}人未付尾款
+                            {{ item.notPayAllClients }}人未付
                         </view>
                         <view
                             wx:else

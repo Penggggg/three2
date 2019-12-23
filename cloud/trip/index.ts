@@ -497,18 +497,6 @@ export const main = async ( event, context ) => {
                 .get( );
 
             /**
-             * 总收益
-             * !至少已付订金，至少已经调节售价、数量
-             */
-            const sum = orders$.data
-                .filter( x => x.pay_status !== '0' &&
-                    (( x.base_status === '1' ) || ( x.base_status === '2' ) || ( x.base_status === '3' ))
-                )
-                .reduce(( x, y ) => {
-                    return x + ( y.allocatedPrice * ( y.allocatedCount || 0 ));
-                }, 0 );
-
-            /**
              * 总客户数量
              * !至少已付订金
              */
@@ -526,6 +514,55 @@ export const main = async ( event, context ) => {
                     .filter( x => x.pay_status === '1' )
                     .map( x => x.openid )
             )).length;
+
+            // 获取行程的购物清单
+            const sl$ = await db.collection('shopping-list')
+                .where({
+                    tid
+                })
+                .field({
+                    pid: true,
+                    oids: true,
+                    uids: true,
+                    adjustPrice: true,
+                    adjustGroupPrice: true
+                })
+                .get( );
+            const sl = sl$.data;
+
+            // 统计收益
+            const slOrders$ = await Promise.all(
+                sl.map( async s => {
+                    const { oids } = s;
+                    const orders: any = await Promise.all(
+                        oids.map( async o => {
+                            const order$ = await db.collection('order')
+                                .doc( String( o ))
+                                .field({
+                                    count: true,
+                                    allocatedCount: true
+                                })
+                                .get( );
+                            return order$.data;
+                        })
+                    );
+                    return {
+                        ...s,
+                        orders
+                    }
+                })
+            );
+        
+            // 统计收益
+            const sum = slOrders$.reduce(( sum, sl: any ) => {
+                const { orders, uids, adjustPrice, adjustGroupPrice } = sl;
+                const slInome = orders.reduce(( last, order ) => {
+                    const { allocatedCount, count } = order;
+                    let count_ = allocatedCount !== undefined ? allocatedCount : count;
+                    return last + ( uids.length > 1 ? ( adjustGroupPrice ? adjustGroupPrice : adjustPrice ) : adjustPrice ) * count_;
+                }, 0 );
+                return slInome + sum;
+            }, 0 );
 
             return ctx.body = {
                 status: 200,
