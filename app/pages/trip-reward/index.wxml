@@ -124,7 +124,7 @@
                     <view 
                         class="ptr-personal-pin-tips"
                     >
-                        {{ item.pinSuccess ? item.buyer.length + '群友拼团' : '没拼成功' }}
+                        {{ item.pinSuccess ? '拼团成功' : '没拼成功' }}
                     </view>
                 </view>
 

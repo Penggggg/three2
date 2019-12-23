@@ -290,7 +290,7 @@ Page({
 
         if ( hasGet ) {
             wx.showToast({
-                title: '已领取过啦'
+                title: '已领取'
             });
             return this.toggleHongbao( );
         }

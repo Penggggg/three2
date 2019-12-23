@@ -731,7 +731,8 @@ export const main = async ( event, context ) => {
 
     /**
      * @description
-     * 手动/自动关闭行程的时候，发送整个行程的运营数据给adm
+     * 手动/自动关闭行程的时候，发送整个行程的运营数据给adm。
+     * 同时发送「群报」给adm
      */
     app.router('close-trip-analyze', async( ctx, next ) => {
         try {
@@ -870,6 +871,8 @@ export const main = async ( event, context ) => {
             // 推送
             await Promise.all(
                 adms$.data.map( async adm => {
+
+                    // 运营数据
                     await cloud.callFunction({
                         name: 'common',
                         data: {
@@ -882,6 +885,21 @@ export const main = async ( event, context ) => {
                             }
                         }
                     });
+
+                    // 群报
+                    await cloud.callFunction({
+                        name: 'common',
+                        data: {
+                            $url: 'push-subscribe-cloud',
+                            data: {
+                                openid: adm.openid,
+                                type: 'tid',
+                                page: `pages/trip-reward/index?tid=${tid}`,
+                                texts: ['群拼团报告已出！', '点击并分享给群友吧～']
+                            }
+                        }
+                    });
+
                     return 
                 })
             );
@@ -907,7 +925,7 @@ export const main = async ( event, context ) => {
                 message: e
             }
         }
-    })
+    });
 
     return app.serve( );
 
