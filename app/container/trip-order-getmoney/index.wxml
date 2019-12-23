@@ -137,7 +137,7 @@
                     <view
                         class="tog-order-item"
                         wx:for="{{ item[ item.key ]}}"
-                        wx:key="{{ orderKey }}"
+                        wx:key="orderKey"
                         wx:for-item="order"
                         wx:for-index="orderKey"
                     >
@@ -216,7 +216,7 @@
                     class="tog-address-orders-list"
                 >
                     <view
-                        wx:key="{{ adk }}"
+                        wx:key="adk"
                         wx:for-index="adk"
                         wx:for-item="addressOrder"
                         class="tog-address-order-item"
@@ -249,7 +249,7 @@
                         <!-- 该地址下的订单 -->
                         <view class="tog-address-orders">
                             <view
-                                wx:key="{{ ad }}"
+                                wx:key="ad"
                                 wx:for-index="ad"
                                 wx:for-item="orderitem"
                                 class="tog-address-item"

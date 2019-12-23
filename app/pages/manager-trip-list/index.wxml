@@ -97,13 +97,12 @@
 
             <!-- 订单详情 -->
             <view
-                wx:if="{{ item.ing && !item.hasProductIds }}"
+                wx:if="{{ item.ing }}"
                 class="pmgl-tips"
                 data-tid="{{ item.tid }}"
                 catchtap="onTab"
             >
-                主推货
-                
+                {{ !item.hasProductIds ? '主推货' : '更多' }}
                 <image 
                     class="pmgl-tips-icon"
                     mode="aspectFill"

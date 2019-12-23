@@ -89,7 +89,7 @@
             wx:for="{{ formData[ item.key ]}}"
             wx:for-item="label"
             wx:for-index="k"
-            wx:key="{{ k }}"
+            wx:key="k"
             data-tagkey="{{ item.key }}"
             data-tagindex="{{ k }}"
             class='label inline'

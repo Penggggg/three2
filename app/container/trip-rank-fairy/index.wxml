@@ -131,7 +131,7 @@
                     <!-- 商品列表 -->
                     <view class="con-ptd-rank-order-block">
                         <view
-                            wx:key="{{ k }}"
+                            wx:key="k"
                             wx:for-index="k"
                             wx:for-item="order"
                             wx:for="{{ item.orders }}"

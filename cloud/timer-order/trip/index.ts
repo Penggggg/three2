@@ -122,14 +122,14 @@ export const overtimeTrip = async ( ) => {
 
         if ( trips$.data.length > 0 ) {
             // 推送代购通知
-            const members = await db.collection('manager-member')
+            const members$ = await db.collection('manager-member')
                 .where({
                     push: true
                 })
                 .get( );
 
             await Promise.all(
-                members.data.map( async member => {
+                members$.data.map( async member => {
                     // 4、调用推送
                     const push$ = await cloud.callFunction({
                         name: 'common',
@@ -145,6 +145,20 @@ export const overtimeTrip = async ( ) => {
                     });
                 })
             );
+
+            await Promise.all(
+                trips$.data.map( async trip => {
+                    await cloud.callFunction({
+                        name: 'trip',
+                        data: {
+                            $url: 'close-trip-analyze',
+                            data: {
+                                tid: trip._id
+                            }
+                        }
+                    });
+                })
+            )
         }
 
         return { status: 200 }
@@ -181,7 +195,7 @@ export const autoTrip = async ( ) => {
         const y = Sunday.getFullYear( );
         const m = Sunday.getMonth( ) + 1;
         const d = Sunday.getDate( );
-        const end_date = new Date(`${y}/${m}/${d} 23:00:00`)
+        const end_date = new Date(`${y}/${m}/${d} 23:00:00`).getTime( )
 
         // 自动创建
         await db.collection('trip')

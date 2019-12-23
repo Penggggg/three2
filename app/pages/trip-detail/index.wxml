@@ -188,7 +188,7 @@
                             <image
                                 mode="scaleToFill"
                                 lazy-load="{{ true }}"
-                                wx:key="{{ k }}"
+                                wx:key="k"
                                 wx:for-index="k"
                                 wx:for-item="user"
                                 wx:for="{{ item.users }}"
@@ -227,7 +227,7 @@
                                 src="{{ img }}"
                                 wx:for-index="k"
                                 wx:for-item="img"
-                                wx:key="{{ k }}"
+                                wx:key="k"
                                 class="ptd-pin-item-good-img-item"
                                 wx:for="{{ item.detail.good.img }}"
                                 data-img="{{ img }}"

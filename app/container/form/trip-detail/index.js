@@ -565,7 +565,9 @@ Component({
                                     title: '关闭成功'
                                 });
                                 setTimeout(( ) => {
-                                    navTo(`/pages/manager-trip-order/index?id=${tid}`)
+                                    wx.redirectTo({
+                                        url: `/pages/manager-trip-order/index?id=${tid}`
+                                    })
                                 }, 200 );
                             }
                         }

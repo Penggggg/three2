@@ -635,8 +635,9 @@ export const main = async ( event, context ) => {
         
             await Promise.all(
                 members.data.map( async member => {
+
                     // 4、调用推送
-                    const push$ = await cloud.callFunction({
+                    const push1$ = await cloud.callFunction({
                         name: 'common',
                         data: {
                             $url: 'push-subscribe-cloud',
@@ -648,6 +649,17 @@ export const main = async ( event, context ) => {
                             }
                         }
                     });
+
+                    const push2$ = await cloud.callFunction({
+                        name: 'trip',
+                        data: {
+                            $url: 'close-trip-analyze',
+                            data: {
+                                tid
+                            }
+                        }
+                    });
+
                 })
             );
 
@@ -655,6 +667,186 @@ export const main = async ( event, context ) => {
 
         } catch ( e ) {
             return ctx.body = { status: 500 };
+        }
+    });
+
+    /**
+     * @description
+     * 手动/自动关闭行程的时候，发送整个行程的运营数据给adm
+     */
+    app.router('close-trip-analyze', async( ctx, next ) => {
+        try {
+
+            // 收益
+            let income = 0;
+            // 成功下单的商品
+            let pinGoodsNum = 0;
+            // 被查看的商品
+            let visitGoodsNum = 0;
+            // 行程天数
+            let daysNum = 0;
+            // 浏览量
+            let visitNum = 0;
+            // 浏览人数
+            let visitorNum = 0;
+            // 成功拼团人数
+            let pinNum = 0;
+    
+            const { tid } = event.data;
+
+            // 获取行程详情
+            const trip$ = await db.collection('trip')
+                .doc( String( tid ))
+                .field({
+                    end_date: true,
+                    start_date: true
+                })
+                .get( )
+            const trip = trip$.data;
+
+            // 获取行程的浏览量
+            const visitRecords$ = await db.collection('good-visiting-record')
+                .where({
+                    visitTime: _.gte( trip.start_date )
+                })
+                .get( );
+            const visitRecords = visitRecords$.data;
+
+            // 获取行程的购物清单
+            const sl$ = await db.collection('shopping-list')
+                .where({
+                    tid
+                })
+                .field({
+                    pid: true,
+                    oids: true,
+                    uids: true,
+                    adjustPrice: true,
+                    adjustGroupPrice: true
+                })
+                .get( );
+            const sl = sl$.data;
+                
+            // 统计收益
+            const slOrders$ = await Promise.all(
+                sl.map( async s => {
+                    const { oids } = s;
+                    const orders: any = await Promise.all(
+                        oids.map( async o => {
+                            const order$ = await db.collection('order')
+                                .doc( String( o ))
+                                .field({
+                                    count: true,
+                                    allocatedCount: true
+                                })
+                                .get( );
+                            return order$.data;
+                        })
+                    );
+                    return {
+                        ...s,
+                        orders
+                    }
+                })
+            );
+        
+            // 统计收益
+            income = slOrders$.reduce(( sum, sl: any ) => {
+                const { orders, uids, adjustPrice, adjustGroupPrice } = sl;
+                const slInome = orders.reduce(( last, order ) => {
+                    const { allocatedCount, count } = order;
+                    let count_ = allocatedCount !== undefined ? allocatedCount : count;
+                    return last + ( uids.length > 1 ? ( adjustGroupPrice ? adjustGroupPrice : adjustPrice ) : adjustPrice ) * count_;
+                }, 0 );
+                return slInome + sum;
+            }, 0 );
+
+            // 统计成功拼团
+            let slOpenids: string[ ] = [ ];
+            sl.map( s => {
+                slOpenids = [ ...slOpenids, ...s.uids ]
+            });
+            pinNum = Array.from(
+                new Set( slOpenids )
+            ).length;
+
+            // 统计成功下单的产品
+            pinGoodsNum = sl.length;
+
+            // 统计查看的数据
+            let goodIds: string[ ] = [ ];
+            let visitOpenids: string[ ] = [ ];
+
+            visitRecords.map( v => {
+                goodIds = [ ...goodIds, v.pid ]
+                visitOpenids = [ ...visitOpenids, v.openid ]
+            });
+
+            visitGoodsNum = Array.from(
+                new Set( goodIds )
+            ).length;
+
+            visitorNum = Array.from(
+                new Set( visitOpenids )
+            ).length;
+
+            // 按人均每款商品都打开3次计算
+            visitNum = visitorNum * visitGoodsNum * 3;
+
+            // 统计天数
+            daysNum = Math.ceil(( trip.end_date - trip.start_date ) / ( 24 * 60 * 60 * 1000))
+
+            const text1 = `${daysNum}天内，`;
+            const text2 = `${visitGoodsNum}件商品被${visitorNum}人围观${visitNum}次`;
+            const texts = [
+                `收益${income}元，${pinNum}人拼团${pinGoodsNum}件商品`,
+                (text1 + text2).length > 20 ? text2 : text1 + text2
+            ];
+
+            // 获取所有管理员
+            const adms$ = await db.collection('manager-member')
+                .where({ })
+                .get( );
+            
+            // 推送
+            await Promise.all(
+                adms$.data.map( async adm => {
+                    await cloud.callFunction({
+                        name: 'common',
+                        data: {
+                            $url: 'push-subscribe-cloud',
+                            data: {
+                                openid: adm.openid,
+                                type: 'waitPin',
+                                page: `pages/manager-trip-list/index`,
+                                texts
+                            }
+                        }
+                    });
+                    return 
+                })
+            );
+
+            return ctx.body = {
+                status: 200,
+                data: {
+                    texts,
+                    pinNum,
+                    income,
+                    pinGoodsNum,
+                    visitorNum,
+                    visitGoodsNum,
+                    visitNum,
+                    daysNum,
+                }
+            }
+            
+        } catch ( e ) {
+            console.log('????', e )
+            return ctx.body = {
+                status: 500,
+                message: e
+            }
         }
     })
 

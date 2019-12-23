@@ -199,6 +199,12 @@ Page({
     goOrder({ currentTarget, detail }) {
         this.onSubscribe( );
         const { tid } = currentTarget.dataset;
+        // return http({
+        //     url: 'trip_close-trip-analyze',
+        //     data: {
+        //         tid
+        //     }
+        // })
         navTo(`/pages/manager-trip-order/index?id=${tid}`);
     },
 
