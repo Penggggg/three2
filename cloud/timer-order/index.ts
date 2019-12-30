@@ -7,7 +7,7 @@ import { userGetExp } from './push-timer';
 import { lastDayData } from './analyze';
 
 cloud.init({
-    env: process.env.cloud
+    env: cloud.DYNAMIC_CURRENT_ENV
 });
 
 const db: DB.Database = cloud.database( );
