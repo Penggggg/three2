@@ -123,7 +123,7 @@
                                     class="te2-tips-btn-block"
                                 >
                                     <view class="te2-tips-btn">
-                                        {{ ipName ? ipName + '代购拼团' : '更多代购拼团' }}
+                                        {{ ipName ? ipName + '群拼团' : '群拼团' }}
                                     </view>
                                 </view>
 
