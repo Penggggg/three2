@@ -236,7 +236,7 @@ export const autoTrip = async ( ) => {
                             openid: member.openid,
                             type: 'trip',
                             page: `pages/manager-trip-list/index?s=1`,
-                            texts: [`已自动创建代购行程`, `可推荐拼团商品啦～`]
+                            texts: [`自动创建代购行程～`, `可使用群拼团啦！～`]
                         }
                     }
                 });
