@@ -150,7 +150,7 @@ Component({
                 });
                 meta.splice( 9, 0, {
                   key: 'groupPrice',
-                  label: '拼价',
+                  label: '拼团价',
                   type: 'number',
                   placeholder: '让客户相互分享、多下单',
                   value: undefined,

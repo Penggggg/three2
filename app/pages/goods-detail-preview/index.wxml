@@ -1,180 +1,149 @@
-<view class="page-goods-detail-preview">
+<view class="page-goods-detail"> 
 
-    <!-- 加载栏 -->
-    <view
-        class="pgd-tips-skt"
-        wx:if="{{ !detail }}"
-    >
-        <view class="text">正在加载...</view> 
-    </view>
+    <!-- 内容 -->
+    <view>
 
-    <view
-        wx:else
-    >
+        <!-- 轮播图 + 标题、价格、商品标签 -->
+        <view class="pgd-swiper-con">
 
-        <!-- 预览提示 -->
-        <view
-            class="gd-pin-tips"
-        >
-            <wxc-notice
-                color="#fff"
-                bg-color="transparent"
-                scroll="{{ true }}"
-                notice="正在处于商品预览模式"
-            />
-        </view>
-
-        <!-- 轮播图 -->
-        <swiper
-            autoplay="{{ true }}"
-            interval="{{ 5000 }}"
-            circular="{{ true }}"
-            class="pgd-swiper"
-        >
-            <block
-                wx:if="{{ detail }}"
-                wx:key="index"
-                wx:for="{{ detail.img }}"
+            <swiper
+                class="pgd-swiper"
+                autoplay="{{ true }}"
+                interval="{{ 5000 }}"
+                circular="{{ true }}"
             >
-                <swiper-item>
-                    <image
-                        mode="aspectFill"
-                        src="{{ item }}"
-                        data-img="{{ item }}"
-                        class="pgd-swiper-img"
-                        bindtap='previewImg'
-                        lazy-load="{{ true }}"
-                    />
-                </swiper-item>
-            </block>
-        </swiper>
-
-        <!-- v2 价格信息 + 倒计时 -->
-        <view
-            class="pgd-price-time-block"
-        >
-            <!-- 固定文案 -->
-            <view class="pgd-price-time-block-item msg">
-                <view class="pgd-price-time-block-text">
-                    超值优惠
-                </view>
-                <view class="pgd-price-time-block-text indent">
-                    限时购
-                </view>
-            </view>
-
-            <!-- 价格信息 -->
-            <view class="pgd-price-time-block-item purple">
-                <wxc-price
-                    icon="sub"
-                    class="white price mr"
-                    decimal="small"
+                <block
+                    wx:key="index"
                     wx:if="{{ detail }}"
-                > 
-                    {{ price$ }}
-                </wxc-price>
-                <wxc-price
-                    status="del"
-                    decimal="small"
-                    wx:if="{{ detail }}"
-                    del-color="#fff"
-                    class="white fade-price"
-                > 
-                    原价{{ detail.fadePrice }}
-                </wxc-price>
-            </view>
-
-            <!-- 行程倒计时 -->
-            <view
-                class="pgd-price-time-block-item countdown"
-            >
-                <view class="pgd-price-time-block-tips">行程开始还剩</view>
-                <wxc-countdown
-                    countdown="{{ 1000 }}"
-                    format="hh:mm:ss"
-                    num-style="font-size: 32rpx; color: #fff; padding: 5rpx 8rpx;background: #000; text-align: center; border-radius: 8rpx;"
-                />
-            </view>
-
-        </view>
-
-        <!-- v1 - 标题 -->
-        <view
-            class="pgd-title"
-            wx:if="{{ detail }}"
-        >
-            {{ detail.title }}
-        </view>
-
-        <!-- v1 - 标签、收藏-->
-        <view
-            wx:if="{{ detail }}"
-            class="pgd-tag-block padding"
-        >
-            <wxc-label
-                class="pgd-label"
-                text="{{ item }}"
-                wx:key="index"
-                wx:for="{{ detail.tag }}"
-            />
-
-            <wxc-label
-                class="pgd-label"
-                wx:if="{{ detail.groupPrice }}"
-                text="团购价{{ detail.groupPrice }}"
-            />
-
-            <view class="pgd-like">
-                <i-icon
-                    size="20"
-                    type="{{ liked ? 'like_fill' : 'like' }}"
-                    color="#ff5777"
-                />收藏
-            </view>
-        </view>
-
-        <!-- 分割线 -->
-        <view class="drive-line mt"></view>
-
-        <!-- 团购信息、基本保证、促销活动（一口价） -->
-        <view
-            class="info-block"
-        >
-            <!-- 保证，三个icon -->
-            <view
-                class="info-block-item"
-            >
-                <view class="info-block-item-label">
-                    保证：
-                </view>
-
-                <view class="info-block-item-content flex">
-                    <view
-                        wx:for="{{ promiseTips }}"
-                        wx:key="index"
-                        class="info-block-item-tips"
-                    >
+                    wx:for="{{ detail.img }}"
+                >
+                    <swiper-item>
                         <image
-                            class="info-block-item-tips-image"
-                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/right-icon.png"
+                            mode="aspectFill"
+                            class="pgd-swiper-img"
+                            src="{{ item }}"
+                            bindtap='previewImg'
+                            data-img="{{ item }}"
+                            lazy-load="{{ true }}"
                         />
-                        {{ item }}
+                    </swiper-item>
+                </block>
+            </swiper>
+
+            <form
+                class="pgd-title-form-con"
+            >
+                <button 
+                    bindtap="togglePinGoods"
+                    class="pgd-title-con fix-btn"
+                >
+                    <view 
+                        class="pgd-header-title"
+                    >
+                        <view>
+                            <wxc-price
+                                icon="sub"
+                                decimal="small"
+                                class="pgd-title-price"
+                            > 
+                                {{ detail$.lowest_price$ }}
+                            </wxc-price>
+                            <view
+                                class="pgd-title-tips"
+                            >
+                                {{ detail$.hasPin ? '拼团买' : '超划算' }}{{ detail$.hasActivity ? ' 特价' : '' }}
+                            </view>
+                            <my-icon-question 
+                                color="#FF0066"
+                                invert="{{ true }}"
+                            />
+                        </view>
+                        <view class="pgb-taobao">
+                            <image
+                                mode="aspectFill"
+                                class="pgd-campare-icon"
+                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-taobao.png"
+                                lazy-load="{{ true }}"
+                            />
+                            <wxc-price
+                                status="del"
+                                del-color="#616161"
+                                class="pgd-campare-price ml"
+                            > 
+                                {{ detail$.fadePrice }}
+                            </wxc-price>
+                        </view>
                     </view>
-                </view>
-                
-            </view>
+                    <view class="pgd-title-block">
+                        <view class="pgd-title">
+                            {{ detail$.title }}{{ detail$.tagText ? ' | ' + detail$.tagText : '' }}
+                        </view>
+                        <view 
+                            wx:if="{{ detail$.hasPin }}"
+                            class="pgd-zhijie-buy"
+                        >
+                            直接买<wxc-price
+                                icon="sub"
+                                decimal="small"
+                                class="pgd-campare-price"
+                            > 
+                                {{ detail$.lowest_pin_origin_price$ }}
+                            </wxc-price>
+                        </view>
+                    </view>
+                </button>
+            </form>
+
         </view>
 
-        <!-- 分割线 -->
-        <view class="drive-line"></view>
+        <!-- 分享赚钱提示栏 -->
+        <view 
+            class="pgd-ad-con"
+            wx:if="{{ canIntegrayShare }}"
+        >
+            <view 
+                class="pgd-ad-item"
+                wx:if="{{ canIntegrayShare }}"
+            >
+                <form
+                >
+                    <button
+                        class="fix-btn pgd-question-btn"
+                        bindtap="toggleShareGetMoney"
+                    >   
+                        <my-icon-question 
+                            color="#FF0066"
+                        />
+                    </button>
+                </form>
+                <view class="pgd-ad-text">
+                    分享：即获{{ integral$ }}元抵现金
+                </view>
+            </view>
+        </view>
 
         <!-- banner -->
         <view class="detail-info-banner">
             <image
                 mode="scaleToFill"
                 class="detail-info-banner-img"
-                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-info-banner.png"
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/banner-3.png"
             />
+            <view class="detail-banner-info">
+                <view class="detail-banner-title">
+                    {{ ipName || '跑腿' }}代购
+                    <image
+                        src="{{ ipAvatar }}"
+                        mode="aspectFill"
+                        class="detail-banner-avatar"
+                        wx:if="{{ !!ipAvatar }}"
+                        lazy-load="{{ true }}"
+                    />
+                </view>
+                <view class="detail-banner-tips">
+                    正品·质量·超划算
+                </view>
+            </view>
         </view>
 
         <!-- 文字介绍 -->
@@ -188,16 +157,142 @@
             </view>
         </view>
 
-        <!-- 商品下面的栏 -->
-        <my-goods-detail-bar
-            tid=""
-            preview="{{ true }}"
-            detail="{{ detail }}"
-            canPinSku="{{[ ]}}"
-            activities="{{[ ]}}"
-        />
-
     </view>
+
+    <!-- 预览提示 -->
+    <view
+        class="gd-pin-tips"
+    >
+        <wxc-notice
+            color="#fff"
+            bg-color="transparent"
+            scroll="{{ true }}"
+            notice="正在处于商品预览模式"
+        />
+    </view>
+
+    <!-- 商品下面的bar -->
+    <my-goods-detail-bar
+        tid=""
+        preview="{{ true }}"
+        detail="{{ detail }}"
+        canPinSku="{{[ ]}}"
+        activities="{{[ ]}}"
+    />
+
+    <!-- 分享赚钱提示弹框 -->
+    <my-share-integral
+        show="{{ showShareGetMoney }}"
+        bind:toggle="toggleShareGetMoney"
+    />
+
+    <!-- 团购商品列表弹框 -->
+    <wxc-mask
+        content-align="cc"
+        status="{{ showPinGoods }}"
+        bindmasktap="togglePinGoods"
+    >
+        <view class="gd-pin-tips-block">
+
+            <view class="gd-pin-tips-icon-block">
+                <view 
+                    wx:if="{{ !ipAvatar }}"
+                    class="gd-pin-tips-icon-round"
+                >
+                    <image
+                        mode="widthFix"
+                        class="gd-pin-tips-icon"
+                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-money-white.png"
+                    />
+                </view>
+                <view 
+                    wx:else
+                    class="gd-pin-tips-icon-round nb"
+                >
+                    <image
+                        mode="aspectFill"
+                        lazy-load="{{ true }}"
+                        class="gd-pin-ipAvatar"
+                        src="{{ ipAvatar }}"
+                    />
+                </view>
+            </view>
+
+            <view class="gd-pin-tips-title">
+                拼团省钱
+            </view>
+
+            <view class="gd-pin-tips-content mt">
+                群里有群友下单，就自动拼团            
+            </view>
+
+            <view class="gd-pin-tips-content mb">
+                先订金/后尾款            
+            </view>
+
+            <swiper
+                wx:if="{{ pin$.length > 0 }}"
+                autoplay="{{ true }}"
+                circular="{{ true }}"
+                duration="{{ 1000 }}"
+                interval="{{ 3000 }}"
+                class="gd-swiper {{ pin$.length <= 2 ? pin$.length === 1 ? 'one' : pin$.length === 2 ? 'two' : '' : 'two' }}"
+                display-multiple-items="{{ pin$.length <= 2 ? pin$.length : 2 }}"
+            >
+                <block
+                    wx:key="index"
+                    wx:for="{{ pin$ }}"
+                >
+                    <swiper-item class="swiper-visible">
+                        <view
+                            data-data="{{ item }}"
+                            class="gd-swiper-item"
+                            bindtap="previewSingleImg"
+                        >
+                            <image
+                                src="{{ item.img }}"
+                                mode="aspectFill"
+                                class="gd-swiper-image"
+                            />
+                            <view class="gd-swiper-title">
+                                {{ item.name }}
+                            </view>
+                            <view class="gd-swiper-title del small">
+                                ¥{{ item.price }}
+                            </view>
+                            <view class="gd-swiper-title small color">
+                                拼: {{ item.groupPrice }}
+                            </view>
+                            <view
+                                class="gd-swiper-tag"
+                                wx:if="{{ item.canPin }}"
+                            >
+                                下单就拼团
+                            </view>
+                            <view
+                                wx:else
+                                class="gd-swiper-tag"
+                            >
+                                省¥{{ item.delta }}
+                            </view>
+                        </view>
+                    </swiper-item>
+                </block>
+            </swiper>
+
+            <form
+                class="gd-pin-close"
+            >
+                <button
+                    bindtap="togglePinGoods"
+                    class="formid-btn fix-btn"
+                >   
+                    <wxc-icon size="40" type="no" color="rgba(0,0,0,0.1)"></wxc-icon>
+                </button>
+            </form>
+
+        </view>
+    </wxc-mask>
 
     <!-- 商品管理页面入口 -->
     <view

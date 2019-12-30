@@ -17,7 +17,7 @@
     >
       <view class='name standards-item'>型号名称</view>
       <view class='standards-item'>价格</view>
-      <view class='standards-item'>团购价</view>
+      <view class='standards-item'>拼团价</view>
       <view class='standards-item'>库存</view>
       <view class='standards-item'>图片</view>
     </view>
@@ -85,10 +85,10 @@
     />
     <wxc-input
       type="number"
-      title="团购价"
+      title="拼团价"
       nocenter="{{ true }}"
       data-key="groupPrice"
-      placeholder="该型号的团购价"
+      placeholder="该型号的拼团价"
       value='{{ standarForm.groupPrice }}'
       bindinput='standarInput'
     />

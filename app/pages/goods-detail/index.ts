@@ -422,8 +422,8 @@ Page({
 
     /** 拉取商品详情 */
     fetDetail( id ) {
-        const { detail, from } = this.data;
-        if ( detail ) { return; }
+        const { detail, from, showAdmBtn } = this.data;
+        if ( detail && !showAdmBtn ) { return; }
         http({
             data: {
                 _id: id,
@@ -833,40 +833,44 @@ Page({
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady: function ( ) {
-        let circleCount = 0; 
-        const that: any = this;
-        // 心跳的外框动画 
-        that.animationMiddleHeaderItem = wx.createAnimation({ 
-            duration: 800, 
-            timingFunction: 'ease', 
-            transformOrigin: '50% 50%',
-        }); 
-        setInterval( function( ) { 
-            if (circleCount % 2 == 0) { 
-                that.animationMiddleHeaderItem.scale( 1.0 ).rotate( 10 ).step( ); 
-            } else { 
-                that.animationMiddleHeaderItem.scale( 1.0 ).rotate( -30 ).step( ); 
-            } 
-            that.setData({ 
-                animationMiddleHeaderItem: that.animationMiddleHeaderItem.export( ) 
-            }); 
+        // let circleCount = 0; 
+        // const that: any = this;
+        // // 心跳的外框动画 
+        // that.animationMiddleHeaderItem = wx.createAnimation({ 
+        //     duration: 800, 
+        //     timingFunction: 'ease', 
+        //     transformOrigin: '50% 50%',
+        // }); 
+        // setInterval( function( ) { 
+        //     if (circleCount % 2 == 0) { 
+        //         that.animationMiddleHeaderItem.scale( 1.0 ).rotate( 10 ).step( ); 
+        //     } else { 
+        //         that.animationMiddleHeaderItem.scale( 1.0 ).rotate( -30 ).step( ); 
+        //     } 
+        //     that.setData({ 
+        //         animationMiddleHeaderItem: that.animationMiddleHeaderItem.export( ) 
+        //     }); 
             
-            if ( ++circleCount === 1000 ) { 
-                circleCount = 0; 
-            } 
-        }.bind( this ), 1000 ); 
+        //     if ( ++circleCount === 1000 ) { 
+        //         circleCount = 0; 
+        //     } 
+        // }.bind( this ), 1000 ); 
     },
   
     /**
      * 生命周期函数--监听页面显示
      */
     onShow: function ( ) {
-        const { id, tid, trip } = this.data;
+        const { id, tid, trip, detail, showAdmBtn } = this.data;
         
         this.fetchShopping( id, tid );
         if ( !!trip ) {
             const { start_date, end_date } = (trip as any);
             this.fetchVisitRecord( id, start_date, end_date );
+        }
+
+        if ( !!detail && !!showAdmBtn ) {
+            this.fetDetail( id );
         }
 
     },
