@@ -53,6 +53,7 @@
                         report-submit="{{ true }}"
                         bindgetuserinfo="getUserAuth"
                         class="formid-btn con-lj-share"
+                        animation="{{ animationMiddleHeaderItem }}"
                     >
                         分享
                     </button>
