@@ -248,7 +248,7 @@ export const autoTrip = async ( ) => {
         }
 
     } catch ( e ) {
-        console.log('!!!!autoTrip')
+        console.log('!!!!autoTrip', e );
         return { status: 500 }
     }
 }
