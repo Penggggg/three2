@@ -6,9 +6,9 @@ import { clearShareRecord } from './share-record';
 import { userGetExp } from './push-timer';
 import { lastDayData } from './analyze';
 
-cloud.init({
-    env: cloud.DYNAMIC_CURRENT_ENV
-});
+// cloud.init({
+//     env: process.env.cloud
+// });
 
 const db: DB.Database = cloud.database( );
 const _ = db.command;
