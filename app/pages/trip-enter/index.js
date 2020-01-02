@@ -598,16 +598,10 @@ Page({
             this.getAnotherLijian( );
         }
 
-        if ( !current ) {
-            return {
-                title: '一个可以拼团的代购～',
-                path: '/pages/trip-enter/index'
-            }
-        } else {
-            return {
-                title: `${current.title}在${current.start_date$}开始！来拼团吧～`,
-                path: '/pages/trip-enter/index'
-            }
+        return {
+            title: '在群拼团小程序～大家都能省！～',
+            path: '/pages/trip-enter/index',
+            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/cover-trip-enter.png'
         }
     }
 })
