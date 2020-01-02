@@ -599,9 +599,9 @@ Page({
         }
 
         return {
-            title: '「群拼团」大家都能省！～',
+            title: '群拼团！大家都能省～',
             path: '/pages/trip-enter/index',
-            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/cover-trip-enter.png'
+            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/cover-trip-enter-1.png'
         }
     }
 })
