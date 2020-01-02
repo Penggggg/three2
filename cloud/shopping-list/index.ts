@@ -3,7 +3,7 @@ import * as TcbRouter from 'tcb-router';
 import { find$ } from './find';
 
 cloud.init({
-    env: cloud.DYNAMIC_CURRENT_ENV
+    env: process.env.cloud
 });
 
 const db: DB.Database = cloud.database( );

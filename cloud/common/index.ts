@@ -6,7 +6,7 @@ import * as rp from 'request-promise';
 import * as CONFIG from './config';
 
 cloud.init({
-    env: cloud.DYNAMIC_CURRENT_ENV
+    env: process.env.cloud
 });
 
 const db: DB.Database = cloud.database( );
