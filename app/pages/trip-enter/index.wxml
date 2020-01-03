@@ -248,7 +248,7 @@
                                     <view
                                         class="te2-pin-price"
                                     > 
-                                        最低价
+                                        拼团价
                                     </view>
                                 </view>
                             </view>
@@ -407,9 +407,6 @@
 
     <!-- 任务列表 -->
     <my-task-modal />
-
-    <!-- 任务模块 -->
-    <!-- <my-task-modal /> -->
 
     <!-- 订阅消息模块 -->
     <my-subscribe-tips />

@@ -69,8 +69,7 @@
                         bindtap="onSubscribe"
                         open-type="share"
                         form-type="submit"
-                        class="formid-btn con-lj-share"
-                        animation="{{ animationMiddleHeaderItem }}"
+                        class="formid-btn con-lj-share scale"
                     >   
                         分享
                     </button>

@@ -314,9 +314,6 @@ Component({
         /** 获取当前人的推广积分、签到经验 */
         fetchPushIntegral( e = null, mustFetch = false ) {
             const { onlyGetMoney } = this.data;
-            // if ( onlyGetMoney && !mustFetch ) {
-            //     return this.checkGetIntegral( true );
-            // }
             http({
                 data: {
                     showMore: true
@@ -617,6 +614,14 @@ Component({
                     ) 
                 ) {
                     return reset( );
+                } else {
+                    this.setData({
+                        isGetMoney: true
+                    })
+                    return wx.showToast({
+                        icon: 'none',
+                        title: '你已领过啦～'
+                    });
                 }
             }
         },
