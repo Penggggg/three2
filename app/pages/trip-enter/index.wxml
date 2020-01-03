@@ -392,6 +392,7 @@
         wx:if="{{ current }}"
         tid="{{ current._id }}"
         opacity="{{ !showMember }}"
+        url="/pages/ground-pin/index"
     />
 
     <!-- 立减优惠券 -->
