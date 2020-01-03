@@ -183,7 +183,7 @@
                 <view class="pgd-visitor-btn">
                     <button 
                         open-type="share"
-                        class="fix-btn pgd-visitor-share-btn shine"
+                        class="fix-btn pgd-visitor-share-btn {{ openingSku ? '' : 'shine' }}"
                     >
                         一起拼
                     </button>
@@ -271,7 +271,7 @@
                     <view class="pgd-pin-btn-con">
                         <button 
                             bindtap="onToggleSku"
-                            class="fix-btn pgd-pin-btn shine"
+                            class="fix-btn pgd-pin-btn {{ openingSku ? '' : 'shine' }}"
                         >
                             一起拼
                         </button>
