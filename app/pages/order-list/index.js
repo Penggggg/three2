@@ -81,7 +81,9 @@ Page({
         // 当前行程的订单
         currentTripOrder: { },
         // 推广积分使用记录表
-        pushIntegralFees: [ ]
+        pushIntegralFees: [ ],
+        // 展示任务组件
+        showTaskCom: false
     },
 
     /** 设置computed */
@@ -1164,6 +1166,12 @@ Page({
                 title: '省钱'
             });
         }
+
+        setTimeout(( ) => {
+            this.setData({
+                showTaskCom: true
+            })
+        }, 500 );
     },
 
     /**

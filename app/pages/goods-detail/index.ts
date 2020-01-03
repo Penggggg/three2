@@ -296,7 +296,12 @@ Page({
                 ];
                 
                 const allVisitors = visitors
-                    .filter( x => x.openid !== openid )
+                    .filter( x => {
+                        if ( visitors.length === 1 ) {
+                            return x.openid !== openid
+                        };
+                        return true;
+                    })
                     .map( x => {
                         const randomNum = getRandom( allTexts.length );
                         return {
