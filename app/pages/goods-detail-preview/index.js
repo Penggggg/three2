@@ -173,6 +173,14 @@ Page({
         });
     },
 
+    /** sku某部分点击 */
+    onSkuTap( e ) {
+        const type = e.detail;
+        if ( type === 'moneyQuestion' ) {
+            this.toggleShareGetMoney( );
+        }
+    },
+
     /** 提交当前表单的值 */
     submit( ) {
         const { detail } = this.data;

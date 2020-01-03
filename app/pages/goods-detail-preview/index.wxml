@@ -178,6 +178,7 @@
         detail="{{ detail }}"
         canPinSku="{{[ ]}}"
         activities="{{[ ]}}"
+        bind:custom="onSkuTap"
     />
 
     <!-- 分享赚钱提示弹框 -->

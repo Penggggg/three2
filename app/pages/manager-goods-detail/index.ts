@@ -12,7 +12,7 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-      const id = options!.id || '1a2751ef5cab50440283e59a10d24bec';
+      const id = options!.id; 
       wx.hideShareMenu({ });
       if ( !id ) { return; }
       this.setData!({

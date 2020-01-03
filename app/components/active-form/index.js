@@ -218,7 +218,6 @@ Component({
 
       let selectTypeIndex = { };
       let obj = JSON.parse( JSON.stringify( theObj ));
-
       this.data.meta.map( formItem => {
         if ( !!formItem.key ) {
           // 处理formData
@@ -230,7 +229,7 @@ Component({
                 formItem.value :
                 typeof formItem.value === 'object' && !!formItem.value && formItem.type !== 'switch' && typeof formItem.value.getTime !== 'function' ?
                   Object.assign({ }, formItem.value ) :
-                  formItem.type === 'switch' ?
+                  formItem.type === 'switch' || formItem.type === 'select' ?
                     formItem.value :
                     obj[ formItem.key ]
           });
@@ -254,7 +253,6 @@ Component({
     dealFormData( meta ) {
       let theObj = Object.assign({ }, this.data.formData );
       const { obj, selectTypeIndex } = this.dealFormData2( theObj );
-
       this.setData({
         formData: obj,
         selectFormItemIndex: selectTypeIndex
@@ -278,7 +276,6 @@ Component({
       const validateItemResult = Object.keys( this.data.formData ).map( k => {
         return this.validateItem( k );
       }).filter( x => x !== undefined );
-
       // 这里有点奇怪 number 如果是带 小数点的 会返回 string，因此做个特殊处理
       let temp = { };
       const { formData, meta } = this.data;
@@ -293,7 +290,6 @@ Component({
               formData[ formKey ]
         })
       });      
-
       return {
         data: temp,
         err: this.data.errData,

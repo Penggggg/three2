@@ -56,9 +56,10 @@ Component({
 
     runComputed( ) {
          computed( this, {
-    
+          
             // 表单数据
             meta( ) {
+              const { category } = this.data;
 
               const meta = [
                 {
@@ -98,7 +99,7 @@ Component({
                   label: '商品类目',
                   type: 'select',
                   placeholder: '请设置商品类目',
-                  value: this.data.category,
+                  value: category,
                   options: this.data.dic['goods_category'] || [ ]
                 }, {
                   key: 'img',
@@ -129,14 +130,14 @@ Component({
                   }]
                 }, {
                   title: '规格型号',
-                  desc: '无多个型号则不用填写'
+                  desc: '无型号 则不填写'
                 }
               ];
         
               if ( this.data.standards.length === 0 ) {
                 meta.splice( 7, 0, {
                   key: 'price',
-                  label: '价格',
+                  label: '单买价',
                   type: 'number',
                   placeholder: '如：128',
                   value: undefined,
@@ -155,17 +156,20 @@ Component({
                   placeholder: '让客户相互分享、多下单',
                   value: undefined,
                   rules: [{
-                    validate: val => val !== null && val !== undefined && !!String( val ).trim( ) ? Number( String( val ).trim( )) > 0 : true,
-                    message: '拼团价必填'
+                    validate: val => !!val,
+                    message: '请设置拼团价'
+                  }, {
+                    validate: val => Number( val ) > 0,
+                    message: '拼团价不能为0'
                   }]
                 });
-                meta.splice( 10, 0, {
-                  key: 'stock',
-                  label: '库存',
-                  type: 'number',
-                  placeholder: '不填则无限制',
-                  value: undefined
-                })
+                // meta.splice( 10, 0, {
+                //   key: 'stock',
+                //   label: '库存',
+                //   type: 'number',
+                //   placeholder: '不填则无限制',
+                //   value: undefined
+                // })
               }
         
               return meta;
@@ -194,7 +198,7 @@ Component({
                   key: 'visiable',
                   label: '立即上架',
                   type: 'switch',
-                  value: false
+                  value: true
                 }
               ]
             },
@@ -279,8 +283,12 @@ Component({
         return errMsg('价格不能为0');
       }
 
+      if ( groupPrice === undefined || groupPrice === null || !String( groupPrice ).trim( )) {
+        return errMsg('请填写拼团价');
+      } 
+
       if ( groupPrice !== undefined && groupPrice !== null  && Number( groupPrice ) <= 0 ) {
-        return errMsg('价格不能为0');
+        return errMsg('拼团价不能为0');
       }
 
       if ( !img ) {
@@ -395,7 +403,7 @@ Component({
 
             const form1 = that.selectComponent('#form1');
             const form2 = that.selectComponent('#form2');
-
+            
             that.setData({
               standards,
               category,
@@ -406,7 +414,7 @@ Component({
               tag,
               img,
               title,
-              stock,
+              // stock,
               price,
               detail,
               category,
@@ -500,6 +508,7 @@ Component({
     preview( ) {
       const _id = this.data.pid;
       const goodsDetail = this.check( );
+
       if ( !goodsDetail ) { return; }
       app.setGlobalData({
         editingGood: goodsDetail
