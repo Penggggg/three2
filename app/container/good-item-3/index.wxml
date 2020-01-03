@@ -25,7 +25,7 @@
 
         <!-- 原价 -->
         <view class="gi3-fadeprice">
-            市场售价:¥{{ good.fadePrice }}
+            淘宝售价:¥{{ good.fadePrice }}
         </view>
 
         <!-- 最低价 -->

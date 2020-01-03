@@ -199,12 +199,6 @@ Page({
     goOrder({ currentTarget, detail }) {
         this.onSubscribe( );
         const { tid } = currentTarget.dataset;
-        return http({
-            url: 'trip_close-trip-analyze',
-            data: {
-                tid
-            }
-        })
         navTo(`/pages/manager-trip-order/index?id=${tid}`);
     },
 
@@ -280,7 +274,8 @@ Page({
         return {
             title: '超值群拼团～进来看看吧',
             path: '/pages/ground-pin/index',
-            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/bg-trip-reward-share-colorful.jpg'
+            // imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/bg-trip-reward-share-colorful.jpg'
+            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/cover-trip-enter-1.png'
         }
     }
 })

@@ -136,7 +136,7 @@
                     form-type="submit"
                     class='fix-btn ptd-btn invert'
                 >
-                    {{ !!tid ? '更新' : '创建' }}
+                    {{ !!tid ? '确定' : '创建' }}
                 </button>
             </form>
         </view>

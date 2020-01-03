@@ -195,7 +195,7 @@ export const autoTrip = async ( ) => {
         const y = Sunday.getFullYear( );
         const m = Sunday.getMonth( ) + 1;
         const d = Sunday.getDate( );
-        const end_date = new Date(`${y}/${m}/${d} 23:00:00`).getTime( )
+        const end_date = new Date(`${y}/${m}/${d} 23:00:00`).getTime( ) - 8 * 60 * 60 * 1000;
 
         // 自动创建
         await db.collection('trip')

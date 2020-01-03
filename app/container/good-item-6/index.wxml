@@ -33,7 +33,7 @@
             class="gi6-fadeprice"
             wx:if="{{ !good.hasActivity }}"
         >
-            市场售价:¥{{ good.fadePrice }}
+            淘宝售价:¥{{ good.fadePrice }}
         </view>
 
         <!-- 活动标签 -->

@@ -116,20 +116,20 @@ Component({
                   desc: ''
                 }, {
                   key: 'fadePrice',
-                  label: '划线价',
+                  label: '淘宝价',
                   type: 'number',
-                  placeholder: '建议比单价稍高，用于对比',
+                  placeholder: '比售价稍高，用于客户对比',
                   value: undefined,
                   rules: [{
                     validate: val => !!val,
-                    message: '请设置商品划线价'
+                    message: '请设置商品淘宝价'
                   }, {
                     validate: val => Number( val ) > 0,
-                    message: '划线价不能为0'
+                    message: '淘宝价不能为0'
                   }]
                 }, {
                   title: '规格型号',
-                  desc: ''
+                  desc: '无多个型号则不用填写'
                 }
               ];
         
@@ -148,7 +148,7 @@ Component({
                     message: '价格不能为0'
                   }]
                 });
-                meta.splice( 9, 0, {
+                meta.splice( 8, 0, {
                   key: 'groupPrice',
                   label: '拼团价',
                   type: 'number',
