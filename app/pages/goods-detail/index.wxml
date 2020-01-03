@@ -268,12 +268,26 @@
                         </view>
                     </view>
                     <!-- 按钮 -->
-                    <view class="pgd-pin-btn-con">
+                    <view 
+                        wx:if="{{ !item.hasOrder }}"
+                        class="pgd-pin-btn-con"
+                    >
                         <button 
                             bindtap="onToggleSku"
                             class="fix-btn pgd-pin-btn {{ openingSku ? '' : 'shine' }}"
                         >
                             一起拼
+                        </button>
+                    </view>
+                    <view 
+                        wx:else
+                        class="pgd-pin-btn-con"
+                    >
+                        <button 
+                            open-type="share"
+                            class="fix-btn pgd-pin-btn {{ openingSku ? '' : 'shine' }}"
+                        >
+                            找人拼
                         </button>
                     </view>
                 </view>

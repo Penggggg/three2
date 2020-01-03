@@ -46,7 +46,7 @@ export const userGetExp = async ( ) => {
                             data: {
                                 openid: target.openid,
                                 type: 'hongbao',
-                                page: `pages/trip-enter/index`,
+                                page: `pages/my/index`,
                                 texts: target.texts
                             }
                         }

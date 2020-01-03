@@ -323,7 +323,7 @@ Page({
 
             // 当前商品的购物清单
             shopping$( ) {
-                const { shopping, id } = this.data;
+                const { shopping, id, openid } = this.data;
 
                 const getRandom = n => Math.floor( Math.random( ) * n );
                 const allTexts = [
@@ -336,14 +336,15 @@ Page({
                 return shopping
                     .filter( x => x.pid === id )
                     .map( sl => {
-                        const { users, detail } = sl;
+                        const { users, detail, uids } = sl;
                         const { name } = detail;
                         return {
                             ...sl,
                             name,
                             firstUser: users[ 0 ],
                             otherUser: users.slice( 1 ),
-                            tips: allTexts[ getRandom( allTexts.length )]
+                            tips: allTexts[ getRandom( allTexts.length )],
+                            hasOrder: uids.includes( openid )
                         }
                     })
             },
