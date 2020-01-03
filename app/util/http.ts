@@ -46,7 +46,7 @@ const http = ( params$: httpParam ) => {
                 getError( message && message !== { } ? message : params.errMsg );
 
             } else {
-                wx.hideLoading({ });
+                // wx.hideLoading({ });
             }
             params.success( res.result );
         },
@@ -56,7 +56,7 @@ const http = ( params$: httpParam ) => {
             console.log(`【---- Request ERROR : ${params$.url}】`, params$.data );
         },
         complete: ( ) => {
-            // wx.hideLoading({ });
+            wx.hideLoading({ });
             params.complete && params.complete( )
         }
     })

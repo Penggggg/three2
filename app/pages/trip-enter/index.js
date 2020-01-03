@@ -198,6 +198,7 @@ Page({
                 page: 1,
                 sort: 'createTime'
             },
+            loadingMsg: 'none',
             url: `good_rank`,
             success: res => {
                 const { status, data } = res;
@@ -547,7 +548,9 @@ Page({
         if ( role === 1 ) {
 
             setTimeout(( ) => {
-                this.fetchLast( );
+                // this.fetchLast( );
+                this.fetchNew( );
+                this.fetchRank( );
             }, 20 );
         }
     },
