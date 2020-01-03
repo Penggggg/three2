@@ -244,6 +244,8 @@
     font-weight: bold;
     line-height: 60rpx;
     position: relative;
+    margin-right: 15rpx;
+    letter-spacing: 0.1em;
     /* text-decoration: line-through; */
 }
 

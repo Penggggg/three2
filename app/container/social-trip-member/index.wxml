@@ -30,7 +30,7 @@
 
     <!-- 文字信息 -->
     <view class="info">
-        群友拼啦～
+        群友都在拼～
         <!-- <image
             mode="scaleToFill"
             class="tips-arrow"

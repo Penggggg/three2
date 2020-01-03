@@ -284,7 +284,7 @@ Page({
 
             // 商品的访问 + 社交属性模块
             social$( ) {
-                const { visitors, openid, detail } = this.data;
+                const { visitors, openid, detail, canPinSku, ipAvatar } = this.data;
                 const good = delayeringGood( detail ); 
                 const getRandom = n => Math.floor( Math.random( ) * n );
 
@@ -308,7 +308,15 @@ Page({
                             avatar: x.avatarUrl,
                             text: allTexts[ randomNum ]
                         }
+                    });
+
+                if ( canPinSku.length > 0 ) {
+                    allVisitors.unshift({
+                        avatar: ipAvatar,
+                        text: `这宝贝在群里拼团中哦～`
                     })
+                }
+
                 return allVisitors;
 
             },
@@ -511,6 +519,13 @@ Page({
                         sid: x.sid
                     }))
                 });
+
+                if ( data.length > 0 ) {
+                    wx.setNavigationBarTitle({
+                        title: '拼团中 划算！'
+                    });
+                }
+
             }
         })
     },
