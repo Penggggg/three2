@@ -257,6 +257,7 @@ App<MyApp>({
                 // this.getPushIntegral( );
                 // this.getIsNewCustom( );
                 this.getSubscribeTemplated( );
+                this.getWxUserInfo( );
             })
             .catch( e => {
                 wx.showToast({
@@ -297,6 +298,7 @@ enum Role {
 type globalState = {
     role: Role,
     openid: string,
+    editingGood: any,
     isUserAuth: boolean,
     userInfo: any
     isNew: boolean

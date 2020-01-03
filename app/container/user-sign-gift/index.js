@@ -618,10 +618,12 @@ Component({
                     this.setData({
                         isGetMoney: true
                     })
-                    return wx.showToast({
-                        icon: 'none',
-                        title: '你已领过啦～'
-                    });
+                    if ( !!goNext ) {
+                        wx.showToast({
+                            icon: 'none',
+                            title: '你已领过啦～'
+                        });
+                    }
                 }
             }
         },
