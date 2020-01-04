@@ -313,7 +313,7 @@ Page({
                 if ( canPinSku.length > 0 ) {
                     allVisitors.unshift({
                         avatar: ipAvatar,
-                        text: `这宝贝在群里拼团中哦～`
+                        text: `群里拼团中哦～`
                     })
                 }
 
@@ -591,7 +591,7 @@ Page({
             success: res => {
                 const { status, data } = res;
                 if ( status !== 200 || !data ) { return; }
-                this.setData!({
+                data.role !== 1 && this.setData!({
                     shareFromUser: data
                 });
             }

@@ -1500,9 +1500,28 @@ export const main = async ( event, context ) => {
 
             const data = user$.data[ 0 ] || null;
 
-            return ctx.body = {
-                data,
-                status: 200
+            // 查询是否为adm
+            if ( !!data ) {
+
+                const adm$ = await db.collection('manager-member')
+                    .where(({
+                        openid: data.openid
+                    }))
+                    .count( );
+
+                return ctx.body = {
+                    data: {
+                        ...data,
+                        role: adm$.total > 0 ? 1 : 0
+                    },
+                    status: 200
+                }
+                
+            } else {
+                return ctx.body = {
+                    data: null,
+                    status: 200
+                }
             }
         } catch ( e ) {
             return ctx.body = {

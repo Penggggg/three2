@@ -48,7 +48,7 @@
                         src="{{ ipAvatar }}"
                     />
                     <view class="gi8-ip-tips">
-                        {{ good.tagText || '推荐' }}
+                        {{ good.tagText ? good.tagText + '神器' : '强烈推荐' }}
                     </view>
                 </view>
 

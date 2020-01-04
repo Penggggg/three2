@@ -1436,18 +1436,18 @@ function getTextByPushType( type: 'buyPin1' | 'buyPin2' | 'waitPin' | 'buy' | 'g
         ];
     } else if ( type === 'buyPin1' ) {
         return [
-            `恭喜您省了${delta}元！`,
-            `您和其他人买了同款拼团商品，查看`
+            `恭喜你省了${delta}元！`,
+            `点击查看`
         ]
     } else if ( type === 'buyPin2' ) {
         return [
-            `恭喜！您买的商品减了${delta}元!`,
-            `有人购买了同款拼团的商品，查看`
+            `恭喜！你省了${delta}元!`,
+            `有群友参加了拼团，点击查看`
         ]
     } else if ( type === 'waitPin' ) {
         return [
-            `您的商品可参加拼团！`,
-            `参加拼团，可以再省${delta}元！`
+            `差1人就拼成！`,
+            `找群友拼团，立省${delta}元！`
         ]
     } else if ( type === 'getMoney' ) {
         return [
