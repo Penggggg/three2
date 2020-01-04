@@ -1,5 +1,5 @@
 <view class="con-trip-order">
-    {{ active }}
+
     <!-- 上方tab -->
     <view class="to-tabs">
         <form

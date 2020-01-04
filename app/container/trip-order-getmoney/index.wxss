@@ -118,8 +118,8 @@
 }
 
 .tog-deliver-icon {
-    width: 40rpx;
-    height: 40rpx;
+    width: 28rpx;
+    height: 28rpx;
 }
 
 .tog-deliver-icon-con {
@@ -518,13 +518,14 @@
     width: 94%;
     z-index: 100;
     color: #fff;
-    bottom: 15rpx;
+    bottom: 25rpx;
     font-size: 24rpx;
     position: fixed;
     text-align: center;
     background: #bc4e9c;
-    border-radius: 5rpx;
-    padding: 20rpx 0;
+    border-radius: 10rpx;
+    padding: 22rpx 0;
+    letter-spacing: 0.08em;
     background:-webkit-linear-gradient(to right, #f80759, #bc4e9c);
     background:linear-gradient(to right, #f80759, #bc4e9c);
 }

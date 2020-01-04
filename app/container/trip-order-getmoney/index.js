@@ -638,7 +638,7 @@ Component({
             if ( !isAllHasDeliver ) {
                 wx.showModal({
                     title: '提示',
-                    content: '有未调整邮费，确定提交吗？',
+                    content: '有邮费未调整，确定发送吗？',
                     success: res => {
                         res.confirm && sendGetMoney( )
                     }

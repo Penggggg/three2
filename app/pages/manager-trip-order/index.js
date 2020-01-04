@@ -14,10 +14,10 @@ Page({
         // 上方tabs
         tabs: [{
             key: 0,
-            label: '购物清单'
+            label: '采购单'
         }, {
             key: 1,
-            label: '清账收款'
+            label: '收尾款'
         }
         // , {
         //     key: 2,
@@ -60,6 +60,7 @@ Page({
     onLoad: function (options) {
         wx.hideShareMenu( );
         const { id, ac } = options;
+
         if ( !id ) { return }
         this.setData({
             id
