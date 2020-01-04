@@ -130,7 +130,7 @@
                     color="#fff"
                     show-icon="{{ true }}"
                     bgColor="transparent"
-                    notice="【Tips】行程中看看大家买了什么，加入拼团，拼得越多越省钱！"
+                    notice="【Tips】看看群友买了什么，加入拼团，拼得越多越省钱！"
                     wx:if="{{ tripOrders$.length !== 0 && metaList.length !== 0 }}"
                 />
 
@@ -237,12 +237,11 @@
                                 <image
                                     lazy-load="{{ true }}"
                                     mode="aspectFill"
-                                    class="pol-trip-order-img"
+                                    class="pol-trip-order-img {{ !order.pining && order.pin_cutoff ? 'red' : '' }}"
                                     src="{{ order.img[ 0 ]}}"
                                     bindtap="goGoodDetail"
                                     data-data="{{ order }}"
                                 />
-                                <view class="pol-trip-order-img-cover {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }}"></view>
                                 <!-- 异常状态显示 -->
                                 <view
                                     wx:for-index="k"
@@ -258,6 +257,13 @@
                                             '' :
                                         i
                                     }}
+                                </view>
+                                <!-- 拼团成功 -->
+                                <view 
+                                    class="pol-trip-img-tips"
+                                    wx:if="{{ order.pining && order.pin_cutoff }}"
+                                >
+                                    省{{ order.pin_cutoff }}元
                                 </view>
                             </view>
 
@@ -281,58 +287,22 @@
                                         <view class="pol-tag-text">
                                             活动
                                         </view>
-                                    </view>{{ order.name }}
-                                </view>
-                                <view
-                                    bindtap="goGoodDetail"
-                                    data-data="{{ order }}"
-                                    class="pol-trip-order-standar"
-                                    wx:if="{{ order.standername !== '默认型号' && order.standername !== null }}"
-                                >
-                                    {{ order.standername }}
-                                </view>
-                                <view
-                                    bindtap="toggleTask"
-                                    class="pol-trip-order-pin-info"
-                                    wx:if="{{ order.pining || order.pin_cutoff }}"
-                                >
-                                    {{
-                                        order.pining ?
-                                            order.b === '0' || order.b === '1' ?
-                                                '拼团成功！将减' + order.pin_cutoff + '元' :
-                                                '拼团成功！减' + order.pin_cutoff + '元' :
-                                            '拼团可减' + order.pin_cutoff + '元'
-                                    }}
+                                    </view>{{ order.name }} {{ !!order.standername && order.standername !== '默认型号' ? order.standername : '' }}
                                 </view>
                             </view>
 
                             <!-- 价格、数量，调整完成之前，都是看到默认的count跟price -->
                             <view class="pol-trip-order-price-block">
-                                <!-- <view 
-                                    class="pol-trip-order-status-pin"
-                                    wx:if="{{ order.allocatedGroupPrice && order.canGroup }}"
-                                >
-                                    拼
-                                </view> -->
-                                <!-- 正价 调整前 -->
+
+                                <!-- 价格 -->
                                 <view
-                                    wx:if="{{ !order.canGroup }}"
-                                    class="pol-trip-order-price inline {{ order.b === '4' || order.b === '5' || (order.b === '2' && !order.allocatedCount) ? 'disabled' : '' }} {{ showDataBar$ ? 'grey' : '' }}"
-                                >
-                                    ¥ {{
-                                        order.b === '2' || order.b === '3' ?
-                                            order.allocatedPrice :
-                                            order.b === '1' || order.b === '0' ?
-                                                order.price :
-                                                order.allocatedPrice
-                                    }}
-                                </view>
-                                <!--  团购价 -->
-                                <view
-                                    wx:if="{{ order.canGroup && order.allocatedGroupPrice }}"
                                     class="pol-trip-order-count inline"
                                 >
-                                    ¥ {{ order.allocatedGroupPrice }}
+                                    ¥ {{ 
+                                        order.pining ? 
+                                            order.allocatedGroupPrice || order.groupPrice :
+                                            order.allocatedPrice || order.groupPrice
+                                    }}
                                 </view>
 
                                 <!-- 期待的采购量 -->
@@ -357,7 +327,7 @@
                     <!-- 货数、订金信息 -->
                     <view class="pol-trip-order-sum-block">
                         <view class="pol-trip-order-sum">
-                            共{{ item.sum }}件商品
+                            {{ item.sum }}件商品
                         </view>
                         <view class="pol-trip-order-totalprice ml">
                             已付订金：<view class="pol-totalprice">¥{{ item.hasPayDepositPrice }}</view>
@@ -444,7 +414,7 @@
                         wx:if="{{( item.canSettle || item.isClosed ) && item.retreat }}"
                     >
                         <view class="pol-trip-order-sum">
-                            退款:
+                            联系退款:
                         </view>
                         <view class="pol-trip-order-totalprice">
                             <view class="pol-pay-price small">¥{{ item.retreat }}</view>

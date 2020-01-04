@@ -586,6 +586,7 @@ Component({
 
         // 检查今天是否已经领取了抵现金
         checkGetIntegral( goNext = false ) {
+            const { showSign } = this.data;
             const lastTime =  wx.getStorageSync( storageKey['integral-get-last-time']);
 
             const reset = ( ) => {
@@ -618,7 +619,7 @@ Component({
                     this.setData({
                         isGetMoney: true
                     })
-                    if ( !!goNext ) {
+                    if ( !!goNext && !showSign ) {
                         wx.showToast({
                             icon: 'none',
                             title: '你已领过啦～'

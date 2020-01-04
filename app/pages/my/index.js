@@ -86,9 +86,10 @@ Page({
         navTo('/pages/coupon-list/index');
     },
 
-    /** 跳到我的喜欢 */
+    /** 跳到我的喜欢、联系客服 */
     goLike( ) {
-        navTo('/pages/like-goods/index');
+        // navTo('/pages/like-goods/index');
+        navTo('/pages/concat/index')
     },
 
     /** 点击下方的客服等模块 */

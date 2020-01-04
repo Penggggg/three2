@@ -671,6 +671,7 @@ Page({
                 const hasCurrentTripOrder = !!metaList.find( x => x.tid === tid );
 
                 if ( hasCurrentTripOrder && !showALlTrip ) {
+                    console.log('???', allTripOrders)
                     return allTripOrders.filter( x => x.tid === tid );
                 } else {
                     if ( !showALlTrip ) {
@@ -1032,7 +1033,6 @@ Page({
     payLastDepositPrice({ currentTarget }) {
         const { lastDepositPrice, notPayDepositOrders } = currentTarget.dataset.data;
         wxPay( lastDepositPrice, ({ prepay_id }) => {
-            console.log('支付啦！！！')
             // 批量更新订单为已支付
             const pay = ( ) => http({
                 url: 'order_upadte-to-payed',

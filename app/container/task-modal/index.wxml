@@ -37,8 +37,6 @@
                     data-data="{{ item }}"
                     bindtap="goDetail"
                 >
-                    <!-- 小圆点 -->
-                    <!-- <view class="ctm-task-round {{ item.isPin ? 'finished' : '' }}"></view> -->
 
                     <!-- 图片 -->
                     <image 
@@ -55,7 +53,7 @@
                         >
                             <view
                                 wx:if="{{ item.isPin }}"
-                            >
+                            >   
                                 拼团成功
                             </view>
                             <view
@@ -76,17 +74,12 @@
                         >
                             和群友拼团，立省{{ item.delta }}元！
                         </view>
-                        <!-- <view 
-                            class="ctm-task-desc"
-                        >
-                            {{ item.count }}件, {{ item.detail.name ? item.detail.name + ' ' : '' }}{{ item.detail.title }}
-                        </view> -->
                     </view>
 
                     <!-- 价格 -->
                     <wxc-price
                         icon="sub"
-                        class="ctm-task-price {{ item.isPin ? 'finished' : '' }}"
+                        class="ctm-task-price {{ item.isPin && !summary$.allPin ? 'finished' : '' }}"
                     >
                         {{ item.delta }}
                     </wxc-price>
@@ -103,7 +96,7 @@
                         </button>
                         <view
                             wx:else
-                            class="ctm-task-btn {{ item.isPin ? 'finished' : '' }}"
+                            class="ctm-task-btn {{ item.isPin && !summary$.allPin ? 'finished' : '' }}"
                         >
                             已拼成
                         </view>

@@ -61,6 +61,10 @@ Page({
         wx.hideShareMenu( );
         const { id, ac } = options;
 
+        // this.setData({
+        //     id: '0b85a0f35e0ea0240126aedb06cece2b'
+        // });
+
         if ( !id ) { return }
         this.setData({
             id

@@ -187,7 +187,7 @@ Component({
                 })
             }
 
-            if ( adjustGroupPrice === 0 ) {
+            if ( !adjustGroupPrice || Number( adjustGroupPrice ) === 0 ) {
                 return wx.showToast({
                     icon: 'none',
                     title: '团购价不能为0'

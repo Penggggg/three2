@@ -40,7 +40,7 @@
                             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/header.png"
                         />
                     </view>
-                    <view class="pm-bar-item-title">我的收藏</view>
+                    <view class="pm-bar-item-title">我要进群</view>
                 </view>
             </view>
 

@@ -217,7 +217,7 @@
     background: #e8e8e8;
 }
 
-.pm-checkin-task-count.shine:after {
+.pm-checkin-task-btn.shine:after {
     left: 50%;
     top: 50%;
     content: '';
