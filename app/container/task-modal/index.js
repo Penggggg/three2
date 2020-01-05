@@ -58,6 +58,7 @@ Component({
                 list$( ) {
                     const { list } = this.data;
                     const r = list
+                        .filter( x => x.type === 'shoppinglist')
                         .filter( x => !!x.adjustGroupPrice )
                         .map( x => {
                             const { adjustPrice, adjustGroupPrice, count } = x;
@@ -71,7 +72,17 @@ Component({
                     const r1 = r.filter( x => !x.isPin );
                     const r2 = r.filter( x => !!x.isPin );
 
-                    return [ ...r1, ...r2 ];
+                    const meta = [ ...r1, ...r2 ];
+
+                    const t_lijian = list
+                        .filter( x => x.type === 't_lijian');
+
+                    if ( t_lijian.length > 0 && t_lijian[ 0 ].t_delta > 0 ) {
+                        meta.unshift( t_lijian[ 0 ])
+                    } else if ( t_lijian.length > 0 && t_lijian[ 0 ].t_delta === 0 ) {
+                        meta.push( t_lijian[ 0 ])
+                    }
+                    return meta;
                 },
 
                 /**
@@ -84,6 +95,46 @@ Component({
                     }
                 }
             });
+        },
+
+        /**
+         * 领取立减券
+         */
+        repaireLijian( ) {
+            http({
+                data: { },
+                url: 'coupon_repair-lijian',
+                success: res => {
+                    if ( res.status === 200 ) {
+
+                        const { list } = this.data;
+                        const t_lijianIndex = list
+                            .findIndex( x => x.type === 't_lijian');
+
+                        const { t_total } = list[ t_lijianIndex ];  
+                        list.splice( t_lijianIndex, 1, {
+                            t_total,
+                            t_delta: 0,
+                            type: 't_lijian',
+                            t_current: t_total,
+                        });
+
+                        this.setData({
+                            list: [ ...list ]
+                        });
+
+                        this.triggerEvent('repaireLijian', true );
+
+                        setTimeout(( ) => {
+                            wx.showToast({
+                                duration: 2000,
+                                title: '领取成功！'
+                            });
+                            
+                        }, 2500 );
+                    }
+                }
+            })
         },
     
         /**

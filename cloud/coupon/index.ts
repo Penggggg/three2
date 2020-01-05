@@ -94,15 +94,39 @@ export const main = async ( event, context ) => {
     app.router('repair-lijian', async( ctx, next ) => {
         try {
 
-            const { tid } = event.data;
+            let reduce_price = 0;
+            let tid = event.data.tid;
             const openid = event.data.openId || event.userInfo.openId;
 
-            const trip$ = await db.collection('trip')
-                .doc( tid )
-                .get( );
+            if ( !!tid ) {
+                const trip$ = await db.collection('trip')
+                    .doc( tid )
+                    .get( );
 
-            const trip = trip$.data;
-            const { reduce_price } = trip;
+                 const trip = trip$.data;
+                 reduce_price = trip.reduce_price;
+
+            } else {
+                // 先找到当前的行程
+                const trips$ = await cloud.callFunction({
+                    data: {
+                        $url: 'enter'
+                    },
+                    name: 'trip'
+                });
+                const trips = trips$.result.data;
+                const trip = trips[ 0 ];
+
+                if ( !trip ) {
+                    return ctx.body = {
+                        status: 200
+                    };
+                }
+
+                tid = trip._id;
+                reduce_price = trip.reduce_price;
+            }
+            
 
             const find$ = await db.collection('coupon')
                 .where({

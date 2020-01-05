@@ -56,7 +56,6 @@
 .ctm-task-item {
     display: flex;
     padding: 35rpx 0;
-    /* align-items: flex-start; */
     align-items: center;
     position: relative;
 }

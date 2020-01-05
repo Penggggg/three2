@@ -118,7 +118,7 @@ Page({
                  *  }
                  */
 
-                const { tid, showALlTrip, isNew, metaList, pinList, deliverFees, pushIntegralFees } = this.data;
+                const { tid, showALlTrip, isNew, metaList, pinList, deliverFees, pushIntegralFees, coupons } = this.data;
                 const orderObj = { };
 
                 const fixNumber = n => {
@@ -671,7 +671,6 @@ Page({
                 const hasCurrentTripOrder = !!metaList.find( x => x.tid === tid );
 
                 if ( hasCurrentTripOrder && !showALlTrip ) {
-                    console.log('???', allTripOrders)
                     return allTripOrders.filter( x => x.tid === tid );
                 } else {
                     if ( !showALlTrip ) {
@@ -870,9 +869,7 @@ Page({
 
         http({
             url: `coupon_list`,
-            data: {
-                // isUsed: false
-            },
+            data: { },
             success: res => {
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
@@ -1005,6 +1002,12 @@ Page({
                 }
             }
         });
+    },
+
+    // 在任务模块，领取了另一个券
+    onReplareLijian( ) {
+        // onShow会自动调
+        // this.fetchCoupons( true );
     },
 
     /** 监听全局新旧客 */
@@ -1153,7 +1156,7 @@ Page({
     onLoad: function (options) {
         this.watchRole( );
         this.runComputed( );
-        wx.hideShareMenu( );
+        // wx.hideShareMenu( );
 
         const { tid, fromDetail } = options;
         if ( tid ) { 
@@ -1228,6 +1231,12 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( event ) {
-        return event.target.dataset.share;
+
+        // return event.target.dataset.share;
+        return {
+            title: '群拼团！大家都能省～',
+            path: '/pages/trip-enter/index',
+            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/cover-trip-enter-1.png'
+        }
     }
 })

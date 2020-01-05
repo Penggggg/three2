@@ -611,6 +611,7 @@
     <my-task-modal
         id="task" 
         wx:if="{{ showTaskCom }}"
+        bindrepaireLijian="onReplareLijian"
     />
 
     <!-- 结算获得代金券 -->

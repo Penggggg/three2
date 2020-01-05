@@ -160,7 +160,7 @@
     border-radius: 6px;
     position: absolute;
     text-align: center;
-    letter-spacing: 0.5em;
+    letter-spacing: 0.05em;
     background: linear-gradient(to left, #f80759, #bc4e9c);
 }
 

@@ -1220,6 +1220,7 @@ export const main = async ( event, context ) => {
                     return {
                         count,
                         ...shopping,
+                        type: 'shoppinglist',
                         isPin: groupMenOrders$.total > 0,
                         detail: {
                             ...good$.data,
@@ -1230,13 +1231,39 @@ export const main = async ( event, context ) => {
                 })
             );
 
+            // 查询优惠券领用情况
+            // 行程立减金额/行程满减金额/行程代金券金额
+            const { reduce_price } = trip;
+
+            // 行程立减代金券
+            const lijian$ = await db.collection('coupon')
+                .where({
+                    openid,
+                    tid: trip._id,
+                    type: 't_lijian'
+                })
+                .get( );
+            const lijian = lijian$.data[ 0 ];
+            
+            const t_total = reduce_price;
+            const t_current = !!lijian ?
+                lijian.value : 0;
+            const t_delta = Number(( reduce_price - t_current ).toFixed( 2 ));
+
             return ctx.body = {
                 status: 200,
-                data: all$
+                data: [
+                    {
+                        type: 't_lijian',
+                        t_total,
+                        t_current,
+                        t_delta
+                    },
+                    ...all$
+                ]
             };
 
         } catch ( e ) {
-            console.log('??? ', e );
             return ctx.body = {
                 status: 500
             };
