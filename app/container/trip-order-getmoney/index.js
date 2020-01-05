@@ -571,7 +571,7 @@ Component({
             const sendGetMoney = ( ) => {
                 wx.showModal({
                     title: '提示',
-                    content: '发送收款推送后，不能更改订单数量/价格',
+                    content: '发送推送后，无法更改',
                     success: res => {
                         if ( !res.confirm ) { return; }
     

@@ -111,7 +111,7 @@
             class="ptd-btn-block"
         >
 
-            <form
+            <!-- <form
                 class="flex-1 btn-mr"
                 bindsubmit="closeTrip"
                 wx:if="{{ canBeEnd }}"
@@ -124,7 +124,7 @@
                 >
                     结束行程( 收尾款 )
                 </button>
-            </form>
+            </form> -->
 
             <form
                 class="flex-1"

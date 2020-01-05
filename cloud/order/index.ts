@@ -972,16 +972,20 @@ export const main = async ( event, context ) => {
                 status: 400
             };
 
+            await db.collection('trip')
+                .doc( tid )
+                .update({
+                    data: {
+                        isClosed: true
+                    }
+                })
+            
             const trip$ = await db.collection('trip')
                 .doc( tid )
                 .get( );
             const trip = trip$.data;
-
-            // 未结束，且未手动关闭
-            if ( getNow( true ) < trip.end_date && !trip.isClosed ) {
-                return getWrong('行程未结束，请手动关闭当前行程');
-
-            } else if ( trip.callMoneyTimes &&  trip.callMoneyTimes >= 3 ) {
+            
+            if ( trip.callMoneyTimes &&  trip.callMoneyTimes >= 3 ) {
                 return getWrong(`已经发起过${trip.callMoneyTimes}次催款`);
 
             }
