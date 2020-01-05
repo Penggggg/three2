@@ -296,7 +296,7 @@
 
                                 <!-- 价格 -->
                                 <view
-                                    class="pol-trip-order-count inline"
+                                    class="pol-trip-order-count inline purple"
                                 >
                                     ¥ {{ 
                                         order.pining ? 
@@ -307,7 +307,7 @@
 
                                 <!-- 期待的采购量 -->
                                 <view
-                                    class="pol-trip-order-count {{ showDataBar$ ? 'grey' : '' }}"
+                                    class="pol-trip-order-count purple"
                                 >
                                     x {{ order.count }}
                                 </view>

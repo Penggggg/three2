@@ -91,7 +91,14 @@ Component({
                 summary$( ) {
                     const { list } = this.data;
                     return {
-                        allPin: list.every( x => !!x.isPin )
+                        allPin: list    
+                            .every( x => {
+                                if ( x.type === 'shoppinglist' ) {
+                                    return x.isPin
+                                } else if ( x.type === 't_lijian' ) {
+                                    return x.t_delta === 0
+                                }
+                            })
                     }
                 }
             });
