@@ -110,7 +110,7 @@ Component({
                   value: this.data.hasBeenUploaded,
                   rules: [{
                     validate: val => val.length >= 1,
-                    message: '至少上传一张商品图片'
+                    message: '上传一张图片（白底效果好）'
                   }]
                 }, {
                   title: '价格信息',

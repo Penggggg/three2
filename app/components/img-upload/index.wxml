@@ -71,7 +71,7 @@
           mode="aspectFit"
           src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/upload.png"
       />
-      <text class='ciu-upload-tips'>上传图片</text>
+      <text class='ciu-upload-tips'>点击上传</text>
     </view>
 
 </view>

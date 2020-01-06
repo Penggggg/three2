@@ -1,10 +1,10 @@
 {
   "pages": [
     "pages/trip-enter/index",
+    "pages/manager-goods-detail/index",
     "pages/manager-trip-list/index",
     "pages/manager-trip-order/index",
     "pages/order-list/index",
-    "pages/manager-goods-detail/index",
     "pages/my/index",
     "pages/trip-reward/index",
     "pages/ground-pin/index",
