@@ -95,8 +95,7 @@
 }
 
 .tos-shoppinglist-item.notadjust {
-    /* border: 1px solid #f7b0c7; */
-    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.22);
+    border: 1px solid #ffa39e;
 }
 
 .tos-good-info-block {

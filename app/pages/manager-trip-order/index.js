@@ -1,5 +1,5 @@
+const app = getApp( );
 const { http } = require('../../util/http.js');
-const { createFormId } = require('../../util/form-id');
 
 Page({
 
@@ -14,14 +14,16 @@ Page({
         // 上方tabs
         tabs: [{
             key: 0,
-            label: '购物清单'
+            label: '采购单'
         }, {
             key: 1,
-            label: '清账收款'
-        }, {
-            key: 2,
-            label: '快递信息'
-        }],
+            label: '收尾款'
+        }
+        // , {
+        //     key: 2,
+        //     label: '快递信息'
+        // }
+        ],
         // 购物清单是否显示边框
         shopping_list_outline: true,
     },
@@ -29,12 +31,14 @@ Page({
     /** 切换tab */
     onTabChange({ currentTarget, detail }) {
         
-        createFormId( detail.formId );
-
         const { index } = currentTarget.dataset;
         this.setData({
             active: index
         });
+    },
+
+    onSubscribe( ) {
+        app.getSubscribe('newOrder,trip,getMoney');
     },
 
     /** 子组件修改tab */
@@ -56,6 +60,11 @@ Page({
     onLoad: function (options) {
         wx.hideShareMenu( );
         const { id, ac } = options;
+
+        // this.setData({
+        //     id: '0b85a0f35e0ea0240126aedb06cece2b'
+        // });
+
         if ( !id ) { return }
         this.setData({
             id
@@ -120,4 +129,5 @@ Page({
             imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/share.png'
         }
     }
+
 })

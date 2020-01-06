@@ -119,7 +119,7 @@
     >
         <view
             class="trg-outtop3"
-            wx:key="{{ index }}"
+            wx:key="index"
             wx:for="{{ outtop3$ }}"
         >
             <view

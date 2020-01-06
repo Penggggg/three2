@@ -27,7 +27,7 @@
     >
         <view
             wx:for="{{ list$ }}"
-            wx:key="{{ index }}"
+            wx:key="index"
             class="pmgl-list-item-con"
             bindtap="onTab"
             data-pid="{{ item.pid }}"

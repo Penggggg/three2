@@ -42,11 +42,11 @@ export const userGetExp = async ( ) => {
                     const push$ = await cloud.callFunction({
                         name: 'common',
                         data: {
-                            $url: 'push-template-cloud',
+                            $url: 'push-subscribe-cloud',
                             data: {
                                 openid: target.openid,
                                 type: 'hongbao',
-                                page: `pages/trip-enter/index`,
+                                page: `pages/my/index`,
                                 texts: target.texts
                             }
                         }

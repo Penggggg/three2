@@ -880,7 +880,7 @@ export const main = async ( event, context ) => {
                     list.sid
                 ))
             ).filter( x => !!x );
-            
+
             // 商品
             let allGoods$: any = await Promise.all( goodIds.map( goodId => {
                 return db.collection('goods')
@@ -890,17 +890,17 @@ export const main = async ( event, context ) => {
 
             allGoods$ = allGoods$.map( x => x.data );
 
-            // 型号
-            let allStandars$: any = await Promise.all( standarsIds.map( sid => {
-                return db.collection('standards')
-                    .doc( String( sid ))
-                    .get( );
-            }));
-
-            allStandars$ = allStandars$.map( x => x.data );
-
             // 查询每条清单底下每个商品的详情
             if ( detail === undefined || !!detail ) {
+
+                // 型号
+                let allStandars$: any = await Promise.all( standarsIds.map( sid => {
+                    return db.collection('standards')
+                        .doc( String( sid ))
+                        .get( );
+                }));
+
+                allStandars$ = allStandars$.map( x => x.data );
 
                 const good$ = data$.map( list => {
 
@@ -922,9 +922,10 @@ export const main = async ( event, context ) => {
     
                 // 注入商品详情
                 data = data$.map(( shopping, k ) => {
-                    return Object.assign({ }, shopping, {
+                    return {
+                        ...shopping, 
                         detail: good$[ k ]
-                    })
+                    };
                 });
 
             }
@@ -957,9 +958,10 @@ export const main = async ( event, context ) => {
                 users$ = users$.map( x => x.data[ 0 ]);
 
                 data = data.map(( shopping, k ) => {
-                    return Object.assign({ }, shopping, {
+                    return {
+                        ...shopping,
                         users: shopping.uids.map( uid => users$.find( x => x.openid === uid ))
-                    })
+                    }
                 });
 
             }
@@ -1129,7 +1131,7 @@ export const main = async ( event, context ) => {
      * @description
      * 个人的等待拼团任务列表
      * {
-     *    openid
+     *    openid？
      * }
      */
     app.router('pin-task', async( ctx, next ) => {
@@ -1181,9 +1183,25 @@ export const main = async ( event, context ) => {
                         return x + y.count;
                     }, 0 );
 
+                    // 是否有拼团成功
+                    const groupMenOrders$ = await db.collection('order')
+                        .where({
+                            pid, 
+                            sid, 
+                            tid,
+                            openid: _.neq( openid ),
+                            pay_status: '1',
+                            base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
+                        })
+                        .count( );
+
                     // 获取商品详情
                     const good$ = await db.collection('goods')
                         .doc( String( pid ))
+                        .field({
+                            title: true,
+                            img: true
+                        })
                         .get( );
 
                     // 获取型号详情
@@ -1191,22 +1209,58 @@ export const main = async ( event, context ) => {
                     if ( !!sid ) {
                         const standard$ = await db.collection('standards')
                             .doc( String( sid ))
+                            .field({
+                                name: true,
+                                img: true
+                            })
                             .get( );
                         standard = standard$.data;
                     }
 
                     return {
                         count,
-                        standard,
                         ...shopping,
-                        good: good$.data
+                        type: 'shoppinglist',
+                        isPin: groupMenOrders$.total > 0,
+                        detail: {
+                            ...good$.data,
+                            img: standard ? standard.img : good$.data.img[ 0 ],
+                            name: standard ? standard.name : ''
+                        }
                     }
                 })
             );
 
+            // 查询优惠券领用情况
+            // 行程立减金额/行程满减金额/行程代金券金额
+            const { reduce_price } = trip;
+
+            // 行程立减代金券
+            const lijian$ = await db.collection('coupon')
+                .where({
+                    openid,
+                    tid: trip._id,
+                    type: 't_lijian'
+                })
+                .get( );
+            const lijian = lijian$.data[ 0 ];
+            
+            const t_total = reduce_price;
+            const t_current = !!lijian ?
+                lijian.value : 0;
+            const t_delta = Number(( reduce_price - t_current ).toFixed( 2 ));
+
             return ctx.body = {
                 status: 200,
-                data: all$
+                data: [
+                    {
+                        type: 't_lijian',
+                        t_total,
+                        t_current,
+                        t_delta
+                    },
+                    ...all$
+                ]
             };
 
         } catch ( e ) {

@@ -1,5 +1,5 @@
+const app = getApp( );
 const { navTo } = require('../../util/route.js');
-const { createFormId } = require('../../util/form-id.js');
 
 /**
  * @description
@@ -20,7 +20,14 @@ Component({
          * tag
          * price
          * groupPirce
-         * detail
+         * detail,
+         * delta,
+         * users
+         * zoomTips,
+         * zoomDelay,
+         * tagText,
+         * isPin 是否拼团中
+         * isZoom 是否需要动画弹幕效果
          */
         good: {
             type: Object,
@@ -37,20 +44,37 @@ Component({
      * 组件的初始数据
      */
     data: {
-
+        ipAvatar: ''
     },
 
     /**
      * 组件的方法列表
      */
     methods: {
+
+        watchStore( ) {
+            app.watch$('appConfig', val => {
+                !!val && this.setData({
+                    ipAvatar: val['ip-avatar']
+                });
+            });
+        },
+
         init( val ) {
         },
 
         goDetail( e ) {
-            createFormId( e.detail.formId );
             const { _id } = this.data.good;
             navTo(`/pages/goods-detail/index?id=${_id}`);
+        },
+
+        onSubscribe( e ) {
+            app.getSubscribe('buyPin,hongbao,trip');
+            this.goDetail( null );
         }
+    },
+
+    attached: function( ) {
+        this.watchStore( );
     }
 })

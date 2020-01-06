@@ -1,4 +1,6 @@
+const app = getApp( );
 const { navTo } = require('../../util/route.js');
+
 /**
  * @description
  * 有3中颜色

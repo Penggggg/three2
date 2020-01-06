@@ -9,9 +9,12 @@ const pushIntegralRate = 0.05;
  */
 const delayeringGood = ( x, pushIntegralRate = 0 ) => {
  
-    if ( !x ) {
-        return null
+    if ( !x || Object.keys( x ).length === 0 ) {
+        return { };
     }
+
+    // 最低拼团价，对应的原价
+    let lowest_pin_origin_price$ = x.price;
 
     // 初始化：价格数组（含团购价、特价）
     let allPriceArr: any[ ] = [ ];
@@ -53,15 +56,43 @@ const delayeringGood = ( x, pushIntegralRate = 0 ) => {
     // 没有型号
     if ( !x.standards || x.standards.length === 0 ) {
         decorateItem( x );
-    
+        lowest_pin_origin_price$ = x.price;
     // 有型号
     } else {
         x.standards.map( decorateItem );
+
+        let standardSet: any = null;
+        let lowest_standard_price = 0;
+
+        x.standards.map( x => {
+            if ( x.groupPrice < lowest_standard_price || lowest_standard_price === 0 ) {
+                standardSet = x;
+                lowest_standard_price = x.groupPrice;
+            }
+        });
+        if ( !!standardSet ) {
+            lowest_pin_origin_price$ = standardSet.price;
+        }
     }
 
     // 重新排序价格和库存
     allPriceArr = allPriceArr.sort(( x, y ) => x - y );
     allStockArr = allStockArr.sort(( x, y ) => x - y );
+
+    // 最低价
+    let lowest_price$ = allPriceArr[ 0 ];
+
+    // 有特价
+    ( x.activities || [ ]).map( activity => {
+        if ( 
+            !!activity.ac_price &&
+            !!activity.ac_groupPrice && 
+            lowest_price$ === activity.ac_groupPrice 
+        ) {
+            lowest_pin_origin_price$ = activity.ac_price;
+        }
+    });
+
 
     return Object.assign({ }, x, {
 
@@ -92,15 +123,18 @@ const delayeringGood = ( x, pushIntegralRate = 0 ) => {
                     `${(allPriceArr[ 0 ] * pushIntegralRate).toFixed( 1 )} ~ ${(allPriceArr[ allPriceArr.length - 1 ] * pushIntegralRate).toFixed( 1 )}`,
 
         // 最大积分
-        integral2$: (allPriceArr[ allPriceArr.length - 1 ] * pushIntegralRate).toFixed( 1 ),
+        maxIntegral$: Number((allPriceArr[ allPriceArr.length - 1 ] * pushIntegralRate).toFixed( 1 )),
 
         // 最大幅度差价
         priceGap: allPriceArr.length === 0 ?
             0 :
-            `${allPriceArr[ allPriceArr.length - 1 ] - allPriceArr[ 0 ]}`,
+            Math.ceil( allPriceArr[ allPriceArr.length - 1 ] - allPriceArr[ 0 ]),
 
         // 最低价格（含团购价）
-        lowest_price$: allPriceArr[ 0 ],
+        lowest_price$,
+
+        // 最低价格（含团购价）的原价
+        lowest_pin_origin_price$,
 
         /** 是否有活动 */
         hasActivity: !!x.activity || (Array.isArray( x.activities ) && x.activities.length > 0),

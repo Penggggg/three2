@@ -1,4 +1,5 @@
 import { http } from './util/http';
+import { checkSubscribeTips, requestSubscribe } from './util/subscribe';
 
 // const cloudEnv = 'prod-b87b76';;
 const cloudEnv = undefined;
@@ -20,7 +21,15 @@ App<MyApp>({
         /** 编辑中的商品数据 */
         editingGood: { },
         /** app配置 */
-        appConfig: { }
+        appConfig: { },
+        /** 展示全局的订阅提示信息 */
+        showSubscribeTips: false,
+        /** 订阅类型 */
+        subscribeTpye: '',
+        /** 订阅模板 */
+        subscribeTemplates: [ ],
+        /** 此账号可用抵现金 */
+        pushIntegral: 0
     },
 
     /** 全局store */
@@ -31,7 +40,11 @@ App<MyApp>({
         userInfo: null,
         isNew: true,
         editingGood: null,
-        appConfig: null
+        appConfig: null,
+        showSubscribeTips: false,
+        subscribeTpye: '',
+        subscribeTemplates: [ ],
+        pushIntegral: 0
     },
 
     /** 监听函数的对象数组 */
@@ -104,6 +117,35 @@ App<MyApp>({
         })
     },
 
+    /** 获取当前账号的抵现金、签到经验 */
+    getPushIntegral( ) {
+        http({
+            data: {
+                showMore: true,
+            },
+            url: 'common_push-integral',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setGlobalData({
+                    pushIntegral: data.integral
+                });
+            }
+        })
+    },
+
+    /** 获取订阅模板 */
+    getSubscribeTemplated( ) {
+        http({
+            url: 'common_get-subscribe-templates',
+            success: res => {
+                this.setGlobalData({
+                    subscribeTemplates: res.data
+                });
+            }
+        })
+    },
+
     /** 获取app配置 */
     getAppConfig( ) {
         http({
@@ -147,6 +189,21 @@ App<MyApp>({
             this.setGlobalData( res.result );
             !!cb && cb( );
         });
+    },
+
+    /** 获取订阅授权 */
+    getSubscribe( types ) {
+        const hasShow = checkSubscribeTips( );
+        if ( !hasShow ) {
+            // 弹框
+            this.setGlobalData({
+                subscribeTpye: types,
+                showSubscribeTips: true
+            });
+        } else {    
+            // 订阅请求
+            requestSubscribe( types, ( this.globalData.subscribeTemplates || [ ]));
+        }
     },
 
     /** 设置全局数据 */
@@ -196,8 +253,11 @@ App<MyApp>({
         this.initCloud( )
             .then(( ) => {
                 this.getUserInfo( );
-                this.getIsNewCustom( );
                 this.getAppConfig( );
+                // this.getPushIntegral( );
+                // this.getIsNewCustom( );
+                this.getSubscribeTemplated( );
+                this.getWxUserInfo( );
             })
             .catch( e => {
                 wx.showToast({
@@ -222,7 +282,10 @@ export interface MyApp {
     getAppConfig: ( ) => void
     getUserInfo: ( cb?: () => void ) => void,
     getIsNewCustom:  ( ) => void,
+    getPushIntegral: ( ) => void,
+    getSubscribeTemplated: ( ) => void,
     getWxUserInfo: ( cb?: ( ) => void ) => void,
+    getSubscribe: ( type?: any ) => void,
     setGlobalData: <K extends keyof globalState>( data: globalState | Pick<globalState, K> ) => void,
     watch$: ( key: keyof globalState, any ) => void
 }
@@ -235,8 +298,13 @@ enum Role {
 type globalState = {
     role: Role,
     openid: string,
+    editingGood: any,
     isUserAuth: boolean,
     userInfo: any
     isNew: boolean
-    appConfig: any
+    appConfig: any,
+    showSubscribeTips: boolean
+    subscribeTpye: any,
+    subscribeTemplates: any[]
+    pushIntegral: number
 }

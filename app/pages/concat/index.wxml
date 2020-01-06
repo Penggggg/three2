@@ -48,7 +48,7 @@
         <view
             class="pc-img-item"
             wx:for="{{ group_qrcode }}"
-            wx:key="{{ index }}"
+            wx:key="index"
         >
             <image
                 mode="widthFix"

@@ -1,0 +1,181 @@
+<view class="con-task-modal">
+    <!-- 积分提示弹框 -->
+    <wxc-mask
+        content-align="bl"
+        status="{{ showModal }}"
+        bindmasktap="toggle"
+    >
+        <view class="ctm-con">
+
+            <!-- 关闭 -->
+            <view
+                bindtap="toggle"
+                class="ctm-task-close"
+            >
+                <i-icon type="close" color="rgba(0,0,0,0.3)" size="14" />
+            </view>
+
+            <!-- 倒计时 -->
+            <view class="ctm-title">
+                <!-- 我的拼团 -->
+                <view class="ctm-title-countdowm">
+                    <wxc-countdown
+                        countdown="{{ countDownNight$ }}"
+                        format="hh:mm:ss"
+                        num-style="width: 50rpx; height: 50rpx; line-height: 50rpx; font-size: 24rpx; color: #fff; background: #272839; text-align: center; border-radius: 50%"
+                        symbol-style="font-size: 20rpx; color: #272839;padding: 0 3rpx"
+                    />
+                </view>
+            </view>
+
+            <!-- 任务列表 -->
+            <view class="ctm-content">
+                <view
+                    wx:key="index"
+                    wx:for="{{ list$ }}"
+                >
+
+                    <!-- 立减券 -->
+                    <view 
+                        wx:if="{{ item.type === 't_lijian' }}"
+                        class="ctm-task-item"
+                    >
+                        <!-- 图片 -->
+                        <image 
+                            mode="aspectFill"
+                            lazy-load="{{ true }}"
+                            class="ctm-img {{ item.t_delta > 0 ? 'red' : '' }}"
+                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-task-modal-coupon-purple.png%20.png"
+                        />
+
+                        <!-- 标题、备注 -->
+                        <view class="ctm-task-info">
+                            <view 
+                                class="ctm-task-title"
+                            >
+                                <view
+                                >   
+                                    <view class="inline {{ item.t_delta > 0 ? 'red' : '' }}">立减券</view>
+                                </view>
+                            </view>
+                            <view 
+                                wx:if="{{ item.t_delta > 0 && !!item.t_current }}"
+                                class="ctm-task-desc"
+                            >
+                                已领{{ item.t_current }}元 还可领{{ item.t_delta }}元
+                            </view>
+                            <view 
+                                wx:if="{{ item.t_delta  === 0  || ( item.t_delta > 0 && !item.t_current )}}"
+                                class="ctm-task-desc"
+                            >
+                                分享转发即领{{ item.t_delta || item.t_total }}元～
+                            </view>
+                        </view>
+
+                        <!-- 价格 -->
+                        <wxc-price
+                            icon="sub"
+                            class="ctm-task-price {{ !item.t_delta && !summary$.allPin ? 'finished' : '' }}"
+                        >
+                            {{ item.t_delta || item.t_total }}
+                        </wxc-price>
+
+                        <!-- 按钮 -->
+                        <view
+                            class="ctm-task-action {{ !!item.t_delta ? 'shine' : '' }}"
+                        >
+                            <button
+                                wx:if="{{ !!item.t_delta }}"
+                                open-type="share"
+                                class="ctm-task-btn"
+                                bindtap="repaireLijian"
+                            >
+                                领取
+                            </button>
+                            <view
+                                wx:else
+                                class="ctm-task-btn {{ !item.t_delta && !summary$.allPin ? 'finished' : '' }}"
+                            >
+                                已领取
+                            </view>
+                        </view>
+
+                    </view>
+
+                    <!-- 拼团任务 -->
+                    <view 
+                        wx:if="{{ item.type === 'shoppinglist' }}"
+                        class="ctm-task-item"
+                        data-data="{{ item }}"
+                        bindtap="goDetail"
+                    >
+                        <!-- 图片 -->
+                        <image 
+                            class="ctm-img {{ !item.isPin ? 'red' : '' }}"
+                            mode="aspectFill"
+                            lazy-load="{{ true }}"
+                            src="{{ item.detail.img }}"
+                        />
+
+                        <!-- 标题、备注 -->
+                        <view class="ctm-task-info">
+                            <view 
+                                class="ctm-task-title"
+                            >
+                                <view
+                                    wx:if="{{ item.isPin }}"
+                                >   
+                                    拼团成功
+                                </view>
+                                <view
+                                    wx:else
+                                >
+                                    <view class="inline red">差1人</view>拼成
+                                </view>
+                            </view>
+                            <view 
+                                wx:if="{{ item.isPin }}"
+                                class="ctm-task-desc"
+                            >
+                                恭喜!你和群友都省了{{ item.delta }}元～
+                            </view>
+                            <view 
+                                wx:else
+                                class="ctm-task-desc"
+                            >
+                                和群友拼团，立省{{ item.delta }}元！
+                            </view>
+                        </view>
+
+                        <!-- 价格 -->
+                        <wxc-price
+                            icon="sub"
+                            class="ctm-task-price {{ item.isPin && !summary$.allPin ? 'finished' : '' }}"
+                        >
+                            {{ item.delta }}
+                        </wxc-price>
+
+                        <!-- 按钮 -->
+                        <view
+                            class="ctm-task-action {{ !item.isPin ? 'shine' : '' }}"
+                        >
+                            <button
+                                class="ctm-task-btn"
+                                wx:if="{{ !item.isPin }}"
+                            >
+                                找人拼
+                            </button>
+                            <view
+                                wx:else
+                                class="ctm-task-btn {{ item.isPin && !summary$.allPin ? 'finished' : '' }}"
+                            >
+                                已拼成
+                            </view>
+                        </view>
+                    </view>
+                    
+                </view>
+            </view>
+        </view>   
+    </wxc-mask>
+</view>

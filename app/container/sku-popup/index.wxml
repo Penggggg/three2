@@ -32,7 +32,7 @@
                 />
             </view>
 
-            <!-- 头部栏 图片、价格、库存 -->
+            <!-- 头部栏 图片、价格 -->
             <view class="sku-header">
 
                 <!-- 图片 -->
@@ -86,20 +86,12 @@
                     </view>
 
                     <!-- 库存 -->
-                    <view
+                    <!-- <view
                         class="sku-stock"
                         wx:if="{{ selectedSku.stock || selectedSku.limit }}"
                     >
                         {{ selectedSku.stock ? '库存' + selectedSku.stock + '件' : '' }}<text>{{ selectedSku.limit ? '限购' + selectedSku.limit + '件' : '' }}</text>
-                    </view>
-
-                    <!-- 已选择 -->
-                    <view
-                        class="sku-title"
-                        wx:if="{{ selectedSku.title !== '默认型号' }}"
-                    >
-                        已选择：{{ selectedSku.title }}
-                    </view>
+                    </view> -->
 
                     <!-- 价格对比 -->
                     <view
@@ -114,6 +106,15 @@
                             {{ selectedSku.canPin ? selectedSku.price : selectedSku.groupPrice || '' }}
                         </wxc-price>
                     </view>
+
+                    <!-- 已选择 -->
+                    <!-- <view
+                        class="sku-title grey"
+                        wx:if="{{ selectedSku.title !== '默认型号' }}"
+                    >
+                        已选择：{{ selectedSku.title }}
+                    </view> -->
+
                 </view>
 
             </view>
@@ -135,7 +136,7 @@
                     <view class="sku-standards" wx:if="{{ selectedSku }}">
                         <view
                             wx:for="{{ skuItems }}"
-                            wx:key="{{ index }}"
+                            wx:key="index"
                             wx:if="{{ item.title !== '默认型号' }}"
                             data-standard="{{ item }}"
                             bindtap="onSelectSku"
@@ -160,7 +161,7 @@
                 </view>
 
                 <!-- 拼团助手 -->
-                <view
+                <!-- <view
                     wx:if="{{ !selectedSku.canPin }}"
                     class="sku-standards-block"
                 >
@@ -174,7 +175,7 @@
                             群助手帮你, 找人拼团
                         </view>
                     </view>
-                </view>
+                </view> -->
                 
                 <!-- 订金 -->
                 <view
@@ -182,7 +183,7 @@
                     wx:if="{{ depositPrice }}"
                 >
 
-                    <view
+                    <!-- <view
                         wx:if="{{ !shouldPrepay && !isNew }}"
                     >
                         <view class="sku-info-title mt il">
@@ -196,10 +197,9 @@
                         <view class="sku-info-title mt il">
                             本趟行程免订金
                         </view>
-                    </view>
+                    </view> -->
 
                     <view
-                        wx:else
                         class="sku-dingjin"
                     >
                         <view class="sku-info-title mt il">
@@ -214,11 +214,39 @@
                                 {{ depositPrice }}
                             </wxc-price>
                         </view>
-                        <view
+                        <!-- <view
                             class="sku-dingjin-tips"
                         >
                             先付订金，后付尾款～
+                        </view> -->
+                    </view>
+
+                    <view
+                        class="sku-dingjin"
+                        wx:if="{{ pushIntegralMoneyRate }}"
+                    >
+                        <view class="sku-info-title mt il">
+                            抵现金可抵
                         </view>
+                        <view class="sku-info-text il">
+                            <wxc-price
+                                icon="sub"
+                                decimal="small"
+                                class="deposit-price"
+                            > 
+                                {{ pushIntegralMoney$ }}
+                            </wxc-price>
+                        </view>
+                        <button 
+                            bindtap="onTap"
+                            data-type="moneyQuestion"
+                            class="fix-btn sku-question"
+                        >
+                            <my-icon-question 
+                                color="#ff5777"
+                                invert="{{ true }}"
+                            />
+                        </button>
                     </view>
                     
                 </view>
@@ -247,9 +275,9 @@
                 <form
                     wx:else
                     report-submit="{{ true }}"
-                    bindsubmit="confirmSelect"
                 >
                     <button
+                        bindtap="confirmSelect"
                         class="sku-btn lh"
                         form-type="submit"
                     >
@@ -259,7 +287,6 @@
             </view>
 
         </view>
-
     </view>
 
 </view>

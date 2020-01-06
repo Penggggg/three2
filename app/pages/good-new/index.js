@@ -2,7 +2,6 @@ const { http } = require('../../util/http.js');
 const { navTo } = require('../../util/route.js');
 const { computed } = require('../../lib/vuefy/index.js');
 const { delayeringGood } = require('../../util/goods.js');
-const { createFormId } = require('../../util/form-id');
 const app = getApp( );
 
 Page({

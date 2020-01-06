@@ -1,0 +1,47 @@
+.c-single-theme-modal {
+    width: 80vw;
+    padding: 30rpx 30rpx 50rpx;
+    border-radius: 5px;
+    background: #e73e42;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cstm-title {
+    font-size: 26rpx;
+    color: #f4d294;
+    position: relative;
+    letter-spacing: 0.1em;
+}
+
+.cstm-title:after {
+    top: 45%;
+    content: '';
+    height: 1px;
+    width: 60rpx;
+    right: -80rpx;
+    background: #f4d294;
+    position: absolute;
+    transform: scaleY( 0.5 );
+}
+
+.cstm-title:before {
+    top: 45%;
+    content: '';
+    height: 1px;
+    width: 60rpx;
+    left: -80rpx;
+    background: #f4d294;
+    position: absolute;
+    transform: scaleY( 0.5 );
+}
+
+.cstm-content {
+    font-size: 60rpx;
+    color: #f4d294;
+    font-weight: bold;
+    margin: 80rpx 0;
+    letter-spacing: 0.2em;
+}

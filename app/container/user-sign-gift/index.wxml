@@ -7,6 +7,7 @@
         bindsubmit="toggleSign"
     >
         <button
+            bindtap="onSubscribe"
             form-type="submit"
             class='fix-btn pm-checkin-bg'
         >
@@ -18,21 +19,6 @@
         class="pm-checkin-con {{ showSignBlock$ ? 'fixed' : '' }}"
     
     >
-        <!-- 关闭按钮 -->
-        <!-- <form
-            wx:if="{{ showSignBlock$ }}"
-            report-submit="{{ true }}"
-            class="pm-sign-close-form"
-            bindsubmit="toggleSign"
-        >
-            <button
-                form-type="submit"
-                class='fix-btn pm-hongbao-close'
-            >
-                x
-            </button>
-        </form> -->
-
         <!-- 签到版面 -->
         <view
             wx:if="{{ showSign || showSignBlock$ }}"
@@ -81,7 +67,7 @@
                     class="pm-checkin-user"
                 >
                     <view class="pm-checkin-class">
-                        等级: <view class="pm-checkin-class-tips">{{ currentLevel$ }}级</view> 
+                        当前等级: <view class="pm-checkin-class-tips">{{ currentLevel$ }}级</view> 
                         <view>全周可送 ¥{{ currentLevelSignGift$ }}元</view>
                     </view>
                     <view
@@ -92,7 +78,8 @@
                             mode="aspectFill"
                             class='pm-checkin-icon'
                             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-coin-1.png"
-                        /> {{ currentLevel$ + 1 }}级每周送 ¥{{ nextLevelSignGift$ }}元
+                        /> 升级后每周送 ¥{{ nextLevelSignGift$ }}元
+                        <!-- {{ currentLevel$ + 1 }}级每周送 ¥{{ nextLevelSignGift$ }}元 -->
                     </view>
                 </view>
 
@@ -115,7 +102,7 @@
                         </view>
                     </view>
 
-                    <view class="pm-checkin-task-count {{ !!countDown || !isGetExp ? 'shine' : '' }} {{ !!isGetExp ? 'grey' : '' }}">
+                    <view class="pm-checkin-task-count {{ !!isGetExp ? 'grey' : '' }}">
                         <wxc-countdown
                             format="hh:mm:ss"
                             wx:if="{{ countDown && !isGetExp }}"
@@ -125,7 +112,7 @@
                         />
                         <view
                             bindtap="getExp"
-                            class="pm-checkin-task-btn"
+                            class="pm-checkin-task-btn {{ !!countDown || !isGetExp ? 'shine' : '' }}"
                             wx:if="{{ !countDown && !isGetExp }}"
                         >
                             可领取
@@ -196,7 +183,7 @@
             <view class="pm-hongbao-content">
                 <view class="pm-hongbao-title center">
                     <!-- - 下单就能用 - -->
-                    - 送现金 下单用 -
+                    - 抵现金 下单用 -
                 </view>
                 <view class="pm-hongbao-price-block center">
                     <wxc-price
@@ -209,13 +196,14 @@
                 </view>
                 <view class="pm-hongbao-text-block">
                     <view class="pm-hongbao-bigtips center">
-                        今日领取成功
+                        领取成功
                     </view>
                     <view class="pm-hongbao-smalltips mt center">
-                        每天登陆
+                        每天可领抵现金
                     </view>
                     <view class="pm-hongbao-smalltips center">
-                        全周<view class="pm-hongbao-price2 bold">可领¥{{ currentLevelSignGift$ }}元</view>
+                        <!-- 全周<view class="pm-hongbao-price2 bold">可领¥{{ currentLevelSignGift$ }}元</view> -->
+                        <view class="pm-hongbao-price2 bold">总¥{{ pushIntegral }}</view>
                     </view>
 
                     <!-- 发起推送 -->
@@ -226,6 +214,7 @@
                         report-submit="{{ true }}"
                     >
                         <button
+                            bindtap="onSubscribe"
                             form-type="submit"
                             class='fix-btn pm-countdown-block'
                         >
@@ -250,28 +239,16 @@
 
                 </view>
             </view>
-
-            <!-- 关闭按钮 -->
-            <form
-                class="pm-hongbao-close-form"
-                bindsubmit="toggleGift"
-                report-submit="{{ true }}"
-            >
-                <button
-                    form-type="submit"
-                    class='fix-btn pm-hongbao-close'
-                >
-                    X 
-                </button>
-            </form>
+            
         </view>
         
     </wxc-mask>
 
+    <!-- 下方小红包 -->
     <view
         bindtap="fetchPushIntegral"
-        class="pm-tips-con left"
-        wx:if="{{ simple && !showSign }}"
+        class="pm-tips-con {{ position }}"
+        wx:if="{{ !isGetMoney && simple && !showSign }}"
     >
         <image
             mode="aspectFill"
@@ -281,10 +258,10 @@
         <view
             class="pm-tips-price"
         > 
-            现金
+            抵现金
         </view>
         <view class="pm-tips-text">
-            签到
+            免费
         </view>
     </view>
 

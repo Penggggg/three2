@@ -25,6 +25,7 @@
                 report-submit="{{ true }}"
             >
                 <button
+                    bindtap="onSubscribe"
                     form-type="submit"
                     class="fix-btn tos-order-count"
                 >
@@ -50,7 +51,7 @@
 
             <view
                 wx:for="{{ list }}"
-                wx:key="{{ index }}"
+                wx:key="index"
                 class="tos-shoppinglist-item {{ outline && (item.base_status === '0' || !!item.lastAllocated) ? 'notadjust' : '' }}"
             >
 
@@ -153,7 +154,7 @@
                                             商城价格
                                         </view> -->
                                         <view class="tos-compare-total-label small right">
-                                            本次售价
+                                            单买价
                                         </view>
                                         <wxc-price
                                             icon="sub"
@@ -196,7 +197,7 @@
                                     <view class="tos-compare-total right">
                                         <view class="tos-compare-total-label small right">
                                             <!-- 商城团购价 -->
-                                            本次团购
+                                            团购价
                                         </view>
                                         <wxc-price
                                             icon="sub"
@@ -307,7 +308,7 @@
             value='{{ currentSL.purchase }}'
         />
         <wxc-input
-            title="本趟售价"
+            title="单买价"
             nocenter="{{ true }}"
             data-key="adjustPrice"
             placeholder="{{ '商城售价'  + currentSL.price }}"
@@ -316,10 +317,10 @@
             value='{{ currentSL.adjustPrice }}'
         />
         <wxc-input
-            title="本趟团购"
+            title="团购价"
             nocenter="{{ true }}"
             data-key="adjustGroupPrice"
-            placeholder="无团购价，则不用输入"
+            placeholder="团购购买的价格"
             type="digit"
             mode="none"
             bindinput='modalInput'

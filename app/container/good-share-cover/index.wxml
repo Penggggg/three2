@@ -1,0 +1,23 @@
+<view 
+    class="con-good-poster"
+    catchtouchmove="preventTouchMove"
+>
+
+    <!-- 画布 -->
+    <view 
+        class="cgsc-canvas-block {{ !show ? 'hide' : '' }}"
+    >
+
+        <!-- 画布 -->
+        <view class="cgsc-canvas-con">
+            <canvas 
+                id="c1"
+                canvas-id='c1'
+                class="cgsc-canvas"
+                style="height:{{ canvasHeight }}px"
+            />
+        </view>
+        
+    </view>
+
+</view>

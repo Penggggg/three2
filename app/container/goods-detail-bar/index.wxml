@@ -1,91 +1,97 @@
-<!--container/goods-detail-bar/index.wxml-->
-<view class="con-gbs">
+<view class="c-good-detail-bar">
 
-    <!-- 按钮栏 -->
+    <!-- 拼团广场 -->
     <view
-        class="gbs-btn-bar"
-    >   
-        <!-- 商城、行程、购物车按钮 -->
-        <view
-            class="gbs-btn-item"
-            wx:for="{{ btnList }}"
-            wx:key="{{ index }}"
-            data-url="{{ item.url }}"
-            catchtap="navigate"
+        bindtap="goGroundPin"
+        class="gdb-small-btn-con red"
+    >
+        <image
+            mode="aspectFill"
+            class='gdb-btn-img big'
+            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-good-bar-gift-red.png"
+        />
+    </view>
+
+    <!-- sku选择  -->
+    <view 
+        bindtap="toggleSku"
+        class="gdb-small-btn-con"
+        wx:if="{{ !!hasOrder$ && !allPinSuccess$ }}"
+    >
+        <image
+            mode="aspectFill"
+            class='gdb-btn-img big'
+            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-good-bar-cart-purple.png"
+        />
+    </view>
+
+    <!-- 售罄等按钮 -->
+    <view
+        wx:if="{{ hasErr$ }}"
+        class="gdb-main-btn-con"
+    >
+        <button 
+            class="fix-btn gdb-main-btn grey"
+        >
+            {{ hasErr$ }}
+        </button>
+    </view>
+    
+    <!-- 主要按钮 -->
+    <view 
+        wx:if="{{ !hasErr$ }}"
+        class="gdb-main-btn-con"
+    >
+
+        <button 
+            wx:if="{{ !canPin }}"
+            class="fix-btn gdb-main-btn shine" 
+            bindtap="toggleSku"
+        >
+            立即购买
+        </button>
+
+        <button 
+            wx:elif="{{ !!tripShoppinglist && tripShoppinglist.length === 0 }}"
+            class="fix-btn gdb-main-btn shine"
+            bindtap="toggleSku"
+        >
+            <view class="text-mr">下单开团</view>
+        </button>
+
+        <button 
+            wx:elif="{{ !hasOrder$ }}"
+            class="fix-btn gdb-main-btn shine"
+            bindtap="toggleSku"
+        >
+            <view class="text-mr">一起拼团</view>
+        </button>
+
+        <button 
+            wx:elif="{{ !!hasOrder$ && !allPinSuccess$ }}"
+            class="fix-btn gdb-main-btn shine"
+            open-type="share"
         >
             <image
                 mode="aspectFill"
-                class="gbs-btn-item-img"
-                src="{{ item.src }}"
+                class='gdb-btn-img big mr'
+                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-good-bar-share.png"
             />
-            <view class="gbs-btn-item-text">{{ item.label }}</view>
-        </view>
-        
-        <!-- 下架、售罄、购买按钮 -->
-        <view
-            class="gbs-btn-special"
+            <view class="text-mr">差1人拼成</view>
+            <wxc-countdown
+                format="hh:mm:ss"
+                countdown="{{ countDownNight$ }}"
+                num-style="font-size: 28rpx; color: #fff; background: transparent;"
+            />
+        </button>
+
+        <button 
+            wx:elif="{{ !!hasOrder$ && !!allPinSuccess$ }}"
+            class="fix-btn gdb-main-btn"
+            bindtap="toggleSku"
         >
-
-            <!-- 已删除 -->
-            <view
-                wx:if="{{ !preview && detail._id && detail.isDelete }}"
-                class="gbs-btn-special-item grey"
-            >   
-                已删除
-            </view>
-        
-            <!-- 已下架 -->
-            <view
-                wx:elif="{{ !preview && detail._id && !detail.visiable }}"
-                class="gbs-btn-special-item grey"
-            >   
-                已下架
-            </view>
-
-            <!-- 已售罄 -->
-            <view
-                wx:elif="{{ !preview && detail._id && detail.visiable && !hasStock }}"
-                class="gbs-btn-special-item grey"
-            >   
-                已售罄
-            </view>
-
-            <!-- 加入购物车、立即购买 -->
-            <view
-                wx:else
-                class="gbs-btn-special-item"
-            >
-                <!-- <form
-                    data-type="cart"
-                    bindsubmit="toggleSku"
-                    report-submit="{{ true }}"
-                    class="gbs-btn-form-btn flex"
-                >
-                    <button
-                        form-type="submit"
-                        class="gbs-btn-special-item pink"
-                    >   
-                        加入购物车
-                    </button>
-                </form> -->
-                <form
-                    data-type="buy"
-                    bindsubmit="toggleSku"
-                    report-submit="{{ true }}"
-                    class="gbs-btn-form-btn flex"
-                >
-                    <button
-                        form-type="submit"
-                        class="gbs-btn-special-item morepink"
-                    >   
-                        {{ someCanPin ? '拼团购买' : '立即购买' }}
-                    </button>
-                </form>
-            </view>
-            
-
-        </view>
-        
+            拼团成功
+        </button>
     </view>
 
     <!-- sku -->
@@ -93,10 +99,10 @@
         isNew="{{ isNew }}"
         shouldPrepay="{{ shouldPrepay }}"
         open="{{ openSku }}"
-        bind:close="onCloseSku"
         skuItems="{{ skuItems$ }}"
         bind:confirm="onConfirmSku"
         depositPrice="{{ detail.depositPrice }}"
+        bind:close="onCloseSku"
+        bind:custom="onTapSku"
     />
-
 </view>

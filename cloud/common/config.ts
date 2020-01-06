@@ -23,6 +23,7 @@ export const push_template = {
     waitPin: {
         desc: '拼团待成团提醒：	备注、温馨提示',
         example: '您购买的商品可参加拼团！；立即参加拼团，可以再省xx元！',
+        example2: '昨晚有x人浏览它，有x人成功拼团。',
         value: 'mtTLIp2C-FQ87yn46jpY3cH9ilGIzL434N2QlUS0MH0'
     },
     buy: {
@@ -33,6 +34,7 @@ export const push_template = {
     getMoney: {
         desc: '尾款支付提醒：温馨提示、截止时间',
         example: '支付尾款，立即发货哦；越快越好',
+        example2: '【名称】；关闭行程成功，一键收款功能已开启',
         value: 'qKwF8caYQADJ6lTcnETexy0hqi11Sq1dhksNOHBqOdQ'
     }, 
     newOrder: {
@@ -44,7 +46,6 @@ export const push_template = {
         desc: '行程提醒：行程名称、行程备注',
         value: 'XoXY8XWf6EiymW7tYDPkHDD4Vcdh-BqP1ycXbPko-ZU',
         example: '【名称】；发布成功，并开通新订单推送',
-        example2: '【名称】；关闭行程成功，一键收款功能已开启',
         example3: '【名称】；【时间】开始采购，拼团越优惠',
     },
     hongbao: {
@@ -52,6 +53,60 @@ export const push_template = {
         value: 'I_yZjUxTJklPGDVrB-btt82F5z687_2cpTx1Mie_t9A',
         example: '恭喜获得红包【金额】元；趁早下单！无门槛立减【金额】元',
         example4: '恭喜！获得【金额】现金积分；推广成功！有人购买了你分享的商品'
+    }
+};
+
+/** 
+ * 订阅服务类型 
+ * 
+ * { thing } 20个以内字符   可汉字、数字、字母或符号组合
+ * { number } 32位以内数字	只能数字，可带小数
+ * { letter } 32位以内字母	只能字母
+ * { symbol } 5位以内符号	只能符号
+ * { character_string } 32位以内数字、字母或符号	可数字、字母或符号组合
+ * { time } 24小时制时间格式（支持+年月日）	例如：15:01，或：2019年10月1日 15:01
+ * { date } 年月日格式（支持+24小时制时间）	例如：2019年10月1日，或：2019年10月1日 15:01
+ * { amount } 1个币种符号+10位以内纯数字，可带小数，结尾可带“元”	可带小数
+ * { phone_number } 17位以内，数字、符号	电话号码，例：+86-0766-66888866
+ * { car_number } 8位以内，第一位与最后一位可为汉字，其余为字母或数字	车牌号码：粤A8Z888挂
+ * { name } 10个以内纯汉字或20个以内纯字母或符号	中文名10个汉字内；纯英文名20个字母内；中文和字母混合按中文名算，10个字内
+ * { phrase }5个以内汉字	5个以内纯汉字，例如：配送中
+ */
+export const subscribe_templates = {
+    buyPin: {
+        textKeys: ['thing4', 'thing1'],
+        desc: '拼团成功通知	温馨提示、商品名称',
+        id: 'yBBlVH0qvipvzSr93d-Own-cYkTnATjUBhd_Qi1L2vc'
+    },
+    hongbao: {
+        textKeys: ['thing9', 'thing7'],
+        desc: '开奖结果通知：开奖结果、开奖内容',
+        id: 'rau9z8QU48gWel5Jn8hLt6-ChVWi8puo8E_QXR1CgMc'
+    },
+    waitPin: {
+        textKeys: ['thing4', 'thing1'],
+        desc: '拼团进度通知	温馨提示、商品名称',
+        id: 'CC0DCPLC3SFVr1Im7ODEhRnlyMZVB8RIJSmptmLmC_U'
+    },
+    buy: {
+        textKeys: ['thing7', 'thing5'],
+        desc: '订单状态通知： 订单状态、备注',
+        id: 'hAU2bG9eeGDr0KeOIcM_Sq0JbIlcA6Jfcex2HhX8OWI'
+    },
+    trip: {
+        textKeys: ['thing11', 'thing6'],
+        desc: '活动开始提醒：温馨提示、活动内容',
+        id: 'u91Cqoo76phn_0o5N_Jdqz62rry4UdyIR6SyjRsZy0w'
+    },
+    getMoney: {
+        textKeys: ['thing3', 'thing1'],
+        desc: '尾款支付提醒	温馨提示、商品清单',
+        id: 'is_8EPAO0WvaKoG7eDdLcBRZdGDowX2sgnmIAGGhOY0'
+    }, 
+    newOrder: {
+        textKeys: ['thing8', 'thing4'],
+        desc: '新订单提醒: 订单状态、购买商品',
+        id: 'Onl9TTI33fTvg5K7AHydhHjk_NPmFLDGsMMxcDXE2rk'
     }
 };
 
@@ -89,7 +144,8 @@ export const collections = [
     'analyse-data',
     'share-record',
     'integral-use-record',
-    'push-timer'
+    'push-timer',
+    'good-visiting-record'
 ];
 
 /** 权限模块 */

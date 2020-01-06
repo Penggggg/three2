@@ -24,7 +24,8 @@ const getNow = ( ts = false ): any => {
 
 /**
  * 
- * @description 创建/编辑商品
+ * @description 
+ * 创建/编辑商品
  * {
  *      _id: id
  *      isDelete: 是否删除
@@ -53,6 +54,16 @@ const getNow = ( ts = false ): any => {
  *          isDelete: boolean
  *      }>
  * }
+ * 
+ * 
+ * @description
+ * 商品浏览记录
+ * 
+ * {
+ *   pid
+ *   openid
+ *   visitTime
+ * }
  */
 export const main = async ( event, context ) => {
 
@@ -68,6 +79,7 @@ export const main = async ( event, context ) => {
         try {
 
             const _id = event.data._id;
+            const openid = event.userInfo.openId;
 
             // 获取数据
             const data$ = await db.collection('goods')
@@ -110,6 +122,18 @@ export const main = async ( event, context ) => {
                 activities: activities$.data,
                 standards: standards[ k ].data
             }));
+
+            // 创建浏览
+            await cloud.callFunction({
+                data: {
+                    data: {
+                        openid,
+                        pid: _id,
+                    },
+                    $url: 'update-good-visit-record'
+                },
+                name: 'good'
+            });
 
             return ctx.body = {
                 status: 200,
@@ -248,30 +272,40 @@ export const main = async ( event, context ) => {
      *  -------- 请求 ----------
      * {
      *      page: 页数
-     *      search: 搜索
+     *      search: 搜索,
+     *      visitTime: 浏览开始时间，用于获取访客列表， 可无
+     *      filterGoodIds: 过滤指定的商品 string | string[]，可无
      * }
      */
     app.router('pin-ground', async( ctx, next ) => {
         try {
 
-            const { page } = event.data;
+            const { page, visitTime } = event.data;
             const limit = event.data.limit || 10;
+            const filterGoodIds = event.data.filterGoodIds || [ ];
 
             const search$ = event.data.search || '';
             const search = new RegExp( search$.replace(/\s+/g, ""), 'i');
 
-            let where$ = {
+            let where$: any = {
                 title: search,
                 visiable: true,
                 isDelete: _.neq( true )
             };
 
+            if ( filterGoodIds.length > 0 ) {
+                where$ = {
+                    ...where$,
+                    _id: (_ as any).nor( filterGoodIds.map( x => _.eq( x )))
+                }
+            }
+
             // 保健品配置
             const bjpConfig$ = await db.collection('app-config')
-            .where({
-                type: 'app-bjp-visible'
-            })
-            .get( );
+                .where({
+                    type: 'app-bjp-visible'
+                })
+                .get( );
             const bjpConfig = bjpConfig$.data[ 0 ];
 
             if ( !!bjpConfig && !bjpConfig.value ) {
@@ -334,10 +368,61 @@ export const main = async ( event, context ) => {
                 activities: activities$[ k ].data
             }));
 
+            // 获取商品访客记录
+            let visitRecord: any = [ ];
+            if ( !!visitTime ) {
+                visitRecord = await Promise.all(
+                    insertActivity.map( async ( x, k ) => {
+
+                        const pid = x._id;
+
+                        const where$ = {
+                            pid,
+                            visitTime: _.gte( visitTime )
+                        };
+
+                        const goodVisitTotal$ = await db.collection('good-visiting-record')
+                            .where( where$ )
+                            .count( );
+
+                        const goodVisitRecord$ = await db.collection('good-visiting-record')
+                            .where( where$ )
+                            .orderBy('visitTime', 'desc')
+                            .limit( 5 )
+                            .get( );
+
+                        const users = await Promise.all(
+                            goodVisitRecord$.data.map( async record => {
+                                const { openid } = record;
+                                const user$ = await db.collection('user')
+                                    .where({
+                                        openid
+                                    })
+                                    .field({
+                                        avatarUrl: true,
+                                        nickName: true
+                                    })
+                                    .get( );
+                                return user$.data[ 0 ]
+                            })
+                        );
+                        return {
+                            visitorSum: goodVisitTotal$.total,
+                            avatars: users
+                        }
+                    })
+                )
+            }
+            
+            const insertVisitRecord = insertActivity.map(( x, k ) => ({
+                ...x,
+                visitRecord: visitRecord[ k ]
+            }))
+
             return ctx.body = {
                 status: 200,
                 data: {
-                    data: insertActivity,
+                    data: insertVisitRecord,
                     pagenation: {
                         page,
                         pageSize: limit,
@@ -348,6 +433,7 @@ export const main = async ( event, context ) => {
             }
 
         } catch ( e ) {
+            console.log('???', e );
             return ctx.body = { status: 500 };
         }
     })
@@ -928,6 +1014,121 @@ export const main = async ( event, context ) => {
             }
         }
     })
+
+    /**
+     * @description
+     * 更新当前用户的商品浏览历史
+     * 
+     * @body {openid}
+     * @body {pid} 商品ID
+     */
+    app.router('update-good-visit-record', async( ctx, next ) => {
+        try {
+            const { pid } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+
+            // 查找旧的记录
+            const record$ = await db.collection('good-visiting-record')
+                .where({
+                    pid,
+                    openid
+                })
+                .get( );
+            const record = record$.data[ 0 ];
+
+            // 有则更新
+            if ( !!record ) {
+                await db.collection('good-visiting-record')
+                    .doc( String( record._id ))
+                    .update({
+                        data: {
+                            visitTime: getNow( true )
+                        }
+                    })
+            // 无则插入
+            } else {
+                await db.collection('good-visiting-record')
+                    .add({
+                        data: {
+                            pid,
+                            openid,
+                            visitTime: getNow( true )
+                        }
+                    })
+            }
+            return ctx.body = {
+                status: 200
+            }
+        } catch( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    })
+
+    /** 
+     * @description
+     * 获取商品浏览记录（用户列表 + 头像）
+     * 
+     * {start} 时间戳，在此之后的访问记录
+     * {before} 时间戳，在此之前的访问记录
+     * {pid} 商品id
+     * 
+     */
+    app.router('good-visitors', async( ctx, next ) => {
+        try {
+            const { pid, before, start } = event.data;
+            let search: any = { pid };
+            
+            if ( !!start && !!before ) {
+                search = {
+                    ...search,
+                    visitTime: _.and( _.gte( start ), _.lt( before ))
+                };
+            } else if ( !!start && !before ) {
+                search = {
+                    ...search,
+                    visitTime: _.gte( start )
+                };
+            } else if ( !start && !!before ) {
+                search = {
+                    ...search,
+                    visitTime: _.lt( before )
+                };
+            }
+            
+            const visitors$ = await db.collection('good-visiting-record')
+                .where( search )
+                .get( );
+    
+            const visitors = visitors$.data;
+    
+            const users$ = await Promise.all( visitors.map( async visitor => {
+                const user$ = await db.collection('user')
+                    .where({
+                        openid: visitor.openid
+                    })
+                    .field({
+                        openid: true,
+                        nickName: true,
+                        avatarUrl: true,
+                    })
+                    .get( );
+                const user = user$.data[ 0 ];
+                return !!user ? user : null;
+            }));
+    
+            const users = users$.filter( x => !!x );
+            return ctx.body = {
+                status: 200,
+                data: users
+            };
+        } catch( e ) {
+            return ctx.body = {
+                status: 500
+            };
+        }
+    });
 
 
     return app.serve( );

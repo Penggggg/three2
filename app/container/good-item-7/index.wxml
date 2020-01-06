@@ -5,6 +5,7 @@
     class="good-item-7-form"
 >
     <button
+        bindtap="onSubscribe"
         form-type="submit"
         class="fix-btn good-item-7"
     >
@@ -70,7 +71,7 @@
         data-share="{{ good }}"
         class="fix-btn gi7-share-btn"
     >
-        赚{{ good.integral2$ }}元
+        赚{{ good.maxIntegral$ }}元
         <image
             mode="aspectFill"
             lazy-load="{{ true }}"

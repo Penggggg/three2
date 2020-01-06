@@ -1,5 +1,5 @@
+const app = getApp( );
 const { navTo } = require('../../util/route.js');
-const { createFormId } = require('../../util/form-id.js');
 
 /**
  * @description
@@ -53,9 +53,12 @@ Component({
         },
 
         goDetail( e ) {
-            createFormId( e.detail.formId );
             const { _id } = this.data.good;
             navTo(`/pages/goods-detail/index?id=${_id}`);
+        },
+
+        onSubscribe( e ) {
+            app.getSubscribe('buyPin,waitPin');
         }
     }
 })

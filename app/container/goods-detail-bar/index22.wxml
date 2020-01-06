@@ -1,0 +1,90 @@
+<!--container/goods-detail-bar/index.wxml-->
+<view class="con-gbs">
+
+    <!-- 按钮栏 -->
+    <view
+        class="gbs-btn-bar"
+    >   
+        <!-- 商城、行程、购物车按钮 -->
+        <view
+            class="gbs-btn-item"
+            wx:for="{{ btnList }}"
+            wx:key="index"
+            data-url="{{ item.url }}"
+            catchtap="navigate"
+        >
+            <image
+                mode="aspectFill"
+                class="gbs-btn-item-img"
+                src="{{ item.src }}"
+            />
+            <view class="gbs-btn-item-text">{{ item.label }}</view>
+        </view>
+        
+        <!-- 下架、售罄、购买按钮 -->
+        <view
+            class="gbs-btn-special"
+        >
+
+            <!-- 已删除 -->
+            <view
+                wx:if="{{ !preview && detail._id && detail.isDelete }}"
+                class="gbs-btn-special-item grey"
+            >   
+                已删除
+            </view>
+        
+            <!-- 已下架 -->
+            <view
+                wx:elif="{{ !preview && detail._id && !detail.visiable }}"
+                class="gbs-btn-special-item grey"
+            >   
+                已下架
+            </view>
+
+            <!-- 已售罄 -->
+            <view
+                wx:elif="{{ !preview && detail._id && detail.visiable && !hasStock }}"
+                class="gbs-btn-special-item grey"
+            >   
+                已售罄
+            </view>
+
+            <!-- 加入购物车、立即购买 -->
+            <view
+                wx:else
+                class="gbs-btn-special-item"
+            >
+                <form
+                    data-type="buy"
+                    bindsubmit="toggleSku"
+                    report-submit="{{ true }}"
+                    class="gbs-btn-form-btn flex"
+                >
+                    <button
+                        bindtap="onSubscribe"
+                        form-type="submit"
+                        class="gbs-btn-special-item morepink"
+                    >   
+                        {{ someCanPin ? '拼团购买' : '立即购买' }}
+                    </button>
+                </form>
+            </view>
+            
+
+        </view>
+        
+    </view>
+
+    <!-- sku -->
+    <my-sku-popup
+        isNew="{{ isNew }}"
+        shouldPrepay="{{ shouldPrepay }}"
+        open="{{ openSku }}"
+        bind:close="onCloseSku"
+        skuItems="{{ skuItems$ }}"
+        bind:confirm="onConfirmSku"
+        depositPrice="{{ detail.depositPrice }}"
+    />
+
+</view>

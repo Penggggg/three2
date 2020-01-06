@@ -151,25 +151,31 @@
     position: relative;
 }
 
+.pol-trip-img-tips {
+    top: 15rpx;
+    left: -16rpx;
+    padding: 2rpx 8rpx;
+    color: #fff;
+    font-size: 20rpx;
+    border-radius: 6px;
+    position: absolute;
+    text-align: center;
+    letter-spacing: 0.05em;
+    background: linear-gradient(to left, #f80759, #bc4e9c);
+}
+
 .pol-trip-order-img {
     width: 120rpx;
     height: 120rpx;
     background: #fff;
     border-radius: 5px;
-    border: 2px solid #fff;
+    border: 1px solid #fff;
     /* margin-right: 20rpx; */
-    box-shadow: 3px 3px 13px rgba(0, 0, 0, 0.2);
+    box-shadow: 3px 3px 13px rgba(0, 0, 0, 0.1);
 }
 
-.pol-trip-order-img-cover.disabled {
-    /* top: 0;
-    left: 0;
-    width: 120rpx;
-    height: 120rpx;
-    padding: 5rpx;
-    border-radius: 5px;
-    position: absolute;
-    background: rgba( 0, 0, 0, 0. 5 ); */
+.pol-trip-order-img.red {
+    border: 1px solid #bc4e9c;
 }
 
 .pol-trip-order-info {
@@ -325,6 +331,7 @@
     padding: 5rpx 20rpx 5rpx;
     box-sizing: border-box;
     justify-content: flex-end;
+    letter-spacing: 0.05em;
 }
 
 .pol-tips-img {
@@ -348,6 +355,10 @@
     font-size: 22rpx;
 }
 
+.pol-trip-order-totalprice.purple {
+    color: #f5576c;
+}
+
 .pol-trip-order-totalprice.mr {
     margin-right: 10rpx;
 }
@@ -360,6 +371,10 @@
     color: #999;
     display: inline;
     font-size: 22rpx;
+}
+
+.pol-totalprice.purple {
+    color: #f5576c;
 }
 
 .pol-price {

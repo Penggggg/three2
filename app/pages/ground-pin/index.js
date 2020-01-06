@@ -13,6 +13,9 @@ Page({
      */
     data: {
 
+        // 
+        trip: null,
+
         // 分页
         page: 0,
 
@@ -43,12 +46,21 @@ Page({
         computed( this, {
 
             list$: function( ) {
-                const { list, allShoppinglist } = this.data;
+                const { list, allShoppinglist, search } = this.data;
+
+                const getRandom = n => Math.floor( Math.random( ) * n );
+                const allTexts = [
+                    `谢谢拼团的群友~`,
+                    `赞！又省钱了～`,
+                    `错过就亏啦～`,
+                    `拼团好划算~`
+                ];
+
                 // 拼团总列表
                 const metaList = [ ];
                 
                 list.map( good => {
-                    const { standards, activities } = good;
+                    const { standards, activities, visitRecord } = good;
                     // 有型号
                     if ( Array.isArray( standards ) && standards.length > 0 ) {
                         standards.map( standard => {
@@ -61,7 +73,9 @@ Page({
                                 name: standard.name,
                                 detail: good.detail,
                                 sid: standard._id,
-                                pid: good._id
+                                pid: good._id,
+                                visitRecord: visitRecord ? visitRecord.avatars : [ ],
+                                visitTips: visitRecord ? `${visitRecord.visitorSum}群友在看` : ``
                             };
                             if ( !!activeTarget ) {
                                 metaList.push({
@@ -86,7 +100,9 @@ Page({
                             img: good.img[ 0 ],
                             title: good.title,
                             detail: good.detail,
-                            pid: good._id
+                            pid: good._id,
+                            visitRecord: visitRecord ? visitRecord.avatars : [ ],
+                            visitTips: visitRecord ? `${visitRecord.visitorSum}群友看过` : ``
                         };
                         if ( !!activeTarget ) {
                             metaList.push({
@@ -113,23 +129,46 @@ Page({
                 });
 
                 // 购物清单
-                const meta2 = allShoppinglist.map( s => {
-                    const { good } = s.detail;
+                const meta2 = allShoppinglist
+                    .map( s => {
+                        const { good } = s.detail;
+                        return {
+                            _id: s.pid,
+                            pid: s.pid,
+                            title: good.title,
+                            tag: good.tag,
+                            img: s.detail.img,
+                            price: s.adjustPrice,
+                            detail: good.detail,
+                            users: (s.users || [ ]),
+                            groupPrice: s.adjustGroupPrice,
+                        };
+                    })
+                    .sort(( x, y ) => y.users.length - x.users.length )
+
+                const all = !!search ? 
+                    [ ...meta, ...meta2 ] :
+                    [ ...meta2, ...meta ];
+                
+                
+                const result = all.map(( x, k ) => {
+                    const { price, groupPrice } = x;
                     return {
-                        _id: s.pid,
-                        pid: s.pid,
-                        title: good.title,
-                        tag: good.tag,
-                        img: s.detail.img,
-                        price: s.adjustPrice,
-                        detail: good.detail,
-                        users: s.users,
-                        groupPrice: s.adjustGroupPrice,
+                        ...x,
+                        delta: price - groupPrice,
+                        zoomTips: x.visitTips || allTexts[ getRandom( allTexts.length )],
+                        zoomDelay: k % 2 === 1,
+                        tagText: x.tag.join('、'),
+                        users: Array.isArray( x.users ) && x.users.length > 0 ? 
+                            x.users :
+                            Array.isArray( x.visitRecord ) && x.visitRecord.length > 0 ? 
+                                x.visitRecord : 
+                                [ ],
+                        isPin: Array.isArray( x.users ) && x.users.length > 0,
+                        isZoom: Array.isArray( x.users ) && x.users.length > 0
                     };
                 });
-
-                const all = [ ...meta2, ...meta ];
-                return all;
+                return result;
             }
         });
     },
@@ -144,6 +183,10 @@ Page({
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
 
+                this.setData({
+                    trip: data[ 0 ]
+                });
+
                 this.fetchAllShoppinglist( data[ 0 ] ? data[ 0 ]._id : '' );
 
             }
@@ -153,7 +196,9 @@ Page({
     /** 拉取所有购物清单 */
     fetchAllShoppinglist( tid ) {
         const { allShoppinglist } = this.data;
-        if ( allShoppinglist.length > 0 || !tid ) { return; }
+        if ( allShoppinglist.length > 0 || !tid ) { 
+            return this.fetchGoodRank( )
+        }
 
         http({
             data: {
@@ -171,15 +216,17 @@ Page({
                 const pingList = data.filter( x => !!x.adjustGroupPrice && x.uids.length > 1 );
 
                 this.setData({
-                    allShoppinglist: [ ...waitPin, ...pingList ]
+                    allShoppinglist: [ ...pingList, ...waitPin ]
                 });
+
+                this.fetchGoodRank( )
             }
         });
     },
 
-    /** 拉取拼团列表 */
-    fetchPin( reset = false ) {
-        const { page, canLoadMore, loading, list, search } = this.data;
+    /** 拉取商品列表 */
+    fetchGoodRank( reset = false ) {
+        const { page, canLoadMore, loading, list, search, trip, allShoppinglist } = this.data;
 
         if ( !canLoadMore || !!loading ) { return; }
 
@@ -190,8 +237,10 @@ Page({
         http({
             data: {
                 search,
-                limit: 8,
-                page: page + 1
+                limit: 5,
+                page: page + 1,
+                visitTime: trip ? trip.start_date : '',
+                filterGoodIds: allShoppinglist.map( x => x.pid )
             },
             url: `good_pin-ground`,
             success: res => {
@@ -217,6 +266,7 @@ Page({
 
     /** 输入搜索 */
     onSearch( e ) {
+        console.log( e.detail.value )
         this.setData({
             search: e.detail.value
         });
@@ -229,7 +279,7 @@ Page({
             canLoadMore: true
         });
         setTimeout(( ) => {
-            this.fetchPin( true );
+            this.fetchGoodRank( true );
         }, 20 );
     },
 
@@ -253,7 +303,6 @@ Page({
      */
     onLoad: function (options) {
         this.runComputed( );
-        this.fetchPin( );
         this.fetchLast( );
     },
 
@@ -304,7 +353,7 @@ Page({
      */
     onShareAppMessage: function () {
         return {
-            title: `分享给你～超值拼团价美妆宝贝`,
+            title: `分享给你！群拼团真划算～`,
             path: `/pages/ground-pin/index`
         }
     }

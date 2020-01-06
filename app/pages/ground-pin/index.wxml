@@ -4,7 +4,7 @@
     <scroll-view 
         scroll-y="{{ true }}"
         lower-threshold="100"
-        bindscrolltolower="fetchPin"
+        bindscrolltolower="fetchGoodRank"
         class="p-groud-pin"
     >
 
@@ -35,25 +35,22 @@
         </view>
 
         <!-- 标题 -->
-        <view class="gp-title-block">
+        <view   
+            bindtap="sureOpen"
+            class="gp-title-block"
+        >
             <view class="gp-title bold">
-                热门
-            </view>
-            <view class="gp-title">
-                拼团
-                <view 
-                    bindtap="sureOpen"
-                    class="gp-tips-toggle"
-                >
-                    ?
-                </view>
+                群友拼团
+                <my-icon-question 
+                    color="#ff5777"
+                />
             </view>
         </view>
 
         <!-- 商品列表 -->
         <view class="gp-good-list">
             <my-good-item-8
-                wx:key="{{ index }}"
+                wx:key="index"
                 wx:for="{{ list$ }}"
                 good="{{ item }}"
                 isLeft="{{ index % 2 === 1 }}"
@@ -69,15 +66,16 @@
     </view>
 
     <!-- 提示弹框 -->
-    <view>
-        <my-common-confirm
-            title="拼团省钱"
-            openTime="{{ openTime }}"
-            storageKey="ground-pin"
-            open="{{ openTips }}"
-            bind:toggle="onToggle"
-            texts="{{[ '大家一起购买同一件宝贝', '就能自动获得更便宜的拼团价', '助手会在群上帮大家找拼团哦']}}"
-        />
-    </view>
+    <my-common-confirm
+        title="拼团省钱"
+        openTime="{{ openTime }}"
+        storageKey="ground-pin"
+        open="{{ openTips }}"
+        bind:toggle="onToggle"
+        texts="{{[ '和群友购买同一件商品', '就可获得拼团价']}}"
+    />
+
+    <!-- 订阅消息模块 -->
+    <my-subscribe-tips />
 
 </view>

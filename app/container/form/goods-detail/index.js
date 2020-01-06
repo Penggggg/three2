@@ -1,8 +1,8 @@
+
+const app = getApp( );
 const { http } = require('../../../util/http.js');
 const { computed } = require('../../../lib/vuefy/index.js');
 const { navTo } = require('../../../util/route.js');
-
-const app = getApp( );
 
 /**
  * ! 数值之间的关系校验，如：团购价必须大于原价
@@ -56,9 +56,10 @@ Component({
 
     runComputed( ) {
          computed( this, {
-    
+          
             // 表单数据
             meta( ) {
+              const { category } = this.data;
 
               const meta = [
                 {
@@ -69,7 +70,7 @@ Component({
                   label: '商品名称',
                   type: 'input',
                   max: 50,
-                  placeholder: '如：YSL莹亮纯魅唇膏多色可选',
+                  placeholder: '如：YSL莹亮纯魅唇膏',
                   value: undefined,
                   rules: [{
                     validate: val => !!val,
@@ -79,7 +80,7 @@ Component({
                   key: 'detail',
                   label: '商品描述',
                   type: 'textarea',
-                  placeholder: `可长可短的一段介绍(回车可换行)`,
+                  placeholder: `一段介绍（回车换行）`,
                   value: undefined,
                   rules: [ ]
                 }, {
@@ -98,7 +99,7 @@ Component({
                   label: '商品类目',
                   type: 'select',
                   placeholder: '请设置商品类目',
-                  value: this.data.category,
+                  value: category,
                   options: this.data.dic['goods_category'] || [ ]
                 }, {
                   key: 'img',
@@ -109,36 +110,36 @@ Component({
                   value: this.data.hasBeenUploaded,
                   rules: [{
                     validate: val => val.length >= 1,
-                    message: '至少上传一张商品图片'
+                    message: '上传一张图片（白底效果好）'
                   }]
                 }, {
                   title: '价格信息',
                   desc: ''
                 }, {
                   key: 'fadePrice',
-                  label: '划线价',
+                  label: '淘宝价',
                   type: 'number',
-                  placeholder: '建议输入比原价格稍高的价位',
+                  placeholder: '比售价稍高，用于客户对比',
                   value: undefined,
                   rules: [{
                     validate: val => !!val,
-                    message: '请设置商品划线价'
+                    message: '请设置商品淘宝价'
                   }, {
                     validate: val => Number( val ) > 0,
-                    message: '划线价不能为0'
+                    message: '淘宝价不能为0'
                   }]
                 }, {
                   title: '规格型号',
-                  desc: ''
+                  desc: '无型号 则不填写'
                 }
               ];
         
               if ( this.data.standards.length === 0 ) {
                 meta.splice( 7, 0, {
                   key: 'price',
-                  label: '价格',
+                  label: '单买价',
                   type: 'number',
-                  placeholder: '商品单价',
+                  placeholder: '如：128',
                   value: undefined,
                   rules: [{
                     validate: val => !!val,
@@ -148,24 +149,27 @@ Component({
                     message: '价格不能为0'
                   }]
                 });
-                meta.splice( 9, 0, {
+                meta.splice( 8, 0, {
                   key: 'groupPrice',
-                  label: '团购价',
+                  label: '拼团价',
                   type: 'number',
-                  placeholder: '鼓励多个客户在一趟团购行程中同时下单',
+                  placeholder: '让客户相互分享、多下单',
                   value: undefined,
                   rules: [{
-                    validate: val => val !== null && val !== undefined && !!String( val ).trim( ) ? Number( String( val ).trim( )) > 0 : true,
-                    message: '价格不能为0'
+                    validate: val => !!val,
+                    message: '请设置拼团价'
+                  }, {
+                    validate: val => Number( val ) > 0,
+                    message: '拼团价不能为0'
                   }]
                 });
-                meta.splice( 10, 0, {
-                  key: 'stock',
-                  label: '库存',
-                  type: 'number',
-                  placeholder: '不填写，则无限库存',
-                  value: undefined
-                })
+                // meta.splice( 10, 0, {
+                //   key: 'stock',
+                //   label: '库存',
+                //   type: 'number',
+                //   placeholder: '不填则无限制',
+                //   value: undefined
+                // })
               }
         
               return meta;
@@ -182,19 +186,19 @@ Component({
                   key: 'depositPrice',
                   label: '商品订金',
                   type: 'number',
-                  placeholder: '购买时先付订金',
+                  placeholder: '先付订金，后付尾款',
                   value: undefined
                 }, {
                   key: 'limit',
                   label: '限购数量',
                   type: 'number',
-                  placeholder: '不填则表示不限购',
+                  placeholder: '不填则不限购',
                   value: undefined
                 }, {
                   key: 'visiable',
                   label: '立即上架',
                   type: 'switch',
-                  value: false
+                  value: true
                 }
               ]
             },
@@ -279,8 +283,12 @@ Component({
         return errMsg('价格不能为0');
       }
 
+      if ( groupPrice === undefined || groupPrice === null || !String( groupPrice ).trim( )) {
+        return errMsg('请填写拼团价');
+      } 
+
       if ( groupPrice !== undefined && groupPrice !== null  && Number( groupPrice ) <= 0 ) {
-        return errMsg('价格不能为0');
+        return errMsg('拼团价不能为0');
       }
 
       if ( !img ) {
@@ -395,7 +403,7 @@ Component({
 
             const form1 = that.selectComponent('#form1');
             const form2 = that.selectComponent('#form2');
-
+            
             that.setData({
               standards,
               category,
@@ -406,7 +414,7 @@ Component({
               tag,
               img,
               title,
-              stock,
+              // stock,
               price,
               detail,
               category,
@@ -500,6 +508,7 @@ Component({
     preview( ) {
       const _id = this.data.pid;
       const goodsDetail = this.check( );
+
       if ( !goodsDetail ) { return; }
       app.setGlobalData({
         editingGood: goodsDetail

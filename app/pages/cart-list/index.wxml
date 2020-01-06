@@ -61,7 +61,7 @@
                 </view>
 
                 <view
-                    wx:key="{{ index }}"
+                    wx:key="index"
                     wx:for="{{ cartList }}"
                     class="pcl-cart-list-item"
                 >
@@ -306,7 +306,7 @@
                 display-multiple-items="{{ shoppinglist.length <= 3 ? shoppinglist.length : 3 }}"
             >
                 <block
-                    wx:key="{{ index }}"
+                    wx:key="index"
                     wx:for="{{ shoppinglist }}"
                 >
                     <swiper-item class="swiper-visible">

@@ -54,7 +54,7 @@
 
             头像列表
             <image
-                wx:key="{{ index }}"
+                wx:key="index"
                 wx:for="{{ imgList }}"
                 src="{{ item }}"
                 mode="scaleToFill"

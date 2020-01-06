@@ -7,7 +7,10 @@
         src="{{ left$ }}"
     />
 
-    <view class="com-title-text">
+    <view 
+        class="com-title-text"
+        style="font-size: {{ fontSize }}rpx"
+    >
         {{ title }}
     </view>
 

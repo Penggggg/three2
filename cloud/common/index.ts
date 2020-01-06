@@ -961,7 +961,6 @@ export const main = async ( event, context ) => {
      */
     app.router('push-template-cloud', async( ctx, next ) => {
         try {
-            console.log('===========>push-template-cloud')
             // 获取token
             const result = await (axios as any)({
                 method: 'get',
@@ -1057,6 +1056,124 @@ export const main = async ( event, context ) => {
             }
         }
     })
+
+    /** 
+     * @description
+     * 订阅推送
+     * {
+     *      openid
+     *      type: 'buyPin' | 'buy' | 'getMoney' | 'waitPin' | 'newOrder'
+     *      texts: [ 'xx', 'yy' ]
+     *      ?page
+     * }
+     */
+    app.router('push-subscribe', async ( ctx, next ) => {
+        try {
+            const { type, texts } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const page = event.data.page || 'pages/trip-enter/index';
+            const template = CONFIG.subscribe_templates[ type ];
+
+            let textData = { };
+            texts.map(( text, k ) => {
+                textData = {
+                    ...textData,
+                    [ template.textKeys[ k ]]: {
+                        value: text
+                    }
+                };
+            });
+
+            const subscribeData = {
+                page,
+                data: textData,
+                touser: openid,
+                templateId: template.id
+            };
+
+            console.log('===订阅推送', subscribeData );
+
+            const send$ = await cloud.openapi.subscribeMessage.send( subscribeData );
+
+            if ( String( send$.errCode ) !== '0' ) {
+                throw send$.errMsg;
+            }
+
+            return ctx.body = {
+                status: 200
+            }
+        } catch ( e ) {
+            console.log('????', e );
+            return ctx.body = { 
+                status: 500,
+                data: e
+            };
+        }
+    })
+
+    /** 
+     * @description
+     * 订阅推送，云版本
+     */
+    app.router('push-subscribe-cloud', async( ctx, next ) => {
+        try {
+            const { type, texts } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const page = event.data.page || 'pages/trip-enter/index';
+            const template = CONFIG.subscribe_templates[ type ];
+
+            let textData = { };
+            texts.map(( text, k ) => {
+                textData = {
+                    ...textData,
+                    [ template.textKeys[ k ]]: {
+                        value: text
+                    }
+                };
+            });
+
+            const subscribeData = {
+                page,
+                data: textData,
+                touser: openid,
+                template_id: template.id
+            };
+
+            // 获取token
+            const result = await (axios as any)({
+                method: 'get',
+                url: `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${CONFIG.app.id}&secret=${CONFIG.app.secrect}`
+            });
+            
+            const { access_token, errcode } = result.data;
+
+            if ( errcode ) {
+                throw '生成access_token错误'
+            }
+
+            console.log('===云版本订阅推送', subscribeData );
+
+            const send = await (axios as any)({
+                data: subscribeData,
+                method: 'post',
+                url: `https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=${access_token}`
+            });
+
+            console.log('===云版本订阅推送', send.data );
+            if ( String( send.data.errcode ) !== '0' ) {
+                throw send.data.errmsg;
+            }
+
+            return ctx.body = {
+                status: 200
+            }
+        } catch ( e ) {
+            return ctx.body = { 
+                status: 500,
+                data: e
+            };
+        }
+    });
 
     /**
      * @description
@@ -1324,12 +1441,12 @@ export const main = async ( event, context ) => {
             const push$ = await cloud.callFunction({
                 name: 'common',
                 data: {
-                    $url: 'push-template-cloud',
+                    $url: 'push-subscribe-cloud',
                     data: {
                         openid,
                         type: 'hongbao',
                         page: 'pages/my/index',
-                        texts: [`${get_integral}元抵现金！`, `下单就能用！本周登陆送${week_integral}元！`]
+                        texts: [`成功领取${get_integral}元抵现金！`, `下单就能用！本周登陆送${week_integral}元！`]
                     }
                 }
             });
@@ -1350,6 +1467,184 @@ export const main = async ( event, context ) => {
 
         } catch ( e ) {
             return ctx.body = { status: 500 };
+        }
+    })
+
+    /** 
+     * @description
+     * 获取订阅模板列表
+     */
+    app.router('get-subscribe-templates', async ( ctx, next ) => {
+        try {
+            return ctx.body = { 
+                status: 200,
+                data: CONFIG.subscribe_templates
+            };
+        } catch ( e ) {
+            return ctx.body = { status: 500 };
+        }
+    })
+
+    /**
+     * @description
+     * 根据openid返回用户信息（可返回null）
+     */
+    app.router('get-user-info', async ( ctx, next ) => {
+        try {
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const user$ = await db.collection('user')
+                .where({
+                    openid
+                })
+                .get( );
+
+            const data = user$.data[ 0 ] || null;
+
+            // 查询是否为adm
+            if ( !!data ) {
+
+                const adm$ = await db.collection('manager-member')
+                    .where(({
+                        openid: data.openid
+                    }))
+                    .count( );
+
+                return ctx.body = {
+                    data: {
+                        ...data,
+                        role: adm$.total > 0 ? 1 : 0
+                    },
+                    status: 200
+                }
+                
+            } else {
+                return ctx.body = {
+                    data: null,
+                    status: 200
+                }
+            }
+        } catch ( e ) {
+            return ctx.body = {
+                status: 200,
+                data: e
+            }
+        }
+    })
+
+    /** 
+     * @description
+     * 测试专用
+     */
+    app.router('test', async ( ctx, next ) => {
+        try {
+            
+            // 找到昨晚下午6点后的时间戳
+            const nowTime = getNow( );
+            const y = nowTime.getFullYear( );
+            const m = nowTime.getMonth( ) + 1;
+            const d = nowTime.getDate( );
+            const lastNightTime = new Date(`${y}/${m}/${d} 00:00:00`);
+            const time = lastNightTime.getTime( ) - 6 * 60 * 60 * 1000;
+
+            // 把这个时间点以后的查看商品记录都拿出来
+            const visitorRecords$ = await db.collection('good-visiting-record')
+                .where({
+                    visitTime: _.gte( time )
+                })
+                .field({
+                    pid: true
+                })
+                .get( );
+            const visitorRecords = visitorRecords$.data;
+
+            // 拿到浏览记录最高的商品
+            let maxPid = '';
+            let maxNum = 0;
+            visitorRecords.reduce(( res, record ) => {
+                res[ record.pid ] = !res[ record.pid ] ? 1 : res[ record.pid ] + 1;
+                if ( res[ record.pid ] > maxNum ) {
+                    maxPid = record.pid;
+                    maxNum = res[ record.pid ];
+                }
+                return res;
+            }, { });
+
+            // 若有，获取这个商品的总拼团人数
+            if ( !maxNum || !maxPid ) {
+                return ctx.body = { status: 200 }
+            };
+
+            // 逻辑：通过order的createtime找到tid， 通过 tid+ pid 找到shoppinglist
+            const order$ = await db.collection('order')
+                .where({
+                    createTime: _.gte( time )
+                })
+                .field({
+                    tid: true
+                })
+                .limit( 1 )
+                .get( );
+            const order = order$.data[ 0 ];
+
+            if ( order$.data.length === 0 ) {
+                return ctx.body = { status: 200 }
+            }
+
+            const sl$ = await db.collection('shopping-list')
+                .where({
+                    pid: maxPid,
+                    tid: order.tid
+                })
+                .field({
+                    uids: true
+                })
+                .get( );
+            const sl = sl$.data[ 0 ];
+
+            if ( sl$.data.length === 0 ) {
+                return ctx.body = { status: 200 }
+            }
+
+            // 获取所有管理员
+            const adms$ = await db.collection('manager-member')
+                .where({ })
+                .get( );
+
+            // 获取商品详情
+            const good$ = await db.collection('goods')
+                .doc( String( maxPid ))
+                .field({
+                    title: true
+                })
+                .get( );
+
+            // 推送
+            await Promise.all(
+                adms$.data.map( async adm => {
+                    await cloud.callFunction({
+                        name: 'common',
+                        data: {
+                            $url: 'push-subscribe-cloud',
+                            data: {
+                                openid: adm.openid,
+                                type: 'waitPin',
+                                page: `pages/manager-trip-order/index?id=${order.tid}`,
+                                texts: [`昨天有${maxNum}人浏览，${sl.uids.length}人成功${sl.uids.length > 1 ? '拼团！' : '下单！'}`, `${good$.data.title}`]
+                            }
+                        }
+                    });
+                    return 
+                })
+            );
+
+            return ctx.body = {
+                status: 200
+            }
+        } catch ( e ) {
+            return ctx.body = { 
+                status: 500,
+                data: e
+            };
         }
     })
 

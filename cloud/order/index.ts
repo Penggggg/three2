@@ -484,7 +484,7 @@ export const main = async ( event, context ) => {
                 const pushMe$ = await cloud.callFunction({
                     name: 'common',
                     data: {
-                        $url: 'push-template',
+                        $url: 'push-subscribe',
                         data: {
                             type: buyer.type,
                             openid: buyer.openid,
@@ -543,7 +543,7 @@ export const main = async ( event, context ) => {
                         otherOpenid => cloud.callFunction({
                             name: 'common',
                             data: {
-                                $url: 'push-template',
+                                $url: 'push-subscribe',
                                 data: {
                                     type: 'buyPin',
                                     openid: otherOpenid,
@@ -644,13 +644,13 @@ export const main = async ( event, context ) => {
                         const push$ = await cloud.callFunction({
                             name: 'common',
                             data: {
-                                $url: 'push-template',
+                                $url: 'push-subscribe',
                                 data: {
                                     type: 'hongbao',
                                     openid: pusher.from,
                                     // 积分页面
                                     page: 'pages/ground-push-integral/index',
-                                    texts: [`恭喜！获得${integral}元抵扣现金`,`推广成功！有人购买了你分享的商品`]
+                                    texts: [`恭喜！你获得${integral}元抵现金！`,`有朋友购买了你推广分享的商品～`]
                                 }
                             }
                         });
@@ -690,6 +690,14 @@ export const main = async ( event, context ) => {
     app.router('daigou-list', async( ctx, next ) => {
         try {
             const { tid, needCoupons, needAddress } = event.data;
+
+            // 采购清单
+            const shoppinglist$ = await db.collection('shopping-list')
+                .where({
+                    tid
+                })
+                .get( );
+            const shoppinglist = shoppinglist$.data;
 
             // 订单信息
             const orders$ = await db.collection('order')
@@ -787,7 +795,14 @@ export const main = async ( event, context ) => {
                 const user = user$.data[ 0 ];
 
                 const orders = orders$.data
-                    .filter( x => x.openid === user.openid );
+                    .filter( x => x.openid === user.openid )
+                    .map( x => {
+                        const sl = shoppinglist.find( y => y.pid === x.pid && y.sid === x.sid );
+                        return {
+                            ...x,
+                            canGroup: sl!.uids.length > 1
+                        }
+                    });
 
                 const address = address$.length > 0 ?
                     address$
@@ -957,16 +972,20 @@ export const main = async ( event, context ) => {
                 status: 400
             };
 
+            await db.collection('trip')
+                .doc( tid )
+                .update({
+                    data: {
+                        isClosed: true
+                    }
+                })
+            
             const trip$ = await db.collection('trip')
                 .doc( tid )
                 .get( );
             const trip = trip$.data;
-
-            // 未结束，且未手动关闭
-            if ( getNow( true ) < trip.end_date && !trip.isClosed ) {
-                return getWrong('行程未结束，请手动关闭当前行程');
-
-            } else if ( trip.callMoneyTimes &&  trip.callMoneyTimes >= 3 ) {
+            
+            if ( trip.callMoneyTimes &&  trip.callMoneyTimes >= 3 ) {
                 return getWrong(`已经发起过${trip.callMoneyTimes}次催款`);
 
             }
@@ -1050,9 +1069,10 @@ export const main = async ( event, context ) => {
                             openid,
                             type: 'getMoney',
                             prepay_id: target.prepay_id,
-                            texts: ['支付尾款，立即发货哦','越快越好']
+                            texts: ['支付尾款，立即发货哦','越快越好'],
+                            page: 'pages/order-list/index'
                         },
-                        $url: 'push-template'
+                        $url: 'push-subscribe'
                     },
                     name: 'common'
                 });
@@ -1436,18 +1456,18 @@ function getTextByPushType( type: 'buyPin1' | 'buyPin2' | 'waitPin' | 'buy' | 'g
         ];
     } else if ( type === 'buyPin1' ) {
         return [
-            `恭喜您省了${delta}元！`,
-            `您和其他人买了同款拼团商品，查看`
+            `恭喜！你省了${delta}元！`,
+            `点击查看`
         ]
     } else if ( type === 'buyPin2' ) {
         return [
-            `恭喜！您买的商品减了${delta}元!`,
-            `有人购买了同款拼团的商品，查看`
+            `恭喜！你省了${delta}元!`,
+            `有群友参加了群拼团，点击查看`
         ]
     } else if ( type === 'waitPin' ) {
         return [
-            `您的商品可参加拼团！`,
-            `参加拼团，可以再省${delta}元！`
+            `差1人就拼成！`,
+            `找群友拼团，立省${delta}元！`
         ]
     } else if ( type === 'getMoney' ) {
         return [

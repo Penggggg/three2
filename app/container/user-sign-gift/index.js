@@ -1,7 +1,6 @@
 const { http } = require('../../util/http.js');
 const { computed } = require('../../lib/vuefy/index.js');
 const { navTo } = require('../../util/route.js');
-const { createFormId } = require('../../util/form-id.js');
 
 const app = getApp( );
 const storageKey = {
@@ -24,6 +23,16 @@ Component({
         simple: {
             type: Boolean,
             value: true
+        },
+        // 是否只走「领取抵现金」的路径
+        onlyGetMoney: {
+            type: Boolean,
+            value: false
+        },
+        // 小红包位置，左/右
+        position: {
+            type: String,
+            value: 'right'
         }
     },
 
@@ -32,7 +41,7 @@ Component({
      */
     data: {
 
-        // 是否有授权
+        // 是否有用户授权
         isAuth: false,
 
         // 展示抵现金提示
@@ -67,6 +76,9 @@ Component({
         // 今天是否已经领取了经验
         isGetExp: true,
 
+        // 今日是否已经领取过红包
+        isGetMoney: true,
+
         // 今天的经验倒计时
         countDown: 0,
 
@@ -85,6 +97,36 @@ Component({
      * 组件的方法列表
      */
     methods: {
+
+        // 自动弹出转发提示
+        initTips( ) {
+
+            const time = setInterval(( ) => {
+                const { tips, tips$, tipsIndex, showInteral } = this.data;
+                const allTips = tips$
+
+                if ( tipsIndex >= allTips.length - 1 ) {
+                    return this.setData({
+                        tipsIndex: null,
+                        // showInteral: false
+                    });
+                    // return clearInterval( time );
+                }
+
+                if ( !showInteral ) {
+                    const index = tipsIndex === null ? 0 : tipsIndex + 1;
+                    this.setData({
+                        showInteral: true,
+                        tipsIndex: index,
+                        tipsText: allTips[ index ]
+                    });
+                } else {
+                    this.setData({
+                        showInteral: false
+                    });
+                }
+            }, 3500 );
+        },
 
         runComputed( ) {
             computed( this, {
@@ -269,8 +311,9 @@ Component({
             });
         },
 
-        /** 获取当前人的推广积分 */
-        fetchPushIntegral( ) {
+        /** 获取当前人的推广积分、签到经验 */
+        fetchPushIntegral( e = null, mustFetch = false ) {
+            const { onlyGetMoney } = this.data;
             http({
                 data: {
                     showMore: true
@@ -279,14 +322,18 @@ Component({
                 success: res => {
                     const { status, data } = res;
                     if ( status !== 200 ) { return; }
+
                     this.setData({
                         exp: data.exp,
                         pushIntegral: data.integral
                     });
+
                     setTimeout(( ) => {
                         this.initTips( );
-                        this.checkGetExp( );
-                        this.checkGetIntegral( );
+                        if ( !onlyGetMoney ) {
+                            this.checkGetExp( true );
+                        }
+                        this.checkGetIntegral( true );
                     }, 100 );
                 }
             })
@@ -329,8 +376,7 @@ Component({
 
         // 获取今天的免费抵现金
         getFreeIntegral( close = false ) {
-            const { todaySignGift$, isAuth } = this.data;
-
+            const { todaySignGift$, isAuth, pushIntegral } = this.data;
             if ( !isAuth ) { 
                 return this.setData({
                     showSignGift: true
@@ -346,15 +392,20 @@ Component({
                 success: res => {
                     const { status } = res;
                     if ( status !== 200 ) { return; }
-                    this.setData({
-                        showSignGift: true
-                    });
+
                     wx.showToast({
                         title: '领取成功'
                     })
-                    this.fetchPushIntegral( );
+
+                    this.setData({
+                        isGetMoney: true,
+                        showSignGift: true,
+                        pushIntegral: Number(( pushIntegral + todaySignGift$ ).toFixed( 2 ))
+                    });
+                    
                     wx.setStorageSync( storageKey['integral-get-last-time'], String( Date.now( )));
 
+                    // this.fetchPushIntegral( null, true );
                     !!close && this.toggleGift( );
                 }
             })
@@ -380,19 +431,17 @@ Component({
         toggleGift( e ) {
             
             if ( !!e ) {
-                const { formId } = e.detail;
-                createFormId( formId );
                 setTimeout(( ) => {
                     this.push( );
                 }, 1000 );
             }
             
-            const { showSignGift } = this.data;
+            const { showSignGift, onlyGetMoney } = this.data;
             this.setData({
                 showSignGift: !showSignGift
             });
 
-            if ( !showSignGift === false ) {
+            if ( !!showSignGift && !onlyGetMoney ) {
                 this.setData({
                     showSignBlock: true
                 });
@@ -401,43 +450,14 @@ Component({
 
         // 开启、关闭签到框
         toggleSign( e ) {
-            if ( !!e ) {
-                createFormId( e.detail.formId )
-            }
             const { showSignBlock } = this.data;
             this.setData({
                 showSignBlock: !showSignBlock
             });
         },
 
-        // 自动弹出转发提示
-        initTips( ) {
-
-            const time = setInterval(( ) => {
-                const { tips, tips$, tipsIndex, showInteral } = this.data;
-                const allTips = tips$
-
-                if ( tipsIndex >= allTips.length - 1 ) {
-                    return this.setData({
-                        tipsIndex: null,
-                        // showInteral: false
-                    });
-                    // return clearInterval( time );
-                }
-
-                if ( !showInteral ) {
-                    const index = tipsIndex === null ? 0 : tipsIndex + 1;
-                    this.setData({
-                        showInteral: true,
-                        tipsIndex: index,
-                        tipsText: allTips[ index ]
-                    });
-                } else {
-                    this.setData({
-                        showInteral: false
-                    });
-                }
-            }, 3500 );
+        onSubscribe( ) {
+            app.getSubscribe('buyPin,hongbao,trip');
         },
 
         // 初始化经验倒计时
@@ -531,14 +551,14 @@ Component({
         },
 
         // 今天是否已经领取经验
-        checkGetExp( ) {
+        checkGetExp( goNext = false ) {
             const lastTime =  wx.getStorageSync( storageKey['exp-get-last-time']);
 
             const reset = ( ) => {
                 this.setData({
                     isGetExp: false
                 });
-                this.initExpCount( );
+                !!goNext && this.initExpCount( );
             }
 
             if ( !lastTime ) {
@@ -565,15 +585,19 @@ Component({
         },
 
         // 检查今天是否已经领取了抵现金
-        checkGetIntegral( ) {
+        checkGetIntegral( goNext = false ) {
+            const { showSign } = this.data;
             const lastTime =  wx.getStorageSync( storageKey['integral-get-last-time']);
 
             const reset = ( ) => {
-                this.getFreeIntegral( );
+                this.setData({
+                    isGetMoney: false
+                });
+                !!goNext && this.getFreeIntegral( );
             }
 
             if ( !lastTime ) {
-                reset( );
+                return reset( );
                 
             } else {
                 const now = new Date( );
@@ -590,7 +614,17 @@ Component({
                         now.getTime( ) - thatTime.getTime( ) > oneDay
                     ) 
                 ) {
-                    reset( );
+                    return reset( );
+                } else {
+                    this.setData({
+                        isGetMoney: true
+                    })
+                    if ( !!goNext && !showSign ) {
+                        wx.showToast({
+                            icon: 'none',
+                            title: '你已领过啦～'
+                        });
+                    }
                 }
             }
         },
@@ -606,6 +640,7 @@ Component({
         const { showSign, simple } = this.data;
         this.watchRole( );
         this.runComputed( );
+        !!simple && this.checkGetIntegral( );
         (showSign || !simple) && this.fetchPushIntegral( );
     }
 })

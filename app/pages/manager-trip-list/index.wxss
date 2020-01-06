@@ -20,6 +20,11 @@
     padding: 20rpx 25rpx 20rpx 90rpx;
   
   }
+
+  .pmgl-flex {
+    display: flex;
+    align-items: flex-end;
+  }
   
   .my-icon {
     left: 25rpx;
@@ -65,7 +70,7 @@
   
   .pmgl-list-container {
     flex: 1;
-    padding: 10rpx 0rpx 30rpx;
+    padding: 50rpx 20rpx 30rpx 20rpx;
     box-sizing: border-box;
     overflow-y: scroll;
     overflow-x: visible;
@@ -76,29 +81,34 @@
     box-sizing: border-box;
     padding: 20rpx 25rpx !important;
     position: relative;
-    margin-bottom: 30rpx;
-    margin: 0 20rpx 30rpx;
+    margin: 0 20rpx 40rpx;
     border-radius: 5px;
     border: 1px solid rgba( 0, 0, 0, 0.03 );
-    box-shadow: 0px 0px 20px rgba( 0, 0, 0, 0.05 );
-  
+    /* box-shadow: 0px 0px 20px rgba( 0, 0, 0, 0.05 ); */
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.05);
   }
 
   .pmgl-img {
     width: 180rpx;
     height: 180rpx;
-    background: #000;
+    /* background: #000; */
     border-radius: 3px;
     margin-right: 25rpx;
   }
 
   .pmgl-info {
-    flex: 1;
     display: flex;
-    height: 100%;
+    height: 180rpx;
     width: 100%;
     overflow: visible !important;
     flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .pmgl-buttom-info {
+    display: flex;
+    width: 100%;
+    align-items: flex-end;
     justify-content: space-between;
   }
 
@@ -113,12 +123,6 @@
     justify-content: space-between;
     position: relative;
   }
-
-  .pmgl-btn-form {
-    left: 31%;
-    bottom: 20rpx;
-    position: absolute;
-  }
   
   .pmgl-important {
     height: 80rpx;
@@ -127,14 +131,22 @@
   .pmgl-red-price {
     color: #d92a22;
     font-size: 40rpx;
+    line-height: 40rpx;
+    margin-right: 20rpx;
   }
 
   .pmgl-small-label {
-    margin-left: 6rpx;
-    display: inline;
-    font-size: 20rpx;
     color: #bfbfbf; 
-    
+    font-size: 22rpx;
+ }
+
+ .pmgl-small-label.red {
+   /* color: #ff4d4f; */
+   color: #d92a22;
+ }
+
+ .pmgl-small-label.pr {
+   padding-right: 100rpx;
  }
 
  .pmgl-small-label.mr {
@@ -191,8 +203,8 @@
   }
 
   .pmgl-item-title {
-    color: #333;
-    letter-spacing: 0.02em;
+    color: #272839;
+    letter-spacing: 0.1em;
     font-size: 28rpx;
     overflow :hidden; 
     display: -webkit-box; 
@@ -216,14 +228,35 @@
 }
 
 .pmgl-ing {
+  top: 10rpx;
+  left: -15rpx;
+  color: #fff;
+  font-size: 20rpx;
+  background: #d92a22;
+  border-radius: 5px;
+  padding: 6rpx 10rpx;
+  letter-spacing: 0.05em;
+  position: absolute;
+}
+
+.pmgl-tips {
+  bottom: 15rpx;
+  right: -15rpx;
   color: #fff;
   font-size: 22rpx;
   background: #d92a22;
-  border-radius: 30px;
-  padding: 4rpx 20rpx;
-  letter-spacing: 0.02em;
-  display: inline-block;
-  line-height: 40rpx;
+  border-radius: 3px;
+  padding: 5rpx 8rpx 5rpx 12rpx;
+  letter-spacing: 0.05em;
+  position: absolute;
+  display: flex;
+  align-items: center;
+}
+
+.pmgl-tips-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-left: -3rpx;
 }
 
 .pmgl-nomore {
@@ -269,4 +302,15 @@
 
 .fix-btn:after {
   border:none;
+}
+
+.pmgl-modal-btn {
+  width: 100%;
+  border: 3px;
+  color: #fff;
+  padding: 0rpx 0;
+  text-align: center;
+  background: #f4d294;
+  font-size: 40rpx;
+  letter-spacing: 0.1em;
 }

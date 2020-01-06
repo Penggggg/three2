@@ -21,7 +21,7 @@
                     bindtap="goOrderList"
                 >
                     <view class="pm-bar-item-content">{{ baseInfo.orders }}</view>
-                    <view class="pm-bar-item-title">订单</view>
+                    <view class="pm-bar-item-title">我的拼团</view>
                 </view>
                 <view
                     class="pm-header-bar-item line"
@@ -40,7 +40,7 @@
                             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/header.png"
                         />
                     </view>
-                    <view class="pm-bar-item-title">我的收藏</view>
+                    <view class="pm-bar-item-title">我要进群</view>
                 </view>
             </view>
 
@@ -51,34 +51,6 @@
             showSign="{{ true }}"
         />
 
-        <!-- 其他选项 -->
-        <!-- <view class="pm-other-block">
-            <view class="pm-other-container">
-                <view
-                    wx:for="{{ icons }}"
-                    wx:key="{{ index }}"
-                    class="pm-other-item"
-                    data-data="{{ item }}"
-                    bindtap="onTabIcon"
-                >
-                    <image
-                        mode="scaleToFill"
-                        class="pm-other-img"
-                        wx:if="{{ item.iconImg }}"
-                        src="{{ item.iconImg }}"
-                    />
-                    <view class="pm-other-title">
-                        {{ item.title }}
-                    </view>
-                    <wxc-icon
-                        size="20"
-                        color="#999"
-                        class="pm-other-icon"
-                        type="arrow-right"
-                    />
-                </view>
-            </view>
-        </view> -->
     </view>
     
 
@@ -86,5 +58,8 @@
         <!-- 底部按钮 -->
         <my-nav />
     </view>
+
+    <!-- 订阅消息模块 -->
+    <my-subscribe-tips />
 
 </view>

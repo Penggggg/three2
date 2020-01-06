@@ -55,7 +55,7 @@
                 <view
                     class="gpi-list-item"
                     wx:for="{{ rank$ }}"
-                    wx:key="{{ index }}"
+                    wx:key="index"
                 >
                     <my-good-item-7
                         good="{{ item }}"
@@ -83,8 +83,11 @@
             openTime="{{ openTime }}"
             bind:toggle="onToggle"
             storageKey="ground-push-integral"
-            texts="{{[ '朋友购买了你分享的商品，就能获得积分', '积分可以当现金抵扣使用' ]}}"
+            texts="{{[ '朋友购买了你分享的商品', '就可获得抵现金' ]}}"
         />
     </view>
+
+    <!-- 订阅消息模块 -->
+    <my-subscribe-tips />
 
 </view>
