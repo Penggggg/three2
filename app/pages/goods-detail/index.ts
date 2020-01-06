@@ -830,11 +830,7 @@ Page({
     onLoad: function (options) {
 
         const scene = decodeURIComponent( options!.scene || '' )
-        const id = options!.id || scene || 'ee3099285cdbf38f12869b13363bc206';
-
-        this.setData!({
-            from: 'oJyGB4ntePYcKT8OfW-3qb19JsjA'
-        })
+        const id = options!.id || scene || '6cd397ca5ce7f53f04b9c9367ffe8482';
 
         this.runComputed( );
         this.initCoverText( );
