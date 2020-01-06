@@ -715,6 +715,10 @@
     box-shadow: 3px 3px 15rpx rgba( 0, 0, 0, 0.15 );
 }
 
+.pgd-visitor-img.nmr {
+    margin-right: 0;
+}
+
 .pgd-visitor-share-btn {
     display: flex;
     align-items: center;
@@ -908,6 +912,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    margin-left: 10rpx;
 }
 
 .pgd-pin-item-btn {
