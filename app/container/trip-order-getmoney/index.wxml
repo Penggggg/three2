@@ -252,7 +252,7 @@
                             class="tog-pay-inline ml"
                             wx:if="{{ item.userPushIntegral }}"
                         >   
-                            积分：<view class="tog-pay-color">-{{ item.userPushIntegral }}</view>
+                            抵现金：<view class="tog-pay-color">-{{ item.userPushIntegral }}</view>
                         </view>
                     </view>
                     <view class="tog-pay-text">

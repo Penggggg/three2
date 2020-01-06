@@ -355,6 +355,10 @@
     font-size: 22rpx;
 }
 
+.pol-trip-order-totalprice.purple {
+    color: #f5576c;
+}
+
 .pol-trip-order-totalprice.mr {
     margin-right: 10rpx;
 }
@@ -367,6 +371,10 @@
     color: #999;
     display: inline;
     font-size: 22rpx;
+}
+
+.pol-totalprice.purple {
+    color: #f5576c;
 }
 
 .pol-price {

@@ -77,8 +77,17 @@ Component({
 
         // 初始化
         init( isShow ) {
-            !!isShow && this.setTopColor( );
-            !isShow && this.resetTopColor( );
+            if ( isShow ) {
+                this.setTopColor( );
+                wx.setNavigationBarTitle({
+                    title: '付尾款'
+                });
+            } else {
+                this.resetTopColor( );
+                wx.setNavigationBarTitle({
+                    title: '我的拼团'
+                });
+            }
         },
 
         // 行程订单

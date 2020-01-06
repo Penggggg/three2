@@ -267,7 +267,7 @@ Page({
                         }
 
                         if ( statusCN[ 0 ] === '待付款' && allocatedGroupPrice && canGroup ) {
-                            statusCN = ['拼团成功']
+                            statusCN = ['拼团价']
                         }
 
                         return Object.assign({ }, order, {
@@ -374,13 +374,26 @@ Page({
 
 
                     // 应付全款（不含优惠券）
+                    // let wholePriceNotDiscount = orders.reduce(( x, y ) => {
+                    //     let currentPrice = 0;
+                    //     const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
+                    //     if ( canSettle ) {
+                    //         currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * count$( y );
+                    //     } else {
+                    //         currentPrice = count$( y ) * price;
+                    //     }
+                    //     return x + currentPrice;
+                    // }, 0 );
+                    // 应付全款（不含优惠券）
                     let wholePriceNotDiscount = orders.reduce(( x, y ) => {
                         let currentPrice = 0;
                         const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
-                        if ( canSettle ) {
+                        if ( y.base_status === '1' || y.base_status === '2' || y.base_status === '3' ) {
                             currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * count$( y );
+                        } else if ( y.base_status === '0' ) {
+                            currentPrice = count$( y ) * ( allocatedPrice || price );
                         } else {
-                            currentPrice = count$( y ) * price;
+                            currentPrice = 0;
                         }
                         return x + currentPrice;
                     }, 0 );
@@ -454,6 +467,11 @@ Page({
                     } 
                     if ( t_daijin.canUsed ) {
                         wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_daijin.value ).toFixed( 2 ));
+                    }
+
+                    // 推广积分
+                    if ( pushintegralFee ) {
+                        wholePriceByDiscount = Number((wholePriceByDiscount - pushintegralFee).toFixed( 2 ));
                     }
 
                     tripOrders['wholePriceByDiscount'] = wholePriceByDiscount;
@@ -659,7 +677,7 @@ Page({
                     }
 
                     if ( hasPay ) {
-                        tripOrders['tripStatusCN'] = '已付款';
+                        tripOrders['tripStatusCN'] = '待发货';
                     }
 
                 });
@@ -678,6 +696,7 @@ Page({
                         if ( notPay.length > 0 ) {
                             return notPay
                         } else {
+                            console.log('????', allTripOrders )
                             return allTripOrders;
                         }
                     } else {

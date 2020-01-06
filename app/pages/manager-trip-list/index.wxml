@@ -21,7 +21,7 @@
             wx:for="{{ list }}"
             wx:key="index"
             bindtap="goOrder"
-            data-tid="{{ item.tid }}"
+            data-data="{{ item }}"
         >
 
             <image 

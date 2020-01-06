@@ -453,7 +453,7 @@ export const pushLastPay = async ( ) => {
                         openid,
                         type: 'getMoney',
                         page: 'pages/manager-trip-list/index',
-                        texts: [`${count}人付了尾款`, `今天`]
+                        texts: [`${count}人付了尾款`, `点击查看`]
                     }
                 }
             });

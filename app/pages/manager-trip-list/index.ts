@@ -198,8 +198,9 @@ Page({
     /** 跳订单列表 */
     goOrder({ currentTarget, detail }) {
         this.onSubscribe( );
-        const { tid } = currentTarget.dataset;
-        navTo(`/pages/manager-trip-order/index?id=${tid}`);
+        const { tid, isClosed } = currentTarget.dataset.data;
+
+        navTo(`/pages/manager-trip-order/index?id=${tid}&ac=${ isClosed ? 1 : 0 }`);
     },
 
     onSubscribe( ) {

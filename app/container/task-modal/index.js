@@ -180,7 +180,8 @@ Component({
                     this.setData({
                         list: data
                     });
-                    if ( autoShow && data.length > 0 ) {
+                    // 只有立减券的时候 不展示
+                    if ( autoShow && data.length > 1 ) {
                         this.toggle( );
                     }
                 }
