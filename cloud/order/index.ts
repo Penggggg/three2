@@ -1069,7 +1069,8 @@ export const main = async ( event, context ) => {
                             openid,
                             type: 'getMoney',
                             prepay_id: target.prepay_id,
-                            texts: ['支付尾款，立即发货哦','越快越好']
+                            texts: ['支付尾款，立即发货哦','越快越好'],
+                            page: 'pages/order-list/index'
                         },
                         $url: 'push-subscribe'
                     },
