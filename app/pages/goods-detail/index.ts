@@ -117,7 +117,10 @@ Page({
         shareCover: '',
 
         // 封面提示
-        coverText: "23人看过"
+        coverText: "23人看过",
+
+        // 是否弹起来过玩法介绍
+        hasShowPlayTips: false
     },
 
     /** 设置computed */
@@ -436,7 +439,7 @@ Page({
 
     /** 拉取商品详情 */
     fetDetail( id ) {
-        const { detail, from, showAdmBtn } = this.data;
+        const { detail, from, showAdmBtn, hasShowPlayTips } = this.data;
         if ( detail && !showAdmBtn ) { return; }
         http({
             data: {
@@ -487,9 +490,10 @@ Page({
                 });
 
                 // 弹起拼团框
-                if ( !!from && delayeringGood( res.data ).hasPin ) {
+                if ( !!from && delayeringGood( res.data ).hasPin && !hasShowPlayTips ) {
                     this.setData!({
-                        showPlayTips: 'show'
+                        showPlayTips: 'show',
+                        hasShowPlayTips: true
                     });
                 } else if ( !from && delayeringGood( res.data ).hasPin ) {
                     this.checkOpenPin( );
@@ -827,6 +831,10 @@ Page({
 
         const scene = decodeURIComponent( options!.scene || '' )
         const id = options!.id || scene || 'ee3099285cdbf38f12869b13363bc206';
+
+        this.setData!({
+            from: 'oJyGB4ntePYcKT8OfW-3qb19JsjA'
+        })
 
         this.runComputed( );
         this.initCoverText( );
