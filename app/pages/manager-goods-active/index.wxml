@@ -3,7 +3,7 @@
     <!-- tab栏目 -->
     <view class="pga-tab-block">
         <view
-            wx:key="{{ index }}"
+            wx:key="index"
             wx:for="{{ actives }}"
             data-active="{{ index }}"
             bindtap="onTabActive"
@@ -24,7 +24,7 @@
         <view
             class="pga-list-item"
             wx:for="{{ list$ }}"
-            wx:key="{{ index }}"
+            wx:key="index"
             data-data="{{ item }}"
             bindtap="onTapItem"
         >

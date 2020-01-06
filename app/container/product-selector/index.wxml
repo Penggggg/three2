@@ -41,7 +41,7 @@
 
                 <view
                     wx:for="{{ list }}"
-                    wx:key="{{ index }}"
+                    wx:key="index"
                     data-item="{{ item }}"
                     class="result-item {{ item._id === selectedProductId ? 'selected' : '' }}"
                     bindtap="onChoice"
@@ -97,7 +97,7 @@
             <view class="con-stander-block">
                 <view
                     wx:index="{{ item }}"
-                    wx:key="{{ index }}"
+                    wx:key="index"
                     data-data="{{ item }}"
                     class="con-stander-title {{ selectedStanderIdObj[ item._id ] ? 'active' : '' }}"
                     bindtap="onTapStander"

@@ -45,7 +45,7 @@
         <view class="tog-shoppinglist-block">
 
             <view
-                wx:key="{{ key }}"
+                wx:key="key"
                 wx:for="{{ clientOders$ }}"
                 class="tog-shoppinglist-item"
             >
@@ -115,7 +115,7 @@
                                 class="tog-deliver-icon"
                                 data-data="{{ item }}"
                                 catchtap="onShowDeliverModal"
-                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-deliver.png"
+                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-trip-manager-order-getmoney-deliver.png"
                             />
                         </view>
                         
@@ -132,91 +132,13 @@
                
                 </view>
 
-                <!-- 订单信息 -->
-                <view class="tog-order-list {{ item.canShowMore ? 'mb' : '' }}">
-                    <view
-                        class="tog-order-item"
-                        wx:for="{{ item[ item.key ]}}"
-                        wx:key="{{ orderKey }}"
-                        wx:for-item="order"
-                        wx:for-index="orderKey"
-                    >
-                        <view
-                            bindtap="goFixPrice"
-                            class="tog-order-img-block"
-                        >
-                            <image
-                                mode="aspectFill"
-                                lazy-load="{{ true }}"
-                                class="tog-order-img"
-                                src="{{ order.img[ 0 ]}}"
-                            />
-                            <view
-                                class="tog-order-dotted"
-                                wx:if="{{ order.allocatedPrice === undefined }}"
-                            >
-                                待调整
-                            </view>
-                        </view>
-                        <view
-                            data-data="{{ order }}"
-                            bindtap="onShowModal"
-                            class="tog-order-info-block"
-                        >
-                            <view class="tog-text big">{{ order.acid ? '【活动】' : '' }}{{ order.name }}</view>
-                            <view 
-                                class="tog-stander {{ order.standername === '默认型号' || order.standername === null ? 'white' : '' }}"
-                            >{{ order.standername !== '默认型号' && order.standername !== null ? order.standername : '' }}</view>
-                            <view
-                                class="tog-tag-block"
-                                wx:if="{{ order.acid }}"
-                            >
-                                <image
-                                    mode="widthFix"
-                                    class="tog-activity-icon"
-                                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-tag-white.png"
-                                />
-                                <view class="tog-tag-text">
-                                    活动商品
-                                </view>
-                            </view>
-                        </view>
-                        <view
-                            data-data="{{ order }}"
-                            bindtap="onShowModal"
-                            class="tog-order-count-block"
-                        >
-                            <view
-                                class="tog-order-price"
-                                wx:if="{{  order.allocatedPrice !== undefined && order.allocatedPrice !== null }}"
-                            >
-                                ¥
-                                {{ order.allocatedPrice }}
-                            </view>
-                            <view class="tog-text shadow">x {{ order.count }}</view>
-                            <view
-                                class="tog-order-count"
-                                wx:if="{{  order.allocatedCount !== undefined && order.allocatedCount !== null }}"
-                            >
-                                x {{ order.allocatedCount }}
-                            </view>
-                            <view
-                                class="tog-small-tips"
-                                wx:if="{{ order.allocatedCount === undefined }}"
-                            >
-                                未分配
-                            </view>
-                        </view>
-                    </view>
-                </view>
-
                 <!-- 货品地址 -->
+                <!-- wx:if="{{ item.canShowMore || item.notReadyOrders.length === 0 || item.hasBeenCall || item.isAllAdjusted }}" -->
                 <view
-                    wx:if="{{ item.canShowMore || item.notReadyOrders.length === 0 || item.hasBeenCall || item.isAllAdjusted }}"
                     class="tog-address-orders-list"
                 >
                     <view
-                        wx:key="{{ adk }}"
+                        wx:key="adk"
                         wx:for-index="adk"
                         wx:for-item="addressOrder"
                         class="tog-address-order-item"
@@ -249,13 +171,27 @@
                         <!-- 该地址下的订单 -->
                         <view class="tog-address-orders">
                             <view
-                                wx:key="{{ ad }}"
+                                wx:key="ad"
                                 wx:for-index="ad"
                                 wx:for-item="orderitem"
                                 class="tog-address-item"
                                 wx:for="{{ addressOrder.orders }}"
                                 wx:if="{{ orderitem.allocatedCount }}"
                             >
+                                <view class="tog-order-img-con">
+                                    <image
+                                        mode="aspectFill"
+                                        lazy-load="{{ true }}"
+                                        class="tog-order-img"
+                                        src="{{ orderitem.img[ 0 ]}}"
+                                    />
+                                    <view 
+                                        wx:if="{{ orderitem.canGroup }}"
+                                        class="tog-order-img-tips"
+                                    >
+                                        拼
+                                    </view>
+                                </view>
                                 <view class="tog-address-good">
                                     <view class="tog-address-goodname">
                                         {{ orderitem.acid ? '【活动商品】' : '' }}{{ orderitem.name }}
@@ -267,14 +203,9 @@
                                     </view>
                                 </view>
                                 <view class="tog-address-allocated">
-                                    x {{ orderitem.allocatedCount }}
+                                    <view>¥ {{ orderitem.canGroup ? orderitem.allocatedGroupPrice : orderitem.allocatedPrice }}</view>
+                                    <view>x {{ orderitem.allocatedCount }}</view>
                                 </view>
-                            </view>
-                            <view
-                                wx:if="{{ !addressOrder.isAllOk }}"
-                                class="tog-address-info pl"
-                            >
-                                暂无商品
                             </view>
                         </view>
 
@@ -292,11 +223,11 @@
                             class="tog-user-deliver"
                             wx:if="{{ item.userDeliverFee }}"
                         >
-                            邮费：¥{{ item.userDeliverFee }}
+                            邮费：<view class="tog-pay-color">¥{{ item.userDeliverFee }}</view>
                         </view>
-                        <view class="tog-pay-text inline ml">
+                        <!-- <view class="tog-pay-text inline ml">
                             应付：<view class="tog-pay-color">¥{{ item.wholePriceNotDiscount < 0 ? 0 : item.wholePriceNotDiscount }}</view>
-                        </view>
+                        </view> -->
                     </view>
                     <view class="tog-pay-text">
                         <view
@@ -321,10 +252,12 @@
                             class="tog-pay-inline ml"
                             wx:if="{{ item.userPushIntegral }}"
                         >   
-                            积分：<view class="tog-pay-color">-{{ item.userPushIntegral }}</view>
+                            抵现金：<view class="tog-pay-color">-{{ item.userPushIntegral }}</view>
                         </view>
                     </view>
-                    <view class="tog-pay-text">实付：<view class="tog-pay-color">¥{{ item.wholePriceByDiscount < 0 ? 0 : item.wholePriceByDiscount }}</view></view>
+                    <view class="tog-pay-text">
+                        实付：<view class="tog-pay-color">¥{{ item.wholePriceByDiscount < 0 ? 0 : item.wholePriceByDiscount }}</view>
+                    </view>
                 </view>
 
                 <!-- 更多按钮 -->
@@ -371,12 +304,13 @@
         bindtap="allGetMoney"
         class="tog-money-btn"
     >
-        发送收款通知（剩{{ lastCallMoneyTimes$ }}次）
+        发送付尾款通知
+        <!-- （剩{{ lastCallMoneyTimes$ }}次） -->
     </view>
 
     <!-- 弹框：数量分配 -->
     <i-modal
-        title="调整"
+        title="分配"
         visible="{{ showModal }}"
         bind:ok="submitOrder"
         bind:cancel="onCancelModal"
@@ -387,7 +321,7 @@
             type="number"
             data-key="count"
             nocenter="{{ true }}"
-            placeholder="请输入分配数量"
+            placeholder="请输入"
             bindinput='modalInput'
             value='{{ currentOrder.allocatedCount }}'
         />
@@ -395,7 +329,7 @@
 
     <!-- 弹框 -->
     <i-modal
-        title="调整"
+        title="快递"
         bind:cancel="onCancelModal2"
         bind:ok="submitDeliverFee"
         visible="{{ showDeliverModal }}"
@@ -406,7 +340,7 @@
             type="number"
             data-key="fee"
             nocenter="{{ true }}"
-            placeholder="请输入快递费用"
+            placeholder="请输入"
             bindinput='modalInput'
             value='{{ currentOrder.deliverFee.fee }}'
         />

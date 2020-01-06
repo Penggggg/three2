@@ -154,7 +154,7 @@
     text-align: center;
     background: rgba( 0, 0, 0, 0.325 );
     transform: translate( -100%, -0% );
-    pointer-events: none;
+     
     transition: all ease 0.4s;
 }
 

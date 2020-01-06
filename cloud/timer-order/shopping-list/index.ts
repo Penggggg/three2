@@ -7,8 +7,29 @@ cloud.init({
 const db: DB.Database = cloud.database( );
 const _ = db.command;
 
+/** 
+ * 转换格林尼治时区 +8时区
+ * Date().now() / new Date().getTime() 是时不时正常的+8
+ * Date.toLocalString( ) 好像是一直是+0的
+ * 先拿到 +0，然后+8
+ */
+const getNow = ( ts = false ): any => {
+    if ( ts ) {
+        return Date.now( );
+    }
+    const time_0 = new Date( new Date( ).toLocaleString( ));
+    return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
+}
+
+const checkIsInRange = ( now: Date, range = [ 99 ]) => {
+    return range.some( x => {
+        const h = now.getHours( );
+        return x === h && now.getMinutes( ) === 0;
+    });
+}
+
 /**
- * 清单1：查询未被安排进清单的订单（pay_status: 1 的order）
+ * 清单1：查询未被安排进清单的订单（ pay_status: 1 的order ）
  */
 export const catchLostOrders = async ( ) => {
     try {
@@ -20,13 +41,10 @@ export const catchLostOrders = async ( ) => {
                 $url: 'enter'
             }
         });
-
         const currentTrip = trips$.result.data[ 0 ];
         
         if ( !currentTrip ) { 
-            return {
-                status: 200
-            }
+            return { status: 200 };
         }
 
         const tid = currentTrip._id;
@@ -109,7 +127,7 @@ export const catchLostOrders = async ( ) => {
         }
 
     } catch ( e ) {
-        console.log('!!!!定时器订单catchLostOrders错误',)
+        console.log('!!!!定时器订单catchLostOrders错误', e );
         return { status: 500 };
     }
 }

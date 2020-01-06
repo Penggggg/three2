@@ -47,7 +47,8 @@ Page({
             /** 排行榜 */
             rank$: function( ) {
                 const { rank, pushIntegralRate } = this.data;
-                return rank.map( x => delayeringGood( x, pushIntegralRate ));
+                const r = rank.map( x => delayeringGood( x, pushIntegralRate ));
+                return r;
             }
         });
     },

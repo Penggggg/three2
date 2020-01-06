@@ -2,7 +2,6 @@ const { http } = require('../../util/http.js');
 const { navTo } = require('../../util/route.js');
 const { computed } = require('../../lib/vuefy/index.js');
 const { delayeringGood } = require('../../util/goods.js');
-const { createFormId } = require('../../util/form-id');
 
 const app = getApp( );
 
@@ -199,6 +198,7 @@ Page({
                 page: 1,
                 sort: 'createTime'
             },
+            loadingMsg: 'none',
             url: `good_rank`,
             success: res => {
                 const { status, data } = res;
@@ -548,7 +548,9 @@ Page({
         if ( role === 1 ) {
 
             setTimeout(( ) => {
-                this.fetchLast( );
+                // this.fetchLast( );
+                this.fetchNew( );
+                this.fetchRank( );
             }, 20 );
         }
     },
@@ -599,16 +601,10 @@ Page({
             this.getAnotherLijian( );
         }
 
-        if ( !current ) {
-            return {
-                title: '一个可以拼团的代购～',
-                path: '/pages/trip-enter/index'
-            }
-        } else {
-            return {
-                title: `${current.title}在${current.start_date$}开始！来拼团吧～`,
-                path: '/pages/trip-enter/index'
-            }
+        return {
+            title: '群拼团！大家都能省～',
+            path: '/pages/trip-enter/index',
+            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/cover-trip-enter-1.png'
         }
     }
 })

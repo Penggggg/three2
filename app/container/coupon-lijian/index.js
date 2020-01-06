@@ -1,8 +1,5 @@
-
-const { http } = require('../../util/http.js');
-const { createFormId } = require('../../util/form-id');
-
 const app = getApp( );
+const { http } = require('../../util/http.js');
 
 Component({
     /**
@@ -116,7 +113,12 @@ Component({
 
         /** formid */
         onShare( e ) {
-            createFormId( e.detail.formId )
+
+        },
+
+        /** 订阅授权 */
+        onSubscribe( e ) {
+            app.getSubscribe('buyPin,hongbao,trip');
         },
 
         /** 获取用户授权 */

@@ -4,7 +4,7 @@ import { computed } from '../../lib/vuefy/index.js';
 import { delayeringGood } from '../../util/goods.js';
 import { navTo } from '../../util/route.js';
 
-const app = getApp( );
+const app = getApp<any>( );
 
 // 打开拼团提示的key
 const storageKey = 'opened-pin-in-good';
@@ -18,6 +18,9 @@ Page({
      * 页面的初始数据
      */
     data: {
+        // 是否有用户授权
+        isUserAuth: true,
+
         // ip
         ipName: '',
 
@@ -57,16 +60,19 @@ Page({
         animationMiddleHeaderItem: null,
 
         // 展示管理入口
-        showBtn: false,
+        showAdmBtn: false,
 
         // 正在展示海报
         showingPoster: false,
 
-        // 展示弹框
-        showTips: 'hide',
+        // 展示拼团玩法的弹框
+        showPlayTips: 'hide',
 
-        // 分享Tips
-        showShareTips: 'hide',
+        // 展示分享赚钱
+        showShareGetMoney: false,
+
+        // 展示拼团商品列表
+        showPinGoods: 'hide',
 
         // 分享Tips2
         showShareTips2: false,
@@ -74,7 +80,7 @@ Page({
         // 拼团列表
         pin: [ ],
 
-        // 商品在本行程的购物清单列表
+        // 本行程的购物清单列表
         shopping: [ ],
 
         // 一口价活动列表
@@ -99,7 +105,19 @@ Page({
         pushIntegralRate: 0,
 
         // 是否展开sku
-        openingSku: false
+        openingSku: false,
+
+        // 访问记录
+        visitors: [ ],
+
+        // 分享人信息
+        shareFromUser: { },
+
+        // 分享封面
+        shareCover: '',
+
+        // 封面提示
+        coverText: "23人看过"
     },
 
     /** 设置computed */
@@ -134,6 +152,29 @@ Page({
                     const meta = gap !== '0' && !!gap ? gap : '';
                     return meta;
                 }
+            },
+
+            // 马上可以拼团的个数
+            pinCount$: function( ) {
+                const { id, detail } = this.data;
+                const goodShopping = this.data.shopping.filter( x => x.pid === id );
+                if ( !detail ) { 
+                    return 0;
+                }
+
+                const { standards, groupPrice } = detail;
+
+                if ( !!standards && standards.length > 0 ) {
+                    return standards
+                        .filter( x => !!goodShopping.find( s => s.sid === x._id && s.pid === x.pid ))
+                        .length;
+
+                } else if ( !!groupPrice ) {
+                    const { _id } = detail;
+                    return !!goodShopping.find( s => s.pid === _id ) ? 1 : 0
+                }
+
+                return 0;
             },
 
             // 拼团列表
@@ -204,38 +245,6 @@ Page({
                 return meta2;
             },
 
-            // 马上可以拼团的个数
-            pinCount$: function( ) {
-                const { detail, shopping } = this.data;
-                if ( !detail ) { 
-                    return 0;
-                }
-
-                const { standards, groupPrice } = detail;
-
-                if ( !!standards && standards.length > 0 ) {
-                    return standards
-                        .filter( x => !!shopping.find( s => s.sid === x._id && s.pid === x.pid ))
-                        .length;
-
-                } else if ( !!groupPrice ) {
-                    const { _id } = detail;
-                    return !!shopping.find( s => s.pid === _id ) ? 1 : 0
-                }
-
-                return 0;
-            },
-
-            // 是否有型号
-            hasStanders$: function( ) {
-                const { detail } = this.data;
-                if ( !detail ) { 
-                    return false;
-                }
-                const { standards } = detail;
-                return !!standards && standards.length > 0 ;
-            },
-
             // 积分区间
             integral$: function( ) {
                 const { detail, pushIntegralRate } = this.data;
@@ -249,16 +258,186 @@ Page({
             // 详情
             detail$: function( ) {
                 const { detail } = this.data;
-                return delayeringGood( detail )
-            }
+                const r = delayeringGood( detail );
+                return r;
+            },
+
+            // 此账号，是否有单
+            hasOrder$( ) {
+                const { openid, tripShoppinglist } = this.data;
+                const r = (tripShoppinglist || [ ])
+                    .filter( sl => {
+                        const { uids } = sl;
+                        return uids.includes( openid );
+                    })
+                
+                const result = Array.isArray( tripShoppinglist ) && tripShoppinglist.length > 0
+                    ? r.length > 0 : false;
+                return result;
+            },
+
+            // 商品的访问记录
+            visitors$( ) {
+                const { visitors, openid } = this.data;
+                return visitors.filter( x => x.openid !== openid );
+            },
+
+            // 商品的访问 + 社交属性模块
+            social$( ) {
+                const { visitors, openid, detail, canPinSku, ipAvatar } = this.data;
+                const good = delayeringGood( detail ); 
+                const getRandom = n => Math.floor( Math.random( ) * n );
+
+                const allTexts = [
+                    `划算耶！有群友拼团吗`,
+                    `「${good.tagText}」感觉不错`,
+                    `看起来不错！想拼团`,
+                    `有群友拼团吗？我们一起省`
+                ];
+                
+                const allVisitors = visitors
+                    .filter( x => {
+                        if ( visitors.length === 1 ) {
+                            return x.openid !== openid
+                        };
+                        return true;
+                    })
+                    .map( x => {
+                        const randomNum = getRandom( allTexts.length );
+                        return {
+                            avatar: x.avatarUrl,
+                            text: allTexts[ randomNum ]
+                        }
+                    });
+
+                if ( canPinSku.length > 0 ) {
+                    allVisitors.unshift({
+                        avatar: ipAvatar,
+                        text: `群里拼团中哦～`
+                    })
+                }
+
+                return allVisitors;
+
+            },
+
+            // 当前商品的购物清单
+            shopping$( ) {
+                const { shopping, id, openid } = this.data;
+
+                const getRandom = n => Math.floor( Math.random( ) * n );
+                const allTexts = [
+                    `谢谢拼团的群友~`,
+                    `赞！又省钱了～`,
+                    `错过就亏啦～`,
+                    `拼团好划算~`
+                ];
+
+                return shopping
+                    .filter( x => x.pid === id )
+                    .map( sl => {
+                        const { users, detail, uids } = sl;
+                        const { name } = detail;
+                        return {
+                            ...sl,
+                            name,
+                            firstUser: users[ 0 ],
+                            otherUser: users.slice( 1 ),
+                            tips: allTexts[ getRandom( allTexts.length )],
+                            hasOrder: uids.includes( openid )
+                        }
+                    })
+            },
+
+            // 行程中的其他购物清单
+            otherShopping$( ) {
+                const { shopping, id } = this.data;
+
+                const result = shopping
+                    .filter( x => x.pid !== id )
+                    .map( x => {
+                        const { pid, detail, users, adjustPrice, adjustGroupPrice } = x;
+                        const { name, title } = detail;
+                        const totalDelta = users.length * Math.ceil( adjustPrice - adjustGroupPrice );
+                        return {
+                            pid,
+                            img: detail.img,
+                            topTips: `${users.length > 1 ? users.length + '人' : ''}省${totalDelta}元`,
+                            bottomTips: `${users.length}群友拼团`,
+                            avatars: users.map( x => x.avatarUrl ),
+                            title: `${name ? name + ' ' : ''}${title}`
+                        }
+                    });
+
+                return result;
+            },
+
+            // 行程中，当前产品所有型号加起来，有多少人在拼团
+            allPinPlayers$( ) {
+                const { id, shopping } = this.data;
+                const goodShopping = shopping.filter( x => x.pid === id );
+                return goodShopping.reduce(( x, sl ) => {
+                    return x + sl.uids.length;
+                }, 0 );
+            },
+
+            /**
+             * 现在到凌晨1点的倒计时
+             */
+            countDownNight$( ) {
+                const now = new Date( );
+                const y = now.getFullYear( );
+                const m = now.getMonth( ) + 1;
+                const d = now.getDate( );
+                const todayOne = new Date(`${y}/${m}/${d} 01:00:00`);
+                const tomorrowOne = todayOne.getTime( ) + 24 * 60 * 60 * 1000;
+                return (( tomorrowOne - Date.now( )) / 1000 ).toFixed( 0 );
+            },
 
         })
     },
 
+    /** 监听全局管理员权限 */
+    watchRole( ) {
+        (app as any).watch$('role', ( val ) => {
+            this.setData!({
+                showAdmBtn: ( val === 1 )
+            })
+        });
+        (app as any).watch$('isNew', val => {
+            this.setData!({
+                isNew: val
+            });
+        });
+        (app as any).watch$('appConfig', val => {
+            if ( !val ) { return; }
+            this.setData!({
+                ipName: val['ip-name'],
+                ipAvatar: val['ip-avatar'],
+                pushIntegralRate: (val || { })['push-integral-get-rate'] || 0,
+                canIntegrayShare: !!(val || { })['good-integral-share'] || false
+            });
+            this.createShare( );
+        });
+        (app as any).watch$('openid', val => {
+            this.setData!({
+                openid: val
+            });
+            this.createShare( );
+            this.fetchSharer( );
+        });
+        app.watch$('isUserAuth', val => {
+            if ( val === undefined ) { return; }
+            this.setData!({
+                isUserAuth: val
+            });
+        });
+    },
+
     /** 拉取商品详情 */
     fetDetail( id ) {
-        const { detail, from } = this.data;
-        if ( detail ) { return; }
+        const { detail, from, showAdmBtn } = this.data;
+        if ( detail && !showAdmBtn ) { return; }
         http({
             data: {
                 _id: id,
@@ -310,7 +489,7 @@ Page({
                 // 弹起拼团框
                 if ( !!from && delayeringGood( res.data ).hasPin ) {
                     this.setData!({
-                        showTips: 'show'
+                        showPlayTips: 'show'
                     });
                 } else if ( !from && delayeringGood( res.data ).hasPin ) {
                     this.checkOpenPin( );
@@ -319,16 +498,17 @@ Page({
         });
     },
 
-    /** 拉取当前商品的购物请单信息 */
+    /** 拉取行程的购物请单信息 */
     fetchShopping( pid, tid ) {
         if ( !pid || !tid ) { return; }
 
         http({
             url: 'shopping-list_pin',
             data: {
-                pid,
+                // pid,
                 tid,
-                detail: false
+                detail: true,
+                showUser: true
             },
             success: res => {
                 const { status, data } = res;
@@ -340,8 +520,35 @@ Page({
                         sid: x.sid
                     }))
                 });
+
+                if ( data.length > 0 ) {
+                    wx.setNavigationBarTitle({
+                        title: '拼团中 划算！'
+                    });
+                }
+
             }
         })
+    },
+
+    /** 拉取当前商品的访问记录 */
+    fetchVisitRecord( pid, start, before ) {
+        if ( !start || !before ) { return; }
+        http({
+            url: 'good_good-visitors',
+            data: {
+                pid,
+                start, 
+                before
+            },
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 ) { return; }
+                this.setData!({
+                    visitors: data
+                });
+            }
+        });
     },
 
     /** 拉取两个最新行程 */
@@ -353,20 +560,49 @@ Page({
             success: res => {
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
+                const trip = data[ 0 ];
+                if ( !!trip ) {
+                    const { _id, start_date, end_date } = trip;
+                    const tid = _id
 
-                if ( !!data[ 0 ]) {
-                    const tid = data[ 0 ]._id
+                    this.fetchShopping( id, tid );
+                    this.fetchVisitRecord( id, start_date, end_date );
 
-                    if ( !!tid ) {
-                        this.fetchShopping( id, tid );
-                    }
                     this.setData!({
                         tid,
-                        trip: data[ 0 ]
+                        trip
                     });
                 }
             }
         })
+    },
+
+    /** 获取上个分享人的头像 */
+    fetchSharer( ) {
+        const { openid, from } = this.data;
+        if ( !from || !openid || from === openid ) {
+            return;
+        }
+        http({
+            data: {
+                openid: from 
+            },
+            url: 'common_get-user-info',
+            success: res => {
+                const { status, data } = res;
+                if ( status !== 200 || !data ) { return; }
+                data.role !== 1 && this.setData!({
+                    shareFromUser: data
+                });
+            }
+        })
+    },
+
+    initCoverText( ) {
+        const num = 18 + Math.ceil( Math.random( ) * 20);
+        this.setData!({
+            coverText: `${num}人看过`
+        });
     },
 
     /** 创建分享记录 */
@@ -382,67 +618,65 @@ Page({
         });
     },
 
-    // 展开提示
-    toggleTips( e? ) {
-        const { showTips } = this.data;
+    // 展开拼团玩法提示
+    togglePalyTips( e? ) {
+        const { showPlayTips } = this.data;
         this.setData!({
-            showTips: showTips === 'show' ? 'hide' : 'show'
+            showPlayTips: showPlayTips === 'show' ? 'hide' : 'show'
         });
-        !!e && this.createFormId( e.detail.formId );
     },
 
-    // 展开分享提示
-    toggleTips2( e? ) {
-        const { showShareTips } = this.data;
-        this.setData!({
-            showShareTips: showShareTips === 'show' ? 'hide' : 'show'
+    // 获取授权、关闭拼团玩法提示
+    getUserAuth( ) {
+        app.getWxUserInfo(( ) => {
+            this.setData!({
+                showPlayTips: 'hide'
+            });
         });
-        !!e && this.createFormId( e.detail.formId );
     },
 
-    toggleTips3( e? ) {
-        const { showShareTips2 } = this.data;
+    // 展示推广积分规则
+    toggleShareGetMoney( ) {
+        const { showShareGetMoney } = this.data;
         this.setData!({
-            showShareTips2: !showShareTips2,
+            showShareGetMoney: !showShareGetMoney
         });
-        !!e && this.createFormId( e.detail.formId );
+        if ( !showShareGetMoney ) {
+            this.onSubscribe( );
+        }
+    },
+
+    // 展示拼团列表
+    togglePinGoods( ) {
+        const { showPinGoods } = this.data;
+        this.setData!({
+            showPinGoods: showPinGoods === 'hide' ? 'show' : 'hide'
+        });
+        if ( showPinGoods === 'hide' ) {
+            this.onSubscribe( );
+        }
+    },
+
+    onSubscribe( ) {
+        app.getSubscribe('buyPin,hongbao,trip');
     },
 
     // 进入商品管理
     goManager( ) {
-        navTo(`/pages/manager-goods-detail/index?id=${this.data.id}`)
+        navTo(`/pages/manager-goods-detail/index?id=${this.data.id}`);
     },
 
-    /** 监听全局管理员权限 */
-    watchRole( ) {
-        (app as any).watch$('role', ( val ) => {
-            this.setData!({
-                showBtn: ( val === 1 )
-            })
-        });
-        (app as any).watch$('isNew', val => {
-            this.setData!({
-                isNew: val
-            });
-        });
-        (app as any).watch$('appConfig', val => {
-            if ( !val ) { return; }
-            this.setData!({
-                ipName: val['ip-name'],
-                ipAvatar: val['ip-avatar'],
-                pushIntegralRate: (val || { })['push-integral-get-rate'] || 0,
-                canIntegrayShare: !!(val || { })['good-integral-share'] || false
-            });
-            this.createShare( );
-        });
-        (app as any).watch$('openid', val => {
-            this.setData!({
-                openid: val
-            });
-            this.createShare( );
-        });
+    // 进入拼团广场
+    goGround( ) {
+        navTo('/pages/ground-pin/index')
     },
     
+    // 进入商品详情
+    goGoodDetail({ currentTarget }) {
+        const { pid } = currentTarget.dataset;
+        navTo(`/pages/goods-detail/index?id=${pid}`)
+    },
+
     /** 预览图片 */
     previewImg({ currentTarget }) {
         const { img } = currentTarget.dataset;
@@ -465,7 +699,7 @@ Page({
         });
     },
 
-    /** 检查是否有主动弹开过拼团 */
+    /** 检查是否有主动弹开过拼团玩法 */
     checkOpenPin( ) {
         const { detail } = this.data;
         if ( !detail ) { return }
@@ -477,7 +711,7 @@ Page({
 
             if ( !!priceGap && Date.now( ) - Number( openRecord ) >= oneDay ) {
                 wx.setStorageSync( storageKey, String( Date.now( )));
-                this.toggleTips( );
+                this.togglePalyTips( );
             }
         }
     },
@@ -520,7 +754,7 @@ Page({
         });
     },
 
-    /** 海报开关 */
+    /** 海报开关监听 */
     onPostToggle( e ) {
         const val = e.detail;
         this.setData!({
@@ -531,21 +765,53 @@ Page({
         });
     },
 
-    createFormId( formid ) {
-        if ( !formid ) { return; }
-        http({
-            data: {
-                formid
-            },
-            loadingMsg: 'none',
-            url: 'common_create-formid',
-        })
+    /** 海报--开 */
+    openPoster( ) {
+        const { showingPoster } = this.data;
+        const poster = (this as any).selectComponent('#poster');
+        poster.toggle( );
+        if ( !showingPoster ) {
+            this.onSubscribe( );
+        }
+    },
+
+    /** 海报--关 */
+    closePoster( ) {
+        try {
+            const poster = (this as any).selectComponent('#poster');
+            poster.close( );
+        } catch ( e ) { }
     },
 
     /** sku选择弹框 */
     onSkuToggle( e ) {
         this.setData!({
             openingSku: e.detail
+        });
+    },
+
+    /** sku某部分点击 */
+    onSkuTap( e ) {
+        const type = e.detail;
+        if ( type === 'moneyQuestion' ) {
+            this.toggleShareGetMoney( );
+        }
+    },
+
+    /** 展开、关闭sku框 */
+    onToggleSku( ) {
+        const { openingSku } = this.data;
+        const sku = (this as any).selectComponent('#sku');
+        sku.toggleSku( );
+        if ( !openingSku ) {
+            this.onSubscribe( );
+        }
+    },
+
+    /** 转发封面 */
+    onCoverDone( e ) {
+        this.setData!({
+            shareCover: e.detail
         });
     },
 
@@ -560,17 +826,14 @@ Page({
     onLoad: function (options) {
 
         const scene = decodeURIComponent( options!.scene || '' )
-        
+        const id = options!.id || scene || 'ee3099285cdbf38f12869b13363bc206';
+
         this.runComputed( );
+        this.initCoverText( );
 
-        // if ( !options!.id && !scene && !'71f2cd945cab4fc10261232b3f358619' ) { return; }
-        // this.setData!({
-        //     id: options!.id || scene || '71f2cd945cab4fc10261232b3f358619',
-        // });
-
-        if ( options!.id || scene ) { 
+        if ( !!id ) { 
             this.setData!({
-                id: options!.id || scene,
+                id
             });
         }
 
@@ -582,8 +845,8 @@ Page({
         
         setTimeout(( ) => {
             this.watchRole( );
-            this.checkLike( );
             this.fetchLast( );
+            this.fetDetail( id );
         }, 20 );
     },
   
@@ -591,38 +854,46 @@ Page({
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady: function ( ) {
-        let circleCount = 0; 
-        const that: any = this;
-        // 心跳的外框动画 
-        that.animationMiddleHeaderItem = wx.createAnimation({ 
-            duration: 800, 
-            timingFunction: 'ease', 
-            transformOrigin: '50% 50%',
-        }); 
-        setInterval( function( ) { 
-            if (circleCount % 2 == 0) { 
-                that.animationMiddleHeaderItem.scale( 1.0 ).rotate( 10 ).step( ); 
-            } else { 
-                that.animationMiddleHeaderItem.scale( 1.0 ).rotate( -30 ).step( ); 
-            } 
-            that.setData({ 
-                animationMiddleHeaderItem: that.animationMiddleHeaderItem.export( ) 
-            }); 
+        // let circleCount = 0; 
+        // const that: any = this;
+        // // 心跳的外框动画 
+        // that.animationMiddleHeaderItem = wx.createAnimation({ 
+        //     duration: 800, 
+        //     timingFunction: 'ease', 
+        //     transformOrigin: '50% 50%',
+        // }); 
+        // setInterval( function( ) { 
+        //     if (circleCount % 2 == 0) { 
+        //         that.animationMiddleHeaderItem.scale( 1.0 ).rotate( 10 ).step( ); 
+        //     } else { 
+        //         that.animationMiddleHeaderItem.scale( 1.0 ).rotate( -30 ).step( ); 
+        //     } 
+        //     that.setData({ 
+        //         animationMiddleHeaderItem: that.animationMiddleHeaderItem.export( ) 
+        //     }); 
             
-            if ( ++circleCount === 1000 ) { 
-                circleCount = 0; 
-            } 
-        }.bind( this ), 1000 ); 
+        //     if ( ++circleCount === 1000 ) { 
+        //         circleCount = 0; 
+        //     } 
+        // }.bind( this ), 1000 ); 
     },
   
     /**
      * 生命周期函数--监听页面显示
      */
     onShow: function ( ) {
-        const { id, tid } = this.data;
-
-        this.fetDetail( id );
+        const { id, tid, trip, detail, showAdmBtn } = this.data;
+        
         this.fetchShopping( id, tid );
+        if ( !!trip ) {
+            const { start_date, end_date } = (trip as any);
+            this.fetchVisitRecord( id, start_date, end_date );
+        }
+
+        if ( !!detail && !!showAdmBtn ) {
+            this.fetDetail( id );
+        }
+
     },
   
     /**
@@ -657,19 +928,20 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( e ) {
-        const { detail, pin$, activities, priceGap, trip, openid } = this.data;
+        const { hasOrder$, detail$, openid, shareCover } = (this.data as any);
+
+        this.closePoster( );
+        setTimeout(( ) => {
+            const shareFedback = (this as any).selectComponent('#share-feedback');
+            shareFedback.toggle( );
+        }, 500 );
+
         return {
-            title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
-                        activities.length === 0 ?
-                            `拼团买！一起省${String( priceGap ).replace(/\.00/g, '')}元！` :
-                            '限时特价超实惠！' : 
-                        trip && trip.reduce_price ? 
-                            `立减${trip.reduce_price}元！` :
-                            '给你看看这宝贝！'
-                }${detail.title}`,
-            // 分享不应该带tid
-            path: `/pages/goods-detail/index?id=${detail._id}&from=${openid}`,
-            imageUrl: `${detail.img[ 0 ]}`
+            imageUrl: shareCover || `${detail$.img[ 0 ]}`,
+            path: `/pages/goods-detail/index?id=${detail$._id}&from=${openid}`,
+            title: !!detail$ && detail$.hasPin && !hasOrder$ ?
+                `有人想要吗？拼团买，我们都能省！${detail$.title} ${detail$.tagText}` :
+                `推荐「${detail$.tagText}」神器!${detail$.title}`
         }
     }
   })

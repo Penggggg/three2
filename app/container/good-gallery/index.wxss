@@ -1,0 +1,125 @@
+.good-gallery-swiper {
+    height: 550rpx;
+    padding: 0 5vw;
+    box-sizing: border-box;
+}
+
+.good-gallery-title {
+    margin-bottom: 50rpx;
+}
+
+.good-gallery-swiper-item-con {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 5rpx 35rpx 150rpx;
+    box-sizing: border-box;
+}
+
+.good-gallery-swiper-item {
+    height: 100%;
+    width: 100%;
+    border-radius: 15px;
+    transform: scale( 1 );
+    transition: all ease 0.5s;
+    position: relative;
+    box-shadow: 0 5px 15px rgba( 0, 0, 0, 0.20 );
+}
+
+.good-gallery-swiper-item.small {
+    transform: scale( 0.85 );
+}
+
+.good-gallery-swiper-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+}
+
+.good-gallery-swiper-tips-con {
+    left: 0;
+    bottom: 0rpx;
+    width: 100%;
+    color: #fff;
+    font-size: 30rpx;
+    position: absolute;
+    padding: 15rpx 10rpx 15rpx 25rpx;
+    letter-spacing: 0.05em;
+    box-sizing: border-box;
+    border-radius: 0 0 15px 15px;
+    letter-spacing: 0.08em;
+    background: rgba( 0, 0, 0, 0.3 );
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.good-gallery-swiper-tips {
+    white-space: nowrap;
+    margin-right: 15rpx;
+}
+
+.good-gallery-avatar-list {
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
+    overflow-x: scroll;
+    padding-left: 8rpx;
+}
+
+.good-gallery-avatar-con {
+    position: relative;
+    display: inline-block;
+    margin-left: -6rpx;
+}
+
+.good-gallery-avatar {
+    width: 50rpx;
+    height: 50rpx;
+    display: block;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    box-shadow: 2px 2px 8px rgba( 0, 0, 0, 0.3 );
+}
+
+.good-gallery-avatar.ml {
+    margin-left: -6rpx;
+}
+
+.good-gallery-swiper-title {
+    left: 0;
+    width: 100%;
+    bottom: -75rpx;
+    padding-left: 35rpx;
+    box-sizing: border-box;
+    color: #272839;
+    font-size: 32rpx;
+    position: absolute;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    overflow:hidden; 
+    display:-webkit-box; 
+    -webkit-line-clamp:1;
+    word-break: break-all;
+    text-overflow:ellipsis;
+    -webkit-box-orient:vertical;
+}
+
+.good-gallery-swiper-tips {
+    display: inline;
+    margin-left: 10rpx;
+}
+
+.good-gallery-compare-tips {
+    top: 20rpx;
+    right: -30rpx;
+    position: absolute;
+    color: #fff;
+    padding: 10rpx 15rpx;
+    letter-spacing: 0.08em;
+    border-radius: 10rpx;
+    font-size: 25rpx;
+    text-shadow: 0 0 3px rgba(0,0,0,.35);
+    box-shadow: 3px 3px 10px rgba( 0, 0, 0, 0.08 );
+}

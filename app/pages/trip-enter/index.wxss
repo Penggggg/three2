@@ -244,6 +244,8 @@
     font-weight: bold;
     line-height: 60rpx;
     position: relative;
+    margin-right: 15rpx;
+    letter-spacing: 0.1em;
     /* text-decoration: line-through; */
 }
 
@@ -440,8 +442,7 @@
 }
 
 .te2-new-price2 {
-    font-size: 22rpx;
-    line-height: 34rpx;
+    font-size: 24rpx;
     color: rgba( 0, 0, 0, 0.35 );
 }
 

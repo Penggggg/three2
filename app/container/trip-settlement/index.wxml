@@ -83,7 +83,7 @@
                 <view
                     class="cts-push-integral-tips"
                 >
-                    {{ !!deduction$ ? '你拥有抵现积分:' : '暂无抵现积分' }}
+                    {{ !!deduction$ ? '总抵现积分:' : '暂无抵现积分' }}
                 </view>
                 <wxc-price
                     icon="sub"
@@ -113,6 +113,7 @@
                     class="pmgl-entry-btn-container"
                 >
                     <button
+                        bindtap="onSubscribe"
                         form-type="submit"
                         class='cts-settle-btn fix-btn'
                     >

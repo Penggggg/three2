@@ -1,0 +1,21 @@
+<view>
+    <wxc-mask
+        content-align="cc"
+        status="{{ status }}"
+        bindmasktap="toggleTips"
+    >
+        <view class="c-single-theme-modal">
+
+            <view class="cstm-title">
+                {{ title }}
+            </view>
+
+            <view class="cstm-content">
+                {{ content }}
+            </view>
+
+            <slot></slot>
+
+        </view>
+    </wxc-mask>
+</view>

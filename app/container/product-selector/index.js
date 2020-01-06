@@ -1,4 +1,4 @@
-// container/product-selector/index.js
+const app = getApp( );
 const { http } = require('../../util/http.js');
 
 /**

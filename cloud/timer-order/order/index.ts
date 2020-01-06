@@ -21,6 +21,13 @@ const getNow = ( ts = false ): any => {
     return new Date( time_0.getTime( ) + 8 * 60 * 60 * 1000 )
 }
 
+const checkIsInRange = ( now: Date, range = [ 99 ]) => {
+    return range.some( x => {
+        const h = now.getHours( );
+        return x === h && now.getMinutes( ) === 0;
+    });
+}
+
 /**
  * 订单1: 所有应该支付，但是没有支付（支付超时30分钟）的订单，释放原来的库存，订单重置为已过时
  */
@@ -34,6 +41,10 @@ export const overtime = async ( ) => {
                 createTime: _.lte( getNow( true ) - 30 * 60 * 1000 )
             })
             .get( );
+
+        if ( orders$.data.length === 0 ) {
+            return { status: 200 };
+        }
         
         // 订单更新
         await Promise.all( orders$.data.map( order => {
@@ -84,6 +95,10 @@ export const payedFix = async ( ) => {
                 pay_status: '1'
             })
             .get( );
+
+        if ( orders$.data.length === 0 ) {
+            return { status: 200 };
+        }
 
         // 订单更新
         await Promise.all( orders$.data.map( order => {
@@ -181,7 +196,7 @@ export const priceFix = async ( ) => {
         return { status: 200 }
 
     } catch ( e ) {
-        console.log('!!!!定时器订单priceFix错误',)
+        console.log('!!!!定时器订单priceFix错误', e );
         return { status: 500 }
     }
 }
@@ -198,6 +213,10 @@ export const payLastFix = async ( ) => {
                 base_status: _.or( _.eq('0'), _.eq('1'),  _.eq('2'))
             })
             .get( );
+
+        if ( orders$.data.length === 0 ) {
+            return { status: 200 };
+        }
 
         await Promise.all(
             orders$.data.map( order => {
@@ -219,6 +238,7 @@ export const payLastFix = async ( ) => {
 
 /**
  * 订单4：新订单推送
+ * 时间：12, 18, 0
  */
 export const pushNew = async ( ) => {
     try {
@@ -226,17 +246,7 @@ export const pushNew = async ( ) => {
         const nowDate = getNow( );
         
         // 0、判断是否在那几个时间戳之内
-        const checkIsInRange = ( now: Date ) => {
-
-            const range = [ 6, 12, 18, 0 ];
-            const result = range.some( x => {
-                const h = now.getHours( );
-                return x === h && now.getMinutes( ) === 0;
-            });
-            return result;
-        }
-
-        if ( !checkIsInRange( nowDate )) { 
+        if ( !checkIsInRange( nowDate, [ 12, 18, 0 ])) { 
             return { status: 200 };
         }
 
@@ -303,11 +313,11 @@ export const pushNew = async ( ) => {
                 const push$ = await cloud.callFunction({
                     name: 'common',
                     data: {
-                        $url: 'push-template-cloud',
+                        $url: 'push-subscribe-cloud',
                         data: {
                             openid,
                             type: 'newOrder',
-                            page: 'pages/manager-trip-list/index',
+                            page: `pages/manager-trip-order-all/index?tid=${trip._id}`,
                             texts: [`你有${count}条新订单`, `点击查看`]
                         }
                     }
@@ -361,13 +371,13 @@ export const pushNew = async ( ) => {
 
 /** 
  * 订单5: 尾款推送
+ * 22点才处理
  */
 export const pushLastPay = async ( ) => {
 
     // 0、是否为0点
-    const nowDate = getNow( );
-    if ( nowDate.getHours( ) !== 0 && nowDate.getMinutes( ) !== 0 ) {
-        return { status: 200 };
+    if ( checkIsInRange( getNow( ), [ 22 ])) {
+        return { status: 200 }
     }
 
     // 1、获取上一趟trip
@@ -438,12 +448,12 @@ export const pushLastPay = async ( ) => {
             const push$ = await cloud.callFunction({
                 name: 'common',
                 data: {
-                    $url: 'push-template-cloud',
+                    $url: 'push-subscribe-cloud',
                     data: {
                         openid,
                         type: 'getMoney',
                         page: 'pages/manager-trip-list/index',
-                        texts: [`${count}人付了尾款`, `今天`]
+                        texts: [`${count}人付了尾款`, `点击查看`]
                     }
                 }
             });

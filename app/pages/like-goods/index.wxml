@@ -10,7 +10,7 @@
         <!-- 列表 -->
         <view
             class="lg-good-item"
-            wx:key="{{ index }}"
+            wx:key="index"
             wx:for="{{ list$ }}"
             data-good="{{ item }}"
             bindtap="goDetail"

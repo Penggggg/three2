@@ -43,9 +43,6 @@ Component({
         // 加载
         loading: true,
 
-        // 是否为管理员
-        isAdmin: false,
-
         // 动画
         animationMiddleHeaderItem: null,
 
@@ -70,15 +67,6 @@ Component({
      * 组件的方法列表
      */
     methods: {
-
-        /** 监听全局管理员权限 */
-        watchRole( ) {
-            app.watch$('role', ( val ) => {
-                this.setData({
-                    isAdmin: val === 1
-                });
-            });
-        },
 
         // 初始化动画
         initAnimate( ) {
@@ -122,14 +110,22 @@ Component({
                 },
                 url: `common_create-qrcode`,
                 success: res => {
-                    const { goodMeta } = this.data;
-                    const decorateGood = delayeringGood( goodMeta );
                     const { status, data } = res;
+                    const { goodMeta } = this.data;
                     const fsm = wx.getFileSystemManager( );
+                    const decorateGood = delayeringGood( goodMeta );
+                    const qrCode = wx.env.USER_DATA_PATH + '/wa_qrcode_temp.png';
+
                     if ( status !== 200 ) { return; }
+
+                    // 这里要删除临时文件！！！
+                    try {
+                        fsm.removeSavedFile({
+                            filePath: qrCode
+                        });
+                    } catch ( e ) { }
                     
                     // 二维码
-                    const qrCode = wx.env.USER_DATA_PATH + '/wa_qrcode_temp.png';
                     fsm.writeFileSync( qrCode, data, 'binary' );
 
                     // 画布
@@ -242,7 +238,15 @@ Component({
                 this.onDraw( );
             }
             this.triggerEvent('toggle', !show );
-            this.createFormId( e.detail.formId );
+            app.getSubscribe('newOrder,trip,waitPin');
+        },
+
+        /** 关闭画布 */
+        close( e ) {
+            this.setData({
+                show: false
+            });
+            this.triggerEvent('toggle', false );
         },
 
         /** 保存canvas到本地图片 */
@@ -292,18 +296,6 @@ Component({
         preventTouchMove( ) {
         },
 
-        // 创建formid
-        createFormId( formid ) {
-            if ( !formid ) { return; }
-            http({
-                data: {
-                    formid
-                },
-                loadingMsg: 'none',
-                url: 'common_create-formid',
-            })
-        },
-
         // 自动弹出转发提示
         initTips( ) {
             const { goodCanPin, someCanPin } = this.data;
@@ -340,7 +332,6 @@ Component({
     },
 
     attached: function( ) {
-        this.watchRole( );
-        setTimeout(( ) => this.initTips( ), 5000 );
+
     }
 })

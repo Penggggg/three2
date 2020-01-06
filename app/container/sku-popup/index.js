@@ -1,5 +1,6 @@
 const app = getApp( );
 const { http } = require('../../util/http.js');
+const { computed } = require('../../lib/vuefy/index.js');
 
 Component({
     /**
@@ -56,12 +57,37 @@ Component({
         selectdSkuCount: 1,
         /** 是否进行了用户授权 */
         isUserAuth: false,
+        /** 抵现金可用比例 */
+        pushIntegralMoneyRate: 0
     },
 
     /**
      * 组件的方法列表
      */
     methods: {
+        runComputed( ) {
+            computed( this, {
+                pushIntegralMoney$( ) {
+                    const { pushIntegralMoneyRate, selectedSku } = this.data;
+                    if ( !selectedSku || !pushIntegralMoneyRate ) { return 0; }
+                    const price = selectedSku.groupPrice || selectedSku.price;
+                    return ( price * pushIntegralMoneyRate ).toFixed( 1 );
+                }
+            });
+        },
+        /** 监听全局新旧客 */
+        watchRole( ) {
+            app.watch$('isUserAuth', val => {
+                !!val && this.setData({
+                    isUserAuth: val
+                });
+            });
+            app.watch$('appConfig', val => {
+                !!val && this.setData({
+                    pushIntegralMoneyRate: val['push-integral-money-rate'] || 0
+                });
+            });
+        },
         /** 创建动画 */
         toggleAnimate( e ) {
             
@@ -119,7 +145,6 @@ Component({
         },
         /** 禁止滑动 */
         preventTouchMove( ) {
-
         },
         /** 选择 sku */
         onSelectSku({ currentTarget }) {
@@ -139,6 +164,8 @@ Component({
         /** 确认 */
         confirmSelect( e ) {
 
+            this.onSubscribe( );
+
             app.getWxUserInfo(( ) => {
                 const { selectdSkuCount, selectedSku, skuItems } = this.data;
                 this.triggerEvent('confirm', {
@@ -149,21 +176,13 @@ Component({
                 }, null );
                 this.triggerEvent('close', false, null );
             });
-
-            this.createFormId( e.detail.formId );
+        },
+        onSubscribe( ) {
+            app.getSubscribe('buyPin,waitPin,getMoney');
         },
         /** 关闭弹窗 */
         close( ) {
             this.triggerEvent('close', false, null );
-        },
-        /** 监听用户授权情况 */
-        checkAuth( ) {
-            app.watch$('isUserAuth', val => {
-                if ( val === undefined ) { return; }
-                this.setData({
-                    isUserAuth: val
-                });
-            });
         },
         getUserAuth( ) {
             app.getWxUserInfo(( ) => {
@@ -171,21 +190,16 @@ Component({
                 this.confirmSelect( );
             });
         },
-        // 添加一个formid
-        createFormId( formid ) {
-            if ( !formid ) { return; }
-            http({
-                data: {
-                    formid
-                },
-                loadingMsg: 'none',
-                url: 'common_create-formid',
-            })
+        /** 点击 */
+        onTap( e ) {
+            const { type } = e.currentTarget.dataset;
+            this.triggerEvent('custom', type );
         }
     },
 
     attached: function( ) {
-        this.checkAuth( );
+        this.runComputed( );
+        this.watchRole( );
     }
 
 })

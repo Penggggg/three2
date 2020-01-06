@@ -1,18 +1,6 @@
 <!--app/pages/manager-goods-list/index.wxml-->
 <view class="p-manager-goods-list">
 
-    <!-- 顶部通知栏 -->
-    <wxc-notice
-        class="pmgl-notice"
-        scroll="{{ true }}"
-        show-icon="{{ true }}"
-        wx:if="{{ isNotAvailableTrip }}"
-        color="#333"
-        icon-color="#333"
-        bgColor="transparent"
-        notice="没有下一个【即将开始】的行程，请尽快创建！"
-    />
-
     <!-- 暂无更多 -->
     <view
         class="pmgl-nomore"
@@ -31,117 +19,128 @@
         <view
             class='pmgl-list-item'
             wx:for="{{ list }}"
-            wx:key="{{ index }}"
+            wx:key="index"
+            bindtap="goOrder"
+            data-data="{{ item }}"
         >
 
-            <view
+            <image 
+                src="{{ item.imgBg }}"
+                mode="aspectFill"
+                lazy-load="{{ true }}"
                 class="pmgl-img"
-                style="{{ bgs[ item.bg ]}}"
+            />
+
+            <!-- 基本信息 -->
+            <view
+                class='pmgl-info'
             >
-            </view>
+                <!-- 行程基本信息 -->
+                <view class="pmgl-base">
 
-            <form
-                bindsubmit="onTab"
-                data-tid="{{ item._id }}"
-                report-submit="{{ true }}"
-                class="flex-1"
-            >
-                <button
-                    form-type="submit"
-                    class='pmgl-info fix-btn'
-                >
-                    <view class="pmgl-base">
-
-                        <view class="pmgl-item-title">{{ item.title }}</view>
-                        <view
-                            class="pmgl-item-time {{ item.red ? 'red' : '' }}"
-                        >
-                            {{ 
-                                item.ing ?
-                                    item.endDate + '结束' :
-                                    item.state
-                            }}
-                        </view>
-
+                    <view class="pmgl-item-title">{{ item.title }}</view>
+                    <view
+                        class="pmgl-item-time {{ item.ing ? 'red' : '' }}"
+                    >
+                        {{ item.ing ? item.label : item.state$ }}
                     </view>
+                </view>
 
-                    <view class="pmgl-action">
-
-                        <!-- 不能删除这个 -->
-                        <view></view>
-
-                        <view
-                            class=""
-                        >
-                            <view class="pmgl-small-label {{ item.ing ? 'mr' : '' }}">
-                                {{ item.startDate2 }}~{{ item.endDate2 }}
-                            </view>
-                            <view
-                                class="pmgl-ing"
-                                wx:if="{{ item.ing }}"
-                            >
-                                进行中
-                            </view>
-                        </view>
-                    </view>
-                </button>
-            </form>
-
-            <!-- 按钮 -->
-            <form
-                bindsubmit="goOrder"
-                data-tid="{{ item._id }}"
-                report-submit="{{ true }}"
-                class="pmgl-btn-form"
-            >
-                <button
-                    form-type="submit"
-                    class="pmgl-important fix-btn"
+                <!-- 销售额、尾款信息 -->
+                <view
+                    class="pmgl-buttom-info"
                 >
-                    <wxc-price
+                    <view class="pmgl-flex">
+                        <wxc-price
                         icon="sub"
                         decimal="small"
                         class="pmgl-red-price"
-                    > 
-                        {{ item.sales_volume }}
-                    </wxc-price>
+                        > 
+                            {{ item.sales_volume }}
+                        </wxc-price>
 
-                    <view
-                        class="pmgl-small-label"
-                        wx:if="{{ !item.isClosed  }}"
-                    >
-                        {{ item.orders ? '订单：' + item.orders : '暂无订单' }}
+                        <view
+                            class="pmgl-small-label"
+                            wx:if="{{ !item.isClosed  }}"
+                        >
+                            {{ item.orders ? item.orders + '条订单' : '暂无订单' }}
+                        </view>
+                        <view
+                            class="pmgl-small-label red"
+                            wx:elif="{{ item.notPayAllClients }}"
+                        >
+                            {{ item.notPayAllClients }}人未付
+                        </view>
+                        <view
+                            wx:else
+                            class="pmgl-small-label"
+                        >
+                            尾款收齐
+                        </view>
                     </view>
-                    <view
-                        class="pmgl-small-label"
-                        wx:elif="{{ item.notPayAllClients }}"
+
+                    <view 
+                        class="pmgl-small-label {{ !item.ing ? '' : 'pr' }}"
                     >
-                        {{ item.notPayAllClients }}人未付尾款
+                        {{ !item.ing ? item.startDate2 + '~' + item.endDate2 : item.endDate2 + '结束' }}
                     </view>
-                    <view
-                        wx:else
-                        class="pmgl-small-label"
-                    >
-                        尾款收齐
-                    </view>
-                </button>
-            </form>
+                </view>
+            </view>
+
+            <!-- 进行中 -->
+            <view
+                wx:if="{{ item.ing }}"
+                class="pmgl-ing"
+            >
+                进行中
+            </view>
+
+            <!-- 订单详情 -->
+            <view
+                wx:if="{{ item.ing }}"
+                class="pmgl-tips"
+                data-tid="{{ item.tid }}"
+                catchtap="onTab"
+            >
+                {{ !item.hasProductIds ? '主推货' : '设置' }}
+                <image 
+                    class="pmgl-tips-icon"
+                    mode="aspectFill"
+                    lazy-load="{{ true }}"
+                    src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-right-white.png"
+                />
+            </view>
 
         </view>
     </scroll-view>
 
-    <!-- 可视按钮 -->
+    <!-- 创建按钮 -->
     <form
         bindsubmit="navigate"
         report-submit="{{ true }}"
         class="pmgl-entry-btn-container"
     >
         <button
+            bindtap="onSubscribe"
             form-type="submit"
             class='pmgl-entry-btn fix-btn'
         >
             <wxc-icon color="#fff" size="45" type="add" /> 
         </button>
     </form>
+
+    <!-- 提示 -->
+    <my-single-theme-modal
+        title="创建完成"
+        content="可以拼团啦"
+        show="{{ showSuccess }}"
+    >
+        <button 
+            open-type="share"
+            class="pmgl-modal-btn fix-btn"
+        >
+            分享给客户
+        </button>
+    </my-single-theme-modal>
 
 </view>

@@ -1,0 +1,38 @@
+<view 
+    wx:if="{{ width$ }}"
+    class="com-danmu-tips"
+    style="top: {{ top }}rpx; left: {{ left }}rpx"
+>
+    <swiper 
+        class="cdt-swiper"
+        interval="{{ 5000 }}" 
+        autoplay="{{ true }}"
+        circular="{{ true }}"
+        vertical="{{ true }}"
+        bindchange="onChange"
+        style="height: {{ avatarSize ? avatarSize + 15 : 30 }}rpx; width: {{ width$ }}rpx"
+    >
+        <block 
+            wx:key="index"
+            wx:for="{{ data }}"
+        >
+            <swiper-item>
+                <view class="cdt-item">
+                    <image 
+                        class="cdt-avatar"
+                        mode="aspectFill"
+                        lazy-load="{{ true }}"
+                        src="{{ item.avatar }}"
+                        style="height: {{ avatarSize }}rpx; width: {{ avatarSize }}rpx"
+                    />
+                    <view 
+                        class="cdt-text"
+                        style="font-size: {{ letterSize }}rpx"
+                    >
+                        {{ item.text }}
+                    </view>
+                </view>
+            </swiper-item>
+        </block>
+    </swiper>
+</view>

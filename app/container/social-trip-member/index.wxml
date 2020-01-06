@@ -15,7 +15,7 @@
         class="avatar-swiper {{ imgList.length <= 3 ?'cstm-one' : '' }}"
     >
         <block
-            wx:key="{{ index }}"
+            wx:key="index"
             wx:for="{{ imgList }}"
         >
             <swiper-item>
@@ -30,12 +30,12 @@
 
     <!-- 文字信息 -->
     <view class="info">
-        大家买了啥
-        <image
+        群友都在拼～
+        <!-- <image
             mode="scaleToFill"
             class="tips-arrow"
             src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-two-arrow-right-white.png"
-        />
+        /> -->
     </view>
 
 </view>

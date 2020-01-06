@@ -9,6 +9,7 @@
       class="fon-manager-entry-btn-form"
   >
     <button
+      bindtap="onSubscribe"
       form-type="submit"
       class='con-manager-entry-btn-container'
     >
@@ -31,7 +32,7 @@
     >
       <view class="con-manager-entry-btn-list">
         <form 
-          wx:key="{{ index }}"
+          wx:key="index"
           wx:for="{{ list }}"
           data-url="{{ item.url }}"
           report-submit="{{ true }}"
@@ -39,6 +40,7 @@
           class="con-manager-entry-btn-list-item"
         >
           <button 
+            bindtap="onSubscribe"
             form-type="submit"
             class="con-manager-entry-btn-list-check"
           >
@@ -58,7 +60,7 @@
 
       <view class="con-manager-entry-btn-small-list">
           <view 
-            wx:key="{{ index }}"
+            wx:key="index"
             wx:for="{{ list2 }}"
             bindtap='navigate'
             data-url="{{ item.url }}"

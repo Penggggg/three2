@@ -21,7 +21,7 @@
             <view class="te2-classify-block">
                 <view
                     wx:for="{{ classify }}"
-                    wx:key="{{ index }}"
+                    wx:key="index"
                     data-value="{{ item.value }}"
                     class="te2-classify-item {{ active === item.value ? 'active' : ''  }}"
                     bindtap="onChoiceClassify"
@@ -73,7 +73,7 @@
                 <!-- IP+拼团展示、热门推荐 -->
                 <swiper
                     indicator-dots="{{ true }}"
-                    autoplay="{{ true }}"
+                    autoplay="{{ false }}"
                     duration="{{ 800 }}"
                     circular="{{ true }}"
                     interval="{{ 4500 }}"
@@ -82,6 +82,86 @@
                     indicator-active-color="rgba(0,0,0,0.4)"
                     indicator-color="rgba(0,0,0,0.2)"
                 >
+
+                    <!-- 热门推荐 -->
+                    <block
+                        wx:key="index"
+                        wx:for="{{ recommendGoods$ }}"
+                    >
+                        <swiper-item
+                            data-data="{{ item }}"
+                            bindtap="goGoodDetail"
+                            class="te2-recommond-logo-item line"
+                        >
+
+                            <!-- 背景图 -->
+                            <image
+                                mode="scaleToFill"
+                                class="te2-recommond-logo"
+                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner-2.png"
+                            />
+
+                            <!-- 产品图片 -->
+                            <view 
+                                class="te2-recommond-good-con"
+                                wx:if="{{ recommendGoodWidths[ index ]}}"
+                            >
+                                <view
+                                    class="te2-pinest-img-con"
+                                    style="width: {{ recommendGoodWidths[ index ]}}rpx"
+                                >
+                                    <image
+                                        mode="aspectFill"
+                                        class="te2-pinest-img"
+                                        src="{{ item.img[ 0 ]}}"
+                                        lazy-load="{{ true }}"
+                                    />
+                                </view>
+                                <view class="te2-pinest-text-block">
+                                    <view class="te2-pinest-text">强烈推荐</view>
+                                    <image
+                                        mode="aspectFill"
+                                        class="te2-pinest-icon"
+                                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-star-3.png"
+                                    />
+                                </view>
+                            </view>
+
+                            <!-- 文字信息 -->
+                            <view class="te2-pin-block">
+
+                                <view class="te2-pin-title">
+                                    <!-- {{ item.tagText }} -->
+                                    拼团省钱
+                                </view>
+
+                                <view class="te2-pin-title-big">
+                                    {{ item.title }}
+                                </view>
+
+                                <view class="te2-pin-price-block">
+                                    <view
+                                        class="te2-pin-price"
+                                    > 
+                                        拼团价
+                                    </view>
+                                    <view
+                                        icon="sub"
+                                        decimal="small"
+                                        class="te2-pin-price-big"
+                                    > 
+                                        ¥{{ item.lowest_price$ }}
+                                    </view>
+                                    <!-- <view
+                                        class="te2-pin-price"
+                                    > 
+                                        ¥{{ item.fadePrice }}
+                                    </view> -->
+                                </view>
+                            </view>
+
+                        </swiper-item>
+                    </block>
 
                     <!-- IP+拼团展示 -->
                     <block>
@@ -123,7 +203,7 @@
                                     class="te2-tips-btn-block"
                                 >
                                     <view class="te2-tips-btn">
-                                        {{ ipName ? ipName + '代购拼团' : '更多代购拼团' }}
+                                        {{ ipName ? ipName + '群拼团' : '群拼团' }}
                                     </view>
                                 </view>
 
@@ -182,85 +262,12 @@
                         </swiper-item>
                     </block>
 
-                    <!-- 热门推荐 -->
-                    <block
-                        wx:key="{{ index }}"
-                        wx:for="{{ recommendGoods$ }}"
-                    >
-                        <swiper-item
-                            data-data="{{ item }}"
-                            bindtap="goGoodDetail"
-                            class="te2-recommond-logo-item line"
-                        >
-
-                            <!-- 背景图 -->
-                            <image
-                                mode="scaleToFill"
-                                class="te2-recommond-logo"
-                                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/trip-banner-2.png"
-                            />
-
-                            <!-- 产品图片 -->
-                            <view 
-                                class="te2-recommond-good-con"
-                                wx:if="{{ recommendGoodWidths[ index ]}}"
-                            >
-                                <view
-                                    class="te2-pinest-img-con"
-                                    style="width: {{ recommendGoodWidths[ index ]}}rpx"
-                                >
-                                    <image
-                                        mode="aspectFill"
-                                        class="te2-pinest-img"
-                                        src="{{ item.img[ 0 ]}}"
-                                        lazy-load="{{ true }}"
-                                    />
-                                </view>
-                                <view class="te2-pinest-text-block">
-                                    <view class="te2-pinest-text">强烈推荐</view>
-                                    <image
-                                        mode="aspectFill"
-                                        class="te2-pinest-icon"
-                                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-star-3.png"
-                                    />
-                                </view>
-                            </view>
-
-                            <!-- 文字信息 -->
-                            <view class="te2-pin-block">
-
-                                <view class="te2-pin-title">
-                                    {{ item.tagText }}
-                                </view>
-
-                                <view class="te2-pin-title-big">
-                                    {{ item.title }}
-                                </view>
-
-                                <view class="te2-pin-price-block">
-                                    <view
-                                        icon="sub"
-                                        decimal="small"
-                                        class="te2-pin-price-big"
-                                    > 
-                                        ¥{{ item.lowest_price$ }}
-                                    </view>
-                                    <view
-                                        class="te2-pin-price"
-                                    > 
-                                        最低价
-                                    </view>
-                                </view>
-                            </view>
-
-                        </swiper-item>
-                    </block>
                 </swiper>
 
                 <!-- 各模块入口 -->
                 <view class="te2-entry-block">
                     <view
-                        wx:key="{{ key }}"
+                        wx:key="key"
                         wx:for="{{ entry }}"
                         class="te2-entry-item"
                         data-url="{{ item.url }}"
@@ -290,7 +297,7 @@
                 <!-- 每周上新 -->
                 <view class="te2-new-block">
                     <view
-                        wx:key="{{ index }}"
+                        wx:key="index"
                         class="te2-new-item"
                         wx:for="{{ newList }}"
                         data-data="{{ item }}"
@@ -351,7 +358,7 @@
                 >
                     <my-good-item-3
                         good="{{ item }}"
-                        wx:key="{{ index }}"
+                        wx:key="index"
                         wx:for="{{ rankList }}"
                     />
                 </view>
@@ -382,7 +389,8 @@
 
     <!-- 抵现积分、签到打卡 -->
     <my-user-sign-gift
-        simple="{{ !hasGetAllLijian }}"
+        position="left"
+        simple="{{ true }}"
         wx:if="{{ initHongbao }}"
     />
 
@@ -391,6 +399,7 @@
         wx:if="{{ current }}"
         tid="{{ current._id }}"
         opacity="{{ !showMember }}"
+        url="/pages/ground-pin/index"
     />
 
     <!-- 立减优惠券 -->
@@ -404,7 +413,10 @@
         hasBeenGet="{{ lijian.hasBeenGet }}"
     />
 
-    <!-- 任务模块 -->
-    <!-- <my-task-modal /> -->
+    <!-- 任务列表 -->
+    <my-task-modal />
+
+    <!-- 订阅消息模块 -->
+    <my-subscribe-tips />
 
 </view>

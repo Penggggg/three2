@@ -81,7 +81,9 @@ Page({
         // 当前行程的订单
         currentTripOrder: { },
         // 推广积分使用记录表
-        pushIntegralFees: [ ]
+        pushIntegralFees: [ ],
+        // 展示任务组件
+        showTaskCom: false
     },
 
     /** 设置computed */
@@ -116,7 +118,7 @@ Page({
                  *  }
                  */
 
-                const { tid, showALlTrip, isNew, metaList, pinList, deliverFees, pushIntegralFees } = this.data;
+                const { tid, showALlTrip, isNew, metaList, pinList, deliverFees, pushIntegralFees, coupons } = this.data;
                 const orderObj = { };
 
                 const fixNumber = n => {
@@ -265,7 +267,7 @@ Page({
                         }
 
                         if ( statusCN[ 0 ] === '待付款' && allocatedGroupPrice && canGroup ) {
-                            statusCN = ['拼团成功']
+                            statusCN = ['拼团价']
                         }
 
                         return Object.assign({ }, order, {
@@ -372,13 +374,26 @@ Page({
 
 
                     // 应付全款（不含优惠券）
+                    // let wholePriceNotDiscount = orders.reduce(( x, y ) => {
+                    //     let currentPrice = 0;
+                    //     const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
+                    //     if ( canSettle ) {
+                    //         currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * count$( y );
+                    //     } else {
+                    //         currentPrice = count$( y ) * price;
+                    //     }
+                    //     return x + currentPrice;
+                    // }, 0 );
+                    // 应付全款（不含优惠券）
                     let wholePriceNotDiscount = orders.reduce(( x, y ) => {
                         let currentPrice = 0;
                         const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
-                        if ( canSettle ) {
+                        if ( y.base_status === '1' || y.base_status === '2' || y.base_status === '3' ) {
                             currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * count$( y );
+                        } else if ( y.base_status === '0' ) {
+                            currentPrice = count$( y ) * ( allocatedPrice || price );
                         } else {
-                            currentPrice = count$( y ) * price;
+                            currentPrice = 0;
                         }
                         return x + currentPrice;
                     }, 0 );
@@ -452,6 +467,11 @@ Page({
                     } 
                     if ( t_daijin.canUsed ) {
                         wholePriceByDiscount = Number( Number( wholePriceByDiscount - t_daijin.value ).toFixed( 2 ));
+                    }
+
+                    // 推广积分
+                    if ( pushintegralFee ) {
+                        wholePriceByDiscount = Number((wholePriceByDiscount - pushintegralFee).toFixed( 2 ));
                     }
 
                     tripOrders['wholePriceByDiscount'] = wholePriceByDiscount;
@@ -557,13 +577,13 @@ Page({
 
                                     price: Number(( price * order.count).toFixed( 2 )),
 
-                                    title: '拼团就减',
+                                    title: '拼成就减',
 
                                     img: order.img[ 0 ],
 
                                     // desc: `${order.name} ${order.standername !== '默认型号' && !!order.standername ? order.standername : ''}`,
 
-                                    desc: `邀请他人拼团购买，立减${Number(( price * order.count).toFixed( 1 ))}元`,
+                                    desc: `邀请群友拼团购买，立减${Number(( price * order.count).toFixed( 1 ))}元`,
 
                                     share: {
                                         title: `省${order.allocatedGroupPrice ?
@@ -657,7 +677,7 @@ Page({
                     }
 
                     if ( hasPay ) {
-                        tripOrders['tripStatusCN'] = '已付款';
+                        tripOrders['tripStatusCN'] = '待发货';
                     }
 
                 });
@@ -676,6 +696,7 @@ Page({
                         if ( notPay.length > 0 ) {
                             return notPay
                         } else {
+                            console.log('????', allTripOrders )
                             return allTripOrders;
                         }
                     } else {
@@ -740,11 +761,6 @@ Page({
                             return shopping.pid === order.pid && shopping.sid === order.sid;
                         });
                     });
-
-                    // 判断订单中，是否存在等待拼团的订单
-                    if ( someWaitPin.length > 0 ) {
-                        this.toggleTask( );
-                    }
                 }
             }
         });
@@ -872,9 +888,7 @@ Page({
 
         http({
             url: `coupon_list`,
-            data: {
-                // isUsed: false
-            },
+            data: { },
             success: res => {
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
@@ -1009,6 +1023,12 @@ Page({
         });
     },
 
+    // 在任务模块，领取了另一个券
+    onReplareLijian( ) {
+        // onShow会自动调
+        // this.fetchCoupons( true );
+    },
+
     /** 监听全局新旧客 */
     watchRole( ) {
         app.watch$('isNew', val => {
@@ -1020,9 +1040,8 @@ Page({
             }
         });
         app.watch$('appConfig', val => {
-            const value = (val || { })['push-integral-money-rate'];
-            value !== undefined && this.setData({
-                pushIntegralMoneyRate: (val || { })['push-integral-money-rate']
+            !!val && this.setData({
+                pushIntegralMoneyRate: val['push-integral-money-rate'] || 0
             });
         });
     },
@@ -1036,7 +1055,6 @@ Page({
     payLastDepositPrice({ currentTarget }) {
         const { lastDepositPrice, notPayDepositOrders } = currentTarget.dataset.data;
         wxPay( lastDepositPrice, ({ prepay_id }) => {
-            console.log('支付啦！！！')
             // 批量更新订单为已支付
             const pay = ( ) => http({
                 url: 'order_upadte-to-payed',
@@ -1116,19 +1134,22 @@ Page({
 
     /** 展示任务弹框 */
     toggleTask( ) {
-        const { showTask } = this.data;
+        // const { showTask } = this.data;
 
         // 即将打开
-        if ( showTask === 'hide' ) {
-            wx.showShareMenu( );
-        } else {
-            wx.hideShareMenu( );
-        }
+        // if ( showTask === 'hide' ) {
+        //     wx.showShareMenu( );
+        // } else {
+        //     wx.hideShareMenu( );
+        // }
 
-        this.setData({
-            showTask: showTask === 'hide' ? 'show' : 'hide',
-            showFinger: false
-        });
+        // this.setData({
+        //     showTask: showTask === 'hide' ? 'show' : 'hide',
+        //     showFinger: false
+        // });
+
+        var el = this.selectComponent('#task');
+        el.toggle();
         
     },
 
@@ -1154,7 +1175,7 @@ Page({
     onLoad: function (options) {
         this.watchRole( );
         this.runComputed( );
-        wx.hideShareMenu( );
+        // wx.hideShareMenu( );
 
         const { tid, fromDetail } = options;
         if ( tid ) { 
@@ -1167,6 +1188,12 @@ Page({
                 title: '省钱'
             });
         }
+
+        setTimeout(( ) => {
+            this.setData({
+                showTaskCom: true
+            })
+        }, 500 );
     },
 
     /**
@@ -1223,6 +1250,12 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function ( event ) {
-        return event.target.dataset.share;
+
+        // return event.target.dataset.share;
+        return {
+            title: '群拼团！大家都能省～',
+            path: '/pages/trip-enter/index',
+            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/cover-trip-enter-1.png'
+        }
     }
 })

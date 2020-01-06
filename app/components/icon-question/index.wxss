@@ -1,0 +1,7 @@
+.c-icon-question {
+    font-weight: 200;
+    border-radius: 50%;
+    text-align: center;
+    display: inline-block;
+    letter-spacing: normal;
+}

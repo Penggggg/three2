@@ -14,7 +14,7 @@
 
     <view class="gcl-result-waterfall">
         <view
-            wx:key="{{ index }}"
+            wx:key="index"
             wx:for="{{ result$ }}"
             class="gcl-result-item"
         >

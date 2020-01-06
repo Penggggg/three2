@@ -1,6 +1,6 @@
+const app = getApp( );
 const { http } = require('../../util/http.js');
 const { navTo } = require('../../util/route.js');
-const { createFormId } = require('../../util/form-id');
 
 const storageKey = 'manager-check-order';
 
@@ -187,7 +187,7 @@ Component({
                 })
             }
 
-            if ( adjustGroupPrice === 0 ) {
+            if ( !adjustGroupPrice || Number( adjustGroupPrice ) === 0 ) {
                 return wx.showToast({
                     icon: 'none',
                     title: '团购价不能为0'
@@ -269,9 +269,12 @@ Component({
 
         // 跳到所有的订单
         goAllOrder( e ) {
-            createFormId( e.detail.formId );
             const { tid, lastCheckTime } = this.data;
             navTo(`/pages/manager-trip-order-all/index?tid=${tid}&last=${lastCheckTime}`);
+        },
+
+        onSubscribe( ) {
+            app.getSubscribe('newOrder,trip,waitPin');
         }
     },
 

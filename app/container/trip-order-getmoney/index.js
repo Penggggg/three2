@@ -1,3 +1,4 @@
+const app = getApp( );
 const { http } = require('../../util/http.js');
 const { navTo } = require('../../util/route.js');
 
@@ -63,9 +64,9 @@ Component({
                 let wholePriceNotDiscount = orders.reduce(( x, y ) => {
                     let currentPrice = 0;
                     const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
-                    if ( y.base_status === '2' || y.base_status === '3' ) {
+                    if ( y.base_status === '1' || y.base_status === '2' || y.base_status === '3' ) {
                         currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * count$( y );
-                    } else if ( y.base_status === '0' || y.base_status === '1' ) {
+                    } else if ( y.base_status === '0' ) {
                         currentPrice = count$( y ) * ( allocatedPrice || price );
                     } else {
                         currentPrice = 0;
@@ -296,7 +297,7 @@ Component({
                     hasNotAdjustedLength: x.orders.filter( o => o.allocatedCount === undefined ).length
                 });
             });
-       
+
             return meta;
         },
         lastCallMoneyTimes$( ) {
@@ -570,7 +571,7 @@ Component({
             const sendGetMoney = ( ) => {
                 wx.showModal({
                     title: '提示',
-                    content: '发送收款推送后，不能更改订单数量/价格',
+                    content: '发送推送后，无法更改',
                     success: res => {
                         if ( !res.confirm ) { return; }
     
@@ -637,7 +638,7 @@ Component({
             if ( !isAllHasDeliver ) {
                 wx.showModal({
                     title: '提示',
-                    content: '有未调整邮费，确定提交吗？',
+                    content: '有邮费未调整，确定发送吗？',
                     success: res => {
                         res.confirm && sendGetMoney( )
                     }

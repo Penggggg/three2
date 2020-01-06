@@ -12,10 +12,11 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+      const id = options!.id; 
       wx.hideShareMenu({ });
-      if ( !options!.id ) { return; }
+      if ( !id ) { return; }
       this.setData!({
-        id: options!.id
+        id
       });
     },
   

@@ -69,7 +69,7 @@
     width: 100%;
     content: '';
     transform: scaleY( 0.5 );
-    background: rgba(0, 0, 0, 0.19);
+    background: rgba(0, 0, 0, 0.1);
     position: absolute;
 }
 
@@ -78,7 +78,7 @@
 } */
 
 .caf-item-label {
-    color: #666;
+    color: #333;
     font-size: 24rpx;
     padding: 20rpx 0 20rpx 30rpx;
     margin-right: 50rpx;
@@ -144,7 +144,7 @@
 .ptd-btn-block {
     width: 100vw;
     display: flex;
-    margin-top: 35rpx;
+    margin-top: 55rpx;
     padding: 0 35rpx 30rpx;
     box-sizing: border-box;
     background: transparent;
@@ -222,4 +222,19 @@
   
   .fix-btn:after {
     border:none;
+  }
+
+  .con-form-trip-detail {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+      justify-content: space-between;
+  }
+
+  .cftd-con {
+
+  }
+
+  .ptd-btn-block {
+      
   }

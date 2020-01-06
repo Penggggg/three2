@@ -5,12 +5,13 @@
     <form
         class="flex-1"
         wx:for="{{ navList$ }}"
-        wx:key="{{ index }}"
+        wx:key="index"
         data-url="{{ item.url }}"
         bindsubmit="navigate"
         report-submit="{{ true }}"
     >
         <button 
+            bindtap="onSubscribe"
             form-type="submit"
             class='fix-btn con-tdb-item'
         >

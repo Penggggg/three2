@@ -1,6 +1,6 @@
+const app = getApp( );
 const { http } = require('../../util/http.js');
 const { computed } = require('../../lib/vuefy/index.js');
-const { createFormId } = require('../../util/form-id.js');
 const { wxPay } = require('../../util/pay.js');
 
 Component({
@@ -77,8 +77,17 @@ Component({
 
         // 初始化
         init( isShow ) {
-            !!isShow && this.setTopColor( );
-            !isShow && this.resetTopColor( );
+            if ( isShow ) {
+                this.setTopColor( );
+                wx.setNavigationBarTitle({
+                    title: '付尾款'
+                });
+            } else {
+                this.resetTopColor( );
+                wx.setNavigationBarTitle({
+                    title: '我的拼团'
+                });
+            }
         },
 
         // 行程订单
@@ -129,7 +138,6 @@ Component({
 
         // 开启结算
         onSettle( e ) {
-            createFormId( e.detail.formId );
 
             const coupons = [ ];
             const { lastPrice$, tripOrder, deduction$, isUsePushIntegral } = this.data;
@@ -183,8 +191,10 @@ Component({
                 });
 
             }, ( ) => { });
-        }
+        },
 
+        onSubscribe( ) {
+        }
     },
 
     attached: function( ) {

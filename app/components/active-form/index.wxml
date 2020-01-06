@@ -6,7 +6,7 @@
     
     <view
       wx:for="{{ meta }}"
-      wx:key="{{ index }}"
+      wx:key="index"
     >
 
       <!-- 标题类型 -->
@@ -89,7 +89,7 @@
             wx:for="{{ formData[ item.key ]}}"
             wx:for-item="label"
             wx:for-index="k"
-            wx:key="{{ k }}"
+            wx:key="k"
             data-tagkey="{{ item.key }}"
             data-tagindex="{{ k }}"
             class='label inline'
@@ -257,7 +257,7 @@
       type="text"
       value="{{ selecingTag }}"
       bind:input="editingTag"
-      placeholder="请输入新的标签名"
+      placeholder="如：补水"
     />
   </i-modal>
 

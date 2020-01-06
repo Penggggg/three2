@@ -25,7 +25,7 @@
             <view
                 class="toa-item"
                 wx:for="{{ list$ }}"
-                wx:key="{{ index }}"
+                wx:key="index"
             >
                 <!-- 头像 -->
                 <view class="toa-avatar-con">

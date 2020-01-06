@@ -3,7 +3,7 @@
     <!-- 本次上传的照片 -->
     <view
         wx:for="{{ list }}"
-        wx:key="{{ index }}"
+        wx:key="index"
         class="ciu-img-container {{ canAdjust && list.length > 1 ? 'big' : '' }}"
     >
 
@@ -71,7 +71,7 @@
           mode="aspectFit"
           src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/upload.png"
       />
-      <text class='ciu-upload-tips'>上传图片</text>
+      <text class='ciu-upload-tips'>点击上传</text>
     </view>
 
 </view>

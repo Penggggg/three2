@@ -1,3 +1,4 @@
+const app = getApp( );
 const { navTo } = require('../../util/route.js');
 
 /**

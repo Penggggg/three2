@@ -152,7 +152,7 @@
                             wx:if="{{ fairyList$.length > 0 }}"
                         >
                             <block
-                                wx:key="{{ index }}"
+                                wx:key="index"
                                 wx:for="{{ fairyList$ }}"
                             >
                                 <swiper-item>
@@ -207,7 +207,7 @@
                                     data-item="{{ item }}"
                                     report-submit="{{ true }}"
                                     class="te-pin-goods-form"
-                                    wx:key="{{ index }}"
+                                    wx:key="index"
                                     wx:for="{{ allShoppinglist }}"
                                 >
                                     <button
@@ -263,7 +263,7 @@
                         <view class="te-recommond-img-list">
                             <image
                                 mode="scaleToFill"
-                                wx:key="{{ index }}"
+                                wx:key="index"
                                 lazy-load="{{ true }}"
                                 class="te-recommond-icon-img"
                                 wx:for="{{ recommendGoodsTop$ }}"
@@ -283,7 +283,7 @@
                         wx:if="{{ recommendGoods$.length > 0 }}"
                     >
                         <block
-                            wx:key="{{ index }}"
+                            wx:key="index"
                             wx:for="{{ recommendGoods$ }}"
                         >
                             <swiper-item class="recommond-swiper-item">
@@ -321,7 +321,7 @@
                     >
                         <my-good-item-3
                             wx:for="{{ otherGoods }}"
-                            wx:key="{{ index }}"
+                            wx:key="index"
                             good="{{ item }}"
                             tid="{{ current._id }}"
                         />

@@ -1,150 +1,146 @@
-<!--container/form/trip-detail/index.wxml-->
+<view>
 
-<view class='con-form-trip-detail'>
+    <view class='con-form-trip-detail'>
 
-    <!-- 顶部公告 -->
-    <wxc-notice
-        color="#4d4d4d"
-        bg-color="#fff"
-        icon-color="#4d4d4d"
-        scroll="{{ true }}"
-        close="{{ true }}"
-        show-icon="{{ true }}"
-        notice="{{ isClosed ? '行程已关闭，无法修改' : '已发布行程仅能修改基本信息，已开始行程将无法修改任何信息！'}}"
-    />
+        <view class="cftd-con">
 
-    <!-- 表单：基本信息 -->
-    <my-active-form
-        id="form1"
-        meta="{{ meta }}"
-    />
+            <!-- 表单：基本信息 -->
+            <my-active-form
+                id="form1"
+                meta="{{ meta }}"
+            />
 
-    <!-- 商品推荐 -->
-    <view class="recommend-block">
+            <!-- 商品推荐 -->
+            <view class="recommend-block">
 
-        <!-- 商品推荐列表 -->
-        <scroll-view
-            scroll-x="{{ true }}"
-            wx:if="{{ selectedProducts.length > 0 }}"
-            class="recommend-list"
-        >
-            <view
-                class="recommend-item"
-                wx:key="{{ index }}"
-                data-sid="{{ item._id }}"
-                bindtap="toggleDeleteRecommend"
-                wx:for="{{ selectedProducts }}"
-            >
-                <image
-                    mode="aspectFill"
-                    lazy-load="{{ true }}"
-                    class="recommend-item-img"
-                    src="{{ item.img[ 0 ]}}"
-                />
-                <view class="recommend-item-title">{{ item.title }}</view>
-                <view
-                    data-data="{{ item }}"
-                    catchtap="deleteCommand"
-                    class='ptd-img-icon ptd-icon'
+                <!-- 商品推荐列表 -->
+                <scroll-view
+                    scroll-x="{{ true }}"
+                    wx:if="{{ selectedProducts.length > 0 }}"
+                    class="recommend-list"
                 >
-                    <wxc-icon
-                        size="18"
-                        type="close"
-                        color="#fff"
-                    />
+                    <view
+                        class="recommend-item"
+                        wx:key="index"
+                        data-sid="{{ item._id }}"
+                        bindtap="toggleDeleteRecommend"
+                        wx:for="{{ selectedProducts }}"
+                    >
+                        <image
+                            mode="aspectFill"
+                            lazy-load="{{ true }}"
+                            class="recommend-item-img"
+                            src="{{ item.img[ 0 ]}}"
+                        />
+                        <view class="recommend-item-title">{{ item.title }}</view>
+                        <view
+                            data-data="{{ item }}"
+                            catchtap="deleteCommand"
+                            class='ptd-img-icon ptd-icon'
+                        >
+                            <wxc-icon
+                                size="18"
+                                type="close"
+                                color="#fff"
+                            />
+                        </view>
+                    </view>
+                </scroll-view>
+                
+                <!-- 商品推荐按钮 -->
+                <view class='recommend-btn-block'>
+                    <wxc-button
+                        type="beauty"
+                        plain="{{ true }}"
+                        bind:tap="onToggleProduct"
+                    >
+                        选择商品
+                    </wxc-button>
                 </view>
+
             </view>
-        </scroll-view>
+
+            <!-- 表单：营销信息 -->
+            <my-active-form
+                id="form2"
+                meta="{{ meta2 }}"
+            />
+
+            <!-- 消费满减 -->
+            <!-- <view
+                class="caf-inputs caf-item"
+                bindtap="toggleFullReduce"
+            >
+                <text class='caf-item-label'>消费满减</text>
+                <view
+                    class="caf-item-input {{ !fullreducePrice ? 'no-content' : '' }}"
+                >
+                    <view>
+                        {{ fullreducePrice }}
+                        {{ !fullreducePrice ? '如：满200元减10元' : '' }}
+                    </view>
+                </view>
+            </view> -->
         
-        <!-- 商品推荐按钮 -->
-        <view class='recommend-btn-block'>
-            <wxc-button
-                type="beauty"
-                plain="{{ true }}"
-                bind:tap="onToggleProduct"
+            <!-- 行程代金券 -->
+            <!-- <view
+                class="caf-inputs caf-item"
+                bindtap="toggleCashCoupon"
             >
-                选择商品
-            </wxc-button>
+                <text class='caf-item-label'>代金券</text>
+                <view
+                    class="caf-item-input {{ !cashCouponPrice ? 'no-content' : '' }}"
+                >
+                    <view>
+                        {{ cashCouponPrice }}
+                        {{ !cashCouponPrice ? '行程结束后发放，用于下次消费' : '' }}
+                    </view>
+                </view>
+            </view> -->
+
+            <!-- 表单：资费信息 -->
+            <!-- <my-active-form
+                id="form3"
+                meta="{{ meta3 }}"
+            /> -->
+        
         </view>
 
-    </view>
-
-    <!-- 表单：营销信息 -->
-    <my-active-form
-        id="form2"
-        meta="{{ meta2 }}"
-    />
-
-    <!-- 行程满减 -->
-    <view
-        class="caf-inputs caf-item"
-        bindtap="toggleFullReduce"
-      >
-        <text class='caf-item-label'>行程满减</text>
+        <!-- 按钮 -->
         <view
-            class="caf-item-input {{ !fullreducePrice ? 'no-content' : '' }}"
+            class="ptd-btn-block"
         >
-            <view>
-                {{ fullreducePrice }}
-                {{ !fullreducePrice ? '如：满200元减10元' : '' }}
-            </view>
-        </view>
-    </view>
-   
-    <!-- 行程代金券 -->
-    <view
-        class="caf-inputs caf-item"
-        bindtap="toggleCashCoupon"
-      >
-        <text class='caf-item-label'>代金券</text>
-        <view
-            class="caf-item-input {{ !cashCouponPrice ? 'no-content' : '' }}"
-        >
-            <view>
-                {{ cashCouponPrice }}
-                {{ !cashCouponPrice ? '行程结束后发放，用于下次消费' : '' }}
-            </view>
-        </view>
-    </view>
 
-    <!-- 表单：资费信息 -->
-    <my-active-form
-        id="form3"
-        meta="{{ meta3 }}"
-    />
-
-    <!-- 按钮 -->
-    <view
-        class="ptd-btn-block"
-    >
-
-        <form
-            class="flex-1 btn-mr"
-            bindsubmit="closeTrip"
-            wx:if="{{ canBeEnd }}"
-            report-submit="{{ true }}"
-        >
-            <button
-                form-type="submit"
-                class='fix-btn ptd-btn'
+            <!-- <form
+                class="flex-1 btn-mr"
+                bindsubmit="closeTrip"
+                wx:if="{{ canBeEnd }}"
+                report-submit="{{ true }}"
             >
-                结束行程( 收尾款 )
-            </button>
-        </form>
+                <button
+                    bindsubmit="submit"
+                    form-type="submit"
+                    class='fix-btn ptd-btn'
+                >
+                    结束行程( 收尾款 )
+                </button>
+            </form> -->
 
-        <form
-            class="flex-1"
-            bindsubmit="submit"
-            wx:if="{{ !isClosed }}"
-            report-submit="{{ true }}"
-        >
-            <button
-                form-type="submit"
-                class='fix-btn ptd-btn invert'
+            <form
+                class="flex-1"
+                wx:if="{{ !isClosed }}"
+                report-submit="{{ true }}"
             >
-                {{ !!tid ? '更新' : '创建' }}
-            </button>
-        </form>
+                <button
+                    bindtap="submit"
+                    form-type="submit"
+                    class='fix-btn ptd-btn invert'
+                >
+                    {{ !!tid ? '确定' : '创建' }}
+                </button>
+            </form>
+        </view>
+
     </view>
 
     <!-- 商品选择 -->
@@ -164,9 +160,9 @@
         确定去掉该推荐商品吗?
     </i-modal>
 
-    <!-- 行程满减 -->
+    <!-- 消费满减 -->
     <i-modal
-        title="行程满减"
+        title="消费满减"
         bind:ok="toggleFullReduce"
         visible="{{ showFullReduce }}"
         bind:cancel="closeReduce"

@@ -27,8 +27,7 @@ const getNow = ( ts = false ): any => {
  * @description 行程模块
  * -------- 字段 ----------
         title 标题 string
- *!     destination 目的地 string
-        warning: 是否发送过期警告,
+        warning: 是否发送过期警告给adm,
         start_date 开始时间 number
         end_date 结束时间 number
         reduce_price 行程立减 number
@@ -45,6 +44,7 @@ const getNow = ( ts = false ): any => {
         updateTime 更新时间
         isClosed: 是否已经手动关闭
         callMoneyTimes: 发起催款次数
+*!      type: 类型，sys（系统自动发起）、undefined（手动创建）
  */
 export const main = async ( event, context ) => {
 
@@ -120,7 +120,7 @@ export const main = async ( event, context ) => {
                 .count( );
 
             // 获取数据
-            const data$ = await db.collection('trip')
+            const trips$ = await db.collection('trip')
                 .where({
                     title: search
                 })
@@ -129,69 +129,91 @@ export const main = async ( event, context ) => {
                 .orderBy('updateTime', 'desc')
                 .get( );
 
-            // 获取每躺行程的订单数
-            const orders$ = await Promise.all( data$.data.map( x => {
-                return db.collection('order')
-                    .where({
-                        tid: x._id,
-                        pay_status: _.neq('0')
-                    })
-                    .count( );
-            }));
+            const more = await Promise.all(
+                trips$.data.map( async trip => {
 
-            const injectOrderCount = data$.data.map(( x, k ) => {
-                return Object.assign({ }, x, {
-                    orders: orders$[ k ].total
-                })
-            });
+                    // 获取行程的购物清单
+                    const sl$ = await db.collection('shopping-list')
+                        .where({
+                            tid: trip._id
+                        })
+                        .field({
+                            pid: true,
+                            oids: true,
+                            uids: true,
+                            adjustPrice: true,
+                            adjustGroupPrice: true
+                        })
+                        .get( );
+                    const sl = sl$.data;
 
-            // 获取每躺行程的销售额
-            const salesVolume$ = await Promise.all( injectOrderCount.map( x => {
-                return db.collection('order')
-                    .where({
-                        tid: x._id,
-                        pay_status: _.neq('0'),
-                        base_status: _.or( _.eq('0'),_.eq('1'), _.eq('2'), _.eq('3'))
-                    })
-                    .get( );
-            }))
+                    // 统计收益
+                    const slOrders$ = await Promise.all(
+                        sl.map( async s => {
+                            const { oids } = s;
+                            const orders: any = await Promise.all(
+                                oids.map( async o => {
+                                    const order$ = await db.collection('order')
+                                        .doc( String( o ))
+                                        .field({
+                                            count: true,
+                                            allocatedCount: true
+                                        })
+                                        .get( );
+                                    return order$.data;
+                                })
+                            );
+                            return {
+                                ...s,
+                                orders
+                            }
+                        })
+                    );
 
-            const injectSalesVolume = salesVolume$.map(( o, k ) => {
-
-                // 销量
-                const salesVolume = o.data
-                    .filter( x => x.pay_status !== '0' &&
-                        (( x.base_status === '1' ) || ( x.base_status === '2' ) || ( x.base_status === '3' ))
-                    )
-                    .reduce(( x, y ) => {
-                        return x + ( y.allocatedPrice * ( y.allocatedCount || 0 ));
+                    // 统计收益
+                    const income = slOrders$.reduce(( sum, sl: any ) => {
+                        const { orders, uids, adjustPrice, adjustGroupPrice } = sl;
+                        const slInome = orders.reduce(( last, order ) => {
+                            const { allocatedCount, count } = order;
+                            let count_ = allocatedCount !== undefined ? allocatedCount : count;
+                            return last + ( uids.length > 1 ? ( adjustGroupPrice ? adjustGroupPrice : adjustPrice ) : adjustPrice ) * count_;
+                        }, 0 );
+                        return slInome + sum;
                     }, 0 );
 
-                // 总买家
-                const clients = Array.from(
-                    new Set( o.data
-                        .filter( x => 
-                            x.pay_status !== '0' &&
-                            x.base_status !== '4' && 
-                            x.base_status !== '5'
+                    const orders$ = await db.collection('order')
+                        .where({
+                            tid: trip._id,
+                            pay_status: _.eq('1'),
+                            base_status: _.or( _.eq('0'),_.eq('1'), _.eq('2'), _.eq('3'))
+                        })
+                        .field({
+                            openid: true
+                        })
+                        .get( );
+
+                    // 未付款买家
+                    const notPayAllClients = Array.from(
+                        new Set( 
+                            orders$.data
+                                .map( x => x.openid )
                         )
-                        .map( x => x.openid )
-                )).length;
+                    ).length;
 
-                // 未付款买家
-                const notPayAllClients = Array.from(
-                    new Set( o.data
-                        .filter( x => x.pay_status === '1' )
-                        .map( x => x.openid )
-                )).length;
+                    return {
+                        notPayAllClients,
+                        sales_volume: income
+                    }
 
+                })
+            );
 
-                return Object.assign({ }, injectOrderCount[ k ], {
-                    clients,
-                    notPayAllClients,
-                    sales_volume: salesVolume
-                });
-            });
+            const inject = trips$.data.map(( trip, key ) => {
+                return {
+                    ...trip,
+                    ...more[ key ]
+                }
+            })
             
             return ctx.body = {
                 status: 200,
@@ -199,7 +221,7 @@ export const main = async ( event, context ) => {
                     search: event.data.title.replace(/\s+/g, ''),
                     pageSize: limit,
                     page: event.data.page,
-                    data: injectSalesVolume,
+                    data: inject,
                     total: total$.total,
                     totalPage: Math.ceil( total$.total / limit )
                 }
@@ -224,14 +246,13 @@ export const main = async ( event, context ) => {
         try {
 
             const { moreDetail } = event.data;
+            const tid = event.data._id || event.data.tid;
             
             // 获取基本详情
             const data$ = await db.collection('trip')
-                    .where({
-                        _id: event.data._id || event.data.tid
-                    })
-                    .get( );
-            const meta = data$.data[ 0 ];
+                .doc( tid )
+                .get( );
+            const meta = data$.data;
 
             if ( moreDetail !== false ) {
                 // 通过已选的商品ids,拿到对应的图片、title、_id
@@ -254,10 +275,19 @@ export const main = async ( event, context ) => {
                 meta.selectedProducts = [ ];
             }
             
+            const canEdit$ = await db.collection('coupon')
+                .where({
+                    tid
+                })
+                .count( );
+
+            // meta.canEditCoupons = canEdit$.total === 0;
+            // 这个版本只有 立减
+            meta.canEditCoupons = true;
 
             return ctx.body = {
                 status: 200,
-                data: data$.data[ 0 ]
+                data: meta
             };
 
         } catch( e ) {
@@ -275,10 +305,11 @@ export const main = async ( event, context ) => {
     app.router('edit', async( ctx, next ) => {
         try {
 
-            let trip: any = null;
+            let lastTrip: any = null;
+            let start_date = getNow( true );
             let _id = event.data._id;
             const tid = event.data._id;
-            const { published, title, start_date, reduce_price } = event.data;
+            const { published, title, reduce_price } = event.data;
             
             const getErr = message => {
                 return ctx.body = {
@@ -287,130 +318,107 @@ export const main = async ( event, context ) => {
                 }
             };
 
+            // 行程默认在当天晚上23点结束
             const fixEndDate = endDate => {
                 const t = new Date( endDate );
                 const y = t.getFullYear( );
                 const m = t.getMonth( ) + 1;
                 const d = t.getDate( );
 
-                return new Date(`${y}/${m}/${d} 20:00:00`).getTime( );
+                return new Date(`${y}/${m}/${d} 23:00:00`).getTime( );
             };
 
             const end_date = fixEndDate( Number( event.data.end_date ));
 
-            /**
-             * 校验1：
-             * 如果行程选择“已发布”
-             * 需要检查是否有 已发布行程的结束时间 大于等于 当前行程的开始时间
-             */
-            if ( published ) {
+            if ( reduce_price < 1 ) {
+                return getErr('立减金额不能少于1元')
+            }
 
-                let where$ = {
-                    isClosed: false,
-                    start_date: _.lt( getNow( true )),
-                    end_date: _.gte( event.data.start_date )
+            // 创建行程
+            if ( !_id ) {
+
+                const count$ = await db.collection('trip')
+                    .where({
+                        isClosed: false,
+                        published: true,
+                    })
+                    .count( );
+                
+                if ( count$.total ) {
+                    return getErr('有未结束行程,请结束行程后再创建');
+                }
+
+                const createData = {
+                    ...event.data,
+                    end_date,
+                    start_date: getNow( true ),
+                    warning: false,
+                    callMoneyTimes: 0
                 };
 
-                if ( !!tid ) {
-                    where$ = Object.assign({ }, where$, {
-                        _id: _.neq( tid )
-                    });
-                }
-
-                const rule1$ = await db.collection('trip')
-                    .where(  where$ )
-                    .count( );
-        
-                if ( rule1$.total > 0 ) {
-                    return getErr('开始时间必须大于上趟行程的结束时间');
-                }
-            } 
-
-            /**
-             * 校验2:
-             * 结束时间不能小于开始时间
-             */
-            if ( start_date >= end_date  ) {
-                return getErr('开始时间必须大于结束时间');
-            }
-
-            /** 获取目标trip */
-            if ( !!_id ) {
-                const result$ = await db.collection('trip')
-                    .doc( _id )
-                    .get( );
-                trip = result$.data;
-            }
-
-            // 创建 
-            if ( !_id ) {
-    
                 const create$ = await db.collection('trip')
                     .add({
-                        data: Object.assign({ }, event.data, {
-                            end_date,
-                            warning: false,
-                            callMoneyTimes: 0
-                        })
+                        data: createData
                     });
                 _id = create$._id;
-    
-            // 编辑
+            // 编辑行程、覆盖sysTrip
             } else {
     
                 const origin$ = await db.collection('trip')
-                                    .where({
-                                        _id
-                                    })
-                                    .get( );
+                    .where({
+                        _id
+                    })
+                    .get( );
                 
                 const origin = origin$.data[ 0 ];
+                const isClosed = getNow( true ) >= Number( end_date );
     
                 delete origin['_id'];
                 delete event.data['_id'];
+                delete event.data['createTime'];
                 delete event.data['sales_volume']
                 
                 const temp = Object.assign({ }, origin, {
                     ...event.data,
-                    callMoneyTimes: end_date > origin['end_date'] ? 0 : origin['callMoneyTimes'],
-                    isClosed: getNow( true ) >= Number( end_date ) 
-                })
-    
+                    isClosed,
+                    type: 'custom',
+                    callMoneyTimes: end_date > origin['end_date'] ? 0 : origin['callMoneyTimes']
+                });
+
                 await db.collection('trip')
-                        .doc( _id )
-                        .set({
-                            data: temp
-                        });
+                    .doc( _id )
+                    .set({
+                        data: temp
+                    });   
             }
 
             /**
              * 推送
-             * 创建时候的发布、
-             * 编辑的时候发布
+             * 创建时候的推送
              */
-            if ((!tid && published ) || ( !!trip && !trip.published && !!published )) {
+            if (( !tid && published )) {
 
                 const time = new Date( start_date );
 
                 // 推送代购通知
                 const members = await db.collection('manager-member')
-                .where({
-                    push: true
-                })
-                .get( );
-            
+                    .where({
+                        push: true
+                    })
+                    .get( );
+
                 await Promise.all(
                     members.data.map( async member => {
                         // 4、调用推送
                         const push$ = await cloud.callFunction({
                             name: 'common',
                             data: {
-                                $url: 'push-template-cloud',
+                                $url: 'push-subscribe-cloud',
                                 data: {
                                     openid: member.openid,
                                     type: 'trip',
                                     page: 'pages/manager-trip-list/index',
-                                    texts: [`${title}`, `新行程已推送客户,为你开通了订单推送`]
+                                    texts: [`${title}`, `代购行程推送到客户，且开通了订单推送`]
                                 }
                             }
                         });
@@ -434,7 +442,7 @@ export const main = async ( event, context ) => {
                             const push$ = await cloud.callFunction({
                                 name: 'common',
                                 data: {
-                                    $url: 'push-template-cloud',
+                                    $url: 'push-subscribe-cloud',
                                     data: {
                                         openid: user.openid,
                                         type: 'trip',
@@ -490,18 +498,6 @@ export const main = async ( event, context ) => {
                 .get( );
 
             /**
-             * 总收益
-             * !至少已付订金，至少已经调节售价、数量
-             */
-            const sum = orders$.data
-                .filter( x => x.pay_status !== '0' &&
-                    (( x.base_status === '1' ) || ( x.base_status === '2' ) || ( x.base_status === '3' ))
-                )
-                .reduce(( x, y ) => {
-                    return x + ( y.allocatedPrice * ( y.allocatedCount || 0 ));
-                }, 0 );
-
-            /**
              * 总客户数量
              * !至少已付订金
              */
@@ -519,6 +515,55 @@ export const main = async ( event, context ) => {
                     .filter( x => x.pay_status === '1' )
                     .map( x => x.openid )
             )).length;
+
+            // 获取行程的购物清单
+            const sl$ = await db.collection('shopping-list')
+                .where({
+                    tid
+                })
+                .field({
+                    pid: true,
+                    oids: true,
+                    uids: true,
+                    adjustPrice: true,
+                    adjustGroupPrice: true
+                })
+                .get( );
+            const sl = sl$.data;
+
+            // 统计收益
+            const slOrders$ = await Promise.all(
+                sl.map( async s => {
+                    const { oids } = s;
+                    const orders: any = await Promise.all(
+                        oids.map( async o => {
+                            const order$ = await db.collection('order')
+                                .doc( String( o ))
+                                .field({
+                                    count: true,
+                                    allocatedCount: true
+                                })
+                                .get( );
+                            return order$.data;
+                        })
+                    );
+                    return {
+                        ...s,
+                        orders
+                    }
+                })
+            );
+        
+            // 统计收益
+            const sum = slOrders$.reduce(( sum, sl: any ) => {
+                const { orders, uids, adjustPrice, adjustGroupPrice } = sl;
+                const slInome = orders.reduce(( last, order ) => {
+                    const { allocatedCount, count } = order;
+                    let count_ = allocatedCount !== undefined ? allocatedCount : count;
+                    return last + ( uids.length > 1 ? ( adjustGroupPrice ? adjustGroupPrice : adjustPrice ) : adjustPrice ) * count_;
+                }, 0 );
+                return slInome + sum;
+            }, 0 );
 
             return ctx.body = {
                 status: 200,
@@ -650,19 +695,31 @@ export const main = async ( event, context ) => {
         
             await Promise.all(
                 members.data.map( async member => {
+
                     // 4、调用推送
-                    const push$ = await cloud.callFunction({
+                    const push1$ = await cloud.callFunction({
                         name: 'common',
                         data: {
-                            $url: 'push-template-cloud',
+                            $url: 'push-subscribe-cloud',
                             data: {
                                 openid: member.openid,
-                                type: 'trip',
+                                type: 'getMoney',
                                 page: `pages/manager-trip-order/index?id=${tid}&ac=${1}`,
                                 texts: [`${trip$.data.title}`, `关闭成功！一键收款功能已开启`]
                             }
                         }
                     });
+
+                    const push2$ = await cloud.callFunction({
+                        name: 'trip',
+                        data: {
+                            $url: 'close-trip-analyze',
+                            data: {
+                                tid
+                            }
+                        }
+                    });
+
                 })
             );
 
@@ -671,7 +728,205 @@ export const main = async ( event, context ) => {
         } catch ( e ) {
             return ctx.body = { status: 500 };
         }
-    })
+    });
+
+    /**
+     * @description
+     * 手动/自动关闭行程的时候，发送整个行程的运营数据给adm。
+     * 同时发送「群报」给adm
+     */
+    app.router('close-trip-analyze', async( ctx, next ) => {
+        try {
+
+            // 收益
+            let income = 0;
+            // 成功下单的商品
+            let pinGoodsNum = 0;
+            // 被查看的商品
+            let visitGoodsNum = 0;
+            // 行程天数
+            let daysNum = 0;
+            // 浏览量
+            let visitNum = 0;
+            // 浏览人数
+            let visitorNum = 0;
+            // 成功拼团人数
+            let pinNum = 0;
+    
+            const { tid } = event.data;
+
+            // 获取行程详情
+            const trip$ = await db.collection('trip')
+                .doc( String( tid ))
+                .field({
+                    end_date: true,
+                    start_date: true
+                })
+                .get( )
+            const trip = trip$.data;
+
+            // 获取行程的浏览量
+            const visitRecords$ = await db.collection('good-visiting-record')
+                .where({
+                    visitTime: _.gte( trip.start_date )
+                })
+                .get( );
+            const visitRecords = visitRecords$.data;
+
+            // 获取行程的购物清单
+            const sl$ = await db.collection('shopping-list')
+                .where({
+                    tid
+                })
+                .field({
+                    pid: true,
+                    oids: true,
+                    uids: true,
+                    adjustPrice: true,
+                    adjustGroupPrice: true
+                })
+                .get( );
+            const sl = sl$.data;
+                
+            // 统计收益
+            const slOrders$ = await Promise.all(
+                sl.map( async s => {
+                    const { oids } = s;
+                    const orders: any = await Promise.all(
+                        oids.map( async o => {
+                            const order$ = await db.collection('order')
+                                .doc( String( o ))
+                                .field({
+                                    count: true,
+                                    allocatedCount: true
+                                })
+                                .get( );
+                            return order$.data;
+                        })
+                    );
+                    return {
+                        ...s,
+                        orders
+                    }
+                })
+            );
+        
+            // 统计收益
+            income = slOrders$.reduce(( sum, sl: any ) => {
+                const { orders, uids, adjustPrice, adjustGroupPrice } = sl;
+                const slInome = orders.reduce(( last, order ) => {
+                    const { allocatedCount, count } = order;
+                    let count_ = allocatedCount !== undefined ? allocatedCount : count;
+                    return last + ( uids.length > 1 ? ( adjustGroupPrice ? adjustGroupPrice : adjustPrice ) : adjustPrice ) * count_;
+                }, 0 );
+                return slInome + sum;
+            }, 0 );
+
+            // 统计成功拼团
+            let slOpenids: string[ ] = [ ];
+            sl.map( s => {
+                slOpenids = [ ...slOpenids, ...s.uids ]
+            });
+            pinNum = Array.from(
+                new Set( slOpenids )
+            ).length;
+
+            // 统计成功下单的产品
+            pinGoodsNum = sl.length;
+
+            // 统计查看的数据
+            let goodIds: string[ ] = [ ];
+            let visitOpenids: string[ ] = [ ];
+
+            visitRecords.map( v => {
+                goodIds = [ ...goodIds, v.pid ]
+                visitOpenids = [ ...visitOpenids, v.openid ]
+            });
+
+            visitGoodsNum = Array.from(
+                new Set( goodIds )
+            ).length;
+
+            visitorNum = Array.from(
+                new Set( visitOpenids )
+            ).length;
+
+            // 按人均每款商品都打开3次计算
+            visitNum = visitorNum * visitGoodsNum * 3;
+
+            // 统计天数
+            daysNum = Math.ceil(( trip.end_date - trip.start_date ) / ( 24 * 60 * 60 * 1000))
+
+            const text1 = `${daysNum}天内，`;
+            const text2 = `${visitGoodsNum}件商品被${visitorNum}人围观${visitNum}次`;
+            const texts = [
+                `收益${income}元，${pinNum}人拼团${pinGoodsNum}件商品`,
+                (text1 + text2).length > 20 ? text2 : text1 + text2
+            ];
+
+            // 获取所有管理员
+            const adms$ = await db.collection('manager-member')
+                .where({ })
+                .get( );
+            
+            // 推送
+            await Promise.all(
+                adms$.data.map( async adm => {
+
+                    // 运营数据
+                    await cloud.callFunction({
+                        name: 'common',
+                        data: {
+                            $url: 'push-subscribe-cloud',
+                            data: {
+                                openid: adm.openid,
+                                type: 'waitPin',
+                                page: `pages/manager-trip-list/index`,
+                                texts
+                            }
+                        }
+                    });
+
+                    // 群报
+                    await cloud.callFunction({
+                        name: 'common',
+                        data: {
+                            $url: 'push-subscribe-cloud',
+                            data: {
+                                openid: adm.openid,
+                                type: 'trip',
+                                page: `pages/trip-reward/index?tid=${tid}`,
+                                texts: ['群拼团报告已出！', '点击并分享给群友吧～']
+                            }
+                        }
+                    });
+
+                    return 
+                })
+            );
+
+            return ctx.body = {
+                status: 200,
+                data: {
+                    texts,
+                    pinNum,
+                    income,
+                    pinGoodsNum,
+                    visitorNum,
+                    visitGoodsNum,
+                    visitNum,
+                    daysNum,
+                }
+            }
+            
+        } catch ( e ) {
+            console.log('????', e )
+            return ctx.body = {
+                status: 500,
+                message: e
+            }
+        }
+    });
 
     return app.serve( );
 

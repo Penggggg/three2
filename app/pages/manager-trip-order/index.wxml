@@ -1,16 +1,17 @@
 <view class="con-trip-order">
-    {{ active }}
+
     <!-- 上方tab -->
     <view class="to-tabs">
         <form
             wx:for="{{ tabs }}"
-            wx:key="{{ index }}"
+            wx:key="index"
             data-index="{{ index }}"
             bindsubmit="onTabChange"
             report-submit="{{ true }}"
             class="to-tabs-item {{ active === index ? 'active' : '' }} {{ active === index ? 'current' : '' }} {{ index === 2 || index === 1 ? 'line' : '' }}"
         >
             <button 
+                bindtap="onSubscribe"
                 form-type="submit"
                 class="fix-btn to-tab-text {{ active === index ? 'active' : '' }}"
             >
@@ -43,5 +44,8 @@
             />
         </view>
     </view>
+
+    <!-- 订阅消息模块 -->
+    <my-subscribe-tips />
 
 </view>

@@ -28,7 +28,7 @@
     >
         <view
             data-data="{{ item }}"
-            wx:key="{{ index }}"
+            wx:key="index"
             wx:for="{{ history }}"
             class="ps-history-item"
             bindtap="onSelectHistory"
@@ -55,7 +55,7 @@
     >
         <view class="ps-result-waterfall">
             <view
-                wx:key="{{ index }}"
+                wx:key="index"
                 wx:for="{{ result$ }}"
                 class="ps-result-item"
             >

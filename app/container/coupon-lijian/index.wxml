@@ -42,7 +42,7 @@
                     分享立即获另外<view class="con-lj-inline-big">{{ notGet }}</view>元红包
                 </view>
 
-                <!-- 用户授权按钮 -->
+                <!-- 用户授权按钮（无动画，因为要点击完授权，再点击分享，因此分享按钮才有动画） -->
                 <form
                     wx:if="{{ !isUserAuth }}"
                     class="cgp-toggle-btn"
@@ -66,10 +66,10 @@
                     report-submit="{{ true }}"
                 >
                     <button
+                        bindtap="onSubscribe"
                         open-type="share"
                         form-type="submit"
-                        class="formid-btn con-lj-share"
-                        animation="{{ animationMiddleHeaderItem }}"
+                        class="formid-btn con-lj-share scale"
                     >   
                         分享
                     </button>

@@ -16,6 +16,10 @@ Component({
         right: {
             type: String,
             value: '2'
+        },
+        fontSize: {
+            type: Number,
+            value: 29
         }
     },
 
