@@ -155,12 +155,11 @@
                         wx:key="index"
                         mode="aspectFill"
                         wx:for="{{ visitors$ }}"
-                        class='pgd-visitor-img'
+                        class="pgd-visitor-img {{ index === visitors$.length - 1 ? 'nmr' : '' }}"
                         lazy-load="{{ true }}"
                         src="{{ item.avatarUrl }}"
                    />
                 </view>
-                <view class="pgd-pin-item-sku"></view>
                 <view
                     class="pgd-pin-item-tips-con"
                 >
@@ -236,6 +235,7 @@
                     </view>
                     <!-- sku名称，只显示sku的 -->
                     <view
+                        wx:if="{{ item.name }}"
                         class="pgd-pin-item-sku {{ item.otherUser.length === 0 ? 'npl' : '' }}"
                     >
                         {{ item.name }}
