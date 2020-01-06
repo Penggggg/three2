@@ -99,11 +99,7 @@
   },
   "window": {
     "navigationBarTextStyle": "black",
-<<<<<<< HEAD
-    "navigationBarTitleText": "王小瓜优选",
-=======
-    "navigationBarTitleText": "群拼团",
->>>>>>> master
+    "navigationBarTitleText": "王小瓜群拼团",
     "navigationBarBackgroundColor": "#fff"
   },
   "cloud": true,
