@@ -1099,6 +1099,7 @@ export const main = async ( event, context ) => {
             
             const visitors$ = await db.collection('good-visiting-record')
                 .where( search )
+                .orderBy('visitTime', 'desc')
                 .get( );
     
             const visitors = visitors$.data;

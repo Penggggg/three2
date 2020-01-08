@@ -944,8 +944,8 @@ Page({
             imageUrl: shareCover || `${detail$.img[ 0 ]}`,
             path: `/pages/goods-detail/index?id=${detail$._id}&from=${openid}`,
             title: !!detail$ && detail$.hasPin && !hasOrder$ ?
-                `有人想要吗？拼团买，我们都能省！${detail$.title} ${detail$.tagText}` :
-                `推荐「${detail$.tagText}」神器!${detail$.title}`
+                `「群拼团」有群友想要吗？我们拼团买，一起省！${detail$.title} ${detail$.tagText}` :
+                `「可拼团」推荐大家一款「${detail$.tagText}」神器!${detail$.title}`
         }
     }
   })
