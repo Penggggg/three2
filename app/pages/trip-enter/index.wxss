@@ -65,17 +65,17 @@
 }
 
 .te2-classify-block {
-    padding: 20rpx 25rpx;
-    white-space: nowrap;
+    display: flex;
 }
 
 .te2-classify-item {
     color: #4d4d4d;
     font-size: 24rpx;
     line-height: 32rpx;
-    margin-right: 40rpx;
     display: inline-block;
     letter-spacing: 0.05em;
+    padding: 20rpx 25rpx;
+    white-space: nowrap;
 }
 
 .te2-classify-item.active {
