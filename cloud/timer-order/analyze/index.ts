@@ -30,12 +30,12 @@ const checkIsInRange = ( now: Date, range = [ 99 ]) => {
 
 /**
  * 运营数据分享：上一个运营活动的数据
- * 时间：早上10点
+ * 时间：早上9点
  */
 export const lastDayData = async ( ) => {
     try {
 
-        if ( !checkIsInRange( getNow( ), [ 10 ])) {
+        if ( !checkIsInRange( getNow( ), [ 9 ])) {
             return { status: 200 };
         }
 
@@ -53,7 +53,8 @@ export const lastDayData = async ( ) => {
                 visitTime: _.gte( time )
             })
             .field({
-                pid: true
+                pid: true,
+                openid: true
             })
             .get( );
         const visitorRecords = visitorRecords$.data;
@@ -61,7 +62,15 @@ export const lastDayData = async ( ) => {
         // 拿到浏览记录最高的商品
         let maxPid = '';
         let maxNum = 0;
+
+        let pidArr: string[ ] = [ ];
+        let openidArr: string[ ] = [ ];
+
         visitorRecords.reduce(( res, record ) => {
+
+            pidArr.push( record.pid );
+            openidArr.push( record.openid );
+
             res[ record.pid ] = !res[ record.pid ] ? 1 : res[ record.pid ] + 1;
             if ( res[ record.pid ] > maxNum ) {
                 maxPid = record.pid;
@@ -69,6 +78,16 @@ export const lastDayData = async ( ) => {
             }
             return res;
         }, { });
+
+        /** 被流量量 */
+        const totalPids = Array.from(
+            new Set( pidArr )
+        ).length;
+
+        /** 用户访问量 */
+        const totalOpenids = Array.from(
+            new Set( openidArr )
+        ).length;
 
         // 若有，获取这个商品的总拼团人数
         if ( !maxNum || !maxPid ) {
@@ -87,8 +106,35 @@ export const lastDayData = async ( ) => {
             .get( );
         const order = order$.data[ 0 ];
 
+        // 获取所有管理员
+        const adms$ = await db.collection('manager-member')
+            .where({ })
+            .get( );
+
+        // 如果没有订单，则发送的部分数据
         if ( order$.data.length === 0 ) {
-            return  { status: 200 }
+            // 推送
+            await Promise.all(
+                adms$.data.map( async adm => {
+                    await cloud.callFunction({
+                        name: 'common',
+                        data: {
+                            $url: 'push-subscribe-cloud',
+                            data: {
+                                openid: adm.openid,
+                                type: 'waitPin',
+                                page: `pages/ground-pin/index`,
+                                texts: [`昨天${totalPids}款商品被${totalOpenids}人围观了${ totalPids * totalOpenids * 2 }次`, `暂无订单，请尽快发起群拼团～`]
+                            }
+                        }
+                    });
+                    return 
+                })
+            );
+
+            return {
+                status: 200
+            }
         }
 
         const sl$ = await db.collection('shopping-list')
@@ -105,11 +151,6 @@ export const lastDayData = async ( ) => {
         if ( sl$.data.length === 0 ) {
             return  { status: 200 }
         }
-
-        // 获取所有管理员
-        const adms$ = await db.collection('manager-member')
-            .where({ })
-            .get( );
 
         // 获取商品详情
         const good$ = await db.collection('goods')
