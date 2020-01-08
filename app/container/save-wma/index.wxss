@@ -16,6 +16,7 @@
 
 .con-save-wma.hide {
     opacity: 0;
+    transform: scale( 0 );
 }
 
 .con-save-wma:after{ 
