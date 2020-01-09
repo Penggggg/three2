@@ -195,15 +195,20 @@ Page({
             }, 2000 );
         }
 
+        // return {
+        //     title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
+        //         activities.length === 0 ?
+        //             `看看这宝贝！拼团可省${String( priceGap ).replace(/\.00/g, '')}元！` :
+        //             `看看这宝贝！限时特价！` : 
+        //         '给你看看这宝贝！'
+        //         }${title}`,
+        //     path: `/pages/goods-detail/index?id=${_id}`,
+        //     imageUrl: img[ 0 ]
+        // }
+
         return {
-            title: `${priceGap !== '' && Number( priceGap ) !== 0 ? 
-                activities.length === 0 ?
-                    `看看这宝贝！拼团可省${String( priceGap ).replace(/\.00/g, '')}元！` :
-                    `看看这宝贝！限时特价！` : 
-                '给你看看这宝贝！'
-                }${title}`,
-            path: `/pages/goods-detail/index?id=${_id}`,
-            imageUrl: img[ 0 ]
+            title: '群拼团！分享就拿抵现金',
+            path: '/pages/ground-push-integral/index'
         }
     }
 })
