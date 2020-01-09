@@ -35,7 +35,7 @@ const checkIsInRange = ( now: Date, range = [ 99 ]) => {
 export const lastDayData = async ( ) => {
     try {
 
-        if ( !checkIsInRange( getNow( ), [ 9 ])) {
+        if ( !checkIsInRange( getNow( ), [ 10 ])) {
             return { status: 200 };
         }
 
