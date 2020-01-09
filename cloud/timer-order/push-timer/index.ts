@@ -42,7 +42,7 @@ export const userGetExp = async ( ) => {
                     const push$ = await cloud.callFunction({
                         name: 'common',
                         data: {
-                            $url: 'push-subscribe-cloud',
+                            $url: 'push-subscribe',
                             data: {
                                 openid: target.openid,
                                 type: 'hongbao',
