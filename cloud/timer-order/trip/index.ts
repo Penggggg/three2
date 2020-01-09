@@ -71,7 +71,7 @@ export const almostOver = async ( ) => {
                     const push$ = await cloud.callFunction({
                         name: 'common',
                         data: {
-                            $url: 'push-subscribe-cloud',
+                            $url: 'push-subscribe',
                             data: {
                                 openid: member.openid,
                                 type: 'waitPin',
@@ -134,7 +134,7 @@ export const overtimeTrip = async ( ) => {
                     const push$ = await cloud.callFunction({
                         name: 'common',
                         data: {
-                            $url: 'push-subscribe-cloud',
+                            $url: 'push-subscribe',
                             data: {
                                 openid: member.openid,
                                 type: 'trip',
@@ -231,7 +231,7 @@ export const autoTrip = async ( ) => {
                 const push$ = await cloud.callFunction({
                     name: 'common',
                     data: {
-                        $url: 'push-subscribe-cloud',
+                        $url: 'push-subscribe',
                         data: {
                             openid: member.openid,
                             type: 'trip',

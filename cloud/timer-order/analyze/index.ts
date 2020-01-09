@@ -35,7 +35,7 @@ const checkIsInRange = ( now: Date, range = [ 99 ]) => {
 export const lastDayData = async ( ) => {
     try {
 
-        if ( !checkIsInRange( getNow( ), [ 10 ])) {
+        if ( !checkIsInRange( getNow( ), [ 9 ])) {
             return { status: 200 };
         }
 
@@ -119,7 +119,7 @@ export const lastDayData = async ( ) => {
                     await cloud.callFunction({
                         name: 'common',
                         data: {
-                            $url: 'push-subscribe-cloud',
+                            $url: 'push-subscribe',
                             data: {
                                 openid: adm.openid,
                                 type: 'waitPin',
@@ -166,7 +166,7 @@ export const lastDayData = async ( ) => {
                 await cloud.callFunction({
                     name: 'common',
                     data: {
-                        $url: 'push-subscribe-cloud',
+                        $url: 'push-subscribe',
                         data: {
                             openid: adm.openid,
                             type: 'waitPin',
