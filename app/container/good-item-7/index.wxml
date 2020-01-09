@@ -65,8 +65,9 @@
         
     </button>
 
+    <!-- open-type="share" -->
     <button 
-        open-type="share"
+        bindtap="goDetail"
         wx:if="{{ canShare }}"
         data-share="{{ good }}"
         class="fix-btn gi7-share-btn"

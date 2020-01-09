@@ -352,9 +352,14 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage: function () {
+        // return {
+        //     title: `分享给你！群拼团真划算～`,
+        //     path: `/pages/ground-pin/index`
+        // }
         return {
-            title: `分享给你！群拼团真划算～`,
-            path: `/pages/ground-pin/index`
+            title: '群拼团！看看群友都买什么～',
+            path: '/pages/ground-pin/index',
+            imageUrl: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/cover-trip-enter-1.png'
         }
     }
 })
