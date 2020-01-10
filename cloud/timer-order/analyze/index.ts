@@ -36,7 +36,7 @@ const checkIsInRange = ( now: Date, range = [ 99 ]) => {
 export const lastDayData = async ( ) => {
     try {
 
-        if ( !checkIsInRange( getNow( ), [ 15 ])) {
+        if ( !checkIsInRange( getNow( ), [ 9 ])) {
             return { status: 200 };
         }
 
@@ -121,7 +121,7 @@ export const lastDayData = async ( ) => {
                         openid: adm.openid,
                         type: 'waitPin',
                         page: `pages/ground-pin/index`,
-                        texts: [`昨天${totalPids}款商品被${totalOpenids}人围观了${ totalPids * totalOpenids * 2 }次`, `暂无订单，请尽快发起群拼团～`]
+                        texts: [`昨天${totalPids}款商品被${totalOpenids}人围观了${ totalPids * totalOpenids * 2 }次`, `请尽快使用群拼团！每月多赚30%～`]
                     })
                 })
             );
