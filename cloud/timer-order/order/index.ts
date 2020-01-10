@@ -1,4 +1,5 @@
 import * as cloud from 'wx-server-sdk';
+import { subscribePush } from '../subscribe-push';
 
 cloud.init({
     env: process.env.cloud
@@ -310,46 +311,35 @@ export const pushNew = async ( ) => {
                 }
 
                 // 4、调用推送
-                const push$ = await cloud.callFunction({
-                    name: 'common',
-                    data: {
-                        $url: 'push-subscribe',
-                        data: {
-                            openid,
-                            type: 'newOrder',
-                            page: `pages/manager-trip-order-all/index?tid=${trip._id}`,
-                            texts: [`你有${count}条新订单`, `点击查看`]
-                        }
-                    }
+                await subscribePush({
+                    openid,
+                    type: 'newOrder',
+                    page: `pages/manager-trip-order-all/index?tid=${trip._id}`,
+                    texts: [`你有${count}条新订单`, `点击查看`]
                 });
 
-                console.log( '==== push', push$.result )
-
                 // 5、更新、创建配置
-                if ( push$.result.status === 200 ) {
+                if ( !!tripOrderVisitConfig ) {
 
-                    if ( !!tripOrderVisitConfig ) {
-
-                        // 更新一下此条配置
-                        await db.collection('analyse-data')
-                            .doc( String( tripOrderVisitConfig._id ))
-                            .update({
-                                data: {
-                                    value: getNow( true )
-                                }
-                            });
-                    } else {
-                        // 创建一下配置
-                        await db.collection('analyse-data')
-                            .add({
-                                data: {
-                                    openid,
-                                    tid: trip._id,
-                                    type: 'manager-trip-order-visit',
-                                    value: getNow( true )
-                                }
-                            });
-                    }
+                    // 更新一下此条配置
+                    await db.collection('analyse-data')
+                        .doc( String( tripOrderVisitConfig._id ))
+                        .update({
+                            data: {
+                                value: getNow( true )
+                            }
+                        });
+                } else {
+                    // 创建一下配置
+                    await db.collection('analyse-data')
+                        .add({
+                            data: {
+                                openid,
+                                tid: trip._id,
+                                type: 'manager-trip-order-visit',
+                                value: getNow( true )
+                            }
+                        });
                 }
 
                 return;
@@ -445,45 +435,35 @@ export const pushLastPay = async ( ) => {
             }
 
             // 4、调用推送
-            const push$ = await cloud.callFunction({
-                name: 'common',
-                data: {
-                    $url: 'push-subscribe',
-                    data: {
-                        openid,
-                        type: 'getMoney',
-                        page: 'pages/manager-trip-list/index',
-                        texts: [`${count}人付了尾款`, `点击查看`]
-                    }
-                }
+            await subscribePush({
+                openid,
+                type: 'getMoney',
+                page: 'pages/manager-trip-list/index',
+                texts: [`${count}人付了尾款`, `点击查看`]
             });
 
-            console.log( '==== push', push$.result )
             // 5、更新、创建配置
-            if ( push$.result.status === 200 ) {
+            if ( !!config ) {
 
-                if ( !!config ) {
-
-                    // 更新一下此条配置
-                    await db.collection('analyse-data')
-                        .doc( String( config._id ))
-                        .update({
-                            data: {
-                                value: getNow( true )
-                            }
-                        });
-                } else {
-                    // 创建一下配置
-                    await db.collection('analyse-data')
-                        .add({
-                            data: {
-                                openid,
-                                tid: trip$.data[ 0 ]._id,
-                                type: 'manager-pay-last-visit',
-                                value: getNow( true )
-                            }
-                        });
-                }
+                // 更新一下此条配置
+                await db.collection('analyse-data')
+                    .doc( String( config._id ))
+                    .update({
+                        data: {
+                            value: getNow( true )
+                        }
+                    });
+            } else {
+                // 创建一下配置
+                await db.collection('analyse-data')
+                    .add({
+                        data: {
+                            openid,
+                            tid: trip$.data[ 0 ]._id,
+                            type: 'manager-pay-last-visit',
+                            value: getNow( true )
+                        }
+                    });
             }
         })
     );
