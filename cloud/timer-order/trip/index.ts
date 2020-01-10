@@ -1,4 +1,5 @@
 import * as cloud from 'wx-server-sdk';
+import { subscribePush } from '../subscribe-push';
 
 cloud.init({
     env: process.env.cloud
@@ -68,18 +69,12 @@ export const almostOver = async ( ) => {
             await Promise.all(
                 members.data.map( async member => {
                     // 4、调用推送
-                    const push$ = await cloud.callFunction({
-                        name: 'common',
-                        data: {
-                            $url: 'push-subscribe',
-                            data: {
-                                openid: member.openid,
-                                type: 'waitPin',
-                                page: `pages/manager-trip-list/index`,
-                                texts: [`代购行程即将结束`, `请尽快调整群拼团售价`]
-                            }
-                        }
-                    });
+                    await subscribePush({
+                        openid: member.openid,
+                        type: 'waitPin',
+                        page: `pages/manager-trip-list/index`,
+                        texts: [`代购行程即将结束`, `请尽快调整群拼团售价`]
+                    })
                 })
             );
         }
@@ -131,17 +126,11 @@ export const overtimeTrip = async ( ) => {
             await Promise.all(
                 members$.data.map( async member => {
                     // 4、调用推送
-                    const push$ = await cloud.callFunction({
-                        name: 'common',
-                        data: {
-                            $url: 'push-subscribe',
-                            data: {
-                                openid: member.openid,
-                                type: 'trip',
-                                page: `pages/manager-trip-list/index`,
-                                texts: [`行程已自动到期`, `请查看尾款情况`]
-                            }
-                        }
+                    await subscribePush({
+                        openid: member.openid,
+                        type: 'trip',
+                        page: `pages/manager-trip-list/index`,
+                        texts: [`行程已自动到期`, `请查看尾款情况`]
                     });
                 })
             );
@@ -228,17 +217,11 @@ export const autoTrip = async ( ) => {
         await Promise.all(
             members.data.map( async member => {
                 // 调用推送
-                const push$ = await cloud.callFunction({
-                    name: 'common',
-                    data: {
-                        $url: 'push-subscribe',
-                        data: {
-                            openid: member.openid,
-                            type: 'trip',
-                            page: `pages/manager-trip-list/index?s=1`,
-                            texts: [`自动创建代购行程～`, `可使用群拼团啦！～`]
-                        }
-                    }
+                await subscribePush({
+                    openid: member.openid,
+                    type: 'trip',
+                    page: `pages/manager-trip-list/index?s=1`,
+                    texts: [`自动创建代购行程～`, `可使用群拼团啦！～`]
                 });
             })
         );
