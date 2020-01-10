@@ -1,4 +1,5 @@
 import * as cloud from 'wx-server-sdk';
+import { subscribePush } from '../subscribe-push';
 
 cloud.init({
     env: process.env.cloud
@@ -35,7 +36,7 @@ const checkIsInRange = ( now: Date, range = [ 99 ]) => {
 export const lastDayData = async ( ) => {
     try {
 
-        if ( !checkIsInRange( getNow( ), [ 9 ])) {
+        if ( !checkIsInRange( getNow( ), [ 15 ])) {
             return { status: 200 };
         }
 
@@ -116,19 +117,12 @@ export const lastDayData = async ( ) => {
             // 推送
             await Promise.all(
                 adms$.data.map( async adm => {
-                    await cloud.callFunction({
-                        name: 'common',
-                        data: {
-                            $url: 'push-subscribe',
-                            data: {
-                                openid: adm.openid,
-                                type: 'waitPin',
-                                page: `pages/ground-pin/index`,
-                                texts: [`昨天${totalPids}款商品被${totalOpenids}人围观了${ totalPids * totalOpenids * 2 }次`, `暂无订单，请尽快发起群拼团～`]
-                            }
-                        }
-                    });
-                    return 
+                    await subscribePush({
+                        openid: adm.openid,
+                        type: 'waitPin',
+                        page: `pages/ground-pin/index`,
+                        texts: [`昨天${totalPids}款商品被${totalOpenids}人围观了${ totalPids * totalOpenids * 2 }次`, `暂无订单，请尽快发起群拼团～`]
+                    })
                 })
             );
 
@@ -163,19 +157,12 @@ export const lastDayData = async ( ) => {
         // 推送
         await Promise.all(
             adms$.data.map( async adm => {
-                await cloud.callFunction({
-                    name: 'common',
-                    data: {
-                        $url: 'push-subscribe',
-                        data: {
-                            openid: adm.openid,
-                            type: 'waitPin',
-                            page: `pages/manager-trip-order/index?id=${order.tid}`,
-                            texts: [`昨天有${maxNum}人浏览，${sl.uids.length}人成功${sl.uids.length > 1 ? '拼团！' : '下单！'}`, `${good$.data.title}`]
-                        }
-                    }
+                await subscribePush({
+                    openid: adm.openid,
+                    type: 'waitPin',
+                    page: `pages/manager-trip-order/index?id=${order.tid}`,
+                    texts: [`昨天有${maxNum}人浏览，${sl.uids.length}人成功${sl.uids.length > 1 ? '拼团！' : '下单！'}`, `${good$.data.title}`]
                 });
-                return 
             })
         );
 

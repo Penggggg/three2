@@ -1,4 +1,5 @@
 import * as cloud from 'wx-server-sdk';
+import { subscribePush } from '../subscribe-push';
 
 cloud.init({
     env: process.env.cloud
@@ -39,18 +40,12 @@ export const userGetExp = async ( ) => {
             await Promise.all(
                 target$.data.map( async target => {
                     // 4、调用推送
-                    const push$ = await cloud.callFunction({
-                        name: 'common',
-                        data: {
-                            $url: 'push-subscribe',
-                            data: {
-                                openid: target.openid,
-                                type: 'hongbao',
-                                page: `pages/my/index`,
-                                texts: target.texts
-                            }
-                        }
-                    });
+                    await subscribePush({
+                        openid: target.openid,
+                        type: 'hongbao',
+                        page: `pages/my/index`,
+                        texts: target.texts
+                    })
                 })
             );
         }
