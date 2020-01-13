@@ -5,7 +5,7 @@
     align-items: center;
     padding: 5rpx 10rpx;
     border-radius: 20px;
-    background: rgba( 0, 0, 0, 0.35 );
+    background: rgba( 0, 0, 0, 0.3 );
     top: 120rpx;
     left: 30rpx;
     position: fixed;
@@ -17,21 +17,21 @@
 }
 
 .avatar-swiper {
-    height: 50rpx;
-    width: 130rpx;
+    height: 65rpx;
+    width: 145rpx;
 }
 
 .avatar-swiper.cstm-one {
-    width: 50rpx;
+    width: 65rpx;
 }
 
 .avatar-swiper.cstm-two {
-    width: 50rpx;
+    width: 65rpx;
 }
 
 .swiper-image {
-    width: 40rpx;
-    height: 40rpx;
+    width: 55rpx;
+    height: 55rpx;
     background: #fff;
     border-radius: 50%;
     margin: 5rpx 0 0 5rpx;

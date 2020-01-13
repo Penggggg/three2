@@ -300,10 +300,7 @@ Page({
                 
                 const allVisitors = visitors
                     .filter( x => {
-                        if ( visitors.length === 1 ) {
-                            return x.openid !== openid
-                        };
-                        return true;
+                        return x.openid !== openid
                     })
                     .map( x => {
                         const randomNum = getRandom( allTexts.length );

@@ -31,11 +31,6 @@
     <!-- 文字信息 -->
     <view class="info">
         群友都在拼～
-        <!-- <image
-            mode="scaleToFill"
-            class="tips-arrow"
-            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-two-arrow-right-white.png"
-        /> -->
     </view>
 
 </view>
