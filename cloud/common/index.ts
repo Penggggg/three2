@@ -1441,7 +1441,7 @@ export const main = async ( event, context ) => {
             const push$ = await cloud.callFunction({
                 name: 'common',
                 data: {
-                    $url: 'push-subscribe-cloud',
+                    $url: 'push-subscribe',
                     data: {
                         openid,
                         type: 'hongbao',
@@ -1624,7 +1624,7 @@ export const main = async ( event, context ) => {
                     await cloud.callFunction({
                         name: 'common',
                         data: {
-                            $url: 'push-subscribe-cloud',
+                            $url: 'push-subscribe',
                             data: {
                                 openid: adm.openid,
                                 type: 'waitPin',
