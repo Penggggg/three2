@@ -9,6 +9,10 @@ export default [
         type: 'app-bjp-visible',
         value: true
     }, {
+        desc: '社交头像营销开关',
+        type: 'social-marketing-visible',
+        value: true
+    }, {
         desc: '积分推广开关',
         type: 'good-integral-share',
         value: true

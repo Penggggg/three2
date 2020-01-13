@@ -136,7 +136,7 @@
         <!-- 他们都在看（无单 ）、倒计时 -->
         <view 
             class="pgd-visiting-con"
-            wx:if="{{ shopping$.length === 0 && visitors$.length > 0 }}"
+            wx:if="{{ canAppShowAvatar && shopping$.length === 0 && visitors$.length > 0 }}"
         >
             <!-- 标题、tips  -->
             <view class="pgd-visiting-title-con">
@@ -193,7 +193,7 @@
         <!-- 他们都在拼( 有单 )、倒计时  -->
         <view 
             class="pgd-pin-con"
-            wx:if="{{ shopping$.length > 0 }}"
+            wx:if="{{ canAppShowAvatar && shopping$.length > 0 }}"
         >
             <view class="pgd-pin-title-block">
                 <view class="pgd-pin-title">{{ allPinPlayers$ }}个群友</view>
@@ -361,7 +361,7 @@
         top="{{ 50  }}"
         left="{{ 50 }}"
         data="{{ social$ }}"
-        wx:if="{{ social$.length > 1 }}"
+        wx:if="{{ canAppShowAvatar && social$.length > 1 }}"
     />
 
     <!-- 管理员的海报按钮 -->
