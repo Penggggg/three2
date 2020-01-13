@@ -120,7 +120,10 @@ Page({
         coverText: "23人看过",
 
         // 是否弹起来过玩法介绍
-        hasShowPlayTips: false
+        hasShowPlayTips: false,
+
+        // 是否展示营销头像
+        canAppShowAvatar: false
     },
 
     /** 设置computed */
@@ -300,10 +303,7 @@ Page({
                 
                 const allVisitors = visitors
                     .filter( x => {
-                        if ( visitors.length === 1 ) {
-                            return x.openid !== openid
-                        };
-                        return true;
+                        return x.openid !== openid
                     })
                     .map( x => {
                         const randomNum = getRandom( allTexts.length );
@@ -418,7 +418,8 @@ Page({
                 ipName: val['ip-name'],
                 ipAvatar: val['ip-avatar'],
                 pushIntegralRate: (val || { })['push-integral-get-rate'] || 0,
-                canIntegrayShare: !!(val || { })['good-integral-share'] || false
+                canIntegrayShare: !!(val || { })['good-integral-share'] || false,
+                canAppShowAvatar: (val || { })['social-marketing-visible'] || false
             });
             this.createShare( );
         });
@@ -830,7 +831,7 @@ Page({
     onLoad: function (options) {
 
         const scene = decodeURIComponent( options!.scene || '' )
-        const id = options!.id || scene || '6cd397ca5ce7f53f04b9c9367ffe8482';
+        const id = options!.id || scene || '6d3904ca5e1415ce014048686b9eecb8';
 
         this.runComputed( );
         this.initCoverText( );

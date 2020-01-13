@@ -809,6 +809,7 @@
 }
 
 .pgd-pin-item-avatar-list {
+    flex: 1;
     overflow: visible;
     position: relative;
 }
@@ -891,7 +892,6 @@
 }
 
 .pgd-pin-item-sku {
-    flex: 1;
     padding: 0 10px 0 120rpx;
     box-sizing: border-box;
     font-size: 24rpx;

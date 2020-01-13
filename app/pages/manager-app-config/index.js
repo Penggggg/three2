@@ -16,29 +16,42 @@ Page({
 
             meta$: function( ) {
                 const { config } = this.data;
-                const meta = [{
-                    title: '保健品',
-                    desc: '相关设置'
-                  }, {
-                    key: 'app-bjp-visible',
-                    label: '保健品商品是否可见',
-                    type: 'switch',
-                    max: 1,
-                    rules: [ ],
-                    shadow: true,
-                    value: config ? config['app-bjp-visible'] : false
-                },{
-                    title: '商品',
-                    desc: '相关设置'
-                }, {
-                    key: 'good-integral-share',
-                    label: '商品积分推广',
-                    type: 'switch',
-                    max: 1,
-                    rules: [ ],
-                    shadow: true,
-                    value: config ? config['good-integral-share'] : false
-                }];
+                const meta = [
+                    {
+                        title: '保健品',
+                        desc: '相关设置'
+                    }, {
+                        key: 'app-bjp-visible',
+                        label: '保健品商品是否可见',
+                        type: 'switch',
+                        max: 1,
+                        rules: [ ],
+                        shadow: true,
+                        value: config ? config['app-bjp-visible'] : false
+                    }, {
+                        title: '营销',
+                        desc: '相关设置'
+                    }, {
+                        key: 'social-marketing-visible',
+                        label: '社交头像是否展示',
+                        type: 'switch',
+                        max: 1,
+                        rules: [ ],
+                        shadow: true,
+                        value: config ? config['social-marketing-visible'] : false
+                    },{
+                        title: '商品',
+                        desc: '相关设置'
+                    }, {
+                        key: 'good-integral-share',
+                        label: '商品积分推广',
+                        type: 'switch',
+                        max: 1,
+                        rules: [ ],
+                        shadow: true,
+                        value: config ? config['good-integral-share'] : false
+                    }
+                ];
 
                 return meta;
             }
