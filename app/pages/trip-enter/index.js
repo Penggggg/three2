@@ -225,6 +225,7 @@ Page({
                 limit: 4,
                 page: rankPage + 1,
             },
+            loadingMsg: 'none',
             url: `good_rank`,
             success: res => {
                 const { status, data } = res;
