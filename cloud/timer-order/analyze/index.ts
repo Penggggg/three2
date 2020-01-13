@@ -45,8 +45,8 @@ export const lastDayData = async ( ) => {
         const y = nowTime.getFullYear( );
         const m = nowTime.getMonth( ) + 1;
         const d = nowTime.getDate( );
-        const lastNightTime = new Date(`${y}/${m}/${d} 00:00:00`);
-        const time = lastNightTime.getTime( ) - 6 * 60 * 60 * 1000;
+        const lastNightTime = new Date(`${y}/${m}/${d} 00:00:00`).getTime( ) - 8 * 60 * 60 * 1000;
+        const time = lastNightTime - 6 * 60 * 60 * 1000;
 
         // 把这个时间点以后的查看商品记录都拿出来
         const visitorRecords$ = await db.collection('good-visiting-record')
@@ -121,7 +121,7 @@ export const lastDayData = async ( ) => {
                         openid: adm.openid,
                         type: 'waitPin',
                         page: `pages/ground-pin/index`,
-                        texts: [`昨天${totalPids}款商品被${totalOpenids}人围观了${ totalPids * totalOpenids * 2 }次`, `请尽快使用群拼团！每月多赚30%～`]
+                        texts: [`昨天${totalPids}款商品被${totalOpenids}人围观了${ Math.ceil( totalPids * totalOpenids * 0.5 )}次`, `请尽快使用群拼团！每月多赚30%～`]
                     })
                 })
             );
