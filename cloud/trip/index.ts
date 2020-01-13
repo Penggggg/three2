@@ -413,7 +413,7 @@ export const main = async ( event, context ) => {
                         const push$ = await cloud.callFunction({
                             name: 'common',
                             data: {
-                                $url: 'push-subscribe-cloud',
+                                $url: 'push-subscribe',
                                 data: {
                                     openid: member.openid,
                                     type: 'trip',
@@ -442,7 +442,7 @@ export const main = async ( event, context ) => {
                             const push$ = await cloud.callFunction({
                                 name: 'common',
                                 data: {
-                                    $url: 'push-subscribe-cloud',
+                                    $url: 'push-subscribe',
                                     data: {
                                         openid: user.openid,
                                         type: 'trip',
@@ -700,7 +700,7 @@ export const main = async ( event, context ) => {
                     const push1$ = await cloud.callFunction({
                         name: 'common',
                         data: {
-                            $url: 'push-subscribe-cloud',
+                            $url: 'push-subscribe',
                             data: {
                                 openid: member.openid,
                                 type: 'getMoney',
@@ -877,7 +877,7 @@ export const main = async ( event, context ) => {
                     await cloud.callFunction({
                         name: 'common',
                         data: {
-                            $url: 'push-subscribe-cloud',
+                            $url: 'push-subscribe',
                             data: {
                                 openid: adm.openid,
                                 type: 'waitPin',
@@ -891,7 +891,7 @@ export const main = async ( event, context ) => {
                     await cloud.callFunction({
                         name: 'common',
                         data: {
-                            $url: 'push-subscribe-cloud',
+                            $url: 'push-subscribe',
                             data: {
                                 openid: adm.openid,
                                 type: 'trip',

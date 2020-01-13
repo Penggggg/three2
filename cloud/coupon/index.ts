@@ -172,7 +172,7 @@ export const main = async ( event, context ) => {
             const push$ = await cloud.callFunction({
                 name: 'common',
                 data: {
-                    $url: 'push-subscribe-cloud',
+                    $url: 'push-subscribe',
                     data: {
                         openid,
                         type: 'hongbao',
