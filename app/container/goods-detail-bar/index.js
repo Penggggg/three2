@@ -7,7 +7,6 @@ const { computed } = require('../../lib/vuefy/index.js');
 
 Component({
 
-    // behaviors: [require('../../behaviores/computed/index.js')],
     /**
      * 组件的属性列表
      */
@@ -74,40 +73,31 @@ Component({
      * 组件的初始数据
      */
     data: {
+
         openid: '',
+
         // 按钮列表
         btnList: [
             {
                 label: '商城',
                 url: '/pages/trip-enter/index',
                 src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-home4.png'
-            },
-            {
+            }, {
                 label: '钱',
                 url: '/pages/ground-pin/index',
                 src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-sheng.png'
             }
-            // {
-            //     label: '行程',
-            //     url: '/pages/index/index',
-            //     src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-train4.png'          
-            // },
-            // {
-            //     label: '购物车',
-            //     url: '/pages/cart-list/index',
-            //     src: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/good-bar-cart4.png'          
-            // }
         ],
+
         // 库存
         hasStock: true,
-        // 动画
-        animationSku: null,
-        // 动画
-        animationSkuBg: null,
+
         // 展开sku
         openSku: false,
+
         // 选择sku的类型：cart、buy，（购物车、立即购买）
         skuSelectType: null,
+
         /** 是否进行了用户授权 */
         isUserAuth: false,
 
@@ -119,11 +109,13 @@ Component({
 
         // 按钮禁止点击
         disabled: false,
+
+        // 用户可用积分
+        pushIntegral: 0,
+
+        // 此商品的可抵扣比例
+        pushIntegralMoneyRate: 0
     },
-
-    // computed: {
-
-    // },
 
     /**
      * 组件的方法列表
@@ -281,8 +273,9 @@ Component({
                 }
             });
         },
+
         /** 监听全局状态 */
-        watchRole( ) {
+        watchApp( ) {
             app.watch$('openid', val => {
                 this.setData({
                     openid: val
@@ -294,7 +287,19 @@ Component({
                     isUserAuth: val
                 });
             });
+            app.watch$('pushIntegral', val => {
+                if ( val === undefined ) { return; }
+                this.setData({
+                    pushIntegral: val
+                });
+            });
+            app.watch$('appConfig', val => {
+                !!val && this.setData({
+                    pushIntegralMoneyRate: val['push-integral-money-rate'] || 0
+                });
+            });
         },
+        
         /** 检查是否需要付订金 */
         checkPrePay( tid ) {
             if ( !tid ) { return; }
@@ -314,9 +319,11 @@ Component({
             //     }
             // })
         },
+
         onSubscribe( e ) {
             app.getSubscribe('waitPin,buyPin,getMoney');
         },
+
         /** 展开/关闭 sku */
         toggleSku( e ) {
             const { openSku, disabled } = this.data;
@@ -324,9 +331,11 @@ Component({
             if ( disabled && !openSku ) {
                 return;
             }
-
+            
+            // 打开sku
             if ( !openSku ) {
                 this.onSubscribe( );
+                app.getPushIntegral( );
             }
 
             this.setData({
@@ -341,6 +350,7 @@ Component({
             // 发布
             this.triggerEvent('toggle', !openSku );
         },
+
         /** 关闭sku */
         onCloseSku( e ) {
             this.setData({
@@ -348,6 +358,7 @@ Component({
             });
             this.triggerEvent('toggle', false );
         },
+
         /** 选择sku */
         onConfirmSku( e ) {
             const selectedSku = e.detail.sku;
@@ -367,6 +378,7 @@ Component({
                 this.buy( skuItem, form_id );
             }
         },
+
         /** 处理商品详情 */
         dealDetail( data ) {
             if ( !data ) { return; }
@@ -388,6 +400,7 @@ Component({
                 hasStock: result
             });
         },
+
         /** 加入购物车 */
         putCart( item ) {
             const { preview } = this.data;
@@ -412,10 +425,11 @@ Component({
             });
 
         },
+
         /** 立即购买 */
         buy( item, form_id ) {
 
-            const { tid, shouldPrepay, preview, disabled } = this.data;
+            const { tid, shouldPrepay, preview, disabled, pushIntegral, pushIntegralMoneyRate } = this.data;
             const { sid, pid, price, count, img, title, groupPrice, acid } = item;
 
             if ( preview || disabled ) { return; }
@@ -424,7 +438,7 @@ Component({
             if ( !tid ) {
                 return wx.showToast({
                     icon: 'none',
-                    title: '暂无行程计划，暂时不能购买～'
+                    title: '暂无采购计划，暂不能购买～'
                 });
             }
 
@@ -461,18 +475,35 @@ Component({
                     createOrders( tid, [ orderObj ], 'buy', orders => {
                       
                         // 发起微信支付
-                        let total_fee = orders.reduce(( x, y ) => {
-                            const { shouldPayAll, depositPrice, groupPrice, count } = y;
-                            const thisOrderShouldPay = !shouldPayAll && depositPrice ? depositPrice : groupPrice;
-                            return x + thisOrderShouldPay * count;
-                        }, 0 );
+                        let total_fee = 0;
+
+                        // 此单可用的抵现金
+                        let used_integral = 0;
+
+                        // 由商品详情的支付，只有一个订单。
+                        const { oid, shouldPayAll, depositPrice, groupPrice, count } = orders[ 0 ];
+
+                        // 此商品每件的最大可抵扣（元）
+                        const maxUsedIntegralPer = Number(( pushIntegralMoneyRate * groupPrice ).toFixed( 1 ));
+
+                        // 全款( 拼团价 )
+                        if ( shouldPayAll ) {
+                            const maxUsedIntegral = count * maxUsedIntegralPer;
+                            used_integral = pushIntegral > maxUsedIntegral ?
+                                maxUsedIntegral : pushIntegral;
+                            total_fee = count * groupPrice - used_integral;
+                        // 仅订金
+                        } else {
+                            total_fee = count * depositPrice;
+                        }
                         
                         // 是否免支付订金
                         if ( !shouldPrepay ) {
                             total_fee = 0;
                         }
                       
-                        console.log(`...支付: ${total_fee}`)
+                        console.log(`类型: ${shouldPayAll ? '拼团价' : '订金'}, 支付: ${total_fee}, 总积分：${pushIntegral}, 每件可扣：${maxUsedIntegralPer}, 此支付可扣：${used_integral}`)
+
                         // 支付里面
                         wxPay( total_fee, ({ prepay_id }) => {
             
@@ -481,15 +512,15 @@ Component({
                                 http({
                                     url: 'order_upadte-to-payed',
                                     data: {
-                                        orders: orders.map( x => {
-                                            const { oid, shouldPayAll } = x;
-                                            return {
-                                                oid,
-                                                pay_status: shouldPayAll ? '2' : '1'
-                                            }
-                                        }),
-                                        prepay_id,
-                                        form_id
+                                        // 商品详情的，只有一单
+                                        orders: [{
+                                            oid,
+                                            used_integral,
+                                            pay_status: shouldPayAll ? '2' : '1'
+                                        }],
+                                        tid,
+                                        form_id,
+                                        prepay_id
                                     },
                                     success: res => {
 
@@ -506,7 +537,6 @@ Component({
                                                 icon: 'none',
                                                 title: '刷新失败，请联系管理员'
                                             });
-                                            // pay( );
                                         }
                                     }
                                 });
@@ -534,11 +564,13 @@ Component({
             });
             
         },
+
         /** 地址跳转 */
         navigate( e ) {
             const { preview } = this.data;
             !preview && navTo( e.currentTarget.dataset.url );
         },
+
         /** 获取用户信息授权 */
         getUserAuth( ) {
             app.getWxUserInfo(( ) => {
@@ -546,10 +578,12 @@ Component({
                 this.batchSettle( );
             });
         },
+
         /** 拼团广场 */
         goGroundPin( ) {
             navTo('/pages/ground-pin/index')
         },
+
         /** sku组件点击 */
         onTapSku( e ) {
             this.triggerEvent('custom', e.detail );
@@ -558,7 +592,7 @@ Component({
 
     attached: function( ) {
         this.runComputed( );
-        this.watchRole( );
+        this.watchApp( );
     }
 
 })

@@ -142,7 +142,7 @@
                 >
                     
                     <view class="pol-money-title">
-                        行程已省 (元)
+                        最多可省
                     </view>
 
                     <view class="pol-money">
@@ -150,7 +150,7 @@
                             icon="sub"
                             class="pol-money-i"
                         >
-                            {{ tripOrders$[ 0 ].cutoff }}
+                            {{ tripOrders$[ 0 ].total_cutoff }}
                         </wxc-price>
                     </view>
 

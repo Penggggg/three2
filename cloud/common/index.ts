@@ -132,7 +132,8 @@ export const main = async ( event, context ) => {
                     .add({
                         data: Object.assign({ }, event.data, { 
                             openid,
-                            integral: 0
+                            integral: 0,
+                            push_integral: 0
                         })
                     }).catch( err => { throw `${err}`});
         
@@ -1348,13 +1349,12 @@ export const main = async ( event, context ) => {
                 }
             }
 
+            // 使用表添加记录
             const record$ = await db.collection('integral-use-record')
                     .where({
-                        data: {
-                            tid,
-                            openid,
-                            type: 'push_integral'
-                        }
+                        tid,
+                        openid,
+                        type: 'push_integral'
                     })
                     .get( );
             const record = record$.data[ 0 ];
@@ -1378,6 +1378,22 @@ export const main = async ( event, context ) => {
                         }
                     });
             }
+
+            // 角色表，减去抵现金
+            const user$ = await db.collection('user')
+                .where({
+                    openid
+                })
+                .get( );
+            
+            const user = user$.data[ 0 ];
+            await db.collection('user')
+                .doc( String( user._id ))
+                .update({
+                    data: {
+                        push_integral: _.inc( -value )
+                    }
+                })
 
             return ctx.body = {
                 status: 200

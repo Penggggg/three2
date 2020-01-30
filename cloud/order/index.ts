@@ -52,6 +52,7 @@ const getNow = ( ts = false ): any => {
  * allocatedCount 分配的数量
  * form_id
  * prepay_id,
+ * ! used_integral 积分使用情况
  * final_price 最后成交价
  * ! canGroup 是否可以拼团
  * base_status: 0,1,2,3,4,5 进行中，代购已购买，已调整，已结算，已取消（买不到），已过期（支付过期）
@@ -428,34 +429,71 @@ export const main = async ( event, context ) => {
      *      orders（数组）来自于商品详情（付全款、仅付订金）
      *      orders（string）来自于订单列表（仅付订金）
      *      orders: "111,222,333" | {
+     *         used_integral: xxx
      *         pay_status: '1' | '2',
      *         oid: string
      *      }[ ]
+     *      tid?
      *      form_id,
      *      prepay_id
      * }
      */
     app.router('upadte-to-payed', async( ctx, next ) => {
         try {
-
-            const openId = event.userInfo.openId;
-            const { orders, prepay_id, form_id } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            const openId = openid;
+            const { orders, tid, prepay_id, form_id } = event.data;
             const orderIds = Array.isArray( orders ) ? 
                 orders.map( x => x.oid ).join(',') : orders;
 
             // 更新订单字段
             if ( Array.isArray( orders )) {
-                await Promise.all( orders.map( order => {
-                    const { oid, pay_status } = order;
-                    return db.collection('order').doc( oid )
+
+                await Promise.all( orders.map( async order => {
+                    const { oid, pay_status, used_integral } = order;
+
+                    // 更新状态
+                    await db.collection('order').doc( oid )
                         .update({
                             data: {
                                 form_id,
                                 prepay_id,
-                                pay_status
+                                pay_status,
+                                used_integral
                             }
                         });
+
+                    // 付全款
+                    if ( pay_status === '2' ) {
+                        await db.collection('order').doc( oid )
+                            .update({
+                                data: {
+                                    depositPrice: 0
+                                }
+                            });
+                    }
                 }));
+
+                // 更新用户的抵现金使用情况
+                if ( !!tid ) {
+
+                    const allUsedIntegral = orders.reduce(( x, y ) => {
+                        return x + ( y.used_integral || 0 )
+                    }, 0 );
+
+                    await cloud.callFunction({
+                        name: 'common',
+                        data: {
+                            $url: 'push-integral-create',
+                            data: {
+                                tid,
+                                openid,
+                                value: allUsedIntegral
+                            }
+                        }
+                    });
+                }
+
             } else {
                 await Promise.all( orderIds.split(',').map( oid => {
                     return db.collection('order').doc( oid )

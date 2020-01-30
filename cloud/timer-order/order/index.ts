@@ -93,7 +93,7 @@ export const payedFix = async ( ) => {
         const orders$ = await db.collection('order')
             .where({
                 type: 'pre',
-                pay_status: '1'
+                pay_status: _.or( _.eq('1'), _.eq('2'))
             })
             .get( );
 

@@ -123,6 +123,7 @@ App<MyApp>({
             data: {
                 showMore: true,
             },
+            loadingMsg: 'none',
             url: 'common_push-integral',
             success: res => {
                 const { status, data } = res;

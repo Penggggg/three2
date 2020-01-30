@@ -59,7 +59,8 @@ const create$ = async( openid, data, db: DB.Database, ctx ) => {
             .add({
                 data: {
                     ...data, 
-                    openid
+                    openid,
+                    used_integral: 0
                 }
             });
 
