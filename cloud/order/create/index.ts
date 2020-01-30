@@ -1,5 +1,8 @@
 import * as cloud from 'wx-server-sdk';
 /**
+ * 
+ * 创建「预付款」订单！！！
+ * 
  * data: {
  *   tid
  *   sid

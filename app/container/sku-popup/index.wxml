@@ -188,7 +188,7 @@
                         wx:if="{{ pushIntegralMoneyRate }}"
                     >
                         <view class="sku-info-title mt il">
-                            抵现金可抵
+                            最多可再减
                         </view>
                         <view class="sku-info-text il">
                             <wxc-price

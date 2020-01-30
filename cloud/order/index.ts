@@ -224,7 +224,7 @@ export const main = async ( event, context ) => {
                 return t;
             });
 
-            // 4、批量创建订单 ( 同时处理占领货存的问题 )
+            // 4、批量创建预付款订单 ( 同时处理占领货存的问题 )
             const save$: any = await Promise.all( temp.map( o => {
                 return create$( openid, o, db, ctx );
             }));
@@ -420,10 +420,13 @@ export const main = async ( event, context ) => {
     })
 
     /**
-     * 批量更新，订单为已支付，并且增加到购物清单
+     * 批量更新，订单为已支付「订金」或「全款」，并且增加到购物清单
+     * 
      * 并推送相关买家
-     * 并推送相关“推广者”
+     * 并推送相关“群友”
      * {
+     *      orders（数组）来自于商品详情（付全款、仅付订金）
+     *      orders（string）来自于订单列表（仅付订金）
      *      orders: "111,222,333" | {
      *         pay_status: '1' | '2',
      *         oid: string
