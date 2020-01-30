@@ -235,13 +235,14 @@ export const main = async ( event, context ) => {
 
             // 返回订单信息
             const order_result = save$.map(( x, k ) => {
-                const { price, count, pay_status, depositPrice } = temp[ k ];
+                const { price, count, pay_status, depositPrice, groupPrice } = temp[ k ];
                 return {
-                    oid: x.data._id,
+                    ...x.data,
                     price,
                     count,
                     pay_status,
-                    depositPrice
+                    depositPrice,
+                    groupPrice
                 }
             });
 
@@ -423,7 +424,10 @@ export const main = async ( event, context ) => {
      * 并推送相关买家
      * 并推送相关“推广者”
      * {
-     *      orderIds: "123,234,345"
+     *      orders: "111,222,333" | {
+     *         pay_status: '1' | '2',
+     *         oid: string
+     *      }[ ]
      *      form_id,
      *      prepay_id
      * }
@@ -432,19 +436,35 @@ export const main = async ( event, context ) => {
         try {
 
             const openId = event.userInfo.openId;
-            const { orderIds, prepay_id, form_id } = event.data;
+            const { orders, prepay_id, form_id } = event.data;
+            const orderIds = Array.isArray( orders ) ? 
+                orders.map( x => x.oid ).join(',') : orders;
 
             // 更新订单字段
-            await Promise.all( orderIds.split(',').map( oid => {
-                return db.collection('order').doc( oid )
-                    .update({
-                        data: {
-                            form_id,
-                            prepay_id,
-                            pay_status: '1'
-                        }
-                    });
-            }));
+            if ( Array.isArray( orders )) {
+                await Promise.all( orders.map( order => {
+                    const { oid, pay_status } = order;
+                    return db.collection('order').doc( oid )
+                        .update({
+                            data: {
+                                form_id,
+                                prepay_id,
+                                pay_status
+                            }
+                        });
+                }));
+            } else {
+                await Promise.all( orderIds.split(',').map( oid => {
+                    return db.collection('order').doc( oid )
+                        .update({
+                            data: {
+                                form_id,
+                                prepay_id,
+                                pay_status: '1'
+                            }
+                        });
+                }));
+            }
 
             // 创建/插入到购物清单
             const find$: any = await Promise.all( orderIds.split(',').map( oid => {
@@ -1456,12 +1476,12 @@ function getTextByPushType( type: 'buyPin1' | 'buyPin2' | 'waitPin' | 'buy' | 'g
         ];
     } else if ( type === 'buyPin1' ) {
         return [
-            `恭喜！你省了${delta}元！`,
+            `恭喜！你拼团省了${delta}元！`,
             `点击查看`
         ]
     } else if ( type === 'buyPin2' ) {
         return [
-            `恭喜！你省了${delta}元!`,
+            `恭喜！你拼团省了${delta}元!`,
             `有群友参加了群拼团，点击查看`
         ]
     } else if ( type === 'waitPin' ) {

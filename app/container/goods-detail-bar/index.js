@@ -462,29 +462,32 @@ Component({
                       
                         // 发起微信支付
                         let total_fee = orders.reduce(( x, y ) => {
-                            const { pay_status, depositPrice } = y;
-                            const deposit_price = pay_status === '0' && !!depositPrice ? depositPrice : 0;
-                            return x + deposit_price * y.count;
+                            const { shouldPayAll, depositPrice, groupPrice, count } = y;
+                            const thisOrderShouldPay = !shouldPayAll && depositPrice ? depositPrice : groupPrice;
+                            return x + thisOrderShouldPay * count;
                         }, 0 );
-
+                        
+                        // 是否免支付订金
                         if ( !shouldPrepay ) {
                             total_fee = 0;
                         }
                       
+                        console.log(`...支付: ${total_fee}`)
                         // 支付里面
                         wxPay( total_fee, ({ prepay_id }) => {
             
-                            // 批量更新订单为已支付
+                            // 批量更新订单为 已支付全款、已支付订金
                             const pay = ( ) => {
-                        
                                 http({
                                     url: 'order_upadte-to-payed',
                                     data: {
-                                        orderIds: orders.map( x => {
-                                            return x.pay_status === '0' || x.pay_status === '1' ? x.oid : ''
-                                        })
-                                        .filter( x => !!x )
-                                        .join(','),
+                                        orders: orders.map( x => {
+                                            const { oid, shouldPayAll } = x;
+                                            return {
+                                                oid,
+                                                pay_status: shouldPayAll ? '2' : '1'
+                                            }
+                                        }),
                                         prepay_id,
                                         form_id
                                     },

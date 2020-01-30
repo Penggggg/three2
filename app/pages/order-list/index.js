@@ -696,7 +696,6 @@ Page({
                         if ( notPay.length > 0 ) {
                             return notPay
                         } else {
-                            console.log('????', allTripOrders )
                             return allTripOrders;
                         }
                     } else {
@@ -1060,7 +1059,7 @@ Page({
                 url: 'order_upadte-to-payed',
                 data: {
                     prepay_id,
-                    orderIds: notPayDepositOrders.join(',')
+                    orders: notPayDepositOrders.join(',')
                 },
                 success: res => {
                     if ( res.status === 200 ) {

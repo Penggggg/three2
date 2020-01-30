@@ -1155,7 +1155,7 @@ export const main = async ( event, context ) => {
                 };
             }
 
-            // 获取当前行程的未拼团列表
+            // 获取当前行程的拼团列表
             const shopping$ = await db.collection('shopping-list')
                 .where({
                     tid: trip._id,
@@ -1175,7 +1175,7 @@ export const main = async ( event, context ) => {
                             sid, 
                             tid,
                             openid,
-                            pay_status: '1',
+                            pay_status: _.or( _.eq('1'), _.eq('2')),
                             base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
                         })
                         .get( );
@@ -1190,7 +1190,7 @@ export const main = async ( event, context ) => {
                             sid, 
                             tid,
                             openid: _.neq( openid ),
-                            pay_status: '1',
+                            pay_status: _.or( _.eq('1'), _.eq('2')),
                             base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
                         })
                         .count( );
