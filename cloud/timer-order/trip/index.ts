@@ -195,7 +195,7 @@ export const autoTrip = async ( ) => {
                     warning: true,
                     published: true,
                     isClosed: false,
-                    reduce_price: 1,
+                    reduce_price: 0,
                     callMoneyTimes: 0,
                     title: '群拼团',
                     selectedProductIds: [ ],

@@ -330,9 +330,9 @@ export const main = async ( event, context ) => {
 
             const end_date = fixEndDate( Number( event.data.end_date ));
 
-            if ( reduce_price < 1 ) {
-                return getErr('立减金额不能少于1元')
-            }
+            // if ( reduce_price < 1 ) {
+            //     return getErr('立减金额不能少于1元')
+            // }
 
             // 创建行程
             if ( !_id ) {
@@ -447,7 +447,7 @@ export const main = async ( event, context ) => {
                                         openid: user.openid,
                                         type: 'trip',
                                         page: 'pages/trip-enter/index',
-                                        texts: [`${title}`, `代购在${time.getMonth( )+1}月${time.getDate( )}日开始！无门槛立减${reduce_price}元！`]
+                                        texts: [`${title}`, `即将采购！用群拼团下单吧～`]
                                     }
                                 }
                             });

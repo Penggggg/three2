@@ -83,7 +83,7 @@ Component({
                     label: '行程名称',
                     type: 'input',
                     max: 50,
-                    placeholder: '如：28号香港采购',
+                    placeholder: '如：28号香港代购',
                     value: undefined,
                     rules: [{
                       validate: val => !!val,
@@ -112,21 +112,20 @@ Component({
         meta2( ) {
             const { published, tid, canEditCoupons } = this.data;
             const meta = [
-                {
-                    title: '营销工具',
-                    // desc: '裂变与粘性'
-                }, {
-                    key: 'reduce_price',
-                    label: '分享立减/元',
-                    type: 'number',
-                    placeholder: '客户分享你的代购行程后，才获得此优惠',
-                    value: undefined,
-                    disabled: !canEditCoupons && !!tid,
-                    rules: [{
-                        validate: val => !!val,
-                        message: '请设置行程立减多少元'
-                    }]
-                }
+                // {
+                //     title: '营销工具',
+                // }, {
+                //     key: 'reduce_price',
+                //     label: '分享立减/元',
+                //     type: 'number',
+                //     placeholder: '客户分享你的代购行程后，才获得此优惠',
+                //     value: undefined,
+                //     disabled: !canEditCoupons && !!tid,
+                //     rules: [{
+                //         validate: val => !!val,
+                //         message: '请设置行程立减多少元'
+                //     }]
+                // }
             ];
             return meta;
         },
@@ -234,7 +233,7 @@ Component({
                         });
     
                         form2 && form2.set({
-                            reduce_price
+                            // reduce_price
                         });
     
                         // form3 && form3.set({
@@ -490,6 +489,8 @@ Component({
                     payment: '1',
                     // ! 默认为立即发布
                     published: true,
+                    // ! 默认。立减券为0
+                    reduce_price: 0,
                     sales_volume: 0,
                     fullreduce_atleast,
                     fullreduce_values,
