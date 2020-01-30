@@ -82,8 +82,6 @@ Component({
                     } else if ( t_lijian.length > 0 && t_lijian[ 0 ].t_delta === 0 ) {
                         meta.push( t_lijian[ 0 ])
                     }
-                    console.log('????', list );
-                    console.log('????', meta );
                     return meta;
                 },
 
