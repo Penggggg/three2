@@ -1176,36 +1176,17 @@ export const main = async ( event, context ) => {
 
             // 新增推广积分使用记录
             if ( !!push_integral ) {
-                const record$ = await db.collection('integral-use-record')
-                    .where({
+                await cloud.callFunction({
+                    data: {
                         data: {
                             tid,
                             openid,
-                            type: 'push_integral'
-                        }
-                    })
-                    .get( );
-                const record = record$.data[ 0 ];
-
-                if ( !!record && !!push_integral ) {
-                    await db.collection('integral-use-record')
-                        .doc( String( record._id ))
-                        .update({
-                            data: {
-                                value: _.inc( push_integral )
-                            }
-                        });
-                } else if ( !record && !!push_integral ) {
-                    await db.collection('integral-use-record')
-                        .add({
-                            data: {
-                                tid,
-                                openid,
-                                value: push_integral,
-                                type: 'push_integral'
-                            }
-                        });
-                }
+                            value: push_integral
+                        },
+                        $url: 'push-integral-create'
+                    },
+                    name: 'common'
+                });
             }
 
             // 更新订单状态、商品销量

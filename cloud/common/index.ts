@@ -1330,6 +1330,68 @@ export const main = async ( event, context ) => {
 
     /**
      * @description
+     * 创建 积分使用记录
+     * {
+     *    tid
+     *    value
+     *    openid
+     * }
+     */
+    app.router('push-integral-create', async ( ctx, next ) => {
+        try {
+            const { tid, value } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            
+            if ( !value ) {
+                return ctx.body = {
+                    status: 200
+                }
+            }
+
+            const record$ = await db.collection('integral-use-record')
+                    .where({
+                        data: {
+                            tid,
+                            openid,
+                            type: 'push_integral'
+                        }
+                    })
+                    .get( );
+            const record = record$.data[ 0 ];
+
+            if ( !!record && !!value ) {
+                await db.collection('integral-use-record')
+                    .doc( String( record._id ))
+                    .update({
+                        data: {
+                            value: _.inc( value )
+                        }
+                    });
+            } else if ( !record && !!value ) {
+                await db.collection('integral-use-record')
+                    .add({
+                        data: {
+                            tid,
+                            openid,
+                            value,
+                            type: 'push_integral'
+                        }
+                    });
+            }
+
+            return ctx.body = {
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    })
+
+    /**
+     * @description
      * 签到领积分
      * {
      *      exp: number
