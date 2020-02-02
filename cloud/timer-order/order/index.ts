@@ -203,6 +203,7 @@ export const priceFix = async ( ) => {
 }
 
 /**
+ * // 弃用
  * 订单4：所有成功支付尾款的订单，把base_status设为3
  */
 export const payLastFix = async ( ) => {

@@ -71,7 +71,7 @@
                         {{ deduction$ }}
                     </wxc-price>
                     <view class="cts-push-integral small">
-                        本次可抵现
+                        抵现金可用
                         <view 
                             class="cts-tips-toggle"
                             bindtap="toggleTips"
@@ -83,7 +83,7 @@
                 <view
                     class="cts-push-integral-tips"
                 >
-                    {{ !!deduction$ ? '总抵现积分:' : '暂无抵现积分' }}
+                    {{ !!deduction$ ? '我的抵现金:' : '暂无抵现金' }}
                 </view>
                 <wxc-price
                     icon="sub"
@@ -97,16 +97,6 @@
             <view
                 class="cts-btn-block"
             >
-                <!-- <view 
-                    bindtap="onClose"
-                    class="cts-back-btn"
-                >
-                    <image
-                        mode="widthFix"
-                        class="cts-settle-btn-img small"
-                        src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-left.png"
-                    />
-                </view> -->
                 <form
                     bindsubmit="onSettle"
                     report-submit="{{ true }}"

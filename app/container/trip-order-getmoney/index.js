@@ -22,29 +22,58 @@ Component({
      * 组件的初始数据
      */
     data: {
-        title: '', // 行程名称
-        clients: 0, // 总客户数
-        notPayAllClients: 0, // 未交尾款客户数
-        canAction: false, // 是否调整完成，并进行催款
-        lastAdjust: 0, // 剩余未调整订单
-        clientOders: [ ], // 客户订单,
-        showMore: [ ], // 展示更多 uid[ ]
-        showModal: false, // 展示弹框
-        showDeliverModal: false, // 快递弹框
-        currentOrder: null, // 当前选中的订单
-        form: { // 弹框表单
+
+        // 行程名称
+        title: '', 
+        
+        // 总客户数
+        clients: 0, 
+
+         // 未交尾款客户数
+        notPayAllClients: 0,
+
+        // 是否调整完成，并进行催款
+        canAction: false, 
+
+        // 剩余未调整订单
+        lastAdjust: 0, 
+
+        // 客户订单,
+        clientOders: [ ], 
+
+        // 展示更多 uid[ ]
+        showMore: [ ], 
+
+        // 展示弹框
+        showModal: false, 
+
+        // 快递弹框
+        showDeliverModal: false, 
+
+        // 当前选中的订单
+        currentOrder: null, 
+
+        // 弹框表单
+        form: { 
             fee: null,
             count: null
         },
-        showBtn: false, // 展示行程列表按钮,
-        callMoneyTimes: 3 // 行程催款次数
+
+        // 展示行程列表按钮,
+        showBtn: false, 
+
+        // 是否已经催款过了
+        hasBeenCallMoney: false,
+
+        // 行程是否关闭
+        tripClosed: false
     },
 
     /** 计算属性 */
     computed: {
         clientOders$( ) {
             
-            const { tid, clientOders, showMore, callMoneyTimes } = this.data;
+            const { tid, clientOders, showMore, hasBeenCallMoney, tripClosed } = this.data;
 
             // 计算当前可结算的商品数量 
             const count$ = order => {
@@ -201,39 +230,69 @@ Component({
 
 
                 // 是否全部被分配为0
-                const getAllNothing = x.orders
+                const allocatedNothing = x.orders
                     .every( o => o.allocatedCount === 0 );
 
-
                 // 是否已经结算
-                const hasBeenGivenMoney = x.orders
+                const hasGivenAllMoney = x.orders
                     .filter( o => o.base_status !== '4' && o.base_status !== '5' )
-                    .filter( o => !!o.allocatedCount )
-                    .every( o => o.base_status === '3' );
+                    .every( o => o.pay_status === '2' )
 
+                // 已付款（拼团）
+                const hasBeenPay = x.orders
+                    .filter( o => o.pay_status === '2' )
+                    .reduce(( x, y ) => {
+                        return Number(( x + ( y.final_price || 0 )).toFixed( 2 ))
+                    }, 0 );
 
-                // 是否存在被分配为0
-                const getNothing =  x.orders
-                    .some( o => o.allocatedCount === 0 );
-
+                // 已付（拼团+订金）
+                const hasBeenPayAll = Number(( hasBeenPay + ( hasPayDepositPrice || 0 )).toFixed( 2 ));
 
                 // 是否存在货存不足的情况
                 const hasNotEnougth = x.orders
                     .some( o => o.allocatedCount !== undefined && o.allocatedCount < o.count );
 
+                // 计算尾款情况（ 待付 或 退款 ）
+                let rest = orders.reduce(( x, y ) => {
+                    const { allocatedCount, allocatedGroupPrice, allocatedPrice, final_price,
+                        count, groupPrice, price, canGroup, depositPrice, pay_status } = y;
+                    
+                    // 已付
+                    const hasPayed = 
+                        final_price !== undefined ? 
+                            final_price :
+                            pay_status === '1' ? 
+                                count * depositPrice:
+                                count * ( canGroup ? groupPrice : price );
+
+                    // 订单应交
+                    const shouldPay = allocatedCount * ( canGroup ? allocatedGroupPrice : allocatedPrice );
+
+                    return Number(( x + ( shouldPay - hasPayed )).toFixed( 2 ));
+
+                }, 0 );
+
+                // 加上邮费
+                rest += ( !deliverFee || (deliverFee || { }).hasPay ) ? 0 : ( userDeliverFee || 0);
     
                 // 订单中文状态
                 let statusCN = !isAllAdjusted ?
                     '待分配' :
-                    callMoneyTimes > 0 ?
-                        !getAllNothing ?
-                            !hasBeenGivenMoney ?
+                    !!hasBeenCallMoney  ?
+                        !allocatedNothing ?
+                            !hasGivenAllMoney ?
                                 '未到帐' :
                                 '已到帐' :
                             '' :
                     '';
-                if ( !hasBeenGivenMoney && retreat ) {
-                    statusCN = '退订金 ' + retreat;
+
+                // 行程还没有开始结算
+                if ( !tripClosed ) {
+                    rest = 0;
+                }
+                
+                if ( rest !== 0 ) {
+                    statusCN = `${ rest > 0 ? '待付' : '请退款' }: ${Math.abs( rest )}元`;
                 } 
 
                 return Object.assign({ }, x , {
@@ -256,15 +315,19 @@ Component({
 
                     statusCN,
 
+                    rest,
+
                     retreat,
 
-                    getNothing,
-
-                    getAllNothing,
+                    allocatedNothing,
 
                     isAllAdjusted,
 
-                    hasBeenGivenMoney,
+                    hasBeenPay,
+
+                    hasBeenPayAll,
+
+                    hasGivenAllMoney,
 
                     emptyOrders: [ ],
 
@@ -298,11 +361,8 @@ Component({
                 });
             });
 
+            console.log('????', meta )
             return meta;
-        },
-        lastCallMoneyTimes$( ) {
-            const { callMoneyTimes } = this.data;
-            return 3 - callMoneyTimes;
         }
     },
 
@@ -329,15 +389,14 @@ Component({
                 errorMsg: '加载失败，请刷新',
                 success: res => {
                     if ( res.status === 200 ) {
-                        const { clients, notPayAllClients, callMoneyTimes, title } = res.data;
+                        const { clients, notPayAllClients, callMoneyTimes, title, isClosed } = res.data;
                         this.setData({
                             title,
                             clients,
-                            notPayAllClients
+                            notPayAllClients,
+                            tripClosed: isClosed,
+                            hasBeenCallMoney: callMoneyTimes > 0
                         });
-                        setTimeout(( ) => {
-                            this.setData({ callMoneyTimes })
-                        }, 100 );
                     }
                 }
             })
@@ -408,6 +467,10 @@ Component({
 
         /** 展示调整快递费用弹框 */
         onShowDeliverModal({ currentTarget }) {
+            const { hasBeenCallMoney } = this.data;
+
+            if ( hasBeenCallMoney ) { return; }
+
             const currentOrder = currentTarget.dataset.data;
             this.setData({
                 currentOrder,
@@ -564,7 +627,7 @@ Component({
         /** 批量催款 */
         allGetMoney( ) {
             const that = this;
-            const { callMoneyTimes } = this.data;
+            const { hasBeenCallMoney } = this.data;
             const isAllAdjusted = this.data.clientOders$.every( o => !!o.isAllAdjusted );
             const isAllHasDeliver = this.data.clientOders$.every( o => !!o.deliverFee );
 
@@ -607,7 +670,8 @@ Component({
                                             title: `发送成功`
                                         });
                                         that.setData({
-                                            callMoneyTimes: 3 - res.data
+                                            tripClosed: true,
+                                            hasBeenCallMoney: true
                                         });
                                         setTimeout(( ) => {
                                             that.fetchOrder( that.data.tid );
@@ -628,10 +692,10 @@ Component({
                 })
             } 
 
-            if ( !!callMoneyTimes && callMoneyTimes >= 3 ) {
+            if ( !!hasBeenCallMoney ) {
                 return wx.showToast({
                     icon: 'none',
-                    title: '已超过发送次数'
+                    title: '已发过推送'
                 });
             }
 
@@ -651,6 +715,7 @@ Component({
 
         /** 退订金 */
         giveBackMoney({ currentTarget }) {
+            return;
             const { tid } = this.data;
             const { data } = currentTarget.dataset;
             const { wholePriceByDiscount, wholePriceNotDiscount, coupons } = data;
@@ -705,7 +770,7 @@ Component({
                 data: `${info.username} ${info.phone} ${info.address} ${info.postalcode}`,
                 success: res => {
                     wx.showToast({
-                        title: '快递信息复制'
+                        title: '复制快递信息'
                     });
                 }
             })

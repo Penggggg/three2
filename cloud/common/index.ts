@@ -1360,21 +1360,23 @@ export const main = async ( event, context ) => {
             const record = record$.data[ 0 ];
 
             if ( !!record && !!value ) {
+
                 await db.collection('integral-use-record')
                     .doc( String( record._id ))
                     .update({
                         data: {
-                            value: _.inc( value )
+                            value: Number(( record.value + value ).toFixed( 2 ))
                         }
                     });
+
             } else if ( !record && !!value ) {
                 await db.collection('integral-use-record')
                     .add({
                         data: {
                             tid,
                             openid,
-                            value,
-                            type: 'push_integral'
+                            type: 'push_integral',
+                            value: Number( value.toFixed( 2 )),
                         }
                     });
             }
@@ -1391,7 +1393,7 @@ export const main = async ( event, context ) => {
                 .doc( String( user._id ))
                 .update({
                     data: {
-                        push_integral: _.inc( -value )
+                        push_integral: Number(( user.push_integral - value ).toFixed( 2 ))
                     }
                 })
 

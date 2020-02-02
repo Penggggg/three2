@@ -431,7 +431,8 @@ export const main = async ( event, context ) => {
      *      orders: "111,222,333" | {
      *         used_integral: xxx
      *         pay_status: '1' | '2',
-     *         oid: string
+     *         oid: string,
+     *         final_price
      *      }[ ]
      *      tid?
      *      form_id,
@@ -450,7 +451,7 @@ export const main = async ( event, context ) => {
             if ( Array.isArray( orders )) {
 
                 await Promise.all( orders.map( async order => {
-                    const { oid, pay_status, used_integral } = order;
+                    const { oid, pay_status, used_integral, final_price } = order;
 
                     // 更新状态
                     await db.collection('order').doc( oid )
@@ -463,12 +464,14 @@ export const main = async ( event, context ) => {
                             }
                         });
 
-                    // 付全款
+                    // 付全款，则更新订金、最终交易价
                     if ( pay_status === '2' ) {
                         await db.collection('order').doc( oid )
                             .update({
                                 data: {
-                                    depositPrice: 0
+                                    depositPrice: 0,
+                                    final_price,
+                                    paytime: getNow( true )
                                 }
                             });
                     }
@@ -861,7 +864,8 @@ export const main = async ( event, context ) => {
                         const sl = shoppinglist.find( y => y.pid === x.pid && y.sid === x.sid );
                         return {
                             ...x,
-                            canGroup: sl!.uids.length > 1
+                            // 含预测
+                            canGroup: x.canGroup === undefined ?  sl!.uids.length > 1 :  x.canGroup
                         }
                     });
 
@@ -1009,6 +1013,7 @@ export const main = async ( event, context ) => {
      *        openid
      *        prepay_id
      *        form_id
+     *        pay_status
      *        allocatedCount
      *        allocatedGroupPrice
      *    }[ ]
@@ -1045,11 +1050,6 @@ export const main = async ( event, context ) => {
                 .doc( tid )
                 .get( );
             const trip = trip$.data;
-            
-            if ( trip.callMoneyTimes &&  trip.callMoneyTimes >= 3 ) {
-                return getWrong(`已经发起过${trip.callMoneyTimes}次催款`);
-
-            }
 
             // 更新订单
             await Promise.all( orders.map( order => {
@@ -1059,7 +1059,7 @@ export const main = async ( event, context ) => {
                     return o.oid !== order.oid &&
                         o.openid !== order.openid && 
                         o.pid === order.pid && o.sid === order.sid &&
-                        o.allocatedCount > 0 && order.allocatedCount > 0 &&
+                        // o.allocatedCount > 0 && order.allocatedCount > 0 &&
                         !!o.allocatedGroupPrice
                 });
 
@@ -1074,14 +1074,11 @@ export const main = async ( event, context ) => {
                     .update({
                         data: {
                             canGroup,
-                            base_status: '2'
+                            // 在之前已经付全款的，该订单直接设为「已结算」，否则为「已调整」
+                            base_status: order.pay_status === '2' ? '3' : '2'
                         }
                     })
             }));
-
-            /**
-             * !更新购物清单
-             */
 
             /**
              * 消息推送
@@ -1104,25 +1101,6 @@ export const main = async ( event, context ) => {
 
                 const target = orders.find( order => order.openid === openid &&
                     (!!order.prepay_id || !!order.form_id ));
-
-                // return cloud.callFunction({
-                //     data: {
-                //         data: {
-                //             touser: openid,
-                //             data: {
-                //                 title: canGroupUserMapCount[ String( openid )] ?
-                //                     // `拼团${ canGroupUserMapCount[ String( openid )]}件！您购买的商品已到货` :
-                //                     // '您购买的商品已到货',
-                //                     '到货啦！付尾款，立即发货' : 
-                //                     '到货啦！付尾款，立即发货',
-                //                 time: `[行程]${trip.title}`
-                //             },
-                //             form_id: target.prepay_id || target.form_id
-                //         },
-                //         $url: 'notification-getmoney'
-                //     },
-                //     name: 'common'
-                // });
 
                 return cloud.callFunction({
                     data: {
@@ -1162,7 +1140,7 @@ export const main = async ( event, context ) => {
 
     /** 
      * @description
-     * 订单付尾款
+     * 订单付尾款、含邮费
      * {
      *      tid
      *      integral // 积分总额（user表）
@@ -1184,6 +1162,7 @@ export const main = async ( event, context ) => {
             const openid = event.userInfo.openId;
             const { tid, integral, orders, coupons, push_integral } = event.data;
 
+            // 用户
             const user$ = await db.collection('user')
                 .where({
                     openid
@@ -1192,17 +1171,30 @@ export const main = async ( event, context ) => {
             const user = user$.data[ 0 ];
             const uid = user._id;
 
-            // 计算推广积分
-            const calculatePushIntegral = user.push_integral - push_integral > 0 ?
-                user.push_integral - push_integral : 
-                0;
+            // 邮费
+            const deliver$ = await db.collection('deliver-fee')
+                .where({
+                    tid,
+                    openid
+                })
+                .get( );
+            const deliver = deliver$.data[ 0 ];
 
+            // 邮费设置为已付
+            if ( !!deliver ) {
+                await db.collection('deliver-fee')
+                    .doc( String( deliver._id ))
+                    .update({
+                        data: {
+                            hasPay: true
+                        }
+                    })
+            }
+
+            // 计算购买积分
             const saveData = {
                 ...user,
-                integral: ( user.integral || 0 ) + ( integral || 0 ),
-                push_integral: !user.push_integral ?
-                    0 :
-                    calculatePushIntegral
+                integral: ( user.integral || 0 ) + ( integral || 0 )
             };
 
             delete saveData['_id'];

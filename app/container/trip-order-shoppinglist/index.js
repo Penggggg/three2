@@ -9,12 +9,14 @@ Component({
      * 组件的属性列表
      */
     properties: {
+
         // 行程id
         tid: {
             value: '',
             type: String,
             observer: 'init'
         },
+
         // 未调整的，展示边框
         outline: {
             value: false,
@@ -26,26 +28,35 @@ Component({
      * 组件的初始数据
      */
     data: {
+
         // 行程订单数
         count: 0,
+
         // 行程交易额
         sum: 0,
+
         // 催款次数
         callMoneyTimes: 0,
+
         // 清单列表
         list: [ ],
+
         // 展示弹框
         show: false,
+
         // 正在调整的清单对象
         currentSL: null,
+
         // 调整价格存储
         slTemp: {
             purchase: 0,
             adjustPrice: 0,
             adjustGroupPrice: 0
         },
+
         // 上次拉取未读订单的时间
         lastCheckTime: null,
+
         // 未读订单数
         unread: 0
     },
@@ -83,22 +94,26 @@ Component({
                                 depositPricesArr = [ depositPricesArr[ 0 ]];
                             }
 
-                            return Object.assign({ }, x, {
+                            return {
+                                ...x,
                                 depositPricesArr
-                            });
+                            };
 
                         });
 
+                        const list = [
+                            ...meta1.filter( x => x.base_status === '0'),
+                            ...meta1
+                                .filter( x => x.base_status === '1')
+                                .filter( x => !!x.lastAllocated ),
+                            ...meta1
+                                .filter( x => x.base_status === '1')
+                                .filter( x => !x.lastAllocated )
+                        ];
+
+                        console.log('????', list )
                         this.setData({
-                            list:  [
-                                ...meta1.filter( x => x.base_status === '0'),
-                                ...meta1
-                                    .filter( x => x.base_status === '1')
-                                    .filter( x => !!x.lastAllocated ),
-                                ...meta1
-                                    .filter( x => x.base_status === '1')
-                                    .filter( x => !x.lastAllocated )
-                            ]
+                            list
                         });
                     }
                 }
@@ -190,7 +205,7 @@ Component({
             if ( !adjustGroupPrice || Number( adjustGroupPrice ) === 0 ) {
                 return wx.showToast({
                     icon: 'none',
-                    title: '团购价不能为0'
+                    title: '拼团价不能为0'
                 })
             }
 
@@ -204,7 +219,7 @@ Component({
             if ( !!adjustGroupPrice && adjustGroupPrice < biggestDeposit ) {
                 return wx.showToast({
                     icon: 'none',
-                    title: '团购价不能少于订金'
+                    title: '拼团价不能少于订金'
                 })
             }
             

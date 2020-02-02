@@ -477,6 +477,9 @@ Component({
                         // 发起微信支付
                         let total_fee = 0;
 
+                        // 总应该付的。记录在成交价
+                        let final_price = 0;
+
                         // 此单可用的抵现金
                         let used_integral = 0;
 
@@ -491,7 +494,9 @@ Component({
                             const maxUsedIntegral = count * maxUsedIntegralPer;
                             used_integral = pushIntegral > maxUsedIntegral ?
                                 maxUsedIntegral : pushIntegral;
-                            total_fee = count * groupPrice - used_integral;
+
+                            final_price =  count * groupPrice;
+                            total_fee = final_price - used_integral;
                         // 仅订金
                         } else {
                             total_fee = count * depositPrice;
@@ -515,6 +520,7 @@ Component({
                                         // 商品详情的，只有一单
                                         orders: [{
                                             oid,
+                                            final_price,
                                             used_integral,
                                             pay_status: shouldPayAll ? '2' : '1'
                                         }],

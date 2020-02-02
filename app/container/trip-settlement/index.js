@@ -92,12 +92,9 @@ Component({
 
         // 行程订单
         initOrder( tripOrder ) {
-            const { lastPrice } = tripOrder;
-            if ( !!lastPrice ) {
-                this.setData({
-                    lastPrice
-                });
-            }
+            this.setData({
+                lastPrice: tripOrder.rest
+            });
         },
 
         // 设置顶部颜色

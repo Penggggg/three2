@@ -188,7 +188,7 @@
                         wx:if="{{ pushIntegralMoneyRate }}"
                     >
                         <view class="sku-info-title mt il">
-                            最多可再减
+                            抵现金再抵
                         </view>
                         <view class="sku-info-text il">
                             <wxc-price
@@ -206,7 +206,6 @@
                         >
                             <my-icon-question 
                                 color="#ff5777"
-                                invert="{{ true }}"
                             />
                         </button>
                     </view>
