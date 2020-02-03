@@ -44,6 +44,7 @@ const getNow = ( ts = false ): any => {
         updateTime 更新时间
         isClosed: 是否已经手动关闭
         callMoneyTimes: 发起催款次数
+        selectedProductIds: 推荐商品
 *!      type: 类型，sys（系统自动发起）、undefined（手动创建）
  */
 export const main = async ( event, context ) => {
@@ -468,6 +469,50 @@ export const main = async ( event, context ) => {
             };
         }
     });
+
+    /**
+     * @description
+     * 给最新行程插入推荐商品
+     * {
+     *    pid
+     * }
+     */
+    app.router('create-recommand', async( ctx, next ) => {
+        try {
+            let { pid } = event.data;
+
+            const trip$ = await db.collection('trip')
+                .where({
+                    isClosed: false,
+                    published: true,
+                    end_date: _.gt( getNow( true ))
+                })
+                .limit( 1 )
+                .orderBy('start_date', 'asc')
+                .get( );
+            const trip = trip$.data[ 0 ];
+
+            if ( !trip ) { return ctx.body = { status: 200 };}
+            if (( trip.selectedProductIds || [ ]).includes( pid )) { return ctx.body = { status: 200 };}
+
+            await db.collection('trip')
+                .doc( String( trip._id ))
+                .update({
+                    data: {
+                        selectedProductIds: _.unshift([ pid ])
+                    }
+                });
+            
+            return ctx.body = {
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            };
+        }
+    })
 
     /** 
      * @description
