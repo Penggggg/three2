@@ -75,7 +75,7 @@ Component({
                     const meta = [ ...r1, ...r2 ];
 
                     const t_lijian = list
-                        .filter( x => x.type === 't_lijian');
+                        .filter( x => x.type === 't_lijian' && x.t_total > 0 );
 
                     if ( t_lijian.length > 0 && t_lijian[ 0 ].t_delta > 0 ) {
                         meta.unshift( t_lijian[ 0 ])

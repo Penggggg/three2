@@ -182,13 +182,15 @@ Component({
                 {
                   title: '其他信息',
                   desc: ''
-                }, {
-                  key: 'depositPrice',
-                  label: '商品订金',
-                  type: 'number',
-                  placeholder: '先付订金，后付尾款',
-                  value: undefined
-                }, {
+                }
+                // , {
+                //   key: 'depositPrice',
+                //   label: '商品订金',
+                //   type: 'number',
+                //   placeholder: '先付订金，后付尾款',
+                //   value: undefined
+                // }
+                , {
                   key: 'limit',
                   label: '限购数量',
                   type: 'number',
@@ -425,7 +427,7 @@ Component({
             form2 && form2.set({
               limit,
               visiable,
-              depositPrice
+              // depositPrice
             })
           }
       });
@@ -448,11 +450,12 @@ Component({
 
       // 这里有点奇怪 number 如果是带 小数点的 会返回 string，因此做个特殊处理
       const standards$ = this.data.standards.map( x => {
-        return Object.assign({ }, x, {
+        return {
+          ...x,
           groupPrice: ( x.groupPrice === null || x.groupPrice === undefined ) ? x.groupPrice : Number( x.groupPrice ),
           price: ( x.price === null || x.price === undefined ) ? x.price : Number( x.price ),
           stock: ( x.stock === null || x.stock === undefined ) ? x.stock : Number( x.stock )
-        });
+        };
       });
 
       let goodsDetail = {
@@ -467,16 +470,40 @@ Component({
 
       if ( !_id ) {
           isDelete: false,
-          goodsDetail = Object.assign({ }, goodsDetail, {
+          goodsDetail = {
+            ...goodsDetail,
             createTime: new Date( ).getTime( )
-          });
+          };
       } else {
-          goodsDetail = Object.assign({ }, goodsDetail, {
+          goodsDetail = {
+            ...goodsDetail,
             _id,
             isDelete: false,
-          });
+          };
       }
 
+      // 自动设置订金
+      if ( !!goodsDetail.groupPrice ) {
+        goodsDetail = {
+          ...goodsDetail,
+          depositPrice: Number(( goodsDetail.groupPrice * 0.5 ).toFixed( 2 ))
+        }
+      } else if ( Array.isArray( goodsDetail.standards ) && goodsDetail.standards.length > 0 ) {
+        // 拿到最便宜的拼团价
+        const sort = standards$
+          .filter( x => !!x.groupPrice )
+          .sort(( x, y ) => x.groupPrice - y.groupPrice );
+        
+        goodsDetail = {
+          ...goodsDetail,
+          depositPrice: Number(( sort[ 0 ].groupPrice * 0.5 ).toFixed( 2 ))
+        }
+      } else {
+        goodsDetail = {
+          ...goodsDetail,
+          depositPrice: 5
+        }
+      }
       return goodsDetail;
     },
 

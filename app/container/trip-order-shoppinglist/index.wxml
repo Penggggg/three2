@@ -4,6 +4,7 @@
     <view class="tog-bg"></view>
 
     <view class="tos-container">
+    
         <!-- 收益信息 -->
         <view class="tos-money-block">
             
@@ -186,7 +187,7 @@
                                 </view>
                             </view>
 
-                            <!-- 对比 2、团购价 -->
+                            <!-- 对比 2、拼团价 -->
                             <view
                                 class="tos-compare"
                                 wx:if="{{ item.adjustGroupPrice }}"
@@ -196,8 +197,8 @@
                                     <!-- 需要采购数 -->
                                     <view class="tos-compare-total right">
                                         <view class="tos-compare-total-label small right">
-                                            <!-- 商城团购价 -->
-                                            团购价
+                                            <!-- 商城拼团价 -->
+                                            拼团价
                                         </view>
                                         <wxc-price
                                             icon="sub"
@@ -229,7 +230,7 @@
                                             未设置
                                         </view>
                                         <view class="tos-compare-total-label">
-                                            本次团购价
+                                            本次拼团价
                                         </view>
                                     </view> -->
 
@@ -289,10 +290,6 @@
         bind:cancel="cancel"
     >
         <view class="tos-tips">
-            <!-- <image
-                class="tos-trip-item-image"
-                src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/header.png"
-            /> -->
             <view class="tos-tips-text">
                 <view>订单自动分配</view>
                 <view>先下单客户先得</view>
@@ -317,7 +314,7 @@
             value='{{ currentSL.adjustPrice }}'
         />
         <wxc-input
-            title="团购价"
+            title="拼团价"
             nocenter="{{ true }}"
             data-key="adjustGroupPrice"
             placeholder="团购购买的价格"

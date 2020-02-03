@@ -26,7 +26,7 @@ export const main = async ( event, context ) => {
         await overtime( );
         await payedFix( );
         await priceFix( );
-        await payLastFix( );
+        // await payLastFix( );
         await overtimeTrip( );
         await almostOver( );
         await catchLostOrders( );

@@ -159,48 +159,15 @@
                         bind:changenumber="onSkuCount"
                     />
                 </view>
-
-                <!-- 拼团助手 -->
-                <!-- <view
-                    wx:if="{{ !selectedSku.canPin }}"
-                    class="sku-standards-block"
-                >
-                    <view
-                        class="sku-dingjin"
-                    >
-                        <view class="sku-info-title mt il">
-                            服务
-                        </view>
-                        <view class="sku-info-text il">
-                            群助手帮你, 找人拼团
-                        </view>
-                    </view>
-                </view> -->
                 
-                <!-- 订金 -->
+                <!-- 订金、抵现金 -->
                 <view
                     class="sku-standards-block"
-                    wx:if="{{ depositPrice }}"
                 >
-
-                    <!-- <view
-                        wx:if="{{ !shouldPrepay && !isNew }}"
-                    >
-                        <view class="sku-info-title mt il">
-                            您免付订金
-                        </view>
-                    </view>
-
-                    <view
-                        wx:elif="{{ !shouldPrepay && isNew }}"
-                    >
-                        <view class="sku-info-title mt il">
-                            本趟行程免订金
-                        </view>
-                    </view> -->
 
                     <view
                         class="sku-dingjin"
+                        wx:if="{{ !!selectedSku && !selectedSku.canPin && depositPrice }}"
                     >
                         <view class="sku-info-title mt il">
                             订金
@@ -214,11 +181,6 @@
                                 {{ depositPrice }}
                             </wxc-price>
                         </view>
-                        <!-- <view
-                            class="sku-dingjin-tips"
-                        >
-                            先付订金，后付尾款～
-                        </view> -->
                     </view>
 
                     <view
@@ -226,7 +188,7 @@
                         wx:if="{{ pushIntegralMoneyRate }}"
                     >
                         <view class="sku-info-title mt il">
-                            抵现金可抵
+                            抵现金再抵
                         </view>
                         <view class="sku-info-text il">
                             <wxc-price
@@ -244,7 +206,6 @@
                         >
                             <my-icon-question 
                                 color="#ff5777"
-                                invert="{{ true }}"
                             />
                         </button>
                     </view>

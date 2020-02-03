@@ -93,7 +93,7 @@ export const payedFix = async ( ) => {
         const orders$ = await db.collection('order')
             .where({
                 type: 'pre',
-                pay_status: '1'
+                pay_status: _.or( _.eq('1'), _.eq('2'))
             })
             .get( );
 
@@ -203,6 +203,7 @@ export const priceFix = async ( ) => {
 }
 
 /**
+ * // 弃用
  * 订单4：所有成功支付尾款的订单，把base_status设为3
  */
 export const payLastFix = async ( ) => {

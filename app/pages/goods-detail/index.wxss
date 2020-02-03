@@ -812,6 +812,8 @@
     flex: 1;
     overflow: visible;
     position: relative;
+    display: flex;
+    align-items: flex-end;
 }
 
 .pgd-pin-zoom-tips {
@@ -882,13 +884,16 @@
 }
 
 .pgd-pin-item-users {
-    bottom: 0;
-    left: 50%;
-    width: 115rpx;
-    position: absolute;
+    /* bottom: 0; */
+    /* left: 50%; */
+    /* width: 115rpx; */
+    /* position: absolute; */
     overflow-x: scroll;
     white-space: nowrap;
     padding-left: 25rpx;
+    flex: 1;
+    margin-bottom: -10rpx;
+    max-width: 260rpx;
 }
 
 .pgd-pin-item-sku {
@@ -913,6 +918,7 @@
     align-items: center;
     flex-direction: column;
     margin-left: 10rpx;
+    white-space: nowrap;
 }
 
 .pgd-pin-item-btn {

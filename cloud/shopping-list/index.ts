@@ -725,13 +725,13 @@ export const main = async ( event, context ) => {
                 const baseTemp = {
                     allocatedPrice: adjustPrice,
                     allocatedGroupPrice: adjustGroupPrice,
-                    // 无论自动分配是否成功，都是被“分配”操作过的
+                    /**
+                     * 无论自动分配是否成功，都是被“分配”操作过的
+                     */
                     base_status: '1',
                     /**
-                     * ! v1: 剩余分配量不足采购量就分配0
-                     * ! v2: 剩余分配量不足采购量，就分配剩余的采购量
+                     * !!! 剩余分配量不足采购量，就分配剩余的采购量
                      */
-                    // allocatedCount: purchase - order.count >= 0 ? order.count : 0
                     allocatedCount: purchase - order.count >= 0 ?
                         order.count :
                         purchase
@@ -1155,7 +1155,7 @@ export const main = async ( event, context ) => {
                 };
             }
 
-            // 获取当前行程的未拼团列表
+            // 获取当前行程的拼团列表
             const shopping$ = await db.collection('shopping-list')
                 .where({
                     tid: trip._id,
@@ -1175,7 +1175,7 @@ export const main = async ( event, context ) => {
                             sid, 
                             tid,
                             openid,
-                            pay_status: '1',
+                            pay_status: _.or( _.eq('1'), _.eq('2')),
                             base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
                         })
                         .get( );
@@ -1190,7 +1190,7 @@ export const main = async ( event, context ) => {
                             sid, 
                             tid,
                             openid: _.neq( openid ),
-                            pay_status: '1',
+                            pay_status: _.or( _.eq('1'), _.eq('2')),
                             base_status: _.or( _.eq('0'), _.eq('1'), _.eq('2'))
                         })
                         .count( );

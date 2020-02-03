@@ -1,20 +1,27 @@
 import * as cloud from 'wx-server-sdk';
 /**
- * sid
- * pid
- * cid
- * count
+ * 
+ * 创建「预付款」订单！！！
+ * 
+ * data: {
+ *   tid
+ *   sid
+ *   pid
+ *   cid
+ *   count
+ * }
  */
 const create$ = async( openid, data, db: DB.Database, ctx ) => {
     try {
 
+        const { isOccupied, cid, tid, sid, pid } = data;
         // 创建之前，处理占领货存的问题
-        if ( data.isOccupied ) {
+        if ( isOccupied ) {
             const deal$ = await cloud.callFunction({
                 name: 'good',
                 data: {
+                    data,
                     $url: 'update-stock',
-                    data: data
                 }
             });
     
@@ -23,23 +30,53 @@ const create$ = async( openid, data, db: DB.Database, ctx ) => {
             }
         }
 
+        // 判断是否已经有对应的采购单，无的话付订金，有的话付全款（拼团价）
+        const find$ = await db.collection('shopping-list')
+            .where({
+                tid,
+                pid,
+                sid
+            })
+            .get( );
+
+        let shouldPayAll = false;
+        const sl$ = find$.data[ 0 ];
+
+        if ( !!sl$ ) {
+            const { uids } = sl$;
+
+            if ( uids.length === 1 && uids.includes( openid )) {
+                shouldPayAll = false;
+            } else {
+                shouldPayAll = true;
+            }
+
+        } else {
+            shouldPayAll = false;
+        }
+
         const create$ = await db.collection('order')
             .add({
-                data: Object.assign({ }, data, {
-                    openid
-                })
+                data: {
+                    ...data, 
+                    openid,
+                    used_integral: 0
+                }
             });
 
         // 删除对应的购物车
-        if ( !!data.cid ) {
+        if ( !!cid ) {
             await db.collection('cart')
-                .doc( data.cid )
+                .doc( cid )
                 .remove( );
         }
 
         return {
             status: 200,
-            data: create$
+            data: {
+                oid: create$._id,
+                shouldPayAll
+            }
         }
     } catch ( e ) {
         console.log(`----【Error-Order-Create】----：${JSON.stringify( e )}`);

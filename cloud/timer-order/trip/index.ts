@@ -116,25 +116,8 @@ export const overtimeTrip = async ( ) => {
         }));
 
         if ( trips$.data.length > 0 ) {
+
             // 推送代购通知
-            const members$ = await db.collection('manager-member')
-                .where({
-                    push: true
-                })
-                .get( );
-
-            await Promise.all(
-                members$.data.map( async member => {
-                    // 4、调用推送
-                    await subscribePush({
-                        openid: member.openid,
-                        type: 'trip',
-                        page: `pages/manager-trip-list/index`,
-                        texts: [`行程已自动到期`, `请查看尾款情况`]
-                    });
-                })
-            );
-
             await Promise.all(
                 trips$.data.map( async trip => {
                     await cloud.callFunction({
@@ -195,7 +178,7 @@ export const autoTrip = async ( ) => {
                     warning: true,
                     published: true,
                     isClosed: false,
-                    reduce_price: 1,
+                    reduce_price: 0,
                     callMoneyTimes: 0,
                     title: '群拼团',
                     selectedProductIds: [ ],
@@ -208,23 +191,23 @@ export const autoTrip = async ( ) => {
             });
 
         // 推送代购通知
-        const members = await db.collection('manager-member')
-            .where({
-                push: true
-            })
-            .get( );
+        // const members = await db.collection('manager-member')
+        //     .where({
+        //         push: true
+        //     })
+        //     .get( );
 
-        await Promise.all(
-            members.data.map( async member => {
-                // 调用推送
-                await subscribePush({
-                    openid: member.openid,
-                    type: 'trip',
-                    page: `pages/manager-trip-list/index?s=1`,
-                    texts: [`自动创建代购行程～`, `可使用群拼团啦！～`]
-                });
-            })
-        );
+        // await Promise.all(
+        //     members.data.map( async member => {
+        //         // 调用推送
+        //         await subscribePush({
+        //             openid: member.openid,
+        //             type: 'trip',
+        //             page: `pages/manager-trip-list/index?s=1`,
+        //             texts: [`自动创建代购行程～`, `可使用群拼团啦！～`]
+        //         });
+        //     })
+        // );
         
         return {
             status: 200
