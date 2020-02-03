@@ -152,6 +152,9 @@
 
 .tog-user-deliver {
     display: inline;
+}
+
+.tog-user-deliver.ml {
     margin-left: 15rpx;
 }
 
@@ -506,7 +509,7 @@
 }
 
 .tog-address-allocated {
-    width: 100rpx;
+    width: 130rpx;
     color: #ff5777;
     text-align: right;
     margin-left: 20rpx;

@@ -653,6 +653,17 @@ export const main = async ( event, context ) => {
     
             }
 
+            // 将此商品id，插入到行程推荐
+            await cloud.callFunction({
+                data: {
+                    data: {
+                        pid: _id,
+                    },
+                    $url: 'create-recommand'
+                },
+                name: 'trip'
+            });
+
             return ctx.body = {
                 data: _id,
                 status: 200

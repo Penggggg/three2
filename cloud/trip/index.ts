@@ -44,6 +44,7 @@ const getNow = ( ts = false ): any => {
         updateTime 更新时间
         isClosed: 是否已经手动关闭
         callMoneyTimes: 发起催款次数
+        selectedProductIds: 推荐商品
 *!      type: 类型，sys（系统自动发起）、undefined（手动创建）
  */
 export const main = async ( event, context ) => {
@@ -330,9 +331,9 @@ export const main = async ( event, context ) => {
 
             const end_date = fixEndDate( Number( event.data.end_date ));
 
-            if ( reduce_price < 1 ) {
-                return getErr('立减金额不能少于1元')
-            }
+            // if ( reduce_price < 1 ) {
+            //     return getErr('立减金额不能少于1元')
+            // }
 
             // 创建行程
             if ( !_id ) {
@@ -447,7 +448,7 @@ export const main = async ( event, context ) => {
                                         openid: user.openid,
                                         type: 'trip',
                                         page: 'pages/trip-enter/index',
-                                        texts: [`${title}`, `代购在${time.getMonth( )+1}月${time.getDate( )}日开始！无门槛立减${reduce_price}元！`]
+                                        texts: [`${title}`, `即将采购！用群拼团下单吧～`]
                                     }
                                 }
                             });
@@ -468,6 +469,50 @@ export const main = async ( event, context ) => {
             };
         }
     });
+
+    /**
+     * @description
+     * 给最新行程插入推荐商品
+     * {
+     *    pid
+     * }
+     */
+    app.router('create-recommand', async( ctx, next ) => {
+        try {
+            let { pid } = event.data;
+
+            const trip$ = await db.collection('trip')
+                .where({
+                    isClosed: false,
+                    published: true,
+                    end_date: _.gt( getNow( true ))
+                })
+                .limit( 1 )
+                .orderBy('start_date', 'asc')
+                .get( );
+            const trip = trip$.data[ 0 ];
+
+            if ( !trip ) { return ctx.body = { status: 200 };}
+            if (( trip.selectedProductIds || [ ]).includes( pid )) { return ctx.body = { status: 200 };}
+
+            await db.collection('trip')
+                .doc( String( trip._id ))
+                .update({
+                    data: {
+                        selectedProductIds: _.unshift([ pid ])
+                    }
+                });
+            
+            return ctx.body = {
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            };
+        }
+    })
 
     /** 
      * @description
@@ -573,7 +618,8 @@ export const main = async ( event, context ) => {
                     notPayAllClients, // 未付尾款客户数量
                     count: orders$.data.length, // 总订单数,
                     title: trip$.data.title, // 行程名称
-                    callMoneyTimes: trip$.data.callMoneyTimes // 已发送催款次数
+                    callMoneyTimes: trip$.data.callMoneyTimes, // 已发送催款次数
+                    isClosed: trip$.data.isClosed // 是否已经结束行程
                 }
             };
 

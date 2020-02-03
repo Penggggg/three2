@@ -132,7 +132,8 @@ export const main = async ( event, context ) => {
                     .add({
                         data: Object.assign({ }, event.data, { 
                             openid,
-                            integral: 0
+                            integral: 0,
+                            push_integral: 0
                         })
                     }).catch( err => { throw `${err}`});
         
@@ -1318,6 +1319,85 @@ export const main = async ( event, context ) => {
 
             return ctx.body = {
                 data: meta,
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    })
+
+    /**
+     * @description
+     * 创建 积分使用记录
+     * {
+     *    tid
+     *    value
+     *    openid
+     * }
+     */
+    app.router('push-integral-create', async ( ctx, next ) => {
+        try {
+            const { tid, value } = event.data;
+            const openid = event.data.openId || event.data.openid || event.userInfo.openId;
+            
+            if ( !value ) {
+                return ctx.body = {
+                    status: 200
+                }
+            }
+
+            // 使用表添加记录
+            const record$ = await db.collection('integral-use-record')
+                    .where({
+                        tid,
+                        openid,
+                        type: 'push_integral'
+                    })
+                    .get( );
+            const record = record$.data[ 0 ];
+
+            if ( !!record && !!value ) {
+
+                await db.collection('integral-use-record')
+                    .doc( String( record._id ))
+                    .update({
+                        data: {
+                            value: Number(( record.value + value ).toFixed( 2 ))
+                        }
+                    });
+
+            } else if ( !record && !!value ) {
+                await db.collection('integral-use-record')
+                    .add({
+                        data: {
+                            tid,
+                            openid,
+                            type: 'push_integral',
+                            value: Number( value.toFixed( 2 )),
+                        }
+                    });
+            }
+
+            // 角色表，减去抵现金
+            const user$ = await db.collection('user')
+                .where({
+                    openid
+                })
+                .get( );
+            
+            const user = user$.data[ 0 ];
+            await db.collection('user')
+                .doc( String( user._id ))
+                .update({
+                    data: {
+                        push_integral: Number(( user.push_integral - value ).toFixed( 2 ))
+                    }
+                })
+
+            return ctx.body = {
                 status: 200
             }
 

@@ -240,7 +240,8 @@ Page({
                             statusCN = [ '待付订金' ]
 
                         } else if ( p === '1' && b === '0' ) {
-                            statusCN = [ '购买中' ]
+                            // statusCN = [ '购买中' ]
+                            statusCN = ''
 
                         } else if ( p === '1' && b === '1' ) {
                             statusCN = [ '结算中' ] 
@@ -255,34 +256,45 @@ Page({
                             statusCN = [ '已取消' ]
 
                         } else if ( p === '2' && d === '0' ) {
-                            statusCN = [ '未发货' ]
+                            // statusCN = [ '未发货' ]
+                            statusCN = ''
                             
                         } else if ( p === '2' && d === '2' ) {
                             statusCN = [ '已发货' ]
                         } 
 
-                        if (( b === '1' || b === '2') && count - allocatedCount > 0 ) {
-                            const index = statusCN.findIndex( x => x === '结算中');
-                            statusCN.splice( index, 1, '货源不足');
+                        if ( allocatedCount !== undefined && count - allocatedCount > 0 ) {
+                            statusCN = ['货源不足']
                         }
 
                         if ( statusCN[ 0 ] === '待付款' && allocatedGroupPrice && canGroup ) {
-                            statusCN = ['拼团价']
+                            statusCN = ['拼成']
                         }
 
-                        return Object.assign({ }, order, {
+                        const pining = pining$( order );
+                        const pin_cutoff = pinCutoff$( order );
+                        const order_cutoff = pin_cutoff + (order.used_integral || 0);
+                        const showingPrice = pining ? 
+                            (order.allocatedGroupPrice || order.groupPrice) - (order.used_integral || 0) :
+                            (order.allocatedPrice || order.groupPrice) - (order.used_integral || 0);
+
+                        return {
+
+                            ...order,
                             p,
                             b,
                             statusCN,
                             isNeedPrePay,
-                            pining: pining$( order ), // 是否处于拼团状态
-                            pin_cutoff: pinCutoff$( order ), // 拼团减免（预测）
+                            pining, // 是否处于拼团状态
+                            pin_cutoff, // 拼团减免（预测）
+                            order_cutoff, // 总减免：拼团 + 抵现金
+                            showingPrice, // 在界面展示的价格
                             retreat: b === '2' && allocatedCount < count ? // 退还订金
                                 !!depositPrice ?
                                     (count - allocatedCount) * depositPrice :
                                     0 :
                                 0,
-                        })
+                        }
                     };
 
                     // 创建一个新的 行程键值对
@@ -299,7 +311,7 @@ Page({
                             tripTime: order.trip.isClosed ?
                                 '已结束' :
                                 new Date( ).getTime( ) >= order.trip.start_date ?
-                                    `${d2.getMonth( )+1}月${d2.getDate( )}结束` :
+                                    `${d2.getMonth( )+1}月${d2.getDate( )}完成采购` :
                                     `${d.getMonth( )+1}月${d.getDate( )}出发`,
                             meta: [ decorateOrder( order, isNeedPrePay )]
                         };
@@ -313,47 +325,16 @@ Page({
 
                 }); 
 
-                // 处理订单整体状态、合计信息 tripStatusCN
+                // 处理订单整体状态、合计信息
                 Object.keys( orderObj ).map( tid => {
 
                     let tripStatusCN = '';
                     const tripOrders = orderObj[ tid ];
                     const orders = tripOrders.meta;
 
-
-                    //  处理订单整体状态
-                    if ( orders.filter( x => x.b !== '4' && x.b !== '5').some( x => x.statusCN[ 0 ] === '待付订金' )) {
-                        tripStatusCN = '待付订金';
-
-                    } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '1' && ( x.b === '0' || x.b === '1' ))) {
-                        tripStatusCN = '购买中';
-
-                    } else if ( orders.filter( x => x.b !== '4' && x.b !== '5' && !!x.allocatedCount ).length > 0 &&
-                        orders.filter( x => x.b !== '4' && x.b !== '5' && !!x.allocatedCount )
-                            .every( x => x.p === '1' && x.b === '2' )) {
-                                tripStatusCN = '待付尾款';
-
-                    } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
-                        && orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.d === '0')) {
-                        tripStatusCN = '待发货';
-
-                    } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
-                        && orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.d === '1')) {
-                        tripStatusCN = '已发货';
-
-                    } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => x.p === '2')
-                        && orders.some( x => x.d === '0') && orders.some( x => x.d === '1')) {
-                        tripStatusCN = '部分发货';
-                    }
-
-                    // 退款
-
-                    tripOrders['tripStatusCN'] = tripStatusCN;
-        
-
-                    /** 是否处于可以结算的状态 */
-                    const canSettle = tripOrders.tripStatusCN === '待付尾款';
-                    tripOrders['canSettle'] = canSettle;
+                    // 所有订单，使用的抵现金
+                    const allUsedIntegral = orders.reduce(( x, y ) => x + (y.used_integral || 0 ), 0 );
+                    tripOrders['allUsedIntegral'] = allUsedIntegral
 
             
                     // 行程是否已经付过尾款
@@ -372,18 +353,6 @@ Page({
                     }, 0 );
                     tripOrders['sum'] = sum;
 
-
-                    // 应付全款（不含优惠券）
-                    // let wholePriceNotDiscount = orders.reduce(( x, y ) => {
-                    //     let currentPrice = 0;
-                    //     const { allocatedCount, allocatedPrice, allocatedGroupPrice, canGroup, count, price } = y;
-                    //     if ( canSettle ) {
-                    //         currentPrice = (canGroup && allocatedGroupPrice ? allocatedGroupPrice : allocatedPrice) * count$( y );
-                    //     } else {
-                    //         currentPrice = count$( y ) * price;
-                    //     }
-                    //     return x + currentPrice;
-                    // }, 0 );
                     // 应付全款（不含优惠券）
                     let wholePriceNotDiscount = orders.reduce(( x, y ) => {
                         let currentPrice = 0;
@@ -401,10 +370,11 @@ Page({
 
                     // 邮费
                     const userDeliverFeeMeta = deliverFees.find( x => x.tid === tripOrders.tid );
-                    const userDeliverFee = userDeliverFeeMeta ? userDeliverFeeMeta.fee : null;
+                    const userDeliverFee = userDeliverFeeMeta ? userDeliverFeeMeta.fee : 0;
 
                     // 推广积分
                     const pushIntegralFeesMeta = pushIntegralFees.find( x => x.tid === tripOrders.tid );
+                    // 总的积分使用情况，权重比 allUsedIntegral 高
                     const pushintegralFee = pushIntegralFeesMeta ? pushIntegralFeesMeta.value : null;
 
                     if ( userDeliverFee ) {
@@ -542,6 +512,7 @@ Page({
                 
                     orders.map( order => { // 成功拼团的情况
                         const { groupPrice, price, allocatedGroupPrice, allocatedPrice } = order;
+
                         if ( !!groupPrice || !!allocatedGroupPrice ) {
                             const good_cutoff = allocatedGroupPrice ?
                                 allocatedPrice - allocatedGroupPrice:
@@ -667,23 +638,79 @@ Page({
 
                     tripOrders['total'] = total;
 
+                    // 已付款（拼团）
+                    const hasBeenPay = orders
+                        .filter( o => o.pay_status === '2' )
+                        .reduce(( x, y ) => {
+                            return Number(( x + ( y.final_price || 0 )).toFixed( 2 ))
+                        }, 0 );
+                    tripOrders['hasBeenPay'] = hasBeenPay;
+
+                    // 已付（拼团+订金）
+                    const hasBeenPayAll = Number(( hasBeenPay + ( hasPayDepositPrice || 0 )).toFixed( 2 ));
+                    tripOrders['hasBeenPayAll'] = hasBeenPayAll;
+
                     // 应退订金 ( 已付订金 > 应付 )
                     const retreat = hasPayDepositPrice > wholePriceByDiscount ?
                         (hasPayDepositPrice - wholePriceByDiscount).toFixed( 2 ) : 0;
                     tripOrders['retreat'] = retreat;
 
-                    if ( retreat > 0 && orderObj[ tid ].isClosed ) {
-                        tripOrders['tripStatusCN'] = '需退款';
+                    // 计算尾款情况（ 待付 或 退款 ）
+                    let rest = orders.reduce(( x, y ) => {
+                        const { allocatedCount, allocatedGroupPrice, allocatedPrice, final_price,
+                            count, groupPrice, price, canGroup, depositPrice, pay_status } = y;
+                        
+                        // 已付
+                        const hasPayed = 
+                            final_price !== undefined ? 
+                                final_price :
+                                pay_status === '1' ? 
+                                    count * depositPrice:
+                                    count * ( canGroup ? groupPrice : price );
+
+                        // 应交(订单)
+                        const shouldPay = allocatedCount * ( canGroup ? allocatedGroupPrice : allocatedPrice );
+                        return Number(( x + ( shouldPay - hasPayed )).toFixed( 2 ));
+
+                    }, 0 );
+
+                    // 加上邮费
+                    rest += ( !userDeliverFeeMeta || (userDeliverFeeMeta || { }).hasPay ) ? 0 : ( userDeliverFee || 0);
+
+                    // 行程还没有开始结算
+                    if ( !tripOrders.isClosed ) {
+                        rest = 0;
+                    }
+                    tripOrders['rest'] = rest;
+                    tripOrders['restAbs'] = Math.abs( rest );
+
+                    //  处理订单整体状态
+                    if ( orders.filter( x => x.b !== '4' && x.b !== '5').some( x => x.statusCN[ 0 ] === '待付订金' )) {
+                        tripStatusCN = '待付订金';
+
+                    } else if ( orders.filter( x => x.b !== '4' && x.b !== '5').every( x => ( x.p === '1' || x.p === '2' ) && ( x.b === '0' || x.b === '1' ))) {
+                        tripStatusCN = '采购中';
+
                     }
 
-                    if ( hasPay ) {
-                        tripOrders['tripStatusCN'] = '待发货';
+                    // 退款
+                    if ( rest > 0 ) {
+                        tripStatusCN = '待支付';
+                    } else if ( rest < 0 ) {
+                        tripStatusCN = '需退款';
                     }
+
+                    // 总状态
+                    tripOrders['tripStatusCN'] = tripStatusCN;
+
+                    /** 是否处于可以结算的状态 */
+                    const canSettle = tripStatusCN === '待支付';
+                    tripOrders['canSettle'] = canSettle;
 
                 });
 
                 const allTripOrders = Object.keys( orderObj ).map( tid => orderObj[ tid ]);
-
+                console.log('??????', allTripOrders )
                 // 如果没有当前行程的订单，则展示全部
                 // 如果有，则先展示当前行程的订单
                 const hasCurrentTripOrder = !!metaList.find( x => x.tid === tid );
@@ -696,7 +723,6 @@ Page({
                         if ( notPay.length > 0 ) {
                             return notPay
                         } else {
-                            console.log('????', allTripOrders )
                             return allTripOrders;
                         }
                     } else {
@@ -1060,7 +1086,7 @@ Page({
                 url: 'order_upadte-to-payed',
                 data: {
                     prepay_id,
-                    orderIds: notPayDepositOrders.join(',')
+                    orders: notPayDepositOrders.join(',')
                 },
                 success: res => {
                     if ( res.status === 200 ) {

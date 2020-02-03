@@ -156,7 +156,7 @@ Page({
                 });
 
                 this.configPinest( );
-                this.fetchCoupon( current ? current._id : '' );
+                // this.fetchCoupon( current ? current._id : '' );
                 // this.fetchAllShoppinglist( current ? current._id : '' );
 
             }
