@@ -1,0 +1,10 @@
+{
+    "permissions": {
+      "openapi": [
+        "wxacode.getUnlimited",
+        "uniformMessage.send",
+        "subscribeMessage.send"
+      ]
+    }
+  }
+  

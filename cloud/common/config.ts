@@ -145,7 +145,8 @@ export const collections = [
     'share-record',
     'integral-use-record',
     'push-timer',
-    'good-visiting-record'
+    'good-visiting-record',
+    'super-goods'
 ];
 
 /** 权限模块 */
