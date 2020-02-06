@@ -1,0 +1,27 @@
+<view class="p-super-push-good-detail">
+    
+    <!-- 基本信息 -->
+    <my-active-form
+        id="form1"
+        meta="{{ meta }}"
+    />
+
+    <!-- 按钮 -->
+    <view
+        class="ptd-btn-block"
+    >
+        <view
+            class="ptd-btn"
+            wx:if="{{ !!spid }}"
+            bindtap="onDelete"
+        >
+            删除
+        </view>
+        <view
+            class="ptd-btn invert"
+            bindtap="onCreate"
+        >
+            {{ !!spid ? '更新' : '创建' }}
+        </view>
+    </view>
+</view>

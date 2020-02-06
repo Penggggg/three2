@@ -28,7 +28,9 @@
     "pages/concat/index",
     "pages/trip-deliver/index",
     "pages/manager-person-info/index",
-    "pages/goods-detail-preview/index"
+    "pages/goods-detail-preview/index",
+    "pages/super-push-good-list/index",
+    "pages/super-push-good-detail/index"
   ],
   "usingComponents": {
     "my-nav": "./container/nav-bar/index",
