@@ -89,16 +89,16 @@ export const main = async ( event, context ) => {
      * @description
      * 获取 一个主推商品
      * {
-     *   _id
+     *   _id || spid
      * }
      */
     app.router('detail', async( ctx, next ) => {
         try {
 
-            const _id = event.data._id;
+            const { _id, spid } = event.data;
 
             const find$ = await db.collection('super-goods')
-                .doc( _id )
+                .doc( _id || spid )
                 .get( );
 
             return ctx.body = {
@@ -207,6 +207,29 @@ export const main = async ( event, context ) => {
 
             return ctx.body = {
                 status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = { status: 500 }
+        }
+    });
+
+    /**
+     * @description
+     * 获取正在上架的主推商品
+     */
+    app.router('pushing', async( ctx, next ) => {
+        try {
+
+            const find$ = await db.collection('super-goods')
+                .where({
+                    push: true
+                })
+                .get( );
+
+            return ctx.body = {
+                status: 200,
+                data: find$.data
             }
 
         } catch ( e ) {

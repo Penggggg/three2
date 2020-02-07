@@ -361,7 +361,7 @@ Component({
                 });
             });
 
-            console.log('????', meta )
+  
             return meta;
         }
     },

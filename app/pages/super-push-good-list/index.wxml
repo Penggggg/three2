@@ -35,7 +35,10 @@
             <view class="pmgl-item-info-block">
                 <view class="pmgl-item-info">
                     <view class="pmgl-item-title">
-                        {{ item.title }}
+                        {{ item.tips ? '(' + item.tips + ') ' : '' }}{{ item.title }}
+                    </view>
+                    <view class="pmgl-item-title grey">
+                        {{ item.desc }}
                     </view>
                 </view>
                 <view class="pmgl-item-action">

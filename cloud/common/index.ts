@@ -1611,6 +1611,109 @@ export const main = async ( event, context ) => {
         }
     })
 
+    /**
+     * @description
+     * 获取主推商品列表
+     */
+    app.router('pushing-super-goods', async ( ctx, next ) => {
+        try {
+
+            const { superApp } = CONFIG;
+
+            // 获取token
+            const result = await (axios as any)({
+                method: 'get',
+                url: `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${superApp.id}&secret=${superApp.secrect}`
+            });
+            
+            const { access_token, errcode } = result.data;
+
+            if ( errcode ) {
+                throw '生成access_token错误'
+            }
+
+            // 调取列表
+            const req = await (axios as any)({
+                method: 'post',
+                data: {
+                    $url: "pushing",
+                    data: { }
+                },
+                url: `https://api.weixin.qq.com/tcb/invokecloudfunction?access_token=${access_token}&env=${superApp.env}&name=super-goods`
+            });
+
+            const res = JSON.parse( req.data.resp_data );
+            const { status, data } = res;
+
+            if ( status !== 200 ) { throw ''; }
+
+            return ctx.body = {
+                data,
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    })
+
+    /**
+     * @description 
+     * 调取「核心小程序」的云开发接口
+     * 
+     * {
+     *    url: name_$url
+     *    body
+     * }
+     */
+    app.router('core-app-api', async ( ctx, next ) => {
+        try {
+
+            const { superApp } = CONFIG;
+            const { url, body } = event.data;
+            const [ name, $url ] = url.split('_')
+
+            // 获取token
+            const result = await (axios as any)({
+                method: 'get',
+                url: `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${superApp.id}&secret=${superApp.secrect}`
+            });
+            
+            const { access_token, errcode } = result.data;
+
+            if ( errcode ) {
+                throw '生成access_token错误'
+            }
+
+            // 调取列表
+            const req = await (axios as any)({
+                method: 'post',
+                data: {
+                    $url,
+                    data: body
+                },
+                url: `https://api.weixin.qq.com/tcb/invokecloudfunction?access_token=${access_token}&env=${superApp.env}&name=${name}`
+            });
+
+            const res = JSON.parse( req.data.resp_data );
+            const { status, data } = res;
+
+            if ( status !== 200 ) { throw ''; }
+
+            return ctx.body = {
+                data,
+                status: 200
+            }
+
+        } catch ( e ) {
+            return ctx.body = {
+                status: 500
+            }
+        }
+    })
+
     /** 
      * @description
      * 测试专用

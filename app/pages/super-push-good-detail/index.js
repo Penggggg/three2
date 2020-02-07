@@ -109,6 +109,23 @@ Page({
                         validate: val => Number( val ) > 0,
                         message: '淘宝价不能为0'
                         }]
+                    }, {
+                        title: '其他信息',
+                        desc: ''
+                    }, {
+                        key: 'desc',
+                        label: '描述',
+                        type: 'input',
+                        placeholder: '如：护肤面膜Top3',
+                        value: undefined,
+                        rules: [ ]
+                    }, {
+                        key: 'tips',
+                        label: '提示',
+                        type: 'input',
+                        placeholder: '一个字即可',
+                        value: undefined,
+                        rules: [ ]
                     }
                 ];
 
@@ -146,14 +163,16 @@ Page({
                 const { status, data } = res;
                 if ( status !== 200 ) { return; }
 
-                const { title, detail, tag, category, img, fadePrice } = data; 
+                const { title, detail, tag, category, img, fadePrice, tips, desc } = data; 
                 const form1 = this.selectComponent('#form1');
 
                 form1.set({
                     tag,
                     title,
                     detail,
-                    fadePrice
+                    fadePrice,
+                    tips,
+                    desc
                 });
 
                 this.setData({

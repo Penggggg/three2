@@ -12,6 +12,9 @@ Page({
      */
     data: {
 
+        // 主推商品id
+        spid: '',
+
         // 商品详情
         detail: null,
 
@@ -183,13 +186,16 @@ Page({
 
     /** 提交当前表单的值 */
     submit( ) {
-        const { detail } = this.data;
+        const { detail, spid } = this.data;
         if ( !detail ) { return; }
 
         const { _id } = detail;
     
         http({
-            data: this.data.detail,
+            data: {
+                ...detail,
+                spid
+            },
             loadingMsg: _id ? '更新中...' : '创建中..',
             errMsg: _id ? '更新失败' : '创建失败',
             url: `good_edit`,
@@ -200,7 +206,7 @@ Page({
                     wx.showToast({
                         title: _id ? '更新成功' : '创建成功'
                     });
-                }, 100 );
+                }, 800 );
 
                 app.setGlobalData({
                     editingGood: null
@@ -209,6 +215,7 @@ Page({
                 wx.navigateBack({
                     delta: 2
                 });
+
             }
         });
   
@@ -218,9 +225,14 @@ Page({
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
+        const { spid } = options;
         this.init( );
         this.runComputed( );
         wx.hideShareMenu( );
+
+        !!spid && this.setData({
+            spid
+        })
     },
 
     /**

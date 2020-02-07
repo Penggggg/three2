@@ -114,7 +114,7 @@
 .pmgl-item-title {
     color:#333;
     letter-spacing: 0.02em;
-    font-size: 30rpx;
+    font-size: 28rpx;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -122,7 +122,11 @@
     text-overflow: ellipsis;
     -webkit-box-orient: vertical;
     margin-bottom: 10rpx;
-    
+}
+
+.pmgl-item-title.grey {
+    color: #666;
+    font-size: 24rpx;
 }
   
 .pmgl-item-action {
