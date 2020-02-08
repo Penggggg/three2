@@ -531,6 +531,7 @@ export const main = async ( event, context ) => {
         try {
 
             let _id = event.data._id;
+            const { spid } = event.data;
 
             // 判断是否有同名商品
             const { title } = event.data;
@@ -556,11 +557,13 @@ export const main = async ( event, context ) => {
     
                 delete event.data['standards'];
     
-                const create$ = await db.collection('goods').add({
-                    data: Object.assign({ }, event.data, {
-                        isDelete: false
-                    })
-                });
+                const create$ = await db.collection('goods')
+                    .add({
+                        data: {
+                            ...event.data,
+                            isDelete: false
+                        }
+                    });
                 _id = create$._id;
     
                 // 插入型号
@@ -1134,6 +1137,34 @@ export const main = async ( event, context ) => {
             return ctx.body = {
                 status: 200,
                 data: users
+            };
+        } catch( e ) {
+            return ctx.body = {
+                status: 500
+            };
+        }
+    });
+
+    /** 
+     * @description
+     * 获取本小程序，带有指定spid的本地商品
+     * 
+     * { spid } 主推商品的id
+     * 
+     */
+    app.router('find-by-spid', async( ctx, next ) => {
+        try {
+            const { spid } = event.data;
+            const find$ = await db.collection('goods')
+                .where({
+                    spid
+                })
+                .limit( 1 )
+                .get( );
+
+            return ctx.body = {
+                status: 200,
+                data: find$.data[ 0 ]
             };
         } catch( e ) {
             return ctx.body = {

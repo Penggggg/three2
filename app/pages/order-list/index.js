@@ -710,7 +710,7 @@ Page({
                 });
 
                 const allTripOrders = Object.keys( orderObj ).map( tid => orderObj[ tid ]);
-                console.log('??????', allTripOrders )
+
                 // 如果没有当前行程的订单，则展示全部
                 // 如果有，则先展示当前行程的订单
                 const hasCurrentTripOrder = !!metaList.find( x => x.tid === tid );

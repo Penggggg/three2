@@ -30,12 +30,13 @@ Component({
                 desc: '发布、编辑代购行程',
                 url: '/pages/manager-trip-list/index',
                 img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-2.png'
-            }, {
-                title: '特价',
-                desc: '创建商品特价活动',
-                url: '/pages/manager-goods-active/index',
-                img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-4.png'
             }
+            // , {
+            //     title: '特价',
+            //     desc: '创建商品特价活动',
+            //     url: '/pages/manager-goods-active/index',
+            //     img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-4.png'
+            // }
         ],
         // 下方列表
         list2: [
@@ -60,8 +61,23 @@ Component({
 
         /** 监听全局管理员权限 */
         watchRole( ) {
+            const { list } = this.data;
             app.watch$('role', ( val ) => {
                 this.setBtn( val === 1 )
+            });
+            app.watch$('appConfig', ( val ) => {
+                if ( !val ) { return;}
+                if ( !!val['app-id'] && val['app-id'] === val['super-app-id']) {
+                    list.push({
+                        title: '主推',
+                        desc: '发布、编辑主推商品',
+                        url: '/pages/super-push-good-list/index',
+                        img: 'https://global-1257764567.cos.ap-guangzhou.myqcloud.com/entry-icon-4.png'
+                    });
+                    this.setData({
+                        list
+                    })
+                }
             });
         },
 

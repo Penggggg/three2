@@ -7,6 +7,13 @@ export const app = {
     secrect: '78d9b8f5371cacf3e887e6dcd531da3b'
 }
 
+/** 超级app */
+export const superApp = {
+    env: 'prod-b87b76',
+    id: 'wx60bf7f745ce31ef0',
+    secrect: '6c8ff31489cce7dd4edf0b1843b7b0f5'
+}
+
 /** 推送模版 */
 export const notification_template = {
     getMoney3: '7TDuFkSVtVULTwAebcxmsJCK3Ts3vGqDli0jGf6WXNI'// 购买成功通知
@@ -143,7 +150,8 @@ export const collections = [
     'share-record',
     'integral-use-record',
     'push-timer',
-    'good-visiting-record'
+    'good-visiting-record',
+    'super-goods'
 ];
 
 /** 权限模块 */

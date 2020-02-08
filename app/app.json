@@ -28,7 +28,10 @@
     "pages/concat/index",
     "pages/trip-deliver/index",
     "pages/manager-person-info/index",
-    "pages/goods-detail-preview/index"
+    "pages/goods-detail-preview/index",
+    "pages/super-push-good-list/index",
+    "pages/super-push-good-detail/index",
+    "pages/test/index"
   ],
   "usingComponents": {
     "my-nav": "./container/nav-bar/index",
@@ -37,6 +40,7 @@
     "my-img-upload": "./components/img-upload/index",
     "my-active-form": "./components/active-form/index",
     "my-danmu-tips": "./components/danmu-tips/index",
+    "my-super-push-selector": "./container/super-push-selector/index",
     "my-product-selector": "./container/product-selector/index",
     "my-goods-detail-bar": "./container/goods-detail-bar/index",
     "my-single-theme-modal": "./components/single-theme-modal/index",

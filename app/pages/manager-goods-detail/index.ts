@@ -1,23 +1,31 @@
-// app/pages/manager-goods-detail/index.js
+
 Page({
 
     /**
      * 页面的初始数据
      */
     data: {
-      id: ''
+
+        // 商品id
+        id: '',
+
+        // 主推商品
+        spid: ''
     },
   
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad: function (options) {
-      const id = options!.id; 
-      wx.hideShareMenu({ });
-      if ( !id ) { return; }
-      this.setData!({
-        id
-      });
+        const id = options!.id || ''; 
+        const spid = options!.spid || ''
+        // 74b140b45e3c0f2c0b4411b1353b32a8
+
+        this.setData!({
+            id,
+            spid
+        });
+        wx.hideShareMenu({ });
     },
   
     /**

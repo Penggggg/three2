@@ -419,4 +419,7 @@
     <!-- 订阅消息模块 -->
     <my-subscribe-tips />
 
+    <!-- 主推商品 -->
+    <my-super-push-selector />
+
 </view>

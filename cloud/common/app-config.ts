@@ -56,5 +56,13 @@ export default [
         desc: 'ip的头像',
         type: 'ip-avatar',
         value: ''
+    }, {
+        desc: '当前小程序的appid',
+        type: 'app-id',
+        value: ''
+    }, {
+        desc: '小程序平台的appid',
+        type: 'super-app-id',
+        value: 'wx60bf7f745ce31ef0'
     }
 ]

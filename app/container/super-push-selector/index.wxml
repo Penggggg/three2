@@ -1,0 +1,141 @@
+<view >
+
+    <!-- 拼团玩法提示 -->
+    <wxc-mask
+        locked="true"
+        content-align="cc"
+        status="{{ showTips }}"
+        wx:if="{{ list.length > 0}}"
+    >
+        <view class="gd-compare-modal">
+
+            <!-- 内容 -->
+            <view class="gd-compare-content-con">
+
+                <!-- 背景 -->
+                <view class="gd-compare-con">
+                    <view class="gd-compare-side left">
+                        <view class="gd-compare-tips left">
+                            今晚推什么？
+                        </view>
+                    </view>
+                    <view class="gd-compare-side right">
+                    </view>
+                    <!-- <view 
+                        class="gd-compare-con-ball"
+                    >
+                    </view> -->
+                    <!-- <wxc-icon
+                        size="20"
+                        color="#fff"
+                        type="arrow-left"
+                        class="gd-compare-arrow left"
+                    />
+                    <wxc-icon
+                        size="20"
+                        color="#fff"
+                        type="arrow-right"
+                        class="gd-compare-arrow right"
+                    /> -->
+                </view>
+
+                <!-- 内容 -->
+                <view class="gd-compare-content">
+                    <swiper
+                        class="pgd-swiper"
+                        autoplay="{{ true }}"
+                        interval="{{ 3000 }}"
+                        circular="{{ true }}"
+                    >
+                        <block
+                            wx:key="index"
+                            wx:for="{{ list }}" 
+                        >
+                            <swiper-item>
+                                <view class="pgd-swiper-item">
+                                    
+                                    <!-- 主图、标题、提示1 -->
+                                    <view 
+                                        class="pgd-good-con"
+                                    >
+
+                                        <image
+                                            mode="aspectFill"
+                                            class="pgd-swiper-img"
+                                            src="{{ item.img[ 0 ]}}"
+                                            lazy-load="{{ true }}"
+                                            bindtap="previewImg"
+                                            data-img="{{ item.img[ 0 ]}}"
+                                        />
+
+                                        <view class="pgd-good-title">
+                                            {{ item.title }}
+                                        </view>
+
+                                    </view>
+
+                                    <!-- 提示2 -->
+                                    <view class="pgd-good-desc-con">
+                                        <image  
+                                            mode="scaleToFill"
+                                            class="pgd-good-desc-bg"
+                                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/bg-any-caidai-yellow.png"
+                                        />
+                                        <view class="pgd-good-desc">
+                                            {{ item.desc }}
+                                        </view>
+                                    </view>
+
+                                    <!-- 星星 -->
+                                    <view 
+                                        class="pgd-good-tips-con"
+                                    >
+                                        <image  
+                                            mode="scaleToFill"
+                                            class="pgd-good-tips-bg"
+                                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-star-3.png"
+                                        />
+                                        <view class="pgd-good-tips">{{ item.tips }}</view>
+                                    </view>
+
+                                    <!-- 确定按钮 -->
+                                    <view 
+                                        class="pgd-good-btn"
+                                        data-data="{{ item }}"
+                                        bindtap="goEdit"
+                                    >
+                                        就推它
+                                        <image 
+                                            mode="scaleToFill"
+                                            class="pgd-good-btn-icon"
+                                            src="https://global-1257764567.cos.ap-guangzhou.myqcloud.com/icon-arrow-right.png"
+                                        />
+                                    </view>
+
+                                </view>
+                            </swiper-item>
+                        </block>
+                    </swiper>
+                </view>
+            </view>
+            
+
+            <!-- 下方文案 -->
+            <view class="gd-compare-btn-con"></view>
+
+            <!-- 关闭按钮 -->
+            <button 
+                class="fix-btn gd-compare-btn"
+                bindtap="toggleTips"
+            >
+                <wxc-icon
+                    size="24"
+                    type="close"
+                    color="rgba(0,0,0,0.3)"
+                    class="gd-compare-btn-icon"
+                />
+            </button>
+        </view>
+    </wxc-mask>
+
+</view>

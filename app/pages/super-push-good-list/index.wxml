@@ -1,0 +1,93 @@
+<view class="page-super-push-good-list">
+
+    <!-- 暂无更多 -->
+    <view
+        class="pmgl-nomore"
+        wx:if="{{ !loadingList && list.length === 0 }}"
+    >
+        No More
+    </view>
+
+    <!-- 滑动列表 -->
+    <scroll-view
+        scroll-y
+        lower-threshold="100"
+        class='pmgl-list-container'
+        bindscrolltolower="fetchData"
+    >
+        <view
+            wx:for="{{ list }}"
+            wx:key="index"
+            class="pmgl-list-item-con"
+            bindtap="onEdit"
+            data-data="{{ item }}"
+        >
+            <view
+                class="pmgl-item-img-con"
+            >
+                <image
+                    mode="aspectFill"
+                    class="pmgl-item-img"
+                    src="{{ item.img[ 0 ]}}"
+                    lazy-load="{{ true }}"
+                />
+            </view>
+            <view class="pmgl-item-info-block">
+                <view class="pmgl-item-info">
+                    <view class="pmgl-item-title">
+                        {{ item.tips ? '(' + item.tips + ') ' : '' }}{{ item.title }}
+                    </view>
+                    <view class="pmgl-item-title grey">
+                        {{ item.desc }}
+                    </view>
+                </view>
+                <view class="pmgl-item-action">
+                    <view class="">
+                        <wxc-price
+                            icon="sub"
+                            decimal="small"
+                            class="pmgl-price"
+                        > 
+                            {{ item.fadePrice }}
+                        </wxc-price>
+                    </view>
+                    <view class="pmgl-action"> 
+                        <view
+                            class="pga-trash"
+                            catchtap="onDelete"
+                            data-data="{{ item }}"
+                        >
+                            <i-icon
+                                type="trash"
+                                size="18"
+                                color="#80848f"
+                            />
+                        </view>
+                        <my-switch-text
+                            color="#c5c5c5"
+                            sign="{{ item._id }}"
+                            activecolor="#c5c5c5"
+                            color="#d92a22"
+                            bindchange="onSwitch"
+                            options="{{ closeOpts }}"
+                            value="{{ item.push }}"
+                        />
+                    </view>
+                </view>
+            </view>
+        </view>
+    </scroll-view>
+
+    <!-- 按钮 -->
+    <view
+       class='pmgl-entry-btn-container'
+    >
+        <view 
+            bindtap='onCreate'
+            class="pmgl-entry-btn"
+        >
+            <wxc-icon color="#fff" size="45" type="add" /> 
+        </view>
+    </view>
+
+</view>

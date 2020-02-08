@@ -5,6 +5,7 @@ import { overtime, payedFix, priceFix, payLastFix, pushNew, pushLastPay } from '
 import { clearShareRecord } from './share-record';
 import { userGetExp } from './push-timer';
 import { lastDayData } from './analyze';
+import { cleanPushing } from './super-goods';
 
 // cloud.init({
 //     env: process.env.cloud
@@ -33,6 +34,7 @@ export const main = async ( event, context ) => {
         await removeUselessOrders( );
         await clearShareRecord( );
         await lastDayData( );
+        await cleanPushing( );
         
         return {
             status: 200

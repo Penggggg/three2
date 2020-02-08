@@ -549,7 +549,7 @@ Page({
         if ( role === 1 ) {
 
             setTimeout(( ) => {
-                // this.fetchLast( );
+                this.fetchLast( );
                 this.fetchNew( );
                 this.fetchRank( );
             }, 20 );
