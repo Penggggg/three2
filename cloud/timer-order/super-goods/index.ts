@@ -36,7 +36,7 @@ const checkIsInRange = ( now: Date, range = [ 99 ]) => {
 export const cleanPushing = async ( ) => {
     try {
 
-        if ( !checkIsInRange( getNow( ), [ 3 ])) {
+        if ( !checkIsInRange( getNow( ), [ 2 ])) {
             return { status: 200 } 
         }
 
