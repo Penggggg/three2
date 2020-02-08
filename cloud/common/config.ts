@@ -7,6 +7,13 @@ export const app = {
     secrect: '6c8ff31489cce7dd4edf0b1843b7b0f5'
 }
 
+/** 超级app */
+export const superApp = {
+    env: 'prod-b87b76',
+    id: 'wx60bf7f745ce31ef0',
+    secrect: '6c8ff31489cce7dd4edf0b1843b7b0f5'
+}
+
 /** 推送模版 */
 export const notification_template = {
     getMoney3: 'fCvCrY8_5l60svPglMvQdO1sulAZQUTcOt3hdtrDIsw'// 业务受理通知
@@ -145,7 +152,8 @@ export const collections = [
     'share-record',
     'integral-use-record',
     'push-timer',
-    'good-visiting-record'
+    'good-visiting-record',
+    'super-goods'
 ];
 
 /** 权限模块 */

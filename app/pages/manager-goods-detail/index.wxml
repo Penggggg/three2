@@ -1,7 +1,6 @@
-<!--app/pages/manager-goods-detail/index.wxml-->
-
 <view class='p-manager-goods-detail'>
-  <my-form-goods-details
-    pid="{{ id }}"
-  />
+    <my-form-goods-details
+        pid="{{ id }}"
+        spid="{{ spid }}"
+    />
 </view>
